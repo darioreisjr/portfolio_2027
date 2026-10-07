@@ -2,10 +2,18 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { locales, type Locale } from '@portfolio/contracts';
 import type { z } from 'zod';
-import { profileSchema, uiSchema, type Profile, type Ui } from './schemas.js';
+import {
+  homeSchema,
+  profileSchema,
+  uiSchema,
+  type Home,
+  type Profile,
+  type Ui,
+} from './schemas.js';
 
 export interface Content {
   ui: Record<Locale, Ui>;
+  home: Record<Locale, Home>;
   /** `null` quando não há perfil publicado e os rascunhos estão fora. */
   profile: Profile | null;
 }
@@ -36,10 +44,15 @@ export function loadContent(dataDir: string, { includeDrafts }: LoadOptions): Co
     locales.map((locale) => [locale, parseFile(dataDir, `ui/${locale}.json`, uiSchema)]),
   ) as Record<Locale, Ui>;
 
+  const home = Object.fromEntries(
+    locales.map((locale) => [locale, parseFile(dataDir, `home/${locale}.json`, homeSchema)]),
+  ) as Record<Locale, Home>;
+
   const profile = parseFile(dataDir, 'profile.json', profileSchema);
 
   return {
     ui,
+    home,
     profile: profile.status === 'published' || includeDrafts ? profile : null,
   };
 }

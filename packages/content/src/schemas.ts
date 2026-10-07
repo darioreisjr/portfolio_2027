@@ -35,13 +35,34 @@ export const uiSchema = z
   .strict();
 export type Ui = z.infer<typeof uiSchema>;
 
+const personaTextSchema = z.object({ phrase: text }).strict();
+
+/** Textos da tela de escolha de perfil (home) em um idioma. */
+export const homeSchema = z
+  .object({
+    title: text,
+    enter: text,
+    /** Precisa conter `{tech}`, trocado pelo nome da tecnologia da área. */
+    madeIn: text.refine((value) => value.includes('{tech}'), 'Falta o marcador {tech}'),
+    personas: z
+      .object({
+        recruiter: personaTextSchema,
+        tech: personaTextSchema,
+        client: personaTextSchema,
+        community: personaTextSchema,
+      })
+      .strict(),
+  })
+  .strict();
+export type Home = z.infer<typeof homeSchema>;
+
 export const profileSchema = z
   .object({
     status: statusSchema,
     name: text,
     role: localizedSchema,
-    tagline: localizedSchema,
-    summary: localizedSchema,
+    tagline: localizedSchema.optional(),
+    summary: localizedSchema.optional(),
     location: localizedSchema.optional(),
     availability: localizedSchema.optional(),
     highlightSkills: z.array(text),

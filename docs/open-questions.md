@@ -1,6 +1,6 @@
 # Questões em aberto e suposições não confirmadas
 
-Atualizado em 2026-10-06. **Bloqueante** = precisa de resposta antes do bootstrap.
+Atualizado em 2026-10-07. **Bloqueante** = precisa de resposta antes do bootstrap.
 
 ## Decisões pendentes do autor
 
@@ -38,15 +38,18 @@ Atualizado em 2026-10-06. **Bloqueante** = precisa de resposta antes do bootstra
 
 ## Pendências deixadas pelo bootstrap
 
-| #   | Pendência                                                                                                                                                                                                       | Bloqueia o quê        |
-| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
-| B1  | **Resolvido em 2026-10-07:** repositório em github.com/darioreisjr/portfolio_2027 e primeiro CI verde na `main`. Os passos que só rodam em pull request (commitlint e `--affected`) ainda não foram exercitados | Primeiro pull request |
-| B2  | **Resolvido em 2026-10-07:** o e2e passou no CI em Linux, incluindo a navegação entre páginas Next.js                                                                                                           | Nada                  |
-| B3  | Next.js fixado em 16.3.8 porque a 16.4.0 tinha menos de 24 horas; reavaliar a atualização                                                                                                                       | Nada                  |
-| B4  | O `404.html` do Next.js sai sem atributo `lang`                                                                                                                                                                 | Tarefa de SEO         |
-| B5  | MFE React com 77,5 kB de 80 kB e páginas Next.js com 144,2 kB de 150 kB: folga pequena para features                                                                                                            | Features dessas áreas |
-| B6  | Os textos de interface em en, es e pt-PT foram escritos por IA e não foram revisados pelo autor                                                                                                                 | Publicação            |
-| B7  | Fora do bootstrap: tema, troca de idioma, cabeçalho e rodapé reais, `hreflang`, sitemap, `_redirects`, `_headers`, deploy                                                                                       | Publicação            |
+| #   | Pendência                                                                                                                                                                                                                                 | Bloqueia o quê        |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| B1  | **Resolvido em 2026-10-07:** repositório em github.com/darioreisjr/portfolio_2027 e primeiro CI verde na `main`. Os passos que só rodam em pull request (commitlint e `--affected`) ainda não foram exercitados                           | Primeiro pull request |
+| B2  | **Resolvido em 2026-10-07:** o e2e passou no CI em Linux, incluindo a navegação entre páginas Next.js                                                                                                                                     | Nada                  |
+| B3  | Next.js fixado em 16.3.8 porque a 16.4.0 tinha menos de 24 horas; reavaliar a atualização                                                                                                                                                 | Nada                  |
+| B4  | O `404.html` do Next.js sai sem atributo `lang`                                                                                                                                                                                           | Tarefa de SEO         |
+| B5  | MFE React com 77,5 kB de 80 kB e páginas Next.js com 144,6 kB de 150 kB: folga pequena para features                                                                                                                                      | Features dessas áreas |
+| B6  | Textos em en, es e pt-PT escritos por IA e ainda não revisados pelo autor: os de interface (`ui`), os da home (`home`) e o cargo em `profile.json`. Enquanto o perfil for `draft`, a linha com nome e cargo só aparece em desenvolvimento | Publicação            |
+| B7  | Fora do bootstrap: tema, troca de idioma, cabeçalho e rodapé reais, `hreflang`, sitemap, `_redirects`, `_headers`, deploy                                                                                                                 | Publicação            |
+| B8  | `budgets.md` cita 130 kB para a parte "Página Next.js", sem cobrança em `budgets.json`; o medido é perto de 138 kB. Decidir entre corrigir, remover ou cobrar                                                                             | Nada                  |
+| B9  | Arte final dos quatro personagens da home (hoje silhuetas provisórias) e o estilo dela                                                                                                                                                    | Publicação            |
+| B10 | LCP (2,2 s de 2,5 s) e TBT (102 ms de 200 ms) da home ficaram mais perto do limite; medir de novo com a arte final                                                                                                                        | Arte final            |
 
 ## Não verificado na documentação
 

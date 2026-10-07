@@ -14,7 +14,7 @@
     }
   },
   "scripts": {
-    "dev": "turbo run dev",
+    "dev": "CONTENT_INCLUDE_DRAFTS=1 turbo run dev",
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test && node --test \"scripts/*.test.mjs\"",

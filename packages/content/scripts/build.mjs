@@ -8,7 +8,7 @@ const dataDir = fileURLToPath(new URL('../data', import.meta.url));
 const outDir = fileURLToPath(new URL('../dist/data', import.meta.url));
 const includeDrafts = process.env.CONTENT_INCLUDE_DRAFTS === '1';
 
-const { ui, profile } = loadContent(dataDir, { includeDrafts });
+const { ui, home, profile } = loadContent(dataDir, { includeDrafts });
 
 const modules = {
   ui: {
@@ -17,6 +17,14 @@ const modules = {
       "import type { Locale } from '@portfolio/contracts';",
       "import type { Ui } from '../schemas.js';",
       'export declare const ui: Readonly<Record<Locale, Ui>>;',
+    ],
+  },
+  home: {
+    value: home,
+    types: [
+      "import type { Locale } from '@portfolio/contracts';",
+      "import type { Home } from '../schemas.js';",
+      'export declare const home: Readonly<Record<Locale, Home>>;',
     ],
   },
   profile: {

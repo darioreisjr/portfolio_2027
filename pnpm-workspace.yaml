@@ -2,6 +2,9 @@ packages:
   - apps/*
   - packages/*
 
+# Permite `VAR=valor comando` nos scripts também no Windows.
+shellEmulator: true
+
 # Único lugar onde versões são fixadas. Os package.json usam "catalog:".
 catalog:
   # Linguagem e orquestração

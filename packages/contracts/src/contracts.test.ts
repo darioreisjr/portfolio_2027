@@ -25,6 +25,12 @@ describe('tabela de rotas', () => {
     for (const route of routesOwnedBy('web-next')) expect(route.mfe).toBeUndefined();
   });
 
+  it('diz a tecnologia de cada área, uma por área de MFE', () => {
+    const byArea = Object.fromEntries(routes.map((route) => [route.area, route.framework]));
+    expect(byArea).toMatchObject({ recruiter: 'Vue', tech: 'Angular', client: 'React' });
+    for (const route of routesOwnedBy('web-next')) expect(route.framework).toBe('Next.js');
+  });
+
   it('preserva a rota /como-foi-feito em pt-BR', () => {
     expect(pathFor('how-it-was-built', 'pt-BR')).toBe('/como-foi-feito/');
   });

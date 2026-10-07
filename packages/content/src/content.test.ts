@@ -8,26 +8,52 @@ import { loadContent } from './load.js';
 
 const dataDir = fileURLToPath(new URL('../data', import.meta.url));
 
+type Json = Record<string, unknown>;
+
 /** Copia os dados reais e aplica uma alteração em um arquivo JSON. */
-function dataWith(file: string, change: (json: Record<string, unknown>) => void): string {
+function dataWith(file: string, change: (json: Json) => void): string {
   const copy = mkdtempSync(join(tmpdir(), 'content-'));
   cpSync(dataDir, copy, { recursive: true });
   const path = join(copy, file);
-  const json = JSON.parse(readFileSync(path, 'utf8')) as Record<string, unknown>;
+  const json = JSON.parse(readFileSync(path, 'utf8')) as Json;
   change(json);
   writeFileSync(path, JSON.stringify(json));
   return copy;
 }
 
-describe('conteúdo do repositório', () => {
-  it('é válido e tem textos de interface nos quatro idiomas', () => {
-    const { ui } = loadContent(dataDir, { includeDrafts: true });
-    for (const locale of locales) expect(ui[locale].hello).not.toBe('');
+const allLocales = (value: string) => Object.fromEntries(locales.map((locale) => [locale, value]));
+
+/** Perfil mínimo de teste; não depende do status do perfil real. */
+const profileWith = (overrides: Json) =>
+  dataWith('profile.json', (json) => {
+    for (const key of Object.keys(json)) delete json[key];
+    Object.assign(
+      json,
+      { name: 'Teste', role: allLocales('Cargo'), highlightSkills: [] },
+      overrides,
+    );
   });
 
-  it('deixa rascunhos fora do build de produção', () => {
-    expect(loadContent(dataDir, { includeDrafts: false }).profile).toBeNull();
-    expect(loadContent(dataDir, { includeDrafts: true }).profile?.status).toBe('draft');
+describe('conteúdo do repositório', () => {
+  it('é válido e tem textos de interface e da home nos quatro idiomas', () => {
+    const { ui, home } = loadContent(dataDir, { includeDrafts: true });
+    for (const locale of locales) {
+      expect(ui[locale].hello).not.toBe('');
+      expect(home[locale].personas.recruiter.phrase).not.toBe('');
+    }
+  });
+});
+
+describe('rascunhos', () => {
+  it('ficam fora do build de produção e entram em desenvolvimento', () => {
+    const draft = profileWith({ status: 'draft' });
+    expect(loadContent(draft, { includeDrafts: false }).profile).toBeNull();
+    expect(loadContent(draft, { includeDrafts: true }).profile?.name).toBe('Teste');
+  });
+
+  it('não escondem item publicado', () => {
+    const published = profileWith({ status: 'published' });
+    expect(loadContent(published, { includeDrafts: false }).profile?.status).toBe('published');
   });
 });
 
@@ -42,8 +68,21 @@ describe('validação', () => {
     expect(() => loadContent(broken, { includeDrafts: true })).toThrow(/ui\/en\.json/);
   });
 
+  it('recusa texto da home com chave faltando ou sem o marcador de tecnologia', () => {
+    const missing = dataWith('home/es.json', (json) => delete json.enter);
+    expect(() => loadContent(missing, { includeDrafts: true })).toThrow(/home\/es\.json/);
+
+    const noMarker = dataWith('home/en.json', (json) => (json.madeIn = 'Built with care'));
+    expect(() => loadContent(noMarker, { includeDrafts: true })).toThrow(/\{tech\}/);
+  });
+
   it('recusa item publicado sem os quatro idiomas', () => {
-    const broken = dataWith('profile.json', (json) => (json.status = 'published'));
+    const broken = profileWith({ status: 'published', role: { 'pt-BR': 'Cargo' } });
     expect(() => loadContent(broken, { includeDrafts: true })).toThrow(/sem tradução/);
+  });
+
+  it('aceita perfil publicado sem tagline e sem summary', () => {
+    const minimal = profileWith({ status: 'published' });
+    expect(() => loadContent(minimal, { includeDrafts: true })).not.toThrow();
   });
 });

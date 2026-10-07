@@ -16,6 +16,8 @@ Status: **aprovado** pelo autor em 2026-10-06. Base: áreas do `docs/product/bri
 
 Isso mantém a proposta inicial (Next.js para entrada e SEO, React para projetos, Vue para linha do tempo, Angular para filtro, JavaScript puro para o shell) e encaixa cada framework em um público: Vue para recrutadores, Angular para tech leads, React para clientes, Next.js para a comunidade.
 
+A tecnologia de cada área também está no campo `framework` da tabela de rotas de `packages/contracts`, que a home usa no selo de cada personagem. Mude os dois juntos.
+
 ## Idiomas nas rotas
 
 Decidido pelo autor em 2026-10-06: **rotas traduzidas**. pt-BR, o padrão, fica sem prefixo, o que preserva a rota pedida `/como-foi-feito`. Os demais idiomas ganham prefixo e nomes próprios.

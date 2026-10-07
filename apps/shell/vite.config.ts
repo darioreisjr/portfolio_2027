@@ -74,7 +74,8 @@ const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$
 const nextPaths = routesOwnedBy('web-next')
   .flatMap((route) => Object.values(route.paths))
   .map((path) => `${escapeRegex(path.replace(/\/$/, ''))}/?`);
-const nextProxyPattern = `^(?:/_next/|/__nextjs|(?:${nextPaths.join('|')})$)`;
+// /_home/ são os arquivos estáticos da home (pasta public do Next.js).
+const nextProxyPattern = `^(?:/_next/|/__nextjs|/_home/|(?:${nextPaths.join('|')})$)`;
 
 export default defineConfig({
   plugins: [composedDev()],

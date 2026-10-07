@@ -57,19 +57,19 @@ Cada app e cada pacote tem um `AGENTS.md` próprio com comandos e convenções.
 
 Node e pnpm são fixados no `package.json`; o pnpm baixa o Node certo sozinho. Rode tudo por `pnpm`, nunca com o `node` do sistema. Versões de dependências ficam só no catálogo do `pnpm-workspace.yaml`.
 
-| Comando                          | O que faz                                                                     |
-| -------------------------------- | ----------------------------------------------------------------------------- |
-| `pnpm install`                   | Instala dependências                                                          |
-| `pnpm dev`                       | Sobe tudo composto em `http://localhost:5173` (shell, MFEs em watch, Next.js) |
-| `pnpm build`                     | Builda apps e pacotes, com cache do Turborepo                                 |
-| `pnpm lint`, `pnpm format:check` | ESLint e Prettier na raiz                                                     |
-| `pnpm typecheck`, `pnpm test`    | Tipos e testes de todos os pacotes                                            |
-| `pnpm assemble`                  | Junta os builds em `dist/`, o diretório publicado                             |
-| `pnpm preview`                   | Serve o `dist/` em `http://localhost:4173`                                    |
-| `pnpm test:e2e`                  | Playwright e axe sobre o `dist/`                                              |
-| `pnpm budgets`                   | Cobra os tetos de JavaScript de `docs/quality/budgets.json`                   |
-| `pnpm lhci`                      | Lighthouse CI sobre o `dist/`                                                 |
-| `pnpm ai:sync`, `pnpm ai:check`  | Gera ou confere as configurações das três ferramentas                         |
+| Comando                          | O que faz                                                                                               |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `pnpm install`                   | Instala dependências                                                                                    |
+| `pnpm dev`                       | Sobe tudo composto em `http://localhost:5173` (shell, MFEs em watch, Next.js), com conteúdo em rascunho |
+| `pnpm build`                     | Builda apps e pacotes, com cache do Turborepo                                                           |
+| `pnpm lint`, `pnpm format:check` | ESLint e Prettier na raiz                                                                               |
+| `pnpm typecheck`, `pnpm test`    | Tipos e testes de todos os pacotes                                                                      |
+| `pnpm assemble`                  | Junta os builds em `dist/`, o diretório publicado                                                       |
+| `pnpm preview`                   | Serve o `dist/` em `http://localhost:4173`                                                              |
+| `pnpm test:e2e`                  | Playwright e axe sobre o `dist/`                                                                        |
+| `pnpm budgets`                   | Cobra os tetos de JavaScript de `docs/quality/budgets.json`                                             |
+| `pnpm lhci`                      | Lighthouse CI sobre o `dist/`                                                                           |
+| `pnpm ai:sync`, `pnpm ai:check`  | Gera ou confere as configurações das três ferramentas                                                   |
 
 Um pacote só: `pnpm --filter <nome> <script>`. Antes de `test:e2e`, `budgets` e `lhci`: `pnpm build && pnpm assemble`.
 

@@ -1,8 +1,11 @@
 {
   "status": "draft",
-  "name": "Pessoa de Exemplo",
-  "role": { "pt-BR": "EXEMPLO FICTÍCIO: cargo" },
-  "tagline": { "pt-BR": "EXEMPLO FICTÍCIO: frase de apresentação" },
-  "summary": { "pt-BR": "EXEMPLO FICTÍCIO: este perfil não descreve o autor e não vai ao ar." },
+  "name": "Dario Reis",
+  "role": {
+    "pt-BR": "Desenvolvedor full-stack",
+    "en": "Full-stack developer",
+    "es": "Desarrollador full-stack",
+    "pt-PT": "Programador full-stack"
+  },
   "highlightSkills": []
 }

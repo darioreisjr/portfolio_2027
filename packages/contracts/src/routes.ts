@@ -4,6 +4,7 @@ export const defaultLocale: Locale = 'pt-BR';
 
 export type AreaId = 'home' | 'recruiter' | 'tech' | 'client' | 'community' | 'how-it-was-built';
 export type AppOwner = 'web-next' | 'shell';
+export type Framework = 'Next.js' | 'Vue' | 'Angular' | 'React';
 
 export interface MfeTarget {
   /** Custom element que o MFE registra. */
@@ -15,6 +16,8 @@ export interface MfeTarget {
 export interface RouteEntry {
   area: AreaId;
   owner: AppOwner;
+  /** Tecnologia que renderiza a área. Espelha a coluna de docs/architecture/mfe-map.md. */
+  framework: Framework;
   /** Presente só nas áreas servidas pelo shell. */
   mfe?: MfeTarget;
   /** Caminho por idioma, sempre com barra final. */
@@ -26,11 +29,13 @@ export const routes: readonly RouteEntry[] = [
   {
     area: 'home',
     owner: 'web-next',
+    framework: 'Next.js',
     paths: { 'pt-BR': '/', en: '/en/', es: '/es/', 'pt-PT': '/pt-pt/' },
   },
   {
     area: 'recruiter',
     owner: 'shell',
+    framework: 'Vue',
     mfe: { tag: 'mfe-recrutador', script: '/_mfe/vue/mfe.js' },
     paths: {
       'pt-BR': '/recrutador/',
@@ -42,6 +47,7 @@ export const routes: readonly RouteEntry[] = [
   {
     area: 'tech',
     owner: 'shell',
+    framework: 'Angular',
     mfe: { tag: 'mfe-tecnico', script: '/_mfe/angular/main.js' },
     paths: {
       'pt-BR': '/tecnico/',
@@ -53,6 +59,7 @@ export const routes: readonly RouteEntry[] = [
   {
     area: 'client',
     owner: 'shell',
+    framework: 'React',
     mfe: { tag: 'mfe-clientes', script: '/_mfe/react/mfe.js' },
     paths: {
       'pt-BR': '/clientes/',
@@ -64,6 +71,7 @@ export const routes: readonly RouteEntry[] = [
   {
     area: 'community',
     owner: 'web-next',
+    framework: 'Next.js',
     paths: {
       'pt-BR': '/comunidade/',
       en: '/en/community/',
@@ -74,6 +82,7 @@ export const routes: readonly RouteEntry[] = [
   {
     area: 'how-it-was-built',
     owner: 'web-next',
+    framework: 'Next.js',
     paths: {
       'pt-BR': '/como-foi-feito/',
       en: '/en/how-it-was-built/',

@@ -43,3 +43,5 @@ Passos:
 ## Textos de interface
 
 `ui/<locale>.json` tem as mesmas chaves nos quatro idiomas. Chave nova entra nos quatro arquivos de uma vez.
+
+Os três MFEs importam `ui` inteiro. Texto que só uma tela usa ganha arquivo próprio, como `home/<locale>.json` para a tela de escolha de perfil.

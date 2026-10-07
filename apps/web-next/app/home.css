@@ -1,0 +1,208 @@
+/* Tela de escolha de perfil. Em tela estreita é um carrossel, um personagem por
+   vez, com a legenda sempre visível. A partir de 48rem vira um palco: ninguém em
+   destaque até o visitante apontar ou focar um personagem.
+   (A mesma largura está em _components/persona-list.tsx.) */
+
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 100svh;
+  padding: var(--space-block-lg) 0;
+  text-align: center;
+}
+
+.home-identity {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-inline-sm);
+  margin: 0 var(--space-inline-md) var(--space-block-md);
+  color: var(--color-text-muted);
+  font-size: var(--text-size-sm);
+}
+
+.home-identity strong {
+  color: var(--color-text);
+}
+
+.home h1 {
+  margin: 0 var(--space-inline-md) var(--space-block-md);
+}
+
+.home nav {
+  width: 100%;
+}
+
+.personas {
+  /* Só da tela: tamanho da figura e intensidade do destaque. */
+  --figure-height: clamp(11rem, 40svh, 20rem);
+  --lift: 0.12;
+  --recede: 0.06;
+  --fade: 0.6;
+
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-inline-md);
+  margin: 0;
+  padding: var(--space-block-md) 12%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  list-style: none;
+}
+
+.personas > li {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+}
+
+.persona {
+  /* 1 no personagem em destaque; 1 em todos quando algum está em destaque. */
+  --active: 0;
+  --dimmed: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-block-md);
+  padding: var(--space-block-md) var(--space-inline-sm);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.persona:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.persona-figure {
+  width: auto;
+  height: var(--figure-height);
+}
+
+.persona-caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-block-sm);
+}
+
+.persona-phrase {
+  font-size: var(--text-size-lg);
+  font-weight: var(--text-weight-strong);
+}
+
+.persona-summary {
+  max-width: 18rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-size-sm);
+}
+
+.persona-enter {
+  margin-top: var(--space-block-xs);
+  padding: var(--space-block-sm) var(--space-inline-lg);
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: var(--text-weight-strong);
+}
+
+.persona-dots {
+  --dot-size: 0.5rem;
+
+  display: flex;
+  justify-content: center;
+  gap: var(--space-inline-sm);
+}
+
+.persona-dots span {
+  width: var(--dot-size);
+  height: var(--dot-size);
+  border-radius: var(--radius-full);
+  background: var(--color-border);
+}
+
+.personas:not([data-slide]) ~ .persona-dots span:nth-child(1),
+.personas[data-slide='0'] ~ .persona-dots span:nth-child(1),
+.personas[data-slide='1'] ~ .persona-dots span:nth-child(2),
+.personas[data-slide='2'] ~ .persona-dots span:nth-child(3),
+.personas[data-slide='3'] ~ .persona-dots span:nth-child(4) {
+  background: var(--color-accent);
+}
+
+.home-more {
+  margin: var(--space-block-lg) var(--space-inline-md) 0;
+  font-size: var(--text-size-sm);
+}
+
+.home-more a {
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 48rem) {
+  .personas {
+    justify-content: center;
+    align-items: flex-start;
+    gap: var(--space-inline-lg);
+    padding-inline: var(--space-inline-md);
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .personas > li {
+    flex: 0 1 15rem;
+  }
+
+  .persona-dots {
+    display: none;
+  }
+
+  .personas:has(.persona:is(:focus-visible, [data-active])) .persona {
+    --dimmed: 1;
+  }
+
+  .persona:is(:focus-visible, [data-active]) {
+    --active: 1;
+  }
+
+  /* Só onde existe ponteiro de verdade; em toque o :hover fica preso. */
+  @media (hover: hover) {
+    .personas:has(.persona:hover) .persona {
+      --dimmed: 1;
+    }
+
+    .persona:hover {
+      --active: 1;
+    }
+  }
+
+  /* O destaque avança e cresce; os outros recuam e esmaecem. */
+  .persona-figure {
+    --others: calc(var(--dimmed) * (1 - var(--active)));
+
+    transform-origin: center bottom;
+    scale: calc(1 + var(--lift) * var(--active) - var(--recede) * var(--others));
+    opacity: calc(1 - var(--fade) * var(--others));
+    transition:
+      scale var(--motion-duration-md) var(--motion-ease-out),
+      opacity var(--motion-duration-md) var(--motion-ease-out);
+  }
+
+  /* Fica no DOM e na árvore de acessibilidade; só some da vista. */
+  .persona-caption {
+    opacity: var(--active);
+    transition: opacity var(--motion-duration-md) var(--motion-ease-out);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .persona-figure,
+  .persona-caption {
+    transition: none;
+  }
+
+  .persona-figure {
+    scale: 1;
+  }
+}

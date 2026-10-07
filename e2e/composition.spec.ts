@@ -9,7 +9,8 @@ const mfeAreas = [
   { path: '/clientes/', area: 'client', tag: 'mfe-clientes', framework: 'React' },
 ];
 
-const nextPages = ['/', '/comunidade/', '/como-foi-feito/'];
+// A home tem testes próprios em home.spec.ts.
+const nextPages = ['/comunidade/', '/como-foi-feito/'];
 
 /** Falha o teste se a página lançar erro ou escrever erro no console. */
 function failOnBrowserErrors(page: Page): string[] {
@@ -74,7 +75,8 @@ test('navega da home pelas três áreas de MFE e volta ao Next.js', async ({ pag
   const errors = failOnBrowserErrors(page);
   await page.goto('/');
 
-  await page.getByRole('link', { name: 'Recrutador' }).click();
+  // Na home o caminho do recrutador é o personagem com a frase dele.
+  await page.getByRole('link', { name: /Estou contratando/ }).click();
   await expect(page).toHaveURL(/\/recrutador\/$/);
   await expect(page.locator('mfe-recrutador')).toContainText('Olá');
 

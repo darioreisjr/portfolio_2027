@@ -1,6 +1,6 @@
 # Modelo de conteúdo
 
-Status: rascunho para aprovação. Implementado até agora em `packages/content`: `ui/<locale>.json` e `profile.json` (sem `photo` e `cv`). Modelado a partir das seções do `docs/product/brief.md`; ainda não há dados reais.
+Status: rascunho para aprovação. Implementado até agora em `packages/content`: `ui/<locale>.json`, `home/<locale>.json` e `profile.json` (sem `photo` e `cv`). Modelado a partir das seções do `docs/product/brief.md`; ainda não há dados reais.
 
 Todo o conteúdo vive em `packages/content` como JSON. Os apps só leem conteúdo por esse pacote. A ferramenta de validação e a geração de tipos são definidas no bootstrap (Fase 3).
 
@@ -43,8 +43,8 @@ type Audience = 'recruiter' | 'tech' | 'client' | 'community';
 | `status`          | `"draft"` ou `"published"`                                    | sim         |
 | `name`            | string                                                        | sim         |
 | `role`            | Localized                                                     | sim         |
-| `tagline`         | Localized (uma frase, usada na home)                          | sim         |
-| `summary`         | Localized                                                     | sim         |
+| `tagline`         | Localized (uma frase)                                         | não         |
+| `summary`         | Localized                                                     | não         |
 | `location`        | Localized                                                     | não         |
 | `availability`    | Localized                                                     | não         |
 | `photo`           | Imagem                                                        | não         |
@@ -163,6 +163,17 @@ Um projeto tem duas narrativas: `technical` (área técnica) e `outcome` (área 
 | `locale`       | Locale (idioma do texto original)    | sim         |
 
 O corpo do artigo dentro do site não está modelado; ver `docs/open-questions.md`.
+
+### `home/<locale>.json` (um por idioma)
+
+Textos da tela de escolha de perfil. Sem `status`, como `ui`. Ficam fora de `ui` porque os MFEs importam `ui` inteiro e não precisam destes textos.
+
+| Campo                      | Tipo                                                     | Obrigatório |
+| -------------------------- | -------------------------------------------------------- | ----------- |
+| `title`                    | string (a chamada)                                       | sim         |
+| `enter`                    | string (rótulo do botão)                                 | sim         |
+| `madeIn`                   | string com o marcador `{tech}`                           | sim         |
+| `personas.<perfil>.phrase` | string, para `recruiter`, `tech`, `client` e `community` | sim         |
 
 ### `ui/<locale>.json` (um por idioma)
 

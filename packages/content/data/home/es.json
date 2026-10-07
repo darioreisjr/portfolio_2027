@@ -1,0 +1,19 @@
+{
+  "title": "Elige tu camino",
+  "enter": "Entrar",
+  "madeIn": "Hecho con {tech}",
+  "personas": {
+    "recruiter": {
+      "phrase": "Estoy contratando"
+    },
+    "tech": {
+      "phrase": "Quiero ver el código"
+    },
+    "client": {
+      "phrase": "Tengo un proyecto"
+    },
+    "community": {
+      "phrase": "Vine a aprender e intercambiar ideas"
+    }
+  }
+}
