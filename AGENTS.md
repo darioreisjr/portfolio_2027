@@ -111,7 +111,7 @@ Claude Code é a ferramenta principal. Codex e Gemini são usados para revisão 
 - Conteúdo novo: passa na validação de `packages/content`.
 - Decisão de arquitetura nova: ADR escrito (skill `write-adr`).
 - Docs atualizados quando o comportamento descrito mudou.
-- Commit no padrão Conventional Commits.
+- Commit no padrão Conventional Commits, em pt-BR e sem coautor (skill `commits`).
 
 ## Nunca
 
@@ -119,6 +119,8 @@ Claude Code é a ferramenta principal. Codex e Gemini são usados para revisão 
 - Instalar dependência sem justificativa de uma linha no plano.
 - Escrever segredo em arquivo versionado. Segredos só por variável de ambiente; nomes em `.env.example`.
 - Editar à mão arquivos gerados: `.claude/skills/`, `.claude/agents/`, `.codex/`, `.gemini/`, `.mcp.json` e os `CLAUDE.md` e `GEMINI.md` dentro de `apps/` e `packages/`.
+- Pôr coautor ou assinatura de ferramenta de IA em commit (`Co-Authored-By`, "Generated with"). O `commitlint` recusa.
+- Fazer push sem o autor pedir.
 - Liberar script de instalação (`allowBuilds`) ou exceção de idade de pacote (`minimumReleaseAgeExclude`) sem autorização do autor.
 
 ## Setup dos agentes

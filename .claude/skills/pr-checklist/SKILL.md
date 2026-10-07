@@ -56,6 +56,6 @@ Percorra tudo. Marque como "não se aplica" só com motivo.
 
 ## Commit e PR
 
-- [ ] Conventional Commits: `tipo(escopo): resumo`, com o app ou pacote como escopo.
+- [ ] Conventional Commits em pt-BR: `tipo(escopo): resumo`, com o app ou pacote como escopo, sem coautor (skill `commits`).
 - [ ] A descrição diz o que mudou, por quê, como foi verificado e o que não foi verificado.
 - [ ] Revisão pedida a `integration-reviewer`, a `a11y-perf-reviewer` e, com interface, a `design-system-guardian`.
