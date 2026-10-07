@@ -6,6 +6,21 @@ import { HOME_ASSETS_PATH, pathFor, routes, type AreaId, type Locale } from '@po
 export const personaAreas = ['recruiter', 'tech', 'client', 'community'] as const;
 export type PersonaArea = (typeof personaAreas)[number];
 
+export interface Figure {
+  src: string;
+  width: number;
+  height: number;
+}
+
+// Arte de cada personagem, em public/_home/personas. Silhueta provisória onde a
+// arte final ainda não chegou; largura e altura são as do arquivo.
+const figures: Record<PersonaArea, { file: string; width: number; height: number }> = {
+  recruiter: { file: 'recruiter.webp', width: 287, height: 720 },
+  tech: { file: 'tech.svg', width: 120, height: 320 },
+  client: { file: 'client.svg', width: 120, height: 320 },
+  community: { file: 'community.svg', width: 120, height: 320 },
+};
+
 export interface Persona {
   area: PersonaArea;
   href: string;
@@ -14,7 +29,7 @@ export interface Persona {
   phrase: string;
   summary: string;
   badge: string;
-  image: string;
+  figure: Figure;
 }
 
 export interface HomeModel {
@@ -51,7 +66,11 @@ export function buildHome(locale: Locale): HomeModel {
         phrase: text.personas[area].phrase,
         summary: ui[locale].areas[area].description,
         badge: text.madeIn.replace('{tech}', route.framework),
-        image: `${HOME_ASSETS_PATH}personas/${area}.svg`,
+        figure: {
+          src: `${HOME_ASSETS_PATH}personas/${figures[area].file}`,
+          width: figures[area].width,
+          height: figures[area].height,
+        },
       };
     }),
     more: {

@@ -9,7 +9,8 @@ Páginas com HTML completo para SEO: `/`, `/comunidade`, `/como-foi-feito` e as 
 - Uma rota só, `app/[[...slug]]`, com `generateStaticParams` vindo da tabela de rotas de `packages/contracts`; `lib/route.ts` resolve área e idioma.
 - A home é a tela de escolha de perfil (`app/_components/home-stage.tsx`, `app/home.css`, modelo em `lib/home.ts`). Comunidade e como-foi-feito ainda usam `area-placeholder.tsx`.
 - `persona-list.tsx` é o único Client Component: primeiro toque, setas e posição do carrossel. O destaque é todo em CSS, e sem JavaScript cada personagem continua sendo um link.
-- Silhuetas em `public/_home/personas/{recruiter,tech,client,community}.svg`, proporção 120 por 320, decorativas (`alt=""`). A arte final troca os arquivos mantendo nome, formato e proporção.
+- Arte dos personagens em `public/_home/personas/`, decorativa (`alt=""`). A tabela `figures` de `lib/home.ts` diz o arquivo, a largura e a altura de cada um. Recrutador já tem a arte final (`recruiter.webp`); os outros três são silhuetas SVG provisórias.
+- Arte nova: aparar as bordas transparentes, reduzir para 720 px de altura e salvar em WebP (meta: até 60 kB), depois atualizar a entrada em `figures` e medir com `pnpm lhci`. O PNG original não entra no repositório.
 - Next.js fixado em 16.3.8. O `404.html` gerado ainda sai sem `lang`.
 - Server Components por padrão. Client Component só onde há interação ou uso de custom element.
 - O layout carrega o design system e os tokens uma vez. Componentes do design system não renderizam no servidor: o conteúdo precisa ser legível antes do upgrade (ADR 0003).

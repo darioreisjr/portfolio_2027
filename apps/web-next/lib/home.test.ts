@@ -44,6 +44,14 @@ describe('tela de escolha de perfil', () => {
     expect(recruiter?.summary).toContain('contratando');
   });
 
+  it('dá a cada personagem uma figura com dimensões', () => {
+    for (const { figure } of buildHome('pt-BR').personas) {
+      expect(figure.src).toMatch(/^\/_home\/personas\/[a-z]+\.(svg|webp)$/);
+      expect(figure.width).toBeGreaterThan(0);
+      expect(figure.height).toBeGreaterThan(figure.width);
+    }
+  });
+
   it('liga para "Como foi feito" no idioma', () => {
     expect(buildHome('pt-BR').more).toEqual({
       href: '/como-foi-feito/',

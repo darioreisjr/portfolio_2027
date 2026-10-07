@@ -5,15 +5,18 @@ import Link from 'next/link';
 import { buildHome, type Persona } from '../../lib/home';
 import { PersonaList } from './persona-list';
 
-// Proporção das silhuetas; a arte final precisa manter (ver AGENTS.md do app).
-const FIGURE = { width: 120, height: 320 };
-
 function PersonaLink({ persona, enter }: { persona: Persona; enter: string }) {
   const content = (
     <>
       {/* Decorativa: quem diz o que é o perfil é a frase. */}
       {/* eslint-disable-next-line @next/next/no-img-element -- export estático, sem otimizador */}
-      <img className="persona-figure" src={persona.image} alt="" {...FIGURE} />
+      <img
+        className="persona-figure"
+        src={persona.figure.src}
+        alt=""
+        width={persona.figure.width}
+        height={persona.figure.height}
+      />
       <span className="persona-caption">
         <span className="persona-phrase">{persona.phrase}</span>
         <span className="persona-summary">{persona.summary}</span>

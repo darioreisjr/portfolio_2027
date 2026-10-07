@@ -39,7 +39,9 @@
 
 ## Como a arte final entra
 
-Troque os quatro arquivos em `apps/web-next/public/_home/personas/` mantendo os nomes (`recruiter`, `tech`, `client`, `community`), o formato SVG e a proporção 120 por 320. Nenhum código muda. Se a arte vier em PNG ou WebP, a extensão muda em um lugar, `apps/web-next/lib/home.ts`, e o peso precisa ser medido de novo com `pnpm lhci`.
+Cada personagem tem uma entrada na tabela `figures` de `apps/web-next/lib/home.ts`, com arquivo, largura e altura. A arte chega em PNG grande; ela é aparada nas bordas transparentes, reduzida para 720 px de altura e salva em WebP em `apps/web-next/public/_home/personas/`. Depois, atualiza-se a entrada e mede-se de novo com `pnpm lhci`.
+
+A primeira arte final entrou em 2026-10-07: o recrutador ("Estou contratando", feito em Vue). O PNG de 1 MB (1086 por 1448) virou um WebP de 49 kB (287 por 720).
 
 ## Medido
 
