@@ -57,6 +57,22 @@ describe('cenário de sakura', () => {
     return [0, 1, 2].map((at) => top[at] * alpha + bottom[at] * (1 - alpha));
   };
 
+  // A frase do personagem fica sobre a arte dele, que pode ter qualquer cor. Os
+  // extremos são preto e branco; passando neles, passa em tudo.
+  for (const theme of ['light', 'dark']) {
+    it(`color-text passa em AA sobre a névoa com qualquer cor atrás (${theme})`, () => {
+      const textColor = channels(hex(theme, 'color-text'));
+      const veil = channels(hex(theme, 'color-scene-veil'));
+
+      for (const behind of ['#000000', '#ffffff']) {
+        const background = over(veil, channels(behind));
+        expect(contrast(textColor, background), `névoa sobre ${behind}`).toBeGreaterThanOrEqual(
+          4.5,
+        );
+      }
+    });
+  }
+
   // O seletor de tema tem disco próprio; ícone e borda precisam de 3:1 sobre ele.
   for (const theme of ['light', 'dark']) {
     it(`o seletor de tema tem ícone e borda com 3:1 sobre o disco (${theme})`, () => {

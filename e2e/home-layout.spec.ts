@@ -16,7 +16,7 @@ for (const viewport of [
   }) => {
     const context = await browser.newContext({ viewport });
     const page = await context.newPage();
-    // Em espanhol as legendas têm comprimentos diferentes entre si.
+    // Em espanhol as frases têm comprimentos diferentes entre si.
     await page.goto('/es/');
 
     const figures = await page.locator('img.persona-figure').evaluateAll(boxes);
@@ -24,16 +24,19 @@ for (const viewport of [
     expect(new Set(figures.map((figure) => figure.height)).size).toBe(1);
     expect(new Set(figures.map((figure) => figure.bottom)).size).toBe(1);
 
-    // A legenda começa depois da figura, nunca por cima dela.
-    const captions = await page.locator('.persona-caption').evaluateAll(boxes);
-    for (const [index, caption] of captions.entries()) {
-      expect(caption.top).toBeGreaterThanOrEqual(figures[index]?.bottom ?? Infinity);
+    // A frase fica sobre a figura, na parte de baixo dela.
+    const phrases = await page.locator('.persona-phrase').evaluateAll(boxes);
+    for (const [index, phrase] of phrases.entries()) {
+      const figure = figures[index];
+      if (!figure) throw new Error('frase sem figura');
+      expect(phrase.bottom).toBeLessThanOrEqual(figure.bottom);
+      expect(phrase.top).toBeGreaterThan(figure.top + figure.height / 2);
     }
     await context.close();
   });
 }
 
-test('no celular a figura fica acima da legenda em todos os personagens', async ({ browser }) => {
+test('no celular a frase fica sobre a figura e o painel abaixo dela', async ({ browser }) => {
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 },
     hasTouch: true,
@@ -43,10 +46,13 @@ test('no celular a figura fica acima da legenda em todos os personagens', async 
   await page.goto('/');
 
   const figures = await page.locator('img.persona-figure').evaluateAll(boxes);
-  const captions = await page.locator('.persona-caption').evaluateAll(boxes);
+  const phrases = await page.locator('.persona-phrase').evaluateAll(boxes);
+  const panels = await page.locator('.persona-actions').evaluateAll(boxes);
   expect(new Set(figures.map((figure) => figure.height)).size).toBe(1);
-  for (const [index, caption] of captions.entries()) {
-    expect(caption.top).toBeGreaterThanOrEqual(figures[index]?.bottom ?? Infinity);
+  for (const [index, figure] of figures.entries()) {
+    expect(phrases[index]?.bottom).toBeLessThanOrEqual(figure.bottom);
+    expect(phrases[index]?.top).toBeGreaterThan(figure.top + figure.height / 2);
+    expect(panels[index]?.top).toBeGreaterThanOrEqual(figure.bottom);
   }
   await context.close();
 });

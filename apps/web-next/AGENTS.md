@@ -8,9 +8,11 @@ Páginas com HTML completo para SEO: `/`, `/comunidade`, `/como-foi-feito` e as 
 - Proibido o que não funciona em export estático: `rewrites`, `redirects`, `headers`, `proxy`, Server Actions, cookies, ISR, rota dinâmica sem `generateStaticParams`, `next/image` com o loader padrão.
 - Uma rota só, `app/[[...slug]]`, com `generateStaticParams` vindo da tabela de rotas de `packages/contracts`; `lib/route.ts` resolve área e idioma.
 - A home é a tela de escolha de perfil (`app/_components/home-stage.tsx`, `app/home.css`, modelo em `lib/home.ts`). Comunidade e como-foi-feito ainda usam `area-placeholder.tsx`.
-- `persona-list.tsx` é o único Client Component: primeiro toque, setas e posição do carrossel. O destaque é todo em CSS, e sem JavaScript cada personagem continua sendo um link.
+- `persona-list.tsx` é o único Client Component: escolhe o personagem na própria tela (clique, Espaço, Esc, "Voltar", clique fora), setas e posição do carrossel. O estado fica em atributos do DOM (`data-selected`, `hidden`, `aria-expanded`) e o CSS faz o resto; sem JavaScript cada personagem continua sendo um link. Detalhes em `docs/plans/home-selecao.md`.
+- O personagem é sempre `<a>`, nunca `<Link>`: o `<Link>` navegaria antes de a lista tratar o clique. Quem abre a área é o "Entrar" do painel.
+- A frase do personagem fica sobre a figura e usa só `--color-text`: é o único tom que passa em AA sobre a névoa com qualquer cor da arte atrás.
 - O cenário de sakura (`sakura-scene.tsx`, estilos em `home.css`, pétalas em `lib/sakura.ts`) é decorativo e não usa JavaScript: cores só pelos tokens `--color-scene-*`, números das pétalas por `style`. Detalhes em `docs/plans/home-sakura.md`.
-- Todo texto da home fica sobre a névoa (`--color-scene-veil`). Texto novo na tela entra na lista `textBlocks` do teste de contraste em `e2e/home.spec.ts`.
+- Todo texto da home fica sobre a névoa (`--color-scene-veil`). Texto novo na tela entra nas listas `textBlocks` e `selectedBlocks` do teste de contraste em `e2e/home.spec.ts`.
 - Arte dos personagens em `public/_home/personas/`, decorativa (`alt=""`). A tabela `figures` de `lib/home.ts` diz o arquivo, a largura e a altura de cada um. Os quatro personagens (`recruiter`, `tech`, `client`, `community`) têm a arte final, em AVIF com WebP de reserva.
 - Arte nova: aparar as bordas transparentes, reduzir para 640 px de altura e salvar em AVIF (qualidade 50, cerca de 18 kB) e em WebP de reserva; depois atualizar a entrada em `figures` e medir com `pnpm lhci`. O PNG original não entra no repositório.
 - A imagem do primeiro personagem é o LCP da home: carrega com prioridade alta; as outras três são sob demanda e com prioridade baixa.

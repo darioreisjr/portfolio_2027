@@ -30,7 +30,6 @@ export interface Persona {
   /** Falso quando a área é de outro app: aí o link é `<a>`, nunca `<Link>`. */
   sameApp: boolean;
   phrase: string;
-  summary: string;
   badge: string;
   figure: Figure;
 }
@@ -40,6 +39,8 @@ export interface HomeModel {
   identity: { name: string; role: string } | null;
   title: string;
   enter: string;
+  /** Desfaz a escolha do personagem. */
+  back: string;
   pauseMotion: string;
   personas: Persona[];
   more: { href: string; label: string; sameApp: boolean };
@@ -61,6 +62,7 @@ export function buildHome(locale: Locale): HomeModel {
       : null,
     title: text.title,
     enter: text.enter,
+    back: text.back,
     pauseMotion: text.pauseMotion,
     personas: personaAreas.map((area) => {
       const route = routeOf(area);
@@ -69,7 +71,6 @@ export function buildHome(locale: Locale): HomeModel {
         href: pathFor(area, locale),
         sameApp: route.owner === 'web-next',
         phrase: text.personas[area].phrase,
-        summary: ui[locale].areas[area].description,
         badge: text.madeIn.replace('{tech}', route.framework),
         figure: {
           src: `${HOME_ASSETS_PATH}personas/${figures[area].file}`,

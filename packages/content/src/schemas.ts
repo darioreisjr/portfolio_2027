@@ -44,6 +44,8 @@ export const homeSchema = z
   .object({
     title: text,
     enter: text,
+    /** Desfaz a escolha do personagem. */
+    back: text,
     /** Rótulo do controle que pausa a animação do cenário. */
     pauseMotion: text,
     /** Precisa conter `{tech}`, trocado pelo nome da tecnologia da área. */

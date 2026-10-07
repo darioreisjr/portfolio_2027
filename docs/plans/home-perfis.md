@@ -2,6 +2,7 @@
 
 - Status: **aprovado** pelo autor em 2026-10-07 e implementado
 - Origem: entrevista com o autor, `discovery-analyst` e `architect`
+- **Substituído em parte** por `docs/plans/home-selecao.md` (2026-10-07): o cartão sob o personagem, o resumo da área, o recuo dos outros personagens e o "primeiro toque destaca, segundo abre" não valem mais. O que este documento diz sobre esses pontos fica como registro.
 
 **Objetivo:** `/`, `/en/`, `/es/` e `/pt-pt/` são um palco com quatro personagens que levam às áreas do recrutador, técnica, do cliente e da comunidade.
 

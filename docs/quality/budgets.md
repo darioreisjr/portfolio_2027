@@ -79,6 +79,8 @@ Com o seletor de tema (2026-10-07), o design system foi de 6,6 para 7,8 kB e tod
 
 Com as quatro artes finais dos personagens (2026-10-07, AVIF de 16 a 18 kB cada), a rota `/` mede Performance 98, LCP de 2,4 s, TBT de 45 ms e CLS 0. O JavaScript não mudou.
 
+Com a escolha do personagem na própria home (2026-10-07), a rota `/` mede 146,1 kB de JavaScript, Performance 98, LCP de 2,4 s, TBT de 45 a 58 ms e CLS 0.
+
 As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um terço do teto. O React e o Next.js já nascem perto do teto, com folga de cerca de 3 kB e, depois da tela de escolha de perfil, 5 kB; a primeira feature dessas áreas vai exigir carga sob demanda ou a decisão registrada de subir o teto.
 
 ## Outros recursos

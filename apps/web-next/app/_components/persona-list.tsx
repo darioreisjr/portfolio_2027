@@ -3,84 +3,131 @@
 import {
   useEffect,
   useRef,
-  type FocusEvent,
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
   type UIEvent,
 } from 'react';
 
-// Mesma largura do palco em home.css; abaixo dela a tela é um carrossel com a
-// legenda sempre visível, e um toque já abre a área.
-const STAGE_QUERY = '(min-width: 48rem)';
-
 const personaLinks = (list: HTMLElement) => [
   ...list.querySelectorAll<HTMLAnchorElement>('a.persona'),
 ];
 
-function clearActive(list: HTMLElement, except?: Element | null) {
-  for (const link of personaLinks(list)) {
-    if (link !== except) link.removeAttribute('data-active');
-  }
+const selectedItem = (list: HTMLElement) =>
+  list.querySelector<HTMLLIElement>(':scope > li[data-selected]');
+
+/** Escolhe um personagem: os outros somem (CSS) e o painel dele aparece. */
+function select(list: HTMLElement, item: HTMLLIElement) {
+  list.setAttribute('data-selected', '');
+  item.setAttribute('data-selected', '');
+  item.querySelector('a.persona')?.setAttribute('aria-expanded', 'true');
+  item.querySelector('.persona-actions')?.removeAttribute('hidden');
+  // O foco em "Entrar" faz o leitor de tela anunciar a frase e a tecnologia.
+  item.querySelector<HTMLAnchorElement>('.persona-enter')?.focus({ preventScroll: true });
+}
+
+/** Desfaz a escolha e devolve o foco ao personagem que estava escolhido. */
+function deselect(list: HTMLElement) {
+  const item = selectedItem(list);
+  if (!item) return;
+  list.removeAttribute('data-selected');
+  item.removeAttribute('data-selected');
+  item.querySelector('.persona-actions')?.setAttribute('hidden', '');
+  const link = item.querySelector<HTMLAnchorElement>('a.persona');
+  link?.setAttribute('aria-expanded', 'false');
+  link?.focus({ preventScroll: true });
 }
 
 /**
- * Único Client Component da home. O destaque é todo em CSS; aqui ficam só as
- * coisas que um link não faz sozinho: no toque, o primeiro destaca e o segundo
- * abre; no teclado, as setas andam entre os personagens; no carrossel,
- * `data-slide` diz qual personagem está à vista, para os pontinhos do CSS.
- * Sem JavaScript, cada personagem continua sendo um link comum.
+ * Único Client Component da home. Sem JavaScript, cada personagem é um link
+ * comum para a área. Com JavaScript, o clique escolhe o personagem na própria
+ * tela, e a área só abre pelo "Entrar". O estado fica em atributos do DOM (o
+ * CSS faz o resto), sem estado do React, então a lista nunca re-renderiza.
+ * Também cuida das setas do teclado e da posição do carrossel (`data-slide`).
  */
 export function PersonaList({ children }: { children: ReactNode }) {
   const listRef = useRef<HTMLUListElement>(null);
 
-  // Tocar fora da lista desfaz o destaque deixado pelo primeiro toque.
   useEffect(() => {
-    const onPointerDown = (event: PointerEvent) => {
-      const list = listRef.current;
-      if (list && !list.contains(event.target as Node)) clearActive(list);
+    const list = listRef.current;
+    if (!list) return;
+
+    // A partir daqui o personagem abre um painel em vez de navegar: é um botão
+    // que expande, e é assim que ele se apresenta a leitores de tela.
+    for (const link of personaLinks(list)) {
+      link.setAttribute('role', 'button');
+      link.setAttribute('aria-expanded', 'false');
+    }
+
+    const onKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') deselect(list);
     };
-    document.addEventListener('pointerdown', onPointerDown);
-    return () => document.removeEventListener('pointerdown', onPointerDown);
+    // Clicar fora desfaz. Controles da página (tema, pausa, links) não contam.
+    const onClick = (event: globalThis.MouseEvent) => {
+      // O personagem escolhido vai para o centro; o segundo clique de um duplo
+      // clique cai onde ele estava, e não é um pedido para desfazer.
+      if (event.detail > 1) return;
+      const target = event.target as Element;
+      if (selectedItem(list)?.contains(target)) return;
+      if (target.closest('a, button, input, label, ds-theme-toggle')) return;
+      deselect(list);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('click', onClick);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('click', onClick);
+    };
   }, []);
 
   function handleClick(event: MouseEvent<HTMLUListElement>) {
-    const link = (event.target as Element).closest<HTMLAnchorElement>('a.persona');
-    if (!link) return;
+    const list = event.currentTarget;
+    const target = event.target as Element;
 
-    // Só dedo: mouse e caneta já destacam pelo :hover antes do clique.
-    const isTouch = (event.nativeEvent as PointerEvent).pointerType === 'touch';
-    if (!isTouch || !window.matchMedia(STAGE_QUERY).matches || link.hasAttribute('data-active')) {
+    if (target.closest('.persona-back')) {
+      deselect(list);
       return;
     }
 
-    event.preventDefault();
-    clearActive(event.currentTarget, link);
-    link.setAttribute('data-active', '');
-    // Leva o foco junto, para leitores de tela anunciarem o personagem destacado.
-    link.focus({ preventScroll: true });
-  }
+    const link = target.closest<HTMLAnchorElement>('a.persona');
+    const item = link?.closest('li');
+    if (!link || !item) return;
+    // Ctrl, Shift e afins abrem a área em outra aba ou janela, como em qualquer link.
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
 
-  // O foco indo para outro personagem não pode deixar dois em destaque.
-  function handleFocus(event: FocusEvent<HTMLUListElement>) {
-    clearActive(event.currentTarget, (event.target as Element).closest('a.persona'));
+    event.preventDefault();
+    // Duplo clique escolhe uma vez só; o segundo clique não desfaz.
+    if (event.detail > 1) return;
+
+    if (item.hasAttribute('data-selected')) deselect(list);
+    else select(list, item);
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLUListElement>) {
-    const links = personaLinks(event.currentTarget);
-    const current = links.indexOf(document.activeElement as HTMLAnchorElement);
-    if (current === -1) return;
+    const list = event.currentTarget;
+    const link = (event.target as Element).closest<HTMLAnchorElement>('a.persona');
+    if (!link) return;
 
-    const target = {
+    // Um link não reage ao Espaço; um botão, sim.
+    if (event.key === ' ') {
+      event.preventDefault();
+      link.click();
+      return;
+    }
+    if (selectedItem(list)) return;
+
+    const links = personaLinks(list);
+    const current = links.indexOf(link);
+    const next = {
       ArrowRight: links[current + 1],
       ArrowLeft: links[current - 1],
       Home: links[0],
       End: links.at(-1),
     }[event.key];
-    if (!target) return;
+    if (!next) return;
 
     event.preventDefault();
-    target.focus();
+    next.focus();
   }
 
   function handleScroll(event: UIEvent<HTMLUListElement>) {
@@ -96,7 +143,6 @@ export function PersonaList({ children }: { children: ReactNode }) {
       ref={listRef}
       className="personas"
       onClick={handleClick}
-      onFocus={handleFocus}
       onKeyDown={handleKeyDown}
       onScroll={handleScroll}
     >

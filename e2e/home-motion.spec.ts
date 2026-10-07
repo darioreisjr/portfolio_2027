@@ -52,6 +52,39 @@ test.describe('a tela cabe na janela, sem rolagem', () => {
         await context.close();
       });
     }
+
+    test(`com um personagem escolhido em ${viewport.width}x${viewport.height}`, async ({
+      browser,
+    }) => {
+      const context = await browser.newContext({ viewport });
+      const page = await context.newPage();
+      await page.goto('/es/');
+      const figure = page.locator('.persona-figure').first();
+      const atRest = (await figure.boundingBox())?.height ?? 0;
+
+      await page.getByRole('button', { name: 'Estoy contratando' }).click();
+      await expect(page.getByRole('button', { name: 'Volver' })).toBeVisible();
+
+      const fit = await page.evaluate(() => ({
+        page: document.documentElement.scrollHeight,
+        pageWidth: document.documentElement.scrollWidth,
+        window: innerHeight,
+        windowWidth: innerWidth,
+        lastControl: document.querySelector('.home-motion')?.getBoundingClientRect().bottom ?? 0,
+        back:
+          document.querySelector('li[data-selected] .persona-back')?.getBoundingClientRect()
+            .bottom ?? 0,
+      }));
+      expect(fit.page, 'a página não rola').toBeLessThanOrEqual(fit.window);
+      expect(fit.pageWidth, 'a página não rola de lado').toBeLessThanOrEqual(fit.windowWidth);
+      expect(fit.lastControl, 'o último controle está à vista').toBeLessThanOrEqual(fit.window);
+      expect(fit.back, '"Voltar" está à vista').toBeLessThanOrEqual(fit.window);
+
+      // Sozinho no palco o personagem não encolhe; no carrossel fica igual.
+      const selected = (await figure.boundingBox())?.height ?? 0;
+      expect(selected).toBeGreaterThanOrEqual(Math.floor(atRest));
+      await context.close();
+    });
   }
 
   test('em janela muito baixa a rolagem volta e o personagem mantém o tamanho', async ({

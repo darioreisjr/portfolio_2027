@@ -171,7 +171,8 @@ Textos da tela de escolha de perfil. Sem `status`, como `ui`. Ficam fora de `ui`
 | Campo                      | Tipo                                                     | Obrigatório |
 | -------------------------- | -------------------------------------------------------- | ----------- |
 | `title`                    | string (a chamada)                                       | sim         |
-| `enter`                    | string (rótulo do botão)                                 | sim         |
+| `enter`                    | string (rótulo do link que abre a área)                  | sim         |
+| `back`                     | string (rótulo do botão que desfaz a escolha)            | sim         |
 | `pauseMotion`              | string (rótulo do controle que pausa a animação)         | sim         |
 | `madeIn`                   | string com o marcador `{tech}`                           | sim         |
 | `personas.<perfil>.phrase` | string, para `recruiter`, `tech`, `client` e `community` | sim         |

@@ -1,7 +1,7 @@
-/* Tela de escolha de perfil. Em tela estreita é um carrossel, um personagem por
-   vez, com a legenda sempre visível. A partir de 48rem vira um palco: ninguém em
-   destaque até o visitante apontar ou focar um personagem.
-   (A mesma largura está em _components/persona-list.tsx.) */
+/* Tela de escolha de perfil. Em repouso mostra só os quatro personagens. A
+   frase de cada um aparece sobre a base da figura. Escolher um personagem
+   esconde os outros e mostra o painel dele (tecnologia, Entrar, Voltar).
+   Em tela estreita é um carrossel, um personagem por vez. */
 
 /* As cores do cenário passam por propriedades registradas: só assim o navegador
    consegue interpolar o degradê do céu quando o tema troca. */
@@ -96,11 +96,12 @@
   text-align: center;
 }
 
-/* Névoa atrás de cada bloco de texto: uma pétala, um galho ou a lua passando
-   por trás não derruba o contraste (ver o teste de contraste dos tokens). */
+/* Névoa atrás de cada bloco de texto: uma pétala, um galho, a lua ou a própria
+   arte do personagem por trás não derrubam o contraste (ver o teste de
+   contraste dos tokens). */
 .home-identity,
 .home h1,
-.persona-caption,
+.persona-phrase,
 .home-more,
 .home-motion {
   padding: var(--space-block-xs) var(--space-inline-sm);
@@ -132,12 +133,12 @@
 }
 
 .personas {
-  /* Só da tela: tamanho da figura e intensidade do destaque. */
+  /* Só da tela: altura da figura (em repouso e escolhida), quanto ela cresce
+     no destaque e quanto do vizinho aparece de cada lado no carrossel. */
   --figure-height: clamp(11rem, 40svh, 20rem);
+  --figure-max: 20rem;
+  --figure-max-selected: 28rem;
   --lift: 0.12;
-  --recede: 0.06;
-  --fade: 0.6;
-  /* Quanto do vizinho aparece de cada lado no carrossel. */
   --peek: 12%;
 
   display: flex;
@@ -151,22 +152,25 @@
 }
 
 .personas > li {
-  flex: 0 0 100%;
-  scroll-snap-align: center;
-}
-
-.persona {
-  /* 1 no personagem em destaque; 1 em todos quando algum está em destaque. */
-  --active: 0;
-  --dimmed: 0;
-
   display: flex;
+  flex: 0 0 100%;
   flex-direction: column;
   align-items: center;
   gap: var(--space-block-md);
+  scroll-snap-align: center;
+}
+
+/* Figura e frase ocupam a mesma célula: a frase fica sobre a base da figura. */
+.persona {
+  /* 1 no personagem sob o mouse, em foco ou escolhido. */
+  --active: 0;
+
+  display: grid;
+  justify-items: center;
   padding: var(--space-block-md) var(--space-inline-sm);
   color: var(--color-text);
   text-decoration: none;
+  cursor: pointer;
 }
 
 .persona:focus-visible {
@@ -180,35 +184,75 @@
 }
 
 .persona-figure {
+  grid-area: 1 / 1;
   width: auto;
   height: var(--figure-height);
 }
 
-.persona-caption {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-block-sm);
-}
-
+/* Sempre em `--color-text`: é o único tom que passa em AA sobre a névoa com
+   qualquer cor da arte atrás. */
 .persona-phrase {
+  grid-area: 1 / 1;
+  align-self: end;
+  z-index: 1;
+  max-width: 100%;
+  margin-bottom: var(--space-block-sm);
+  color: var(--color-text);
   font-size: var(--text-size-lg);
   font-weight: var(--text-weight-strong);
 }
 
-.persona-summary {
-  max-width: 18rem;
-  color: var(--color-text-muted);
-  font-size: var(--text-size-sm);
+/* Painel do personagem escolhido. */
+.persona-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-block-md);
+}
+
+.persona-actions[hidden] {
+  display: none;
+}
+
+.persona-enter,
+.persona-back {
+  box-sizing: border-box;
+  min-width: 9rem;
+  padding: var(--space-block-sm) var(--space-inline-lg);
+  border: var(--border-width-control) solid transparent;
+  border-radius: var(--radius-full);
+  font: inherit;
+  font-weight: var(--text-weight-strong);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .persona-enter {
-  margin-top: var(--space-block-xs);
-  padding: var(--space-block-sm) var(--space-inline-lg);
-  border-radius: var(--radius-full);
   background: var(--color-accent);
   color: var(--color-on-accent);
-  font-weight: var(--text-weight-strong);
+}
+
+.persona-back {
+  border-color: var(--color-text-muted);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.persona-enter:focus-visible,
+.persona-back:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Carrossel com um personagem escolhido: a rolagem trava no lugar e os outros
+   somem sem mudar a posição de quem ficou. */
+.personas[data-selected] {
+  overflow-x: hidden;
+}
+
+.personas[data-selected] > li:not([data-selected]) {
+  visibility: hidden;
 }
 
 .persona-dots {
@@ -217,6 +261,10 @@
   display: flex;
   justify-content: center;
   gap: var(--space-inline-sm);
+}
+
+.personas[data-selected] ~ .persona-dots {
+  visibility: hidden;
 }
 
 .persona-dots span {
@@ -243,6 +291,16 @@
   color: var(--color-text-muted);
 }
 
+/* No carrossel o painel guarda o lugar mesmo oculto, para a figura não mudar
+   de tamanho quando o personagem é escolhido. */
+@media (max-width: 47.99rem) {
+  .persona-actions[hidden] {
+    display: flex;
+    visibility: hidden;
+  }
+}
+
+/* Palco: os quatro lado a lado. */
 @media (min-width: 48rem) {
   .personas {
     justify-content: center;
@@ -261,52 +319,73 @@
     display: none;
   }
 
-  .personas:has(.persona:is(:focus-visible, [data-active])) .persona {
-    --dimmed: 1;
-  }
-
-  .persona:is(:focus-visible, [data-active]) {
+  .persona:focus-visible,
+  li[data-selected] > .persona {
     --active: 1;
   }
 
-  /* Só onde existe ponteiro de verdade; em toque o :hover fica preso. */
-  @media (hover: hover) {
-    .personas:has(.persona:hover) .persona {
-      --dimmed: 1;
-    }
-
-    .persona:hover {
-      --active: 1;
-    }
-  }
-
-  /* O destaque avança e cresce; os outros recuam e esmaecem. */
+  /* O personagem em destaque cresce um pouco. */
   .persona-figure {
-    --others: calc(var(--dimmed) * (1 - var(--active)));
-
     transform-origin: center bottom;
-    scale: calc(1 + var(--lift) * var(--active) - var(--recede) * var(--others));
-    opacity: calc(1 - var(--fade) * var(--others));
-    transition:
-      scale var(--motion-duration-md) var(--motion-ease-out),
-      opacity var(--motion-duration-md) var(--motion-ease-out);
+    scale: calc(1 + var(--lift) * var(--active));
+    transition: scale var(--motion-duration-md) var(--motion-ease-out);
   }
 
-  /* Fica no DOM e na árvore de acessibilidade; só some da vista. */
-  .persona-caption {
+  /* Escolhido: os outros saem de cena e ele vai para o centro, com o painel
+     ao lado (abaixo, o painel tiraria altura da figura). */
+  .personas[data-selected] {
+    overflow: visible;
+  }
+
+  .personas[data-selected] > li:not([data-selected]) {
+    display: none;
+  }
+
+  .personas > li[data-selected] {
+    flex: 0 1 auto;
+    flex-direction: row;
+    justify-content: center;
+    gap: var(--space-inline-lg);
+    animation: persona-arrive var(--motion-duration-md) var(--motion-ease-out);
+  }
+
+  li[data-selected] .persona-figure {
+    scale: 1;
+  }
+}
+
+/* Com mouse a tela fica limpa: a frase só aparece em quem está sob o ponteiro,
+   em foco ou escolhido. Sem mouse (tablet) ela fica sempre visível, senão a
+   pessoa teria de tocar às cegas. */
+@media (min-width: 48rem) and (hover: hover) {
+  .persona:hover {
+    --active: 1;
+  }
+
+  .persona-phrase {
     opacity: var(--active);
     transition: opacity var(--motion-duration-md) var(--motion-ease-out);
   }
 }
 
+@keyframes persona-arrive {
+  from {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .persona-figure,
-  .persona-caption {
+  .persona-phrase {
     transition: none;
   }
 
   .persona-figure {
     scale: 1;
+  }
+
+  .personas > li[data-selected] {
+    animation: none;
   }
 }
 
@@ -346,8 +425,7 @@
   }
 
   /* Duas linhas compartilhadas por todos os personagens: a das figuras, com o
-     espaço que sobra, e a das legendas, com a altura da maior. Assim os quatro
-     ficam do mesmo tamanho, mesmo com legendas de comprimentos diferentes. */
+     espaço que sobra, e a dos painéis. Assim os quatro ficam do mesmo tamanho. */
   .personas {
     display: grid;
     flex: 1;
@@ -358,32 +436,34 @@
     min-height: 0;
   }
 
-  .personas > li,
-  .persona {
+  .personas > li {
     display: grid;
     grid-row: span 2;
     grid-template-rows: subgrid;
+    justify-items: center;
     min-width: 0;
     min-height: 0;
   }
 
+  /* Linhas explícitas: a colocação automática punha os dois na mesma célula. */
   .persona {
-    row-gap: var(--space-block-md);
-    justify-items: center;
+    grid-row: 1;
+    grid-template-rows: minmax(0, 1fr);
+    width: 100%;
+    min-height: 0;
+    box-sizing: border-box;
   }
 
-  /* Linha explícita: a colocação automática punha figura e legenda na mesma célula. */
-  .persona-caption {
+  .persona-actions {
     grid-row: 2;
   }
 
   .persona-figure {
-    grid-row: 1;
     align-self: end;
     width: 100%;
     height: 100%;
     min-height: 0;
-    max-height: 20rem;
+    max-height: var(--figure-max);
     object-fit: contain;
     object-position: center bottom;
   }
@@ -393,6 +473,27 @@
   .personas {
     grid-auto-columns: minmax(0, 15rem);
     justify-content: center;
+  }
+
+  /* Escolhido: uma coluna só, do tamanho do conteúdo, com figura e painel lado a lado. */
+  .personas[data-selected] {
+    grid-auto-columns: auto;
+  }
+
+  .personas > li[data-selected] {
+    display: flex;
+    grid-row: 1 / span 2;
+    align-items: center;
+  }
+
+  li[data-selected] > .persona {
+    width: auto;
+    height: 100%;
+  }
+
+  li[data-selected] .persona-figure {
+    width: auto;
+    max-height: var(--figure-max-selected);
   }
 }
 

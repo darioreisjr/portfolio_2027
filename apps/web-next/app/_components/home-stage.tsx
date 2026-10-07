@@ -6,18 +6,24 @@ import { buildHome, type Persona } from '../../lib/home';
 import { PersonaList } from './persona-list';
 import { SakuraScene } from './sakura-scene';
 
-interface PersonaLinkProps {
+interface PersonaItemProps {
   persona: Persona;
   enter: string;
+  back: string;
   /** O primeiro personagem é o que aparece no celular: carrega antes dos outros. */
   first: boolean;
 }
 
-function PersonaLink({ persona, enter, first }: PersonaLinkProps) {
-  const content = (
+function PersonaItem({ persona, enter, back, first }: PersonaItemProps) {
+  const ids = {
+    actions: `persona-actions-${persona.area}`,
+    phrase: `persona-phrase-${persona.area}`,
+    tech: `persona-tech-${persona.area}`,
+  };
+
+  const figure = (
     <>
       {/* Decorativa: quem diz o que é o perfil é a frase. */}
-      {/* eslint-disable-next-line @next/next/no-img-element -- export estático, sem otimizador */}
       <picture>
         {persona.figure.avif && <source type="image/avif" srcSet={persona.figure.avif} />}
         <img
@@ -32,31 +38,42 @@ function PersonaLink({ persona, enter, first }: PersonaLinkProps) {
           decoding="async"
         />
       </picture>
-      <span className="persona-caption">
-        <span className="persona-phrase">{persona.phrase}</span>
-        <span className="persona-summary">{persona.summary}</span>
-        <ds-badge>{persona.badge}</ds-badge>
-        <span className="persona-enter" aria-hidden="true">
-          {enter}
-        </span>
+      <span className="persona-phrase" id={ids.phrase}>
+        {persona.phrase}
       </span>
     </>
   );
 
   // Áreas do shell são outro documento: <a>, nunca <Link> (ADR 0002).
-  return persona.sameApp ? (
-    <Link className="persona" href={persona.href}>
-      {content}
-    </Link>
-  ) : (
-    <a className="persona" href={persona.href}>
-      {content}
-    </a>
+  const Anchor = persona.sameApp ? Link : 'a';
+
+  return (
+    <li>
+      {/* Sem JavaScript é um link para a área. Com JavaScript, persona-list.tsx
+          faz dele o botão que escolhe o personagem e abre o painel abaixo.
+          Sempre <a>: o <Link> navegaria antes de a lista tratar o clique. */}
+      <a className="persona" href={persona.href} aria-controls={ids.actions}>
+        {figure}
+      </a>
+      <div className="persona-actions" id={ids.actions} hidden>
+        <ds-badge id={ids.tech}>{persona.badge}</ds-badge>
+        <Anchor
+          className="persona-enter"
+          href={persona.href}
+          aria-describedby={`${ids.phrase} ${ids.tech}`}
+        >
+          {enter}
+        </Anchor>
+        <button type="button" className="persona-back">
+          {back}
+        </button>
+      </div>
+    </li>
   );
 }
 
 export function HomeStage({ locale }: { locale: Locale }) {
-  const { identity, title, enter, pauseMotion, personas, more } = buildHome(locale);
+  const { identity, title, enter, back, pauseMotion, personas, more } = buildHome(locale);
 
   return (
     <main className="home">
@@ -71,9 +88,13 @@ export function HomeStage({ locale }: { locale: Locale }) {
       <nav aria-labelledby="home-title">
         <PersonaList>
           {personas.map((persona, index) => (
-            <li key={persona.area}>
-              <PersonaLink persona={persona} enter={enter} first={index === 0} />
-            </li>
+            <PersonaItem
+              key={persona.area}
+              persona={persona}
+              enter={enter}
+              back={back}
+              first={index === 0}
+            />
           ))}
         </PersonaList>
         {/* Só no carrossel: indica quantos personagens há e qual está à vista. */}
@@ -90,7 +111,7 @@ export function HomeStage({ locale }: { locale: Locale }) {
           <a href={more.href}>{more.label}</a>
         )}
       </p>
-      {/* No fim do documento: o primeiro Tab continua caindo no primeiro personagem. */}
+      {/* No fim do documento, depois dos personagens na ordem do Tab. */}
       <label className="home-motion">
         <input type="checkbox" />
         {pauseMotion}

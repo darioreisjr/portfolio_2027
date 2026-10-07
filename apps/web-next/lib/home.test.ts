@@ -38,10 +38,11 @@ describe('tela de escolha de perfil', () => {
     expect(sameApp.map((persona) => persona.area)).toEqual(['community']);
   });
 
-  it('usa a frase e o resumo do idioma', () => {
-    const [recruiter] = buildHome('es').personas;
-    expect(recruiter?.phrase).toBe('Estoy contratando');
-    expect(recruiter?.summary).toContain('contratando');
+  it('usa a frase e os rótulos do idioma', () => {
+    const { personas, enter, back } = buildHome('es');
+    expect(personas[0]?.phrase).toBe('Estoy contratando');
+    expect(enter).toBe('Entrar');
+    expect(back).toBe('Volver');
   });
 
   it('dá a cada personagem uma figura com dimensões', () => {

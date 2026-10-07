@@ -26,7 +26,7 @@
 | Pétalas            | Tabela fixa de 20 em `lib/sakura.ts`, sem sorteio. Cada uma leva só números no `style`: posição, tamanho, opacidade, ritmo                    |
 | Animação           | Um `@keyframes` por pétala (queda, balanço e giro juntos) e um balanço leve dos galhos. Só `translate` e `rotate`                             |
 | Astro              | Sol enevoado de dia, lua à noite, meio encoberto pelo galho direito (ver a segunda rodada, abaixo)                                            |
-| Névoa              | `--color-scene-veil` atrás de título, legendas, link e controle de pausa                                                                      |
+| Névoa              | `--color-scene-veil` atrás de título, frases, link e controle de pausa                                                                        |
 | Pausa              | Caixa de seleção "Pausar animação" no fim da tela; o CSS lê o estado com `:has(:checked)`                                                     |
 | Movimento reduzido | Pétalas paradas no ar, galhos imóveis, controle de pausa escondido                                                                            |
 | Celular            | Metade das pétalas e galhos proporcionalmente maiores                                                                                         |

@@ -170,18 +170,16 @@ test.describe('home no celular', () => {
       const box = (selector: string) => document.querySelector(selector)?.getBoundingClientRect();
       const button = box('ds-theme-toggle');
       if (!button) throw new Error('sem botão de tema');
-      return ['.home h1', '.home-identity', '.persona-caption', '.sakura-orb'].filter(
-        (selector) => {
-          const other = box(selector);
-          return (
-            other &&
-            button.left < other.right &&
-            other.left < button.right &&
-            button.top < other.bottom &&
-            other.top < button.bottom
-          );
-        },
-      );
+      return ['.home h1', '.home-identity', '.persona-phrase', '.sakura-orb'].filter((selector) => {
+        const other = box(selector);
+        return (
+          other &&
+          button.left < other.right &&
+          other.left < button.right &&
+          button.top < other.bottom &&
+          other.top < button.bottom
+        );
+      });
     });
     expect(overlaps).toEqual([]);
   });

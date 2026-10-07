@@ -75,8 +75,10 @@ test('navega da home pelas três áreas de MFE e volta ao Next.js', async ({ pag
   const errors = failOnBrowserErrors(page);
   await page.goto('/');
 
-  // Na home o caminho do recrutador é o personagem com a frase dele.
-  await page.getByRole('link', { name: /Estou contratando/ }).click();
+  // Na home o caminho do recrutador é o personagem com a frase dele: escolher
+  // o personagem abre o painel, e o "Entrar" leva à área.
+  await page.getByRole('button', { name: 'Estou contratando' }).click();
+  await page.getByRole('link', { name: 'Entrar' }).click();
   await expect(page).toHaveURL(/\/recrutador\/$/);
   await expect(page.locator('mfe-recrutador')).toContainText('Olá');
 
