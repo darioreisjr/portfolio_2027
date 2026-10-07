@@ -1,6 +1,5 @@
 import { home } from '@portfolio/content/home';
 import { profile } from '@portfolio/content/profile';
-import { ui } from '@portfolio/content/ui';
 import { HOME_ASSETS_PATH, pathFor, routes, type AreaId, type Locale } from '@portfolio/contracts';
 
 export const personaAreas = ['recruiter', 'tech', 'client', 'community'] as const;
@@ -43,7 +42,6 @@ export interface HomeModel {
   back: string;
   pauseMotion: string;
   personas: Persona[];
-  more: { href: string; label: string; sameApp: boolean };
 }
 
 const routeOf = (area: AreaId) => {
@@ -80,10 +78,5 @@ export function buildHome(locale: Locale): HomeModel {
         },
       };
     }),
-    more: {
-      href: pathFor('how-it-was-built', locale),
-      label: ui[locale].areas['how-it-was-built'].title,
-      sameApp: routeOf('how-it-was-built').owner === 'web-next',
-    },
   };
 }

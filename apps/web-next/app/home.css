@@ -102,7 +102,6 @@
 .home-identity,
 .home h1,
 .persona-phrase,
-.home-more,
 .home-motion {
   padding: var(--space-block-xs) var(--space-inline-sm);
   border-radius: var(--radius-md);
@@ -280,15 +279,6 @@
 .personas[data-slide='2'] ~ .persona-dots span:nth-child(3),
 .personas[data-slide='3'] ~ .persona-dots span:nth-child(4) {
   background: var(--color-accent);
-}
-
-.home-more {
-  margin: var(--space-block-md) var(--space-inline-md) 0;
-  font-size: var(--text-size-sm);
-}
-
-.home-more a {
-  color: var(--color-text-muted);
 }
 
 /* No carrossel o painel guarda o lugar mesmo oculto, para a figura não mudar

@@ -296,18 +296,9 @@ test.describe('home em tela larga (palco)', () => {
     await context.close();
   });
 
-  test('liga para "Como foi feito"', async ({ page }) => {
+  test('não tem link para "Como foi feito"', async ({ page }) => {
     await openHome(page);
-    await page.getByRole('link', { name: 'Como foi feito' }).click();
-    await expect(page).toHaveURL(/\/como-foi-feito\/$/);
-  });
-
-  test('"Como foi feito" continua à mão com um personagem escolhido', async ({ page }) => {
-    await openHome(page);
-    await personas(page).nth(0).click();
-    await expectSelected(page, 0);
-    await page.getByRole('link', { name: 'Como foi feito' }).click();
-    await expect(page).toHaveURL(/\/como-foi-feito\/$/);
+    await expect(page.getByRole('link', { name: 'Como foi feito' })).toHaveCount(0);
   });
 });
 
@@ -474,12 +465,11 @@ async function worstContrast(page: Page, selectors: string[]): Promise<Record<st
   );
 }
 
-const textBlocks = ['.home h1', '.persona .persona-phrase', '.home-more a', '.home-motion'];
+const textBlocks = ['.home h1', '.persona .persona-phrase', '.home-motion'];
 const selectedBlocks = [
   '.home h1',
   'li[data-selected] .persona-phrase',
   'li[data-selected] .persona-back',
-  '.home-more a',
   '.home-motion',
 ];
 

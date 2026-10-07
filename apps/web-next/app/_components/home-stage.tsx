@@ -73,7 +73,7 @@ function PersonaItem({ persona, enter, back, first }: PersonaItemProps) {
 }
 
 export function HomeStage({ locale }: { locale: Locale }) {
-  const { identity, title, enter, back, pauseMotion, personas, more } = buildHome(locale);
+  const { identity, title, enter, back, pauseMotion, personas } = buildHome(locale);
 
   return (
     <main className="home">
@@ -104,13 +104,6 @@ export function HomeStage({ locale }: { locale: Locale }) {
           ))}
         </div>
       </nav>
-      <p className="home-more">
-        {more.sameApp ? (
-          <Link href={more.href}>{more.label}</Link>
-        ) : (
-          <a href={more.href}>{more.label}</a>
-        )}
-      </p>
       {/* No fim do documento, depois dos personagens na ordem do Tab. */}
       <label className="home-motion">
         <input type="checkbox" />
