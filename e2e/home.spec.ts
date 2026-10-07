@@ -55,13 +55,17 @@ test.describe('home em tela larga (palco)', () => {
         await expect(personas(page).nth(index)).toHaveAttribute('href', href);
       }
       await expect(page.locator('a.persona ds-badge')).toHaveCount(4);
-      // As quatro silhuetas carregaram de verdade.
-      const loaded = await page
-        .locator('img.persona-figure')
-        .evaluateAll((images) =>
-          images.map((image) => (image as HTMLImageElement).naturalWidth > 0),
-        );
-      expect(loaded).toEqual([true, true, true, true]);
+      // As quatro figuras carregaram de verdade. Três são sob demanda, então
+      // podem chegar um instante depois da página.
+      await expect
+        .poll(() =>
+          page
+            .locator('img.persona-figure')
+            .evaluateAll((images) =>
+              images.map((image) => (image as HTMLImageElement).naturalWidth > 0),
+            ),
+        )
+        .toEqual([true, true, true, true]);
 
       await expectAccessible(page);
       expect(errors).toEqual([]);

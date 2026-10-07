@@ -11,8 +11,9 @@ Páginas com HTML completo para SEO: `/`, `/comunidade`, `/como-foi-feito` e as 
 - `persona-list.tsx` é o único Client Component: primeiro toque, setas e posição do carrossel. O destaque é todo em CSS, e sem JavaScript cada personagem continua sendo um link.
 - O cenário de sakura (`sakura-scene.tsx`, estilos em `home.css`, pétalas em `lib/sakura.ts`) é decorativo e não usa JavaScript: cores só pelos tokens `--color-scene-*`, números das pétalas por `style`. Detalhes em `docs/plans/home-sakura.md`.
 - Todo texto da home fica sobre a névoa (`--color-scene-veil`). Texto novo na tela entra na lista `textBlocks` do teste de contraste em `e2e/home.spec.ts`.
-- Arte dos personagens em `public/_home/personas/`, decorativa (`alt=""`). A tabela `figures` de `lib/home.ts` diz o arquivo, a largura e a altura de cada um. Recrutador já tem a arte final (`recruiter.webp`); os outros três são silhuetas SVG provisórias.
-- Arte nova: aparar as bordas transparentes, reduzir para 720 px de altura e salvar em WebP (meta: até 60 kB), depois atualizar a entrada em `figures` e medir com `pnpm lhci`. O PNG original não entra no repositório.
+- Arte dos personagens em `public/_home/personas/`, decorativa (`alt=""`). A tabela `figures` de `lib/home.ts` diz o arquivo, a largura e a altura de cada um. Recrutador (`recruiter`) e técnico (`tech`) já têm a arte final, em AVIF com WebP de reserva; cliente e comunidade ainda são silhuetas SVG provisórias.
+- Arte nova: aparar as bordas transparentes, reduzir para 720 px de altura e salvar em AVIF (qualidade 55, cerca de 24 kB) e em WebP de reserva; depois atualizar a entrada em `figures` e medir com `pnpm lhci`. O PNG original não entra no repositório.
+- A imagem do primeiro personagem é o LCP da home: carrega com prioridade alta; as outras três são sob demanda.
 - Next.js fixado em 16.3.8. O `404.html` gerado ainda sai sem `lang`.
 - Server Components por padrão. Client Component só onde há interação ou uso de custom element.
 - O layout carrega o design system e os tokens uma vez. Componentes do design system não renderizam no servidor: o conteúdo precisa ser legível antes do upgrade (ADR 0003).

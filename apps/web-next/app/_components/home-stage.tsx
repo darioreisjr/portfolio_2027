@@ -6,18 +6,32 @@ import { buildHome, type Persona } from '../../lib/home';
 import { PersonaList } from './persona-list';
 import { SakuraScene } from './sakura-scene';
 
-function PersonaLink({ persona, enter }: { persona: Persona; enter: string }) {
+interface PersonaLinkProps {
+  persona: Persona;
+  enter: string;
+  /** O primeiro personagem é o que aparece no celular: carrega antes dos outros. */
+  first: boolean;
+}
+
+function PersonaLink({ persona, enter, first }: PersonaLinkProps) {
   const content = (
     <>
       {/* Decorativa: quem diz o que é o perfil é a frase. */}
       {/* eslint-disable-next-line @next/next/no-img-element -- export estático, sem otimizador */}
-      <img
-        className="persona-figure"
-        src={persona.figure.src}
-        alt=""
-        width={persona.figure.width}
-        height={persona.figure.height}
-      />
+      <picture>
+        {persona.figure.avif && <source type="image/avif" srcSet={persona.figure.avif} />}
+        <img
+          className="persona-figure"
+          src={persona.figure.src}
+          alt=""
+          width={persona.figure.width}
+          height={persona.figure.height}
+          // No carrossel os outros três estão fora da tela; só baixam quando chegam perto.
+          loading={first ? 'eager' : 'lazy'}
+          fetchPriority={first ? 'high' : 'auto'}
+          decoding="async"
+        />
+      </picture>
       <span className="persona-caption">
         <span className="persona-phrase">{persona.phrase}</span>
         <span className="persona-summary">{persona.summary}</span>
@@ -56,9 +70,9 @@ export function HomeStage({ locale }: { locale: Locale }) {
       <h1 id="home-title">{title}</h1>
       <nav aria-labelledby="home-title">
         <PersonaList>
-          {personas.map((persona) => (
+          {personas.map((persona, index) => (
             <li key={persona.area}>
-              <PersonaLink persona={persona} enter={enter} />
+              <PersonaLink persona={persona} enter={enter} first={index === 0} />
             </li>
           ))}
         </PersonaList>

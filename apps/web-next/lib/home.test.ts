@@ -47,6 +47,7 @@ describe('tela de escolha de perfil', () => {
   it('dá a cada personagem uma figura com dimensões', () => {
     for (const { figure } of buildHome('pt-BR').personas) {
       expect(figure.src).toMatch(/^\/_home\/personas\/[a-z]+\.(svg|webp)$/);
+      if (figure.avif) expect(figure.avif).toMatch(/\.avif$/);
       expect(figure.width).toBeGreaterThan(0);
       expect(figure.height).toBeGreaterThan(figure.width);
     }
