@@ -1,6 +1,6 @@
 # Modelo de conteúdo
 
-Status: rascunho para aprovação. Modelado a partir das seções do `docs/product/brief.md`; ainda não há dados reais.
+Status: rascunho para aprovação. Implementado até agora em `packages/content`: `ui/<locale>.json` e `profile.json` (sem `photo` e `cv`). Modelado a partir das seções do `docs/product/brief.md`; ainda não há dados reais.
 
 Todo o conteúdo vive em `packages/content` como JSON. Os apps só leem conteúdo por esse pacote. A ferramenta de validação e a geração de tipos são definidas no bootstrap (Fase 3).
 
@@ -24,7 +24,7 @@ type Localized = Record<Locale, string>;
 
 Exemplo: `{ "pt-BR": "...", "en": "...", "es": "...", "pt-PT": "..." }`.
 
-- Item `draft`: só `pt-BR` é obrigatório.
+- Item `draft`: só `pt-BR` é obrigatório. Rascunhos ficam fora do build de produção; em desenvolvimento entram com `CONTENT_INCLUDE_DRAFTS=1`.
 - Item `published`: os quatro idiomas são obrigatórios e não vazios. A validação bloqueia o build se faltar algum.
 - Nomes próprios (empresa, instituição, tecnologia) são `string` simples, sem tradução.
 
@@ -40,6 +40,7 @@ type Audience = 'recruiter' | 'tech' | 'client' | 'community';
 
 | Campo             | Tipo                                                          | Obrigatório |
 | ----------------- | ------------------------------------------------------------- | ----------- |
+| `status`          | `"draft"` ou `"published"`                                    | sim         |
 | `name`            | string                                                        | sim         |
 | `role`            | Localized                                                     | sim         |
 | `tagline`         | Localized (uma frase, usada na home)                          | sim         |
@@ -52,6 +53,8 @@ type Audience = 'recruiter' | 'tech' | 'client' | 'community';
 
 ### `contacts.json` (lista)
 
+Cada item também tem `status`, como nos demais arquivos (decidido em 2026-10-06).
+
 | Campo        | Tipo                                                  | Obrigatório |
 | ------------ | ----------------------------------------------------- | ----------- |
 | `id`         | string                                                | sim         |
@@ -61,6 +64,8 @@ type Audience = 'recruiter' | 'tech' | 'client' | 'community';
 | `primaryFor` | Audience[] (áreas em que o canal aparece em destaque) | não         |
 
 ### `skills.json` (lista)
+
+Cada item também tem `status`.
 
 | Campo      | Tipo                                                                                    | Obrigatório |
 | ---------- | --------------------------------------------------------------------------------------- | ----------- |
@@ -160,6 +165,8 @@ Um projeto tem duas narrativas: `technical` (área técnica) e `outcome` (área 
 O corpo do artigo dentro do site não está modelado; ver `docs/open-questions.md`.
 
 ### `ui/<locale>.json` (um por idioma)
+
+Sem `status`: é texto de interface, não conteúdo sobre o autor.
 
 Textos de interface (rótulos de navegação, botões, títulos de seção), separados do conteúdo sobre o autor. Chaves idênticas nos quatro arquivos; a validação falha se alguma faltar.
 

@@ -9,9 +9,17 @@ Serviços, depoimentos, projetos na narrativa de resultado, canal de orçamento.
 - Tags do design system direto no JSX, com declaração de tipos; sem wrapper.
 - Dados de `packages/content`: `services`, `testimonials`, `projects` (narrativa `outcome`), `contacts`, `ui`.
 - Não empacota o design system nem o Lit.
-- Roda sozinho com uma página HTML mínima própria.
+- Raiz em shadow DOM (`attachShadow` na classe do elemento).
+- Roda sozinho com `index.html` e `dev/main.ts`, que carregam tokens e design system no lugar do shell.
 - Teto de JavaScript: ver `docs/quality/budgets.md`.
 
 ## Comandos
 
-Definidos no bootstrap. Skill de convenções: `react-mfe`.
+| Comando                             | O que faz                                |
+| ----------------------------------- | ---------------------------------------- |
+| `pnpm --filter mfe-react dev:solo`  | Roda isolado em `localhost:5175`         |
+| `pnpm --filter mfe-react build`     | Gera `dist/mfe.js`                       |
+| `pnpm --filter mfe-react test`      | Testes em Chromium (Vitest browser mode) |
+| `pnpm --filter mfe-react typecheck` | Checagem de tipos                        |
+
+Skill de convenções: `react-mfe`.

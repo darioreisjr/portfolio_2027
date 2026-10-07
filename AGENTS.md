@@ -46,25 +46,32 @@ packages/
   design-system/  Web Components em Lit
   contracts/      Eventos tipados e tabela de rotas
   config/         Configurações compartilhadas (TypeScript, lint)
+e2e/              Testes Playwright que atravessam os apps
 docs/             Produto, arquitetura, qualidade, setup dos agentes
-scripts/          Automação do repositório
+scripts/          Montagem do dist, orçamentos, sincronização dos agentes
 ```
 
-Cada app tem um `AGENTS.md` próprio com comandos e convenções do framework.
+Cada app e cada pacote tem um `AGENTS.md` próprio com comandos e convenções.
 
 ## Comandos
 
-O monorepo ainda não foi criado. Os comandos abaixo passam a valer depois do bootstrap; até lá só o primeiro existe.
+Node e pnpm são fixados no `package.json`; o pnpm baixa o Node certo sozinho. Rode tudo por `pnpm`, nunca com o `node` do sistema. Versões de dependências ficam só no catálogo do `pnpm-workspace.yaml`.
 
-| Comando                                    | O que faz                                          |
-| ------------------------------------------ | -------------------------------------------------- |
-| `node scripts/ai-sync.mjs`                 | Gera as configurações nativas das três ferramentas |
-| `node scripts/ai-sync.mjs --check`         | Falha se algo gerado estiver fora de sincronia     |
-| `pnpm install`                             | Instala dependências                               |
-| `pnpm dev`                                 | Sobe o shell e os apps                             |
-| `pnpm build`                               | Builda o que mudou                                 |
-| `pnpm lint`, `pnpm typecheck`, `pnpm test` | Verificações                                       |
-| `pnpm test:e2e`                            | Playwright atravessando os MFEs                    |
+| Comando                          | O que faz                                                                     |
+| -------------------------------- | ----------------------------------------------------------------------------- |
+| `pnpm install`                   | Instala dependências                                                          |
+| `pnpm dev`                       | Sobe tudo composto em `http://localhost:5173` (shell, MFEs em watch, Next.js) |
+| `pnpm build`                     | Builda apps e pacotes, com cache do Turborepo                                 |
+| `pnpm lint`, `pnpm format:check` | ESLint e Prettier na raiz                                                     |
+| `pnpm typecheck`, `pnpm test`    | Tipos e testes de todos os pacotes                                            |
+| `pnpm assemble`                  | Junta os builds em `dist/`, o diretório publicado                             |
+| `pnpm preview`                   | Serve o `dist/` em `http://localhost:4173`                                    |
+| `pnpm test:e2e`                  | Playwright e axe sobre o `dist/`                                              |
+| `pnpm budgets`                   | Cobra os tetos de JavaScript de `docs/quality/budgets.json`                   |
+| `pnpm lhci`                      | Lighthouse CI sobre o `dist/`                                                 |
+| `pnpm ai:sync`, `pnpm ai:check`  | Gera ou confere as configurações das três ferramentas                         |
+
+Um pacote só: `pnpm --filter <nome> <script>`. Antes de `test:e2e`, `budgets` e `lhci`: `pnpm build && pnpm assemble`.
 
 ## Regras de fronteira
 
@@ -112,6 +119,7 @@ Claude Code é a ferramenta principal. Codex e Gemini são usados para revisão 
 - Instalar dependência sem justificativa de uma linha no plano.
 - Escrever segredo em arquivo versionado. Segredos só por variável de ambiente; nomes em `.env.example`.
 - Editar à mão arquivos gerados: `.claude/skills/`, `.claude/agents/`, `.codex/`, `.gemini/`, `.mcp.json` e os `CLAUDE.md` e `GEMINI.md` dentro de `apps/` e `packages/`.
+- Liberar script de instalação (`allowBuilds`) ou exceção de idade de pacote (`minimumReleaseAgeExclude`) sem autorização do autor.
 
 ## Setup dos agentes
 

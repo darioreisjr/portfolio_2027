@@ -18,7 +18,7 @@ Cinco apps em quatro frameworks precisam da mesma aparência. Já decidido: toke
 | Renderização no servidor      | `@lit-labs/ssr`, experimental; integração com Next.js só para o Pages Router | Tem saída de hidratação (não verificado nesta rodada)                 |
 | Peso no toolchain do monorepo | Baixo                                                                        | Alto: mais um compilador ao lado de Vite, Angular CLI e Next.js       |
 
-## Decisão recomendada
+## Decisão
 
 **Lit 3.** Concorda com a inclinação do autor.
 
@@ -30,7 +30,7 @@ Motivo: o monorepo já tem quatro toolchains; Lit não acrescenta um quinto. O p
 - CSS global dos tokens inclui regras `:not(:defined)` que reservam espaço e aplicam tipografia.
 - Nada que esteja acima da dobra depende de um componente para existir.
 
-Se essa mitigação se mostrar insuficiente nas medições do bootstrap, este ADR é reaberto.
+Medido no bootstrap: CLS de 0,000 e LCP de até 2,1 s nas páginas Next.js, com a mitigação aplicada ao `<ds-badge>`. A medição precisa ser repetida quando houver cabeçalho e conteúdo reais; se piorar, este ADR é reaberto.
 
 ## Tokens
 
@@ -65,7 +65,7 @@ O registro de custom elements é global por documento, e registrar a mesma tag d
 | Vue                     | Template direto; `.prop` força atribuição por propriedade                                                          | `compilerOptions.isCustomElement` no plugin do Vite                  |
 | Angular                 | Template direto                                                                                                    | `CUSTOM_ELEMENTS_SCHEMA` no componente (não verificado nesta rodada) |
 
-Divergência entre docs: a doc do Lit ainda recomenda o wrapper `@lit/react`, dizendo que o React não atribui propriedades; a doc atual do React descreve suporte direto. A recomendação é não usar wrapper e confirmar com um teste no bootstrap.
+Divergência entre docs: a doc do Lit ainda recomenda o wrapper `@lit/react`, dizendo que o React não atribui propriedades; a doc atual do React descreve suporte direto. A decisão é não usar wrapper. Confirmado no bootstrap com React 19.3.0: um teste em `apps/mfe-react` prova que o React atribui objeto por propriedade e escuta evento customizado em um custom element.
 
 ## Consequências
 

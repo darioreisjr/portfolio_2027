@@ -24,16 +24,29 @@ Atualizado em 2026-10-06. **Bloqueante** = precisa de resposta antes do bootstra
 - Depoimentos exigem autorização de quem escreveu (`consent: true`).
 - O idioma de quem visita não é detectado automaticamente; a troca é manual, pelo cabeçalho.
 
-## Ambiente (necessário para o bootstrap)
+## Ambiente
 
-| Item                                | Situação                                                                             |
-| ----------------------------------- | ------------------------------------------------------------------------------------ |
-| Claude Code CLI                     | 2.1.177; funciona com o adaptador `CLAUDE.md`                                        |
-| Codex CLI                           | 0.45.0; não verificado se suporta skills e custom agents                             |
-| Gemini CLI                          | Não instalado                                                                        |
-| pnpm                                | O comando falha; precisa ser consertado                                              |
-| Git                                 | O diretório ainda não é um repositório                                               |
-| Chave do Context7 e token do GitHub | Não criados; sem eles dois dos três servidores MCP não conectam (ver `.env.example`) |
+| Item                                | Situação em 2026-10-06                                                                               |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Node                                | 24.21.0, baixado pelo pnpm para este projeto. O Node do sistema é 22.21.1 e não atende ao Angular 22 |
+| pnpm                                | 12.9.1                                                                                               |
+| Git                                 | Repositório local na `main`; sem remoto                                                              |
+| Claude Code CLI                     | 2.1.177                                                                                              |
+| Codex CLI                           | 0.160.1                                                                                              |
+| Gemini CLI                          | 0.63.0                                                                                               |
+| Chave do Context7 e token do GitHub | No `.env`; precisam também estar no ambiente do terminal para Claude Code e Codex                    |
+
+## Pendências deixadas pelo bootstrap
+
+| #   | Pendência                                                                                                                         | Bloqueia o quê        |
+| --- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| B1  | Criar o repositório no GitHub e dar push; só então o CI roda de verdade                                                           | Confirmar o CI verde  |
+| B2  | O export do Next.js em Linux não foi verificado; `scripts/assemble.mjs` tem uma correção de nomes de arquivo observada no Windows | Primeiro CI           |
+| B3  | Next.js fixado em 16.3.8 porque a 16.4.0 tinha menos de 24 horas; reavaliar a atualização                                         | Nada                  |
+| B4  | O `404.html` do Next.js sai sem atributo `lang`                                                                                   | Tarefa de SEO         |
+| B5  | MFE React com 77,5 kB de 80 kB e páginas Next.js com 144,2 kB de 150 kB: folga pequena para features                              | Features dessas áreas |
+| B6  | Os textos de interface em en, es e pt-PT foram escritos por IA e não foram revisados pelo autor                                   | Publicação            |
+| B7  | Fora do bootstrap: tema, troca de idioma, cabeçalho e rodapé reais, `hreflang`, sitemap, `_redirects`, `_headers`, deploy         | Publicação            |
 
 ## Não verificado na documentação
 
@@ -42,5 +55,4 @@ Atualizado em 2026-10-06. **Bloqueante** = precisa de resposta antes do bootstra
 - `CUSTOM_ELEMENTS_SCHEMA` na doc atual do Angular.
 - Se a Cloudflare recomenda Workers com static assets em vez de Pages para projetos novos.
 - Preços e limites dos planos gratuitos dos quatro hosts.
-- Tamanhos reais dos runtimes; os tetos de JavaScript são estimativas.
 - Os itens da seção 8 de `docs/ai-setup/capability-matrix.md`.

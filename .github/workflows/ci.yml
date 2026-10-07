@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # Histórico completo: com clone raso o Turborepo trata tudo como alterado.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      # Versões de pnpm e Node vêm do package.json (packageManager, engines, devEngines).
+      - uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Conventional Commits
+        if: github.event_name == 'pull_request'
+        run: >
+          pnpm exec commitlint
+          --from ${{ github.event.pull_request.base.sha }}
+          --to ${{ github.event.pull_request.head.sha }}
+          --verbose
+
+      - name: Configuração dos agentes em sincronia
+        run: pnpm ai:check
+      - run: pnpm format:check
+      - run: pnpm lint
+
+      - uses: actions/cache@v6
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: turbo-${{ runner.os }}-
+
+      - run: pnpm exec playwright install --with-deps chromium
+
+      - name: Typecheck, testes e build só do que mudou
+        if: github.event_name == 'pull_request'
+        run: pnpm exec turbo run typecheck test build --affected
+        env:
+          TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha }}
+
+      - name: Typecheck, testes e build de tudo
+        if: github.event_name == 'push'
+        run: pnpm exec turbo run typecheck test build
+
+      - name: Testes dos scripts do repositório
+        run: pnpm exec node --test "scripts/*.test.mjs"
+
+      # O site é verificado inteiro; o que não mudou vem do cache do Turborepo.
+      - run: pnpm build
+      - run: pnpm assemble
+      - name: Orçamentos de JavaScript
+        run: pnpm budgets
+      - name: E2E atravessando os apps
+        run: pnpm test:e2e
+      - name: Lighthouse CI
+        run: pnpm lhci
+
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: relatorios
+          path: |
+            playwright-report/
+            .lighthouseci/
+          if-no-files-found: ignore

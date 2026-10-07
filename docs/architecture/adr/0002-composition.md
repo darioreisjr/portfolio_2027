@@ -18,7 +18,7 @@ Três MFEs (React, Vue, Angular) precisam ser montados por um shell em JavaScrip
 | Ganho principal              | Compartilhar dependências entre MFEs                                    | Vários frameworks na mesma tela, com troca sem recarregar                   | Contrato mínimo e padrão                                |
 | O ganho serve aqui?          | Não: os três MFEs usam frameworks diferentes, não há o que compartilhar | Pouco: só um MFE por rota                                                   | Sim                                                     |
 
-## Decisão recomendada
+## Decisão
 
 **Web Components como contrato de integração**, sem Module Federation e sem single-spa. Concorda com a inclinação do autor; a documentação não contradiz.
 
@@ -68,7 +68,9 @@ Decisão:
 - Trocar entre página Next.js e página do shell recarrega o documento.
 - As três áreas de MFE não têm conteúdo no HTML inicial, só título e descrição. O conteúdo indexável fica no Next.js.
 - O desenvolvimento local precisa de um proxy por caminho para ver tudo junto; cada app também roda sozinho.
-- Shadow DOM ou light DOM na raiz de cada MFE fica para o bootstrap. Os tokens funcionam nos dois casos, porque propriedades CSS customizadas atravessam o shadow DOM.
+- A raiz de cada MFE usa shadow DOM (decidido no bootstrap, 2026-10-06). Os tokens chegam lá dentro porque propriedades CSS customizadas atravessam o shadow DOM.
+- Verificado no bootstrap: `createApplication` com `createCustomElement` funciona sem zone.js no Angular 22.2.1, incluindo reação à troca de atributo.
+- O export do Next.js 16.3.8, no Windows, grava os arquivos de pré-carga de segmento com um nome diferente do que o cliente pede; `scripts/assemble.mjs` os publica com o nome pedido. Não verificado em Linux.
 
 ## Fontes
 

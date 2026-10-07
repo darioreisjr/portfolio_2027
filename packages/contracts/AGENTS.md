@@ -1,0 +1,19 @@
+# packages/contracts
+
+Tabela de rotas (área, idioma, caminho) e eventos tipados entre apps. É a única dependência que todos os apps compartilham.
+
+## Convenções
+
+- Sem dependência de framework, de `packages/content` ou de APIs que só existem no navegador fora das funções de evento.
+- `src/routes.ts` espelha a tabela de `docs/architecture/mfe-map.md`. Mude os dois juntos.
+- Evento novo exporta: nome como constante, tipo do `detail`, função de emitir e função de escutar que devolve o cancelamento.
+- Imports relativos levam a extensão `.js` (o pacote é compilado para Node).
+- Mudança que quebra consumidor exige atualizar todos os apps na mesma mudança. Skill: `cross-mfe-contract`.
+
+## Comandos
+
+| Comando                                        | O que faz           |
+| ---------------------------------------------- | ------------------- |
+| `pnpm --filter @portfolio/contracts build`     | Compila para `dist` |
+| `pnpm --filter @portfolio/contracts test`      | Testes (Vitest)     |
+| `pnpm --filter @portfolio/contracts typecheck` | Checagem de tipos   |

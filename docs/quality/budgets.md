@@ -23,7 +23,7 @@ O site não tem coleta de dados de campo (analytics está em aberto), então o C
 
 ## JavaScript inicial por rota
 
-Tamanho transferido (comprimido) de todo o JavaScript necessário para a rota ficar interativa. Os valores abaixo são **tetos de partida, estimados**; os tamanhos de runtime não foram medidos. No bootstrap, mede-se o "olá" de cada app e o teto passa a ser a linha de base medida mais uma folga para funcionalidades.
+Tamanho transferido (comprimido) de todo o JavaScript necessário para a rota ficar interativa. Os tetos abaixo foram estimados antes do bootstrap e mantidos depois da medição. Os números cobrados no CI ficam em `docs/quality/budgets.json`; mantenha os dois arquivos iguais. Scripts `nomodule` não contam, porque navegadores atuais não os baixam.
 
 | Parte                             | Teto   | Justificativa                                                                                        |
 | --------------------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
@@ -48,6 +48,30 @@ Regras:
 - Nenhuma rota carrega o runtime de dois frameworks de MFE.
 - Dependência nova em um MFE precisa caber no teto da rota; se não couber, é carregada sob demanda ou não entra.
 - Aumentar um teto exige registrar o motivo neste arquivo.
+
+### Linha de base medida no bootstrap (2026-10-06)
+
+Só o "olá" de cada app, sem nenhuma feature. Medido por `pnpm budgets` (gzip) e `pnpm lhci`.
+
+| Parte         | Medido  | Teto   |
+| ------------- | ------- | ------ |
+| Shell         | 0,9 kB  | 10 kB  |
+| Design system | 6,6 kB  | 20 kB  |
+| MFE Vue       | 29,8 kB | 60 kB  |
+| MFE React     | 77,5 kB | 80 kB  |
+| MFE Angular   | 37,7 kB | 110 kB |
+
+| Rota              | JavaScript | Teto   | Performance | LCP   | TBT   | CLS |
+| ----------------- | ---------- | ------ | ----------- | ----- | ----- | --- |
+| `/`               | 144,2 kB   | 150 kB | 99          | 2,1 s | 38 ms | 0   |
+| `/como-foi-feito` | 144,2 kB   | 150 kB | 100         | 1,5 s | 37 ms | 0   |
+| `/recrutador`     | 37,4 kB    | 90 kB  | 100         | 1,4 s | 0 ms  | 0   |
+| `/tecnico`        | 45,3 kB    | 140 kB | 100         | 1,4 s | 5 ms  | 0   |
+| `/clientes`       | 85,0 kB    | 110 kB | 100         | 1,1 s | 0 ms  | 0   |
+
+Acessibilidade e SEO do Lighthouse: 100 nas cinco rotas.
+
+As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um terço do teto. O React e o Next.js já nascem perto do teto, com folga de cerca de 3 kB e 6 kB; a primeira feature dessas áreas vai exigir carga sob demanda ou a decisão registrada de subir o teto.
 
 ## Outros recursos
 
@@ -77,6 +101,8 @@ Manual, a cada componente novo e a cada área nova (ferramentas automáticas peg
 - Uma passada com leitor de tela por área antes de publicar.
 
 ## SEO
+
+Cobrado no CI desde o bootstrap: a nota do Lighthouse e `<title>` e descrição por rota. Os demais itens abaixo valem a partir da tarefa de SEO.
 
 - Nota de SEO do Lighthouse: 95 ou mais.
 - Toda rota, em todo idioma, tem `<title>` e descrição próprios.

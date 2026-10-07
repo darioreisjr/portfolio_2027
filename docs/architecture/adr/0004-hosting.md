@@ -21,7 +21,7 @@ Cinco apps estáticos precisam aparecer como um site só, em um domínio, sem se
 
 O Next.js em export estático ao lado do shell funciona nos quatro, porque toda rota conhecida vira um arquivo real (ADR 0002). A diferença aparece nas sub-rotas de MFE não geradas no build: sem reescrita, um link direto para elas dá 404. O GitHub Pages fica de fora por isso.
 
-## Decisão recomendada
+## Decisão
 
 **Um único projeto no Cloudflare Pages**, com regras por caminho em `_redirects`. Concorda com a inclinação do autor por host único.
 

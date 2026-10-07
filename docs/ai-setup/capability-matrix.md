@@ -3,14 +3,14 @@
 Verificado em 2026-10-06 contra a documentação oficial (links ao fim de cada seção).
 Legenda: **NÃO EXISTE** = a doc lida não descreve o recurso. **NÃO VERIFICADO** = não li a página que confirmaria.
 
-Versões instaladas nesta máquina no momento da verificação:
+Versões instaladas nesta máquina:
 
-| Ferramenta        | Versão local  | Observação                                                                                                                                  |
-| ----------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| Claude Code (CLI) | 2.1.177       | Abaixo de 2.1.277, então o CLI local **não** lê `AGENTS.md` nativamente. A extensão do VS Code pode estar em outra versão (não verificado). |
-| Codex CLI         | 0.45.0        | A doc não informa versão mínima para skills e custom agents. Não verificado se 0.45.0 já os suporta.                                        |
-| Gemini CLI        | não instalado | Nada pode ser validado localmente até instalar.                                                                                             |
-| pnpm              | shim quebrado | `pnpm --version` falha; precisa ser corrigido antes da Fase 3.                                                                              |
+| Ferramenta        | Na verificação inicial | Depois do bootstrap (2026-10-06)                                                                      |
+| ----------------- | ---------------------- | ----------------------------------------------------------------------------------------------------- |
+| Claude Code (CLI) | 2.1.177                | 2.1.177. Abaixo de 2.1.277, então o CLI não lê `AGENTS.md` nativamente; o adaptador `CLAUDE.md` cobre |
+| Codex CLI         | 0.45.0                 | 0.160.1                                                                                               |
+| Gemini CLI        | não instalado          | 0.63.0                                                                                                |
+| pnpm              | shim quebrado          | 12.9.1                                                                                                |
 
 ## 1. Instruções de projeto
 
