@@ -20,6 +20,7 @@ export const uiSchema = z
   .object({
     siteName: text,
     hello: text,
+    loadError: text,
     areas: z
       .object({
         home: areaTextSchema,

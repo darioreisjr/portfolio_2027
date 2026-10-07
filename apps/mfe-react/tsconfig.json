@@ -1,0 +1,9 @@
+{
+  "extends": "@portfolio/config/tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["vite/client"],
+    "allowImportingTsExtensions": true
+  },
+  "include": ["src", "dev", "vite.config.ts", "vitest.config.ts"]
+}

@@ -1,6 +1,7 @@
 {
   "siteName": "Portafolio",
   "hello": "Hola",
+  "loadError": "No se pudo cargar esta área. Intenta recargar la página.",
   "areas": {
     "home": {
       "title": "Inicio",

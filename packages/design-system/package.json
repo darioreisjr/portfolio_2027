@@ -28,6 +28,7 @@
     "@portfolio/tokens": "workspace:*",
     "@storybook/addon-a11y": "catalog:",
     "@storybook/web-components-vite": "catalog:",
+    "@types/react": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "playwright": "catalog:",
     "storybook": "catalog:",
