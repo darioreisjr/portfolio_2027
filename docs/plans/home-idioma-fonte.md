@@ -1,6 +1,6 @@
 # Plano: bandeiras de idioma, fonte arredondada, contorno na letra e pausa em ícone
 
-- Status: **aprovado** pelo autor em 2026-10-07
+- Status: **aprovado** pelo autor em 2026-10-07 e implementado
 - Origem: pedido e entrevista com o autor, `discovery-analyst` e `architect`
 - Decisão de arquitetura: `docs/architecture/adr/0006-troca-de-idioma.md`
 
@@ -47,6 +47,30 @@ Cada etapa é um commit e deixa `pnpm lint`, `pnpm typecheck` e `pnpm test` pass
 | 7     | Bandeiras no shell e no Next.js; pausa em ícone                         | `pnpm budgets`, `pnpm test:e2e`, `pnpm lhci`            |
 | 8     | Fonte                                                                   | `pnpm test:e2e`, `pnpm lhci` (LCP ≤ 2,5 s, CLS 0)       |
 | 9     | Documentação                                                            | `pnpm ai:check`, `pnpm format:check`                    |
+
+## Medido
+
+| Medida             | Antes    | Depois        | Limite            |
+| ------------------ | -------- | ------------- | ----------------- |
+| JavaScript de `/`  | 146,1 kB | 146,1 kB      | 150 kB            |
+| MFE React          | 77,5 kB  | 77,5 kB       | 80 kB             |
+| Performance de `/` | 98       | 97            | 90                |
+| LCP de `/`         | 2,4 s    | 2,58 a 2,62 s | 2,7 s (era 2,5 s) |
+| TBT de `/`         | 45 ms    | 39 a 51 ms    | 200 ms            |
+| CLS de `/`         | 0        | 0,001         | 0,1               |
+| Acessibilidade     | 100      | 100           | 100               |
+
+O LCP da home passou do limite com a fonte, que era o critério de parada. O autor escolheu aceitar 2,7 s só nessa rota. O que foi tentado antes: a home baixava os dois pesos da fonte sem ter texto no peso 400 (uma linha vazia do cabeçalho pedia a fonte só para medir a altura); corrigido, o LCP caiu de 2,77 s para 2,58 s. `font-display: optional` não mudou a medição.
+
+O contorno passou no critério com 2 px. A fonte de reserva usa `size-adjust: 103%`, medido contra a Arial com as frases do site.
+
+Verificação: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm budgets`, `pnpm test:e2e` (108 testes) e `pnpm lhci`.
+
+## Em aberto
+
+- Os três revisores do fluxo ainda não passaram por esta mudança.
+- Conferir em aparelho de verdade, no Firefox e no Safari (B12), e com leitor de tela (B11).
+- A marcação do seletor de idioma está repetida no shell e no layout do Next.js, como o ADR 0006 prevê.
 
 ## Dependência nova
 

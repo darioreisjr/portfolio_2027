@@ -12,7 +12,7 @@ Status: **aprovado** pelo autor em 2026-10-06. Base: áreas do `docs/product/bri
 | `/recrutador`           | Recrutador     | `apps/mfe-vue`     | Vue             | Linha do tempo de experiência e formação: lista reativa com transições, bom caso para Vue                 |
 | `/tecnico`              | Técnica        | `apps/mfe-angular` | Angular         | Skills com filtro e projetos filtráveis por tecnologia: é a seção de filtro complexo                      |
 | `/clientes`             | Cliente        | `apps/mfe-react`   | React           | Serviços, depoimentos e projetos por resultado: composição de cartões e listas                            |
-| (todas as rotas de MFE) | Casca          | `apps/shell`       | JavaScript puro | Documento HTML, cabeçalho, rodapé, troca de idioma, carga do script da área                               |
+| (todas as rotas de MFE) | Casca          | `apps/shell`       | JavaScript puro | Documento HTML, cabeçalho, rodapé, carga do script da área                                                |
 
 Isso mantém a proposta inicial (Next.js para entrada e SEO, React para projetos, Vue para linha do tempo, Angular para filtro, JavaScript puro para o shell) e encaixa cada framework em um público: Vue para recrutadores, Angular para tech leads, React para clientes, Next.js para a comunidade.
 
@@ -36,7 +36,7 @@ Os nomes em inglês e espanhol são proposta e podem ser trocados sem efeito na 
 Consequências das rotas traduzidas:
 
 - Existe uma única tabela de rotas (área, idioma, caminho) em `packages/contracts`. Shell, Next.js, MFEs, troca de idioma, `hreflang`, sitemap e regras do host leem dela. Nenhum app escreve um caminho de outra área à mão.
-- A troca de idioma leva à mesma área no outro idioma, consultando a tabela.
+- A troca de idioma leva à mesma área no outro idioma, consultando a tabela. São links comuns, escritos pelo dono de cada documento a partir de `languageAlternates` (ADR 0006); nenhum app é dono da troca.
 - As tags dos MFEs (`<mfe-recrutador>` etc.) e os caminhos de bundles não são traduzidos.
 - O slug de cada projeto é único, igual em todos os idiomas.
 

@@ -5,6 +5,8 @@
 
 **Objetivo:** as quatro homes ganham um cenário de sakura desenhado em SVG e CSS, com pétalas caindo, de dia no tema claro e à noite no tema escuro, sem JavaScript novo.
 
+> Mudou em 2026-10-07 (`docs/plans/home-idioma-fonte.md`): a névoa atrás do texto deu lugar a um contorno na letra, e a caixa "Pausar animação" virou um botão de ícone no canto inferior direito, ainda sem JavaScript.
+
 ## Decisões do autor
 
 | Tema         | Decisão                                                                       |

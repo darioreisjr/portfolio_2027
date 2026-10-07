@@ -6,6 +6,8 @@
 
 **Objetivo:** a home responde a uma pergunta só, "Escolha seu caminho". Em repouso mostra os quatro personagens e mais nada. A frase de cada um aparece sobre a parte de baixo da figura. Clicar escolhe o personagem na mesma página: os outros somem e fica só ele, com a frase, a tecnologia e o "Entrar".
 
+> Mudou em 2026-10-07 (`docs/plans/home-idioma-fonte.md`): a frase deixou de ficar sobre a névoa e ganhou contorno na letra; o link "Como foi feito" saiu da home.
+
 ## Decisões do autor
 
 | Tema                      | Decisão                                                                                              |
