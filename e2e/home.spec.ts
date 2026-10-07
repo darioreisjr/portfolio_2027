@@ -411,6 +411,16 @@ async function capture(page: Page, css: string): Promise<string> {
  * texto em magenta (para achar as letras) e só com o contorno.
  */
 async function outlineContrast(page: Page, selectors: string[]): Promise<Record<string, number>> {
+  // As três capturas têm de ser da mesma cena: tudo parado onde está.
+  const hidden =
+    '*, *::before, *::after { animation-play-state: paused !important; transition: none !important; }' +
+    '.home ds-badge, .persona-enter { visibility: hidden !important; }';
+
+  // A posição do texto só vale depois de a fonte chegar e de a cena parar: uma
+  // fonte que troca no meio das capturas tira as letras do lugar medido.
+  await page.evaluate(() => document.fonts.ready);
+  await capture(page, hidden);
+
   const targets = await page.evaluate(
     (list) =>
       list.map((selector) => {
@@ -432,10 +442,6 @@ async function outlineContrast(page: Page, selectors: string[]): Promise<Record<
     selectors,
   );
 
-  // As três capturas têm de ser da mesma cena: tudo parado onde está.
-  const hidden =
-    '*, *::before, *::after { animation-play-state: paused !important; transition: none !important; }' +
-    '.home ds-badge, .persona-enter { visibility: hidden !important; }';
   const noText =
     '.home, .home * { color: transparent !important; text-decoration-color: transparent !important; }';
   const bare = await capture(page, `${hidden}${noText}.home * { text-shadow: none !important; }`);
