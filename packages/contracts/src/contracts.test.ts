@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   emitMfeReady,
   findRoute,
+  languageAlternates,
   locales,
   onMfeReady,
   pathFor,
@@ -42,6 +43,35 @@ describe('tabela de rotas', () => {
     });
     expect(findRoute('/tecnico/')).toMatchObject({ locale: 'pt-BR', entry: { area: 'tech' } });
     expect(findRoute('/nao-existe/')).toBeUndefined();
+  });
+});
+
+describe('idiomas de uma área', () => {
+  it('lista os quatro idiomas, com um só marcado como atual', () => {
+    for (const { area } of routes) {
+      for (const current of locales) {
+        const alternates = languageAlternates(area, current);
+        expect(alternates.map((alternate) => alternate.locale)).toEqual([...locales]);
+        expect(alternates.filter((alternate) => alternate.current)).toEqual([
+          expect.objectContaining({ locale: current }),
+        ]);
+      }
+    }
+  });
+
+  it('leva à mesma área no outro idioma', () => {
+    for (const alternate of languageAlternates('client', 'pt-BR')) {
+      expect(alternate.href).toBe(pathFor('client', alternate.locale));
+      expect(findRoute(alternate.href)).toMatchObject({
+        locale: alternate.locale,
+        entry: { area: 'client' },
+      });
+    }
+  });
+
+  it('dá a cada idioma o nome no próprio idioma e a bandeira publicada', () => {
+    const spanish = languageAlternates('home', 'en').find(({ locale }) => locale === 'es');
+    expect(spanish).toMatchObject({ name: 'Español', flag: '/_ds/flags/es.svg', href: '/es/' });
   });
 });
 
