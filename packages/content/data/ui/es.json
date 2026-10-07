@@ -3,6 +3,7 @@
   "hello": "Hola",
   "loadError": "No se pudo cargar esta área. Intenta recargar la página.",
   "themeToggle": "Tema oscuro",
+  "languageSwitcher": "Idioma",
   "areas": {
     "home": {
       "title": "Inicio",

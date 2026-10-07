@@ -23,6 +23,8 @@ export const uiSchema = z
     loadError: text,
     /** Nome acessível do seletor de tema; o estado vai em `aria-pressed`. */
     themeToggle: text,
+    /** Nome acessível do grupo de bandeiras que troca o idioma. */
+    languageSwitcher: text,
     areas: z
       .object({
         home: areaTextSchema,

@@ -181,7 +181,7 @@ Textos da tela de escolha de perfil. Sem `status`, como `ui`. Ficam fora de `ui`
 
 Sem `status`: é texto de interface, não conteúdo sobre o autor.
 
-Inclui `themeToggle`, o nome acessível do seletor de tema.
+Inclui `themeToggle`, o nome acessível do seletor de tema, e `languageSwitcher`, o do grupo de bandeiras que troca o idioma. Os nomes dos idiomas não ficam aqui: cada um aparece no próprio idioma e vem de `packages/contracts`.
 
 Textos de interface (rótulos de navegação, botões, títulos de seção), separados do conteúdo sobre o autor. Chaves idênticas nos quatro arquivos; a validação falha se alguma faltar.
 
