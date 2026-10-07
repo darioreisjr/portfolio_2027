@@ -1,0 +1,18 @@
+pnpm-lock.yaml
+dist/
+out/
+.next/
+.turbo/
+.angular/
+storybook-static/
+playwright-report/
+test-results/
+.lighthouseci/
+next-env.d.ts
+
+# Gerados por scripts/ai-sync.mjs
+.claude/skills/
+.claude/agents/
+.codex/
+.gemini/
+.mcp.json

@@ -56,7 +56,9 @@ function planSkills() {
     const name = skillDir.split('/').pop();
     const frontmatter = read(`${skillDir}/SKILL.md`).match(/^---\n([\s\S]*?)\n---\n/);
     if (!frontmatter || !new RegExp(`^name: ${name}$`, 'm').test(frontmatter[1])) {
-      problems.push(`${skillDir}/SKILL.md: frontmatter precisa de "name: ${name}" (igual ao nome da pasta)`);
+      problems.push(
+        `${skillDir}/SKILL.md: frontmatter precisa de "name: ${name}" (igual ao nome da pasta)`,
+      );
     }
     if (!frontmatter || !/^description: \S/m.test(frontmatter[1])) {
       problems.push(`${skillDir}/SKILL.md: frontmatter precisa de "description"`);
@@ -92,11 +94,15 @@ function parseAgents() {
       const meta = JSON.parse(block[1]);
       const profile = profiles[meta.profile];
       if (!meta.description || !profile) {
-        throw new Error(`${source}: agente "${section.title}" precisa de "description" e de um "profile" existente`);
+        throw new Error(
+          `${source}: agente "${section.title}" precisa de "description" e de um "profile" existente`,
+        );
       }
       const prompt = section.body.replace(fence, '').trim();
       if (prompt.includes("'''")) {
-        throw new Error(`${source}: o prompt de "${section.title}" não pode conter ''' (delimitador do TOML)`);
+        throw new Error(
+          `${source}: o prompt de "${section.title}" não pode conter ''' (delimitador do TOML)`,
+        );
       }
       return { name: section.title, description: meta.description, profile, prompt };
     });
@@ -171,7 +177,10 @@ function planMcp() {
       const entry = { command: server.command, args: server.args ?? [] };
       claude[name] = entry;
       gemini[name] = entry;
-      codex.push(`command = ${JSON.stringify(entry.command)}`, `args = ${JSON.stringify(entry.args)}`);
+      codex.push(
+        `command = ${JSON.stringify(entry.command)}`,
+        `args = ${JSON.stringify(entry.args)}`,
+      );
       continue;
     }
 
@@ -191,7 +200,9 @@ function planMcp() {
     };
     codex.push(`url = ${JSON.stringify(server.url)}`);
     if (bearer) codex.push(`bearer_token_env_var = ${JSON.stringify(bearer)}`);
-    const headerPairs = Object.entries(headers).map(([key, value]) => `${JSON.stringify(key)} = ${JSON.stringify(value)}`);
+    const headerPairs = Object.entries(headers).map(
+      ([key, value]) => `${JSON.stringify(key)} = ${JSON.stringify(value)}`,
+    );
     if (headerPairs.length > 0) codex.push(`http_headers = { ${headerPairs.join(', ')} }`);
   }
 
@@ -211,8 +222,10 @@ function planAdapters() {
 
 function checkHandWritten() {
   const hasLine = (path, line) => exists(path) && read(path).split('\n').includes(line);
-  if (!hasLine('CLAUDE.md', '@AGENTS.md')) problems.push('CLAUDE.md: precisa da linha "@AGENTS.md"');
-  if (!hasLine('GEMINI.md', '@./AGENTS.md')) problems.push('GEMINI.md: precisa da linha "@./AGENTS.md"');
+  if (!hasLine('CLAUDE.md', '@AGENTS.md'))
+    problems.push('CLAUDE.md: precisa da linha "@AGENTS.md"');
+  if (!hasLine('GEMINI.md', '@./AGENTS.md'))
+    problems.push('GEMINI.md: precisa da linha "@./AGENTS.md"');
   if (!exists('AGENTS.md')) {
     problems.push('AGENTS.md: não existe');
   } else if (read('AGENTS.md').split('\n').length >= AGENTS_MD_MAX_LINES) {
@@ -244,7 +257,13 @@ if (check) {
 
 if (problems.length > 0) {
   console.error(problems.map((problem) => `- ${problem}`).join('\n'));
-  console.error(check ? '\nFora de sincronia. Rode: node scripts/ai-sync.mjs' : '\nCorrija os problemas acima.');
+  console.error(
+    check ? '\nFora de sincronia. Rode: node scripts/ai-sync.mjs' : '\nCorrija os problemas acima.',
+  );
   process.exit(1);
 }
-console.log(check ? `Em sincronia: ${expected.size} arquivos.` : `Gerados ${expected.size} arquivos; removidos ${stale.length}.`);
+console.log(
+  check
+    ? `Em sincronia: ${expected.size} arquivos.`
+    : `Gerados ${expected.size} arquivos; removidos ${stale.length}.`,
+);

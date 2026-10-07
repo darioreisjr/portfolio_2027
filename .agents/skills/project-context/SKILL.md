@@ -13,15 +13,15 @@ Leia os documentos antes de agir. Eles decidem; o código segue.
 2. `docs/open-questions.md`: se a tarefa depende de um item bloqueante, pare e avise.
 3. Conforme a tarefa:
 
-| A tarefa envolve | Leia |
-|---|---|
-| Público, seções, escopo | `docs/product/brief.md` |
-| Dados JSON | `docs/content/schema.md` |
-| Rotas, qual app faz o quê | `docs/architecture/mfe-map.md` |
-| Como os apps se compõem | `docs/architecture/adr/0002-composition.md` |
-| Tokens, componentes, temas | `docs/architecture/adr/0003-design-system.md` |
-| Build, deploy, caminhos publicados | `docs/architecture/adr/0004-hosting.md` |
-| Peso, acessibilidade, SEO | `docs/quality/budgets.md` |
+| A tarefa envolve                   | Leia                                          |
+| ---------------------------------- | --------------------------------------------- |
+| Público, seções, escopo            | `docs/product/brief.md`                       |
+| Dados JSON                         | `docs/content/schema.md`                      |
+| Rotas, qual app faz o quê          | `docs/architecture/mfe-map.md`                |
+| Como os apps se compõem            | `docs/architecture/adr/0002-composition.md`   |
+| Tokens, componentes, temas         | `docs/architecture/adr/0003-design-system.md` |
+| Build, deploy, caminhos publicados | `docs/architecture/adr/0004-hosting.md`       |
+| Peso, acessibilidade, SEO          | `docs/quality/budgets.md`                     |
 
 4. O `AGENTS.md` do app ou pacote que será tocado.
 

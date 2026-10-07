@@ -9,14 +9,14 @@ Três MFEs (React, Vue, Angular) precisam ser montados por um shell em JavaScrip
 
 ## Opções
 
-| Critério | Module Federation | single-spa | Web Components como contrato |
-|---|---|---|---|
-| O que é | Compartilhamento de módulos em runtime entre builds | Framework de orquestração com ciclo de vida `bootstrap`, `mount`, `unmount` | Cada MFE registra um custom element; o shell cria a tag |
-| Dependência extra em runtime | Runtime de federação em cada build | single-spa, mais um helper por framework e import maps | Nenhuma: é API do navegador |
-| Acoplamento ao bundler | Alto (plugin por bundler) | Baixo | Nenhum |
-| Next.js | O plugin `nextjs-mf` só cobre o Pages Router e está sendo descontinuado | Não se aplica a páginas pré-renderizadas | Não se aplica; Next.js fica fora da composição |
-| Ganho principal | Compartilhar dependências entre MFEs | Vários frameworks na mesma tela, com troca sem recarregar | Contrato mínimo e padrão |
-| O ganho serve aqui? | Não: os três MFEs usam frameworks diferentes, não há o que compartilhar | Pouco: só um MFE por rota | Sim |
+| Critério                     | Module Federation                                                       | single-spa                                                                  | Web Components como contrato                            |
+| ---------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------- |
+| O que é                      | Compartilhamento de módulos em runtime entre builds                     | Framework de orquestração com ciclo de vida `bootstrap`, `mount`, `unmount` | Cada MFE registra um custom element; o shell cria a tag |
+| Dependência extra em runtime | Runtime de federação em cada build                                      | single-spa, mais um helper por framework e import maps                      | Nenhuma: é API do navegador                             |
+| Acoplamento ao bundler       | Alto (plugin por bundler)                                               | Baixo                                                                       | Nenhum                                                  |
+| Next.js                      | O plugin `nextjs-mf` só cobre o Pages Router e está sendo descontinuado | Não se aplica a páginas pré-renderizadas                                    | Não se aplica; Next.js fica fora da composição          |
+| Ganho principal              | Compartilhar dependências entre MFEs                                    | Vários frameworks na mesma tela, com troca sem recarregar                   | Contrato mínimo e padrão                                |
+| O ganho serve aqui?          | Não: os três MFEs usam frameworks diferentes, não há o que compartilhar | Pouco: só um MFE por rota                                                   | Sim                                                     |
 
 ## Decisão recomendada
 
@@ -28,11 +28,11 @@ Três MFEs (React, Vue, Angular) precisam ser montados por um shell em JavaScrip
 
 Como cada framework expõe o elemento:
 
-| Framework | Mecanismo | Observação da doc |
-|---|---|---|
-| Vue | `defineCustomElement` | Custo base de cerca de 16 kB; estilos vão para o shadow root |
-| Angular | `createCustomElement` de `@angular/elements` | A doc pede cuidado ao remover e reinserir o elemento no DOM |
-| React | Não tem API própria; uma classe `HTMLElement` pequena chama `createRoot` em `connectedCallback` e `unmount` em `disconnectedCallback` | Escrita à mão, poucas linhas |
+| Framework | Mecanismo                                                                                                                             | Observação da doc                                            |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Vue       | `defineCustomElement`                                                                                                                 | Custo base de cerca de 16 kB; estilos vão para o shadow root |
+| Angular   | `createCustomElement` de `@angular/elements`                                                                                          | A doc pede cuidado ao remover e reinserir o elemento no DOM  |
+| React     | Não tem API própria; uma classe `HTMLElement` pequena chama `createRoot` em `connectedCallback` e `unmount` em `disconnectedCallback` | Escrita à mão, poucas linhas                                 |
 
 Por causa do aviso do Angular, o shell nunca reinsere um elemento de MFE: ao sair da área, remove; ao voltar, cria outro.
 
@@ -54,13 +54,13 @@ Decisão:
 
 ## O que isso exige da hospedagem
 
-| Exigência | Obrigatória? |
-|---|---|
-| Servir um diretório único de arquivos estáticos | Sim |
-| Resolver `/rota/` para `rota/index.html` | Sim (todo host faz) |
-| Servir `404.html` | Sim |
+| Exigência                                                                | Obrigatória?                                                                                 |
+| ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| Servir um diretório único de arquivos estáticos                          | Sim                                                                                          |
+| Resolver `/rota/` para `rota/index.html`                                 | Sim (todo host faz)                                                                          |
+| Servir `404.html`                                                        | Sim                                                                                          |
 | Regra de reescrita por caminho (`/tecnico/*` para `/tecnico/index.html`) | Só se um MFE tiver sub-rotas não geradas no build, como detalhe de projeto. Recomendado ter. |
-| Cabeçalhos de cache para arquivos com hash | Recomendado |
+| Cabeçalhos de cache para arquivos com hash                               | Recomendado                                                                                  |
 
 ## Consequências
 

@@ -9,26 +9,26 @@
 
 ## 1. Versões exatas
 
-| Item | Versão | Conferido em | Observação |
-|---|---|---|---|
-| Node | **24.21.0** (LTS) | [Node releases](https://nodejs.org/en/about/previous-releases), [Angular versions](https://angular.dev/reference/versions) | Angular 22 exige `^22.22.3 \|\| ^24.15.0`; o local 22.21.1 não serve |
-| pnpm | **12.9.1** | [catalogs](https://pnpm.io/catalogs), [build settings](https://pnpm.io/settings/build) | `strictDepBuilds` é `true` por padrão: o install falha com script de build não revisado |
-| TypeScript | **6.0.3** (linha única) | [Angular versions](https://angular.dev/reference/versions), [typescript-eslint](https://typescript-eslint.io/users/dependency-versions) | Angular (`>=6.0 <6.1`) e typescript-eslint (`<6.1.0`) barram a 7.0.2, que é a `latest` |
-| Next.js / React | 16.4.0 / 19.3.0 | [static exports](https://nextjs.org/docs/app/guides/static-exports) | `next lint` foi removido no 16 |
-| Vue / vue-tsc | 3.5.43 / 3.3.12 | [Vue web components](https://vuejs.org/guide/extras/web-components) | vue-tsc com TS 6.0.3: não verificado além do peer; provado na etapa 10 |
-| Angular (core, cli, build, elements, compiler-cli) | 22.2.1 | [zoneless](https://angular.dev/guide/zoneless), [testing](https://angular.dev/guide/testing) | Zoneless é padrão desde a v21; Vitest com jsdom é o padrão do CLI |
-| Vite / plugin-vue / plugin-react | 8.3.3 / 6.0.9 / 6.1.2 | [Vite build](https://vite.dev/guide/build) | Usa Rolldown |
-| Lit | 3.3.3 | [Lit testing](https://lit.dev/docs/tools/testing/) | A doc pede teste em navegador real |
-| Turborepo | 2.11.7 | [run](https://turborepo.dev/docs/reference/run), [GitHub Actions](https://turborepo.dev/docs/guides/ci-vendors/github-actions) | `--affected` compara com a `main` |
-| Vitest / @vitest/browser-playwright | 5.0.3 | [browser mode](https://vitest.dev/guide/browser/) | `@angular/build` aceita `^5.0.0` |
-| Playwright / @axe-core/playwright | 1.63.0 / 4.13.0 | [webServer](https://playwright.dev/docs/test-webserver) | |
-| Storybook, web-components-vite, addon-a11y | 10.6.1 | [web-components-vite](https://storybook.js.org/docs/get-started/frameworks/web-components-vite) | |
-| @lhci/cli | 0.15.1 | [configuração](https://github.com/GoogleChrome/lighthouse-ci/blob/main/docs/configuration.md) | |
-| ESLint / typescript-eslint / Prettier | 10.12.0 / 8.71.1 / 3.9.9 | [Next ESLint](https://nextjs.org/docs/app/api-reference/config/eslint) | Plugins podem não declarar suporte ao ESLint 10 |
-| eslint-plugin-vue, angular-eslint, @next/eslint-plugin-next, eslint-plugin-react-hooks | 10.11.1, 22.5.0, 16.4.0, 7.1.1 | registro npm | Peer com ESLint 10: não verificado |
-| Zod | 4.6.5 | [zod](https://zod.dev/json-schema) | |
-| commitlint / husky | 21.2.3 / 9.1.7 | [commitlint](https://commitlint.js.org/guides/getting-started.html) | |
-| jsdom | 30.1.2 | [Angular testing](https://angular.dev/guide/testing) | Só no MFE Angular |
+| Item                                                                                   | Versão                         | Conferido em                                                                                                                            | Observação                                                                              |
+| -------------------------------------------------------------------------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Node                                                                                   | **24.21.0** (LTS)              | [Node releases](https://nodejs.org/en/about/previous-releases), [Angular versions](https://angular.dev/reference/versions)              | Angular 22 exige `^22.22.3 \|\| ^24.15.0`; o local 22.21.1 não serve                    |
+| pnpm                                                                                   | **12.9.1**                     | [catalogs](https://pnpm.io/catalogs), [build settings](https://pnpm.io/settings/build)                                                  | `strictDepBuilds` é `true` por padrão: o install falha com script de build não revisado |
+| TypeScript                                                                             | **6.0.3** (linha única)        | [Angular versions](https://angular.dev/reference/versions), [typescript-eslint](https://typescript-eslint.io/users/dependency-versions) | Angular (`>=6.0 <6.1`) e typescript-eslint (`<6.1.0`) barram a 7.0.2, que é a `latest`  |
+| Next.js / React                                                                        | 16.4.0 / 19.3.0                | [static exports](https://nextjs.org/docs/app/guides/static-exports)                                                                     | `next lint` foi removido no 16                                                          |
+| Vue / vue-tsc                                                                          | 3.5.43 / 3.3.12                | [Vue web components](https://vuejs.org/guide/extras/web-components)                                                                     | vue-tsc com TS 6.0.3: não verificado além do peer; provado na etapa 10                  |
+| Angular (core, cli, build, elements, compiler-cli)                                     | 22.2.1                         | [zoneless](https://angular.dev/guide/zoneless), [testing](https://angular.dev/guide/testing)                                            | Zoneless é padrão desde a v21; Vitest com jsdom é o padrão do CLI                       |
+| Vite / plugin-vue / plugin-react                                                       | 8.3.3 / 6.0.9 / 6.1.2          | [Vite build](https://vite.dev/guide/build)                                                                                              | Usa Rolldown                                                                            |
+| Lit                                                                                    | 3.3.3                          | [Lit testing](https://lit.dev/docs/tools/testing/)                                                                                      | A doc pede teste em navegador real                                                      |
+| Turborepo                                                                              | 2.11.7                         | [run](https://turborepo.dev/docs/reference/run), [GitHub Actions](https://turborepo.dev/docs/guides/ci-vendors/github-actions)          | `--affected` compara com a `main`                                                       |
+| Vitest / @vitest/browser-playwright                                                    | 5.0.3                          | [browser mode](https://vitest.dev/guide/browser/)                                                                                       | `@angular/build` aceita `^5.0.0`                                                        |
+| Playwright / @axe-core/playwright                                                      | 1.63.0 / 4.13.0                | [webServer](https://playwright.dev/docs/test-webserver)                                                                                 |                                                                                         |
+| Storybook, web-components-vite, addon-a11y                                             | 10.6.1                         | [web-components-vite](https://storybook.js.org/docs/get-started/frameworks/web-components-vite)                                         |                                                                                         |
+| @lhci/cli                                                                              | 0.15.1                         | [configuração](https://github.com/GoogleChrome/lighthouse-ci/blob/main/docs/configuration.md)                                           |                                                                                         |
+| ESLint / typescript-eslint / Prettier                                                  | 10.12.0 / 8.71.1 / 3.9.9       | [Next ESLint](https://nextjs.org/docs/app/api-reference/config/eslint)                                                                  | Plugins podem não declarar suporte ao ESLint 10                                         |
+| eslint-plugin-vue, angular-eslint, @next/eslint-plugin-next, eslint-plugin-react-hooks | 10.11.1, 22.5.0, 16.4.0, 7.1.1 | registro npm                                                                                                                            | Peer com ESLint 10: não verificado                                                      |
+| Zod                                                                                    | 4.6.5                          | [zod](https://zod.dev/json-schema)                                                                                                      |                                                                                         |
+| commitlint / husky                                                                     | 21.2.3 / 9.1.7                 | [commitlint](https://commitlint.js.org/guides/getting-started.html)                                                                     |                                                                                         |
+| jsdom                                                                                  | 30.1.2                         | [Angular testing](https://angular.dev/guide/testing)                                                                                    | Só no MFE Angular                                                                       |
 
 Ainda a colher com `npm view` antes de instalar: `rxjs`, `tslib`, `@angular/common`, `@angular/compiler`, `@angular/platform-browser`, `@types/react`, `@types/react-dom`, `@types/node`, `playwright`.
 
@@ -36,86 +36,86 @@ Ainda a colher com `npm view` antes de instalar: `rxjs`, `tslib`, `@angular/comm
 
 Cada etapa é um commit no padrão Conventional Commits.
 
-| # | Etapa | Verificação |
-|---|---|---|
-| 0 | Ambiente: Node 24.21.0 ativo | `pnpm exec node -v` mostra v24.21.0; `pnpm -v` mostra 12.9.1 |
-| 1 | Raiz: `package.json`, `pnpm-workspace.yaml` (workspaces, `catalog:`, `allowBuilds`), `turbo.json`, `.gitignore` | `pnpm install` sem erro nem aviso de peer; `pnpm exec turbo --version` |
-| 2 | `packages/config`: tsconfig base, ESLint flat, Prettier | `pnpm lint`; `pnpm exec prettier --check .` |
-| 3 | Commits: husky (`commit-msg`) e commitlint | A mensagem `foo` é recusada; `chore: x` passa |
-| 4 | `packages/contracts`: tabela de rotas e um evento | `pnpm --filter @portfolio/contracts test typecheck build` |
-| 5 | `packages/content`: schemas Zod, `ui/` em 4 idiomas, validação | `pnpm --filter @portfolio/content build test`; um teste prova que JSON inválido falha |
-| 6 | `packages/tokens`: CSS em 3 camadas e tipos dos nomes | `pnpm --filter @portfolio/tokens build test` |
-| 7 | `packages/design-system`: `<ds-badge>` em Lit usando token | `pnpm --filter @portfolio/design-system build test`; existe um único `dist/ds.js` |
-| 8 | Storybook do design system | `pnpm --filter @portfolio/design-system build-storybook` |
-| 9 | `apps/shell`: template, carregador, gerador de HTML | `pnpm --filter shell build test`; 12 `index.html` gerados |
-| 10 | `apps/mfe-vue`: `<mfe-recrutador>` | `pnpm --filter mfe-vue build test typecheck`; a página isolada abre |
-| 11 | `apps/mfe-react`: `<mfe-clientes>` | Idem; um teste confirma propriedade e evento em custom element sem wrapper (pendência do ADR 0003) |
-| 12 | `apps/mfe-angular`: `<mfe-tecnico>` | Idem; existe `main.js`; um teste troca `locale` e vê nova renderização |
-| 13 | `apps/web-next`: segmento de idioma, 3 páginas, layout | `pnpm --filter web-next build`; existem `out/index.html`, `out/como-foi-feito/index.html`, `out/en/index.html`, `out/404.html` |
-| 14 | `scripts/assemble.mjs` | `pnpm build && pnpm assemble`; um teste com colisão forçada falha |
-| 15 | Dev composto | `pnpm dev`; `/recrutador/`, `/tecnico/`, `/clientes/` e `/` em `localhost:5173` mostram o olá |
-| 16 | `e2e/` com Playwright e axe | `pnpm test:e2e` |
-| 17 | `scripts/check-budgets.mjs` e configuração do Lighthouse CI | `pnpm budgets` e `pnpm lhci`; linha de base anotada em `budgets.md` |
-| 18 | `.github/workflows/ci.yml` | Rodar localmente a sequência exata do workflow, com `--frozen-lockfile` |
-| 19 | Docs: comandos nos `AGENTS.md`, `packages/*/AGENTS.md`, ajustes de texto | `node scripts/ai-sync.mjs && node scripts/ai-sync.mjs --check` |
+| #   | Etapa                                                                                                           | Verificação                                                                                                                    |
+| --- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| 0   | Ambiente: Node 24.21.0 ativo                                                                                    | `pnpm exec node -v` mostra v24.21.0; `pnpm -v` mostra 12.9.1                                                                   |
+| 1   | Raiz: `package.json`, `pnpm-workspace.yaml` (workspaces, `catalog:`, `allowBuilds`), `turbo.json`, `.gitignore` | `pnpm install` sem erro nem aviso de peer; `pnpm exec turbo --version`                                                         |
+| 2   | `packages/config`: tsconfig base, ESLint flat, Prettier                                                         | `pnpm lint`; `pnpm exec prettier --check .`                                                                                    |
+| 3   | Commits: husky (`commit-msg`) e commitlint                                                                      | A mensagem `foo` é recusada; `chore: x` passa                                                                                  |
+| 4   | `packages/contracts`: tabela de rotas e um evento                                                               | `pnpm --filter @portfolio/contracts test typecheck build`                                                                      |
+| 5   | `packages/content`: schemas Zod, `ui/` em 4 idiomas, validação                                                  | `pnpm --filter @portfolio/content build test`; um teste prova que JSON inválido falha                                          |
+| 6   | `packages/tokens`: CSS em 3 camadas e tipos dos nomes                                                           | `pnpm --filter @portfolio/tokens build test`                                                                                   |
+| 7   | `packages/design-system`: `<ds-badge>` em Lit usando token                                                      | `pnpm --filter @portfolio/design-system build test`; existe um único `dist/ds.js`                                              |
+| 8   | Storybook do design system                                                                                      | `pnpm --filter @portfolio/design-system build-storybook`                                                                       |
+| 9   | `apps/shell`: template, carregador, gerador de HTML                                                             | `pnpm --filter shell build test`; 12 `index.html` gerados                                                                      |
+| 10  | `apps/mfe-vue`: `<mfe-recrutador>`                                                                              | `pnpm --filter mfe-vue build test typecheck`; a página isolada abre                                                            |
+| 11  | `apps/mfe-react`: `<mfe-clientes>`                                                                              | Idem; um teste confirma propriedade e evento em custom element sem wrapper (pendência do ADR 0003)                             |
+| 12  | `apps/mfe-angular`: `<mfe-tecnico>`                                                                             | Idem; existe `main.js`; um teste troca `locale` e vê nova renderização                                                         |
+| 13  | `apps/web-next`: segmento de idioma, 3 páginas, layout                                                          | `pnpm --filter web-next build`; existem `out/index.html`, `out/como-foi-feito/index.html`, `out/en/index.html`, `out/404.html` |
+| 14  | `scripts/assemble.mjs`                                                                                          | `pnpm build && pnpm assemble`; um teste com colisão forçada falha                                                              |
+| 15  | Dev composto                                                                                                    | `pnpm dev`; `/recrutador/`, `/tecnico/`, `/clientes/` e `/` em `localhost:5173` mostram o olá                                  |
+| 16  | `e2e/` com Playwright e axe                                                                                     | `pnpm test:e2e`                                                                                                                |
+| 17  | `scripts/check-budgets.mjs` e configuração do Lighthouse CI                                                     | `pnpm budgets` e `pnpm lhci`; linha de base anotada em `budgets.md`                                                            |
+| 18  | `.github/workflows/ci.yml`                                                                                      | Rodar localmente a sequência exata do workflow, com `--frozen-lockfile`                                                        |
+| 19  | Docs: comandos nos `AGENTS.md`, `packages/*/AGENTS.md`, ajustes de texto                                        | `node scripts/ai-sync.mjs && node scripts/ai-sync.mjs --check`                                                                 |
 
 ## 3. Dependências por pacote
 
 Todas as versões via `catalog:`. Pacotes internos via `workspace:*`.
 
-| Pacote | Dependência | Por quê |
-|---|---|---|
-| raiz | turbo | Orquestra tarefas com cache e `--affected` |
-| raiz | typescript | Linha única de TypeScript |
-| raiz | eslint, prettier | Lint e formatação rodam uma vez, na raiz |
-| raiz | husky, @commitlint/cli, @commitlint/config-conventional | Cobrar Conventional Commits no commit e no CI |
-| raiz | @playwright/test, @axe-core/playwright | E2E atravessando os apps, com verificação de acessibilidade |
-| raiz | @lhci/cli | Cobrar `budgets.md` |
-| config | typescript-eslint | Regras e parser de TypeScript |
-| config | eslint-plugin-vue, angular-eslint | Sem eles o ESLint não lê `.vue` nem template Angular |
-| config | @next/eslint-plugin-next, eslint-plugin-react-hooks | Regras do Next.js e de hooks |
-| contracts | vitest | Teste da tabela de rotas e do evento |
-| content | zod (dev) | Um schema dá validação e tipos; não entra em bundle de app |
-| content | vitest | Teste da validação |
-| tokens | vitest | Teste: todo token semântico tem valor nos dois temas |
-| design-system | lit | Runtime dos componentes; única cópia por documento |
-| design-system | vite | Build de biblioteca em um bundle ES |
-| design-system | vitest, @vitest/browser-playwright, playwright | Teste em Chromium real, como a doc do Lit pede |
-| design-system | storybook, @storybook/web-components-vite, @storybook/addon-a11y | Documentação e painel de acessibilidade |
-| shell | vite, vitest | Build, servidor de dev com proxy, teste das funções de rota |
-| mfe-vue | vue | Runtime |
-| mfe-vue | vite, @vitejs/plugin-vue, vue-tsc | Build de SFC e typecheck de `.vue` |
-| mfe-vue | vitest, @vitest/browser-playwright | Teste do custom element em navegador |
-| mfe-react | react, react-dom | Runtime |
-| mfe-react | vite, @vitejs/plugin-react, @types/react, @types/react-dom | Build de JSX e tipos |
-| mfe-react | vitest, @vitest/browser-playwright | Teste do custom element em navegador |
-| mfe-angular | @angular/core, common, compiler, platform-browser, elements, rxjs, tslib | Runtime mínimo e `createCustomElement` |
-| mfe-angular | @angular/cli, @angular/build, @angular/compiler-cli | Builder `application` e testes |
-| mfe-angular | vitest, jsdom | Runner e DOM padrão do CLI |
-| web-next | next, react, react-dom | Framework |
-| web-next | @types/react, @types/react-dom, @types/node, vitest | Tipos e um teste da função de parâmetros de rota |
+| Pacote        | Dependência                                                              | Por quê                                                     |
+| ------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| raiz          | turbo                                                                    | Orquestra tarefas com cache e `--affected`                  |
+| raiz          | typescript                                                               | Linha única de TypeScript                                   |
+| raiz          | eslint, prettier                                                         | Lint e formatação rodam uma vez, na raiz                    |
+| raiz          | husky, @commitlint/cli, @commitlint/config-conventional                  | Cobrar Conventional Commits no commit e no CI               |
+| raiz          | @playwright/test, @axe-core/playwright                                   | E2E atravessando os apps, com verificação de acessibilidade |
+| raiz          | @lhci/cli                                                                | Cobrar `budgets.md`                                         |
+| config        | typescript-eslint                                                        | Regras e parser de TypeScript                               |
+| config        | eslint-plugin-vue, angular-eslint                                        | Sem eles o ESLint não lê `.vue` nem template Angular        |
+| config        | @next/eslint-plugin-next, eslint-plugin-react-hooks                      | Regras do Next.js e de hooks                                |
+| contracts     | vitest                                                                   | Teste da tabela de rotas e do evento                        |
+| content       | zod (dev)                                                                | Um schema dá validação e tipos; não entra em bundle de app  |
+| content       | vitest                                                                   | Teste da validação                                          |
+| tokens        | vitest                                                                   | Teste: todo token semântico tem valor nos dois temas        |
+| design-system | lit                                                                      | Runtime dos componentes; única cópia por documento          |
+| design-system | vite                                                                     | Build de biblioteca em um bundle ES                         |
+| design-system | vitest, @vitest/browser-playwright, playwright                           | Teste em Chromium real, como a doc do Lit pede              |
+| design-system | storybook, @storybook/web-components-vite, @storybook/addon-a11y         | Documentação e painel de acessibilidade                     |
+| shell         | vite, vitest                                                             | Build, servidor de dev com proxy, teste das funções de rota |
+| mfe-vue       | vue                                                                      | Runtime                                                     |
+| mfe-vue       | vite, @vitejs/plugin-vue, vue-tsc                                        | Build de SFC e typecheck de `.vue`                          |
+| mfe-vue       | vitest, @vitest/browser-playwright                                       | Teste do custom element em navegador                        |
+| mfe-react     | react, react-dom                                                         | Runtime                                                     |
+| mfe-react     | vite, @vitejs/plugin-react, @types/react, @types/react-dom               | Build de JSX e tipos                                        |
+| mfe-react     | vitest, @vitest/browser-playwright                                       | Teste do custom element em navegador                        |
+| mfe-angular   | @angular/core, common, compiler, platform-browser, elements, rxjs, tslib | Runtime mínimo e `createCustomElement`                      |
+| mfe-angular   | @angular/cli, @angular/build, @angular/compiler-cli                      | Builder `application` e testes                              |
+| mfe-angular   | vitest, jsdom                                                            | Runner e DOM padrão do CLI                                  |
+| web-next      | next, react, react-dom                                                   | Framework                                                   |
+| web-next      | @types/react, @types/react-dom, @types/node, vitest                      | Tipos e um teste da função de parâmetros de rota            |
 
 Não entram: zone.js (zoneless), @lit/react (ADR 0003), ajv e json-schema-to-typescript (Zod cobre), Biome (não cobre template Angular), lefthook, concurrently (Turborepo cobre), size-limit (script próprio), wrangler (deploy fora), happy-dom, eslint-plugin-lit, eslint-config-next.
 
 ## 4. Riscos de conflito
 
-| Risco | Como evitar |
-|---|---|
-| TypeScript 7 é a `latest` e quebra Angular e typescript-eslint | Catálogo fixa 6.0.3; `pnpm why typescript` mostra uma versão só |
-| Node local abaixo do mínimo do Angular | Etapa 0 antes de tudo; `engines.node` na raiz |
-| `strictDepBuilds` do pnpm 12 derruba o install (esbuild, sharp e outros com script) | Lista explícita em `allowBuilds`, revisada pelo autor no primeiro install |
-| `minimumReleaseAge` pode recusar versões recentes | Padrão no pnpm 12 não verificado; se recusar, o autor decide; não desligar em silêncio |
-| Três bundlers (Vite 8, o Vite interno do Angular, Turbopack) | Sem `shamefully-hoist`; cada app resolve o seu |
-| Modo biblioteca do Vite não substitui `process.env.*` | `define` de `process.env.NODE_ENV` nos MFEs React e Vue; o e2e falha se sobrar referência |
-| Fast Refresh do React pede preâmbulo do próprio servidor de dev | No dev composto os MFEs rodam em `build --watch`; recarga a quente só no modo isolado |
-| Duas cópias de React (MFE e Next.js) | Mesma entrada de catálogo; nunca carregam no mesmo documento |
-| Lit ou design system empacotado em MFE | MFEs dependem do design system só para tipos; regra de lint barra `lit` em `apps/mfe-*`; `check-budgets` falha se achar `lit` em `/_mfe/` |
-| Next.js reescreve o `tsconfig.json` no build | Base compartilhada só com opções neutras |
-| Plugins de ESLint sem suporte ao ESLint 10 | Conferir peers antes da etapa 2; se faltar, parar e perguntar |
-| `createCustomElement` com `createApplication` e zoneless não aparecem juntos na doc | Não verificado; a etapa 12 prova com teste. Se falhar, volta ao planejamento |
-| Angular emite chunks além do `main.js` | Aceito: `main.js` é módulo ES e resolve os chunks por caminho relativo |
-| `--affected` com clone raso marca tudo como alterado | `fetch-depth: 0` no checkout do CI |
-| Cache do Turborepo servindo conteúdo errado | `CONTENT_INCLUDE_DRAFTS` declarado em `env` da tarefa de build |
+| Risco                                                                               | Como evitar                                                                                                                               |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| TypeScript 7 é a `latest` e quebra Angular e typescript-eslint                      | Catálogo fixa 6.0.3; `pnpm why typescript` mostra uma versão só                                                                           |
+| Node local abaixo do mínimo do Angular                                              | Etapa 0 antes de tudo; `engines.node` na raiz                                                                                             |
+| `strictDepBuilds` do pnpm 12 derruba o install (esbuild, sharp e outros com script) | Lista explícita em `allowBuilds`, revisada pelo autor no primeiro install                                                                 |
+| `minimumReleaseAge` pode recusar versões recentes                                   | Padrão no pnpm 12 não verificado; se recusar, o autor decide; não desligar em silêncio                                                    |
+| Três bundlers (Vite 8, o Vite interno do Angular, Turbopack)                        | Sem `shamefully-hoist`; cada app resolve o seu                                                                                            |
+| Modo biblioteca do Vite não substitui `process.env.*`                               | `define` de `process.env.NODE_ENV` nos MFEs React e Vue; o e2e falha se sobrar referência                                                 |
+| Fast Refresh do React pede preâmbulo do próprio servidor de dev                     | No dev composto os MFEs rodam em `build --watch`; recarga a quente só no modo isolado                                                     |
+| Duas cópias de React (MFE e Next.js)                                                | Mesma entrada de catálogo; nunca carregam no mesmo documento                                                                              |
+| Lit ou design system empacotado em MFE                                              | MFEs dependem do design system só para tipos; regra de lint barra `lit` em `apps/mfe-*`; `check-budgets` falha se achar `lit` em `/_mfe/` |
+| Next.js reescreve o `tsconfig.json` no build                                        | Base compartilhada só com opções neutras                                                                                                  |
+| Plugins de ESLint sem suporte ao ESLint 10                                          | Conferir peers antes da etapa 2; se faltar, parar e perguntar                                                                             |
+| `createCustomElement` com `createApplication` e zoneless não aparecem juntos na doc | Não verificado; a etapa 12 prova com teste. Se falhar, volta ao planejamento                                                              |
+| Angular emite chunks além do `main.js`                                              | Aceito: `main.js` é módulo ES e resolve os chunks por caminho relativo                                                                    |
+| `--affected` com clone raso marca tudo como alterado                                | `fetch-depth: 0` no checkout do CI                                                                                                        |
+| Cache do Turborepo servindo conteúdo errado                                         | `CONTENT_INCLUDE_DRAFTS` declarado em `env` da tarefa de build                                                                            |
 
 ## 5. Fora desta tarefa
 

@@ -14,3 +14,10 @@ out/
 .turbo/
 .angular/
 coverage/
+storybook-static/
+test-results/
+playwright-report/
+blob-report/
+.lighthouseci/
+*.tsbuildinfo
+next-env.d.ts

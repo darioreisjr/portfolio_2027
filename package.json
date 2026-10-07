@@ -1,0 +1,46 @@
+{
+  "name": "portfolio-2027",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.9.1",
+  "engines": {
+    "node": "^24.15.0"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "24.21.0",
+      "onFail": "download"
+    }
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "assemble": "node scripts/assemble.mjs",
+    "preview": "node scripts/serve-dist.mjs",
+    "test:e2e": "playwright test",
+    "budgets": "node scripts/check-budgets.mjs",
+    "lhci": "lhci autorun",
+    "ai:sync": "node scripts/ai-sync.mjs",
+    "ai:check": "node scripts/ai-sync.mjs --check",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "catalog:",
+    "@commitlint/cli": "catalog:",
+    "@commitlint/config-conventional": "catalog:",
+    "@lhci/cli": "catalog:",
+    "@playwright/test": "catalog:",
+    "@portfolio/config": "workspace:*",
+    "eslint": "catalog:",
+    "husky": "catalog:",
+    "prettier": "catalog:",
+    "turbo": "catalog:",
+    "typescript": "catalog:"
+  }
+}

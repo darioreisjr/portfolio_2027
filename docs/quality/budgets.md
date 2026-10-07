@@ -6,42 +6,42 @@ Status: **aceito** pelo autor em 2026-10-06. Cobrado no CI pelo Lighthouse CI a 
 
 Nível "bom" do web.dev, medido no percentil 75 das visitas, em celular e desktop.
 
-| Métrica | Limite |
-|---|---|
-| LCP | até 2,5 s |
-| INP | até 200 ms |
-| CLS | até 0,1 |
+| Métrica | Limite     |
+| ------- | ---------- |
+| LCP     | até 2,5 s  |
+| INP     | até 200 ms |
+| CLS     | até 0,1    |
 
 O site não tem coleta de dados de campo (analytics está em aberto), então o CI usa medidas de laboratório como substitutas:
 
-| Medida de laboratório (Lighthouse, perfil celular) | Limite | Substitui |
-|---|---|---|
-| LCP | até 2,5 s | LCP de campo |
-| TBT | até 200 ms | INP (o web.dev indica o TBT como substituto de laboratório) |
-| CLS | até 0,1 | CLS de campo |
-| Nota de Performance | 90 ou mais | Visão geral |
+| Medida de laboratório (Lighthouse, perfil celular) | Limite     | Substitui                                                   |
+| -------------------------------------------------- | ---------- | ----------------------------------------------------------- |
+| LCP                                                | até 2,5 s  | LCP de campo                                                |
+| TBT                                                | até 200 ms | INP (o web.dev indica o TBT como substituto de laboratório) |
+| CLS                                                | até 0,1    | CLS de campo                                                |
+| Nota de Performance                                | 90 ou mais | Visão geral                                                 |
 
 ## JavaScript inicial por rota
 
 Tamanho transferido (comprimido) de todo o JavaScript necessário para a rota ficar interativa. Os valores abaixo são **tetos de partida, estimados**; os tamanhos de runtime não foram medidos. No bootstrap, mede-se o "olá" de cada app e o teto passa a ser a linha de base medida mais uma folga para funcionalidades.
 
-| Parte | Teto | Justificativa |
-|---|---|---|
-| Shell | 10 kB | Só roteia, carrega um script e troca tema e idioma; não há framework |
-| Design system (Lit e componentes) | 20 kB | Uma cópia por documento, em cache entre rotas |
-| MFE Vue (`/recrutador`) | 60 kB | A doc do Vue cita cerca de 16 kB de base para custom elements; o resto é folga para a linha do tempo |
-| MFE React (`/clientes`) | 80 kB | `react-dom` é o maior custo fixo; a área é de cartões e listas, sem bibliotecas extras |
-| MFE Angular (`/tecnico`) | 110 kB | Maior runtime dos três, e a área tem filtros e formulários |
-| Página Next.js | 130 kB | React mais o runtime do Next.js; páginas de leitura, poucos Client Components |
+| Parte                             | Teto   | Justificativa                                                                                        |
+| --------------------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
+| Shell                             | 10 kB  | Só roteia, carrega um script e troca tema e idioma; não há framework                                 |
+| Design system (Lit e componentes) | 20 kB  | Uma cópia por documento, em cache entre rotas                                                        |
+| MFE Vue (`/recrutador`)           | 60 kB  | A doc do Vue cita cerca de 16 kB de base para custom elements; o resto é folga para a linha do tempo |
+| MFE React (`/clientes`)           | 80 kB  | `react-dom` é o maior custo fixo; a área é de cartões e listas, sem bibliotecas extras               |
+| MFE Angular (`/tecnico`)          | 110 kB | Maior runtime dos três, e a área tem filtros e formulários                                           |
+| Página Next.js                    | 130 kB | React mais o runtime do Next.js; páginas de leitura, poucos Client Components                        |
 
 Total por rota:
 
-| Rota | Composição | Teto total |
-|---|---|---|
-| `/recrutador` | shell, design system, Vue | 90 kB |
-| `/clientes` | shell, design system, React | 110 kB |
-| `/tecnico` | shell, design system, Angular | 140 kB |
-| `/`, `/comunidade`, `/como-foi-feito` | Next.js, design system | 150 kB |
+| Rota                                  | Composição                    | Teto total |
+| ------------------------------------- | ----------------------------- | ---------- |
+| `/recrutador`                         | shell, design system, Vue     | 90 kB      |
+| `/clientes`                           | shell, design system, React   | 110 kB     |
+| `/tecnico`                            | shell, design system, Angular | 140 kB     |
+| `/`, `/comunidade`, `/como-foi-feito` | Next.js, design system        | 150 kB     |
 
 Regras:
 
@@ -51,13 +51,13 @@ Regras:
 
 ## Outros recursos
 
-| Recurso | Limite |
-|---|---|
-| CSS inicial por rota | 20 kB comprimido |
-| Fontes | No máximo 2 arquivos, com `font-display: swap` e pré-carga da principal |
-| Imagem do LCP | Dimensões declaradas, formato moderno, sem carregamento tardio |
-| Demais imagens | `loading="lazy"` e dimensões declaradas |
-| Scripts de terceiros | Nenhum sem registro neste arquivo |
+| Recurso              | Limite                                                                  |
+| -------------------- | ----------------------------------------------------------------------- |
+| CSS inicial por rota | 20 kB comprimido                                                        |
+| Fontes               | No máximo 2 arquivos, com `font-display: swap` e pré-carga da principal |
+| Imagem do LCP        | Dimensões declaradas, formato moderno, sem carregamento tardio          |
+| Demais imagens       | `loading="lazy"` e dimensões declaradas                                 |
+| Scripts de terceiros | Nenhum sem registro neste arquivo                                       |
 
 ## Acessibilidade (WCAG 2.2 nível AA)
 

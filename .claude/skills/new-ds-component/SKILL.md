@@ -38,13 +38,13 @@ Decisões: `docs/architecture/adr/0003-design-system.md`. Leia antes.
 
 ## Entregáveis
 
-| Item | Conteúdo |
-|---|---|
-| Componente | Código e tipos da tag, para JSX, Vue e Angular |
-| Story | Estados principais, nos dois temas |
-| Teste | Renderização, propriedades, eventos, teclado |
+| Item           | Conteúdo                                                     |
+| -------------- | ------------------------------------------------------------ |
+| Componente     | Código e tipos da tag, para JSX, Vue e Angular               |
+| Story          | Estados principais, nos dois temas                           |
+| Teste          | Renderização, propriedades, eventos, teclado                 |
 | Acessibilidade | Verificação automática no teste e passada manual por teclado |
-| Exportação | Incluído no bundle e no índice do pacote |
+| Exportação     | Incluído no bundle e no índice do pacote                     |
 
 ## Verificação
 

@@ -4,15 +4,15 @@ Status: **aprovado** pelo autor em 2026-10-06. Base: áreas do `docs/product/bri
 
 ## Quem renderiza o quê
 
-| Rota (pt-BR) | Área | App | Framework | Por quê |
-|---|---|---|---|---|
-| `/` | Home | `apps/web-next` | Next.js | Primeira impressão de todos os públicos; precisa de HTML pronto para SEO e LCP |
-| `/comunidade` | Comunidade | `apps/web-next` | Next.js | Artigos e open source são o conteúdo com mais valor de busca; é conteúdo de leitura, sem interação pesada |
-| `/como-foi-feito` | Como foi feito | `apps/web-next` | Next.js | Página de texto e diagramas, indexável |
-| `/recrutador` | Recrutador | `apps/mfe-vue` | Vue | Linha do tempo de experiência e formação: lista reativa com transições, bom caso para Vue |
-| `/tecnico` | Técnica | `apps/mfe-angular` | Angular | Skills com filtro e projetos filtráveis por tecnologia: é a seção de filtro complexo |
-| `/clientes` | Cliente | `apps/mfe-react` | React | Serviços, depoimentos e projetos por resultado: composição de cartões e listas |
-| (todas as rotas de MFE) | Casca | `apps/shell` | JavaScript puro | Documento HTML, cabeçalho, rodapé, troca de idioma e tema, carga do script da área |
+| Rota (pt-BR)            | Área           | App                | Framework       | Por quê                                                                                                   |
+| ----------------------- | -------------- | ------------------ | --------------- | --------------------------------------------------------------------------------------------------------- |
+| `/`                     | Home           | `apps/web-next`    | Next.js         | Primeira impressão de todos os públicos; precisa de HTML pronto para SEO e LCP                            |
+| `/comunidade`           | Comunidade     | `apps/web-next`    | Next.js         | Artigos e open source são o conteúdo com mais valor de busca; é conteúdo de leitura, sem interação pesada |
+| `/como-foi-feito`       | Como foi feito | `apps/web-next`    | Next.js         | Página de texto e diagramas, indexável                                                                    |
+| `/recrutador`           | Recrutador     | `apps/mfe-vue`     | Vue             | Linha do tempo de experiência e formação: lista reativa com transições, bom caso para Vue                 |
+| `/tecnico`              | Técnica        | `apps/mfe-angular` | Angular         | Skills com filtro e projetos filtráveis por tecnologia: é a seção de filtro complexo                      |
+| `/clientes`             | Cliente        | `apps/mfe-react`   | React           | Serviços, depoimentos e projetos por resultado: composição de cartões e listas                            |
+| (todas as rotas de MFE) | Casca          | `apps/shell`       | JavaScript puro | Documento HTML, cabeçalho, rodapé, troca de idioma e tema, carga do script da área                        |
 
 Isso mantém a proposta inicial (Next.js para entrada e SEO, React para projetos, Vue para linha do tempo, Angular para filtro, JavaScript puro para o shell) e encaixa cada framework em um público: Vue para recrutadores, Angular para tech leads, React para clientes, Next.js para a comunidade.
 
@@ -20,13 +20,13 @@ Isso mantém a proposta inicial (Next.js para entrada e SEO, React para projetos
 
 Decidido pelo autor em 2026-10-06: **rotas traduzidas**. pt-BR, o padrão, fica sem prefixo, o que preserva a rota pedida `/como-foi-feito`. Os demais idiomas ganham prefixo e nomes próprios.
 
-| Área | pt-BR | en | es | pt-PT |
-|---|---|---|---|---|
-| Home | `/` | `/en` | `/es` | `/pt-pt` |
-| Recrutador | `/recrutador` | `/en/recruiter` | `/es/reclutador` | `/pt-pt/recrutador` |
-| Técnica | `/tecnico` | `/en/tech` | `/es/tecnico` | `/pt-pt/tecnico` |
-| Cliente | `/clientes` | `/en/clients` | `/es/clientes` | `/pt-pt/clientes` |
-| Comunidade | `/comunidade` | `/en/community` | `/es/comunidad` | `/pt-pt/comunidade` |
+| Área           | pt-BR             | en                     | es                 | pt-PT                   |
+| -------------- | ----------------- | ---------------------- | ------------------ | ----------------------- |
+| Home           | `/`               | `/en`                  | `/es`              | `/pt-pt`                |
+| Recrutador     | `/recrutador`     | `/en/recruiter`        | `/es/reclutador`   | `/pt-pt/recrutador`     |
+| Técnica        | `/tecnico`        | `/en/tech`             | `/es/tecnico`      | `/pt-pt/tecnico`        |
+| Cliente        | `/clientes`       | `/en/clients`          | `/es/clientes`     | `/pt-pt/clientes`       |
+| Comunidade     | `/comunidade`     | `/en/community`        | `/es/comunidad`    | `/pt-pt/comunidade`     |
 | Como foi feito | `/como-foi-feito` | `/en/how-it-was-built` | `/es/como-se-hizo` | `/pt-pt/como-foi-feito` |
 
 Os nomes em inglês e espanhol são proposta e podem ser trocados sem efeito na arquitetura.
@@ -40,9 +40,9 @@ Consequências das rotas traduzidas:
 
 ## Dois tipos de documento
 
-| Tipo | Rotas | Quem gera o HTML |
-|---|---|---|
-| Página Next.js | `/`, `/comunidade`, `/como-foi-feito` e versões por idioma | `next build` com export estático |
+| Tipo            | Rotas                                                       | Quem gera o HTML                                                                          |
+| --------------- | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Página Next.js  | `/`, `/comunidade`, `/como-foi-feito` e versões por idioma  | `next build` com export estático                                                          |
 | Página do shell | `/recrutador`, `/tecnico`, `/clientes` e versões por idioma | Build do shell: um HTML por rota e idioma, com `<title>`, descrição e `hreflang` próprios |
 
 Navegar entre os dois tipos recarrega o documento (link `<a>` comum). Navegar dentro de uma área é do próprio framework. O cabeçalho e o rodapé são os mesmos Web Components do design system nos dois tipos, então a troca não é visível como mudança de layout.

@@ -6,19 +6,19 @@ Todo o conteúdo vive em `packages/content` como JSON. Os apps só leem conteúd
 
 ## Convenções
 
-| Regra | Detalhe |
-|---|---|
-| `id` | kebab-case, único no arquivo, estável (nunca reaproveitar) |
-| Referências | Sempre por `id`; a validação falha se o alvo não existir |
-| Datas | `YYYY-MM` para períodos, `YYYY-MM-DD` para publicações; `end: null` significa "atual" |
-| `status` | `"draft"` ou `"published"`; só `published` vai para o build de produção |
-| URLs | Absolutas, com `https://` |
-| Imagens | `{ "src": "caminho", "alt": Localized }`; `alt` é obrigatório |
+| Regra       | Detalhe                                                                               |
+| ----------- | ------------------------------------------------------------------------------------- |
+| `id`        | kebab-case, único no arquivo, estável (nunca reaproveitar)                            |
+| Referências | Sempre por `id`; a validação falha se o alvo não existir                              |
+| Datas       | `YYYY-MM` para períodos, `YYYY-MM-DD` para publicações; `end: null` significa "atual" |
+| `status`    | `"draft"` ou `"published"`; só `published` vai para o build de produção               |
+| URLs        | Absolutas, com `https://`                                                             |
+| Imagens     | `{ "src": "caminho", "alt": Localized }`; `alt` é obrigatório                         |
 
 ### Texto traduzível
 
 ```ts
-type Locale = "pt-BR" | "en" | "es" | "pt-PT";
+type Locale = 'pt-BR' | 'en' | 'es' | 'pt-PT';
 type Localized = Record<Locale, string>;
 ```
 
@@ -31,131 +31,131 @@ Exemplo: `{ "pt-BR": "...", "en": "...", "es": "...", "pt-PT": "..." }`.
 ### Público
 
 ```ts
-type Audience = "recruiter" | "tech" | "client" | "community";
+type Audience = 'recruiter' | 'tech' | 'client' | 'community';
 ```
 
 ## Arquivos
 
 ### `profile.json` (objeto único)
 
-| Campo | Tipo | Obrigatório |
-|---|---|---|
-| `name` | string | sim |
-| `role` | Localized | sim |
-| `tagline` | Localized (uma frase, usada na home) | sim |
-| `summary` | Localized | sim |
-| `location` | Localized | não |
-| `availability` | Localized | não |
-| `photo` | Imagem | não |
-| `highlightSkills` | id de skill[] | sim |
-| `cv` | `Partial<Record<Locale, string>>` (caminho do PDF por idioma) | não |
+| Campo             | Tipo                                                          | Obrigatório |
+| ----------------- | ------------------------------------------------------------- | ----------- |
+| `name`            | string                                                        | sim         |
+| `role`            | Localized                                                     | sim         |
+| `tagline`         | Localized (uma frase, usada na home)                          | sim         |
+| `summary`         | Localized                                                     | sim         |
+| `location`        | Localized                                                     | não         |
+| `availability`    | Localized                                                     | não         |
+| `photo`           | Imagem                                                        | não         |
+| `highlightSkills` | id de skill[]                                                 | sim         |
+| `cv`              | `Partial<Record<Locale, string>>` (caminho do PDF por idioma) | não         |
 
 ### `contacts.json` (lista)
 
-| Campo | Tipo | Obrigatório |
-|---|---|---|
-| `id` | string | sim |
-| `kind` | `"email" \| "linkedin" \| "github" \| "whatsapp"` | sim |
-| `url` | string (`mailto:`, `https://`) | sim |
-| `display` | string (texto visível, ex.: o endereço) | sim |
-| `primaryFor` | Audience[] (áreas em que o canal aparece em destaque) | não |
+| Campo        | Tipo                                                  | Obrigatório |
+| ------------ | ----------------------------------------------------- | ----------- |
+| `id`         | string                                                | sim         |
+| `kind`       | `"email" \| "linkedin" \| "github" \| "whatsapp"`     | sim         |
+| `url`        | string (`mailto:`, `https://`)                        | sim         |
+| `display`    | string (texto visível, ex.: o endereço)               | sim         |
+| `primaryFor` | Audience[] (áreas em que o canal aparece em destaque) | não         |
 
 ### `skills.json` (lista)
 
-| Campo | Tipo | Obrigatório |
-|---|---|---|
-| `id` | string | sim |
-| `name` | string | sim |
-| `category` | `"frontend" \| "backend" \| "database" \| "devops" \| "testing" \| "design" \| "other"` | sim |
-| `level` | `"learning" \| "working" \| "advanced"` | sim |
-| `since` | ano (número) | não |
+| Campo      | Tipo                                                                                    | Obrigatório |
+| ---------- | --------------------------------------------------------------------------------------- | ----------- |
+| `id`       | string                                                                                  | sim         |
+| `name`     | string                                                                                  | sim         |
+| `category` | `"frontend" \| "backend" \| "database" \| "devops" \| "testing" \| "design" \| "other"` | sim         |
+| `level`    | `"learning" \| "working" \| "advanced"`                                                 | sim         |
+| `since`    | ano (número)                                                                            | não         |
 
 ### `experiences.json` (lista)
 
-| Campo | Tipo | Obrigatório |
-|---|---|---|
-| `id`, `status` | | sim |
-| `company` | string | sim |
-| `companyUrl` | string | não |
-| `role` | Localized | sim |
-| `start`, `end` | `YYYY-MM`, `end` pode ser `null` | sim |
-| `location` | Localized | não |
-| `mode` | `"remote" \| "hybrid" \| "onsite"` | não |
-| `summary` | Localized | sim |
-| `highlights` | Localized[] | não |
-| `skills` | id de skill[] | sim |
+| Campo          | Tipo                               | Obrigatório |
+| -------------- | ---------------------------------- | ----------- |
+| `id`, `status` |                                    | sim         |
+| `company`      | string                             | sim         |
+| `companyUrl`   | string                             | não         |
+| `role`         | Localized                          | sim         |
+| `start`, `end` | `YYYY-MM`, `end` pode ser `null`   | sim         |
+| `location`     | Localized                          | não         |
+| `mode`         | `"remote" \| "hybrid" \| "onsite"` | não         |
+| `summary`      | Localized                          | sim         |
+| `highlights`   | Localized[]                        | não         |
+| `skills`       | id de skill[]                      | sim         |
 
 ### `education.json` (lista)
 
-| Campo | Tipo | Obrigatório |
-|---|---|---|
-| `id`, `status` | | sim |
-| `kind` | `"degree" \| "course" \| "certification"` | sim |
-| `title` | Localized | sim |
-| `institution` | string | sim |
-| `start`, `end` | `YYYY-MM`, `end` pode ser `null` | `end` sim |
-| `credentialUrl` | string | não |
+| Campo           | Tipo                                      | Obrigatório |
+| --------------- | ----------------------------------------- | ----------- |
+| `id`, `status`  |                                           | sim         |
+| `kind`          | `"degree" \| "course" \| "certification"` | sim         |
+| `title`         | Localized                                 | sim         |
+| `institution`   | string                                    | sim         |
+| `start`, `end`  | `YYYY-MM`, `end` pode ser `null`          | `end` sim   |
+| `credentialUrl` | string                                    | não         |
 
 ### `projects.json` (lista)
 
 Um projeto tem duas narrativas: `technical` (área técnica) e `outcome` (área do cliente). Cada uma é opcional; o projeto aparece em uma área só se tiver a narrativa correspondente.
 
-| Campo | Tipo | Obrigatório |
-|---|---|---|
-| `id`, `status` | | sim |
-| `slug` | string (usado na URL) | sim |
-| `title` | Localized | sim |
-| `summary` | Localized | sim |
-| `start`, `end` | `YYYY-MM` | `start` sim |
-| `role` | Localized | não |
-| `skills` | id de skill[] | sim |
-| `links.repo`, `links.demo` | string | não |
-| `openSource` | boolean (lista o projeto na área da comunidade) | sim |
-| `cover` | Imagem | não |
-| `gallery` | Imagem[] | não |
-| `technical.problem` | Localized | se houver `technical` |
-| `technical.architecture` | Localized | se houver `technical` |
-| `technical.tradeoffs` | Localized[] | não |
-| `outcome.context` | Localized | se houver `outcome` |
-| `outcome.result` | Localized | se houver `outcome` |
-| `featured` | boolean | não |
+| Campo                      | Tipo                                            | Obrigatório           |
+| -------------------------- | ----------------------------------------------- | --------------------- |
+| `id`, `status`             |                                                 | sim                   |
+| `slug`                     | string (usado na URL)                           | sim                   |
+| `title`                    | Localized                                       | sim                   |
+| `summary`                  | Localized                                       | sim                   |
+| `start`, `end`             | `YYYY-MM`                                       | `start` sim           |
+| `role`                     | Localized                                       | não                   |
+| `skills`                   | id de skill[]                                   | sim                   |
+| `links.repo`, `links.demo` | string                                          | não                   |
+| `openSource`               | boolean (lista o projeto na área da comunidade) | sim                   |
+| `cover`                    | Imagem                                          | não                   |
+| `gallery`                  | Imagem[]                                        | não                   |
+| `technical.problem`        | Localized                                       | se houver `technical` |
+| `technical.architecture`   | Localized                                       | se houver `technical` |
+| `technical.tradeoffs`      | Localized[]                                     | não                   |
+| `outcome.context`          | Localized                                       | se houver `outcome`   |
+| `outcome.result`           | Localized                                       | se houver `outcome`   |
+| `featured`                 | boolean                                         | não                   |
 
 ### `services.json` (lista)
 
-| Campo | Tipo | Obrigatório |
-|---|---|---|
-| `id`, `status` | | sim |
-| `title` | Localized | sim |
-| `description` | Localized | sim |
-| `deliverables` | Localized[] | não |
-| `relatedProjects` | id de projeto[] | não |
+| Campo             | Tipo            | Obrigatório |
+| ----------------- | --------------- | ----------- |
+| `id`, `status`    |                 | sim         |
+| `title`           | Localized       | sim         |
+| `description`     | Localized       | sim         |
+| `deliverables`    | Localized[]     | não         |
+| `relatedProjects` | id de projeto[] | não         |
 
 ### `testimonials.json` (lista)
 
-| Campo | Tipo | Obrigatório |
-|---|---|---|
-| `id`, `status` | | sim |
-| `author` | string | sim |
-| `authorRole` | Localized | sim |
-| `company` | string | não |
-| `relation` | `"client" \| "colleague" \| "manager"` | sim |
-| `quote` | Localized | sim |
-| `originalLocale` | Locale (idioma em que foi escrito) | sim |
-| `consent` | `true` (a validação rejeita qualquer outro valor) | sim |
-| `sourceUrl` | string (ex.: recomendação no LinkedIn) | não |
-| `relatedProject` | id de projeto | não |
+| Campo            | Tipo                                              | Obrigatório |
+| ---------------- | ------------------------------------------------- | ----------- |
+| `id`, `status`   |                                                   | sim         |
+| `author`         | string                                            | sim         |
+| `authorRole`     | Localized                                         | sim         |
+| `company`        | string                                            | não         |
+| `relation`       | `"client" \| "colleague" \| "manager"`            | sim         |
+| `quote`          | Localized                                         | sim         |
+| `originalLocale` | Locale (idioma em que foi escrito)                | sim         |
+| `consent`        | `true` (a validação rejeita qualquer outro valor) | sim         |
+| `sourceUrl`      | string (ex.: recomendação no LinkedIn)            | não         |
+| `relatedProject` | id de projeto                                     | não         |
 
 ### `articles.json` (lista)
 
-| Campo | Tipo | Obrigatório |
-|---|---|---|
-| `id`, `status` | | sim |
-| `title` | Localized | sim |
-| `summary` | Localized | sim |
-| `publishedAt` | `YYYY-MM-DD` | sim |
-| `tags` | string[] | não |
-| `url` | string (onde o texto está publicado) | sim |
-| `locale` | Locale (idioma do texto original) | sim |
+| Campo          | Tipo                                 | Obrigatório |
+| -------------- | ------------------------------------ | ----------- |
+| `id`, `status` |                                      | sim         |
+| `title`        | Localized                            | sim         |
+| `summary`      | Localized                            | sim         |
+| `publishedAt`  | `YYYY-MM-DD`                         | sim         |
+| `tags`         | string[]                             | não         |
+| `url`          | string (onde o texto está publicado) | sim         |
+| `locale`       | Locale (idioma do texto original)    | sim         |
 
 O corpo do artigo dentro do site não está modelado; ver `docs/open-questions.md`.
 
@@ -165,13 +165,13 @@ Textos de interface (rótulos de navegação, botões, títulos de seção), sep
 
 ## Quem consome o quê
 
-| Área | Arquivos |
-|---|---|
-| Home | `profile`, `contacts`, `ui` |
-| Recrutador | `profile`, `experiences`, `education`, `skills`, `contacts`, `ui` |
-| Técnica | `projects` (narrativa `technical`), `skills`, `contacts`, `ui` |
-| Cliente | `services`, `testimonials`, `projects` (narrativa `outcome`), `contacts`, `ui` |
-| Comunidade | `articles`, `projects` (com `openSource: true`), `ui` |
+| Área       | Arquivos                                                                       |
+| ---------- | ------------------------------------------------------------------------------ |
+| Home       | `profile`, `contacts`, `ui`                                                    |
+| Recrutador | `profile`, `experiences`, `education`, `skills`, `contacts`, `ui`              |
+| Técnica    | `projects` (narrativa `technical`), `skills`, `contacts`, `ui`                 |
+| Cliente    | `services`, `testimonials`, `projects` (narrativa `outcome`), `contacts`, `ui` |
+| Comunidade | `articles`, `projects` (com `openSource: true`), `ui`                          |
 
 ## Como mudar o schema sem quebrar consumidores
 

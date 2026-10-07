@@ -9,14 +9,14 @@ Cinco apps em quatro frameworks precisam da mesma aparência. Já decidido: toke
 
 ## Lit ou Stencil
 
-| Critério | Lit 3 | Stencil 4 |
-|---|---|---|
-| Natureza | Biblioteca pequena sobre as APIs padrão | Compilador que gera custom elements |
-| Build | Qualquer bundler; TypeScript comum | Compilador próprio, com configuração e versão de TypeScript próprias |
-| Saídas | Módulos ES | `dist` (com carregamento sob demanda), `dist-custom-elements`, `www` |
-| Wrappers por framework | `@lit/react` opcional; os demais usam a tag direto | Gera wrappers para React, Vue e Angular (não verificado nesta rodada) |
-| Renderização no servidor | `@lit-labs/ssr`, experimental; integração com Next.js só para o Pages Router | Tem saída de hidratação (não verificado nesta rodada) |
-| Peso no toolchain do monorepo | Baixo | Alto: mais um compilador ao lado de Vite, Angular CLI e Next.js |
+| Critério                      | Lit 3                                                                        | Stencil 4                                                             |
+| ----------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Natureza                      | Biblioteca pequena sobre as APIs padrão                                      | Compilador que gera custom elements                                   |
+| Build                         | Qualquer bundler; TypeScript comum                                           | Compilador próprio, com configuração e versão de TypeScript próprias  |
+| Saídas                        | Módulos ES                                                                   | `dist` (com carregamento sob demanda), `dist-custom-elements`, `www`  |
+| Wrappers por framework        | `@lit/react` opcional; os demais usam a tag direto                           | Gera wrappers para React, Vue e Angular (não verificado nesta rodada) |
+| Renderização no servidor      | `@lit-labs/ssr`, experimental; integração com Next.js só para o Pages Router | Tem saída de hidratação (não verificado nesta rodada)                 |
+| Peso no toolchain do monorepo | Baixo                                                                        | Alto: mais um compilador ao lado de Vite, Angular CLI e Next.js       |
 
 ## Decisão recomendada
 
@@ -57,13 +57,13 @@ O registro de custom elements é global por documento, e registrar a mesma tag d
 
 ## Como cada framework consome
 
-| Framework | Como usa a tag | Configuração |
-|---|---|---|
-| JavaScript puro (shell) | HTML direto | Nenhuma |
-| React 19 | JSX direto; React atribui propriedade quando ela existe no elemento e aceita eventos customizados com prefixo `on` | Declaração de tipos das tags para o JSX |
-| Next.js | Como no React, dentro de Client Components; o bundle é carregado pelo layout | Mesma declaração de tipos |
-| Vue | Template direto; `.prop` força atribuição por propriedade | `compilerOptions.isCustomElement` no plugin do Vite |
-| Angular | Template direto | `CUSTOM_ELEMENTS_SCHEMA` no componente (não verificado nesta rodada) |
+| Framework               | Como usa a tag                                                                                                     | Configuração                                                         |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
+| JavaScript puro (shell) | HTML direto                                                                                                        | Nenhuma                                                              |
+| React 19                | JSX direto; React atribui propriedade quando ela existe no elemento e aceita eventos customizados com prefixo `on` | Declaração de tipos das tags para o JSX                              |
+| Next.js                 | Como no React, dentro de Client Components; o bundle é carregado pelo layout                                       | Mesma declaração de tipos                                            |
+| Vue                     | Template direto; `.prop` força atribuição por propriedade                                                          | `compilerOptions.isCustomElement` no plugin do Vite                  |
+| Angular                 | Template direto                                                                                                    | `CUSTOM_ELEMENTS_SCHEMA` no componente (não verificado nesta rodada) |
 
 Divergência entre docs: a doc do Lit ainda recomenda o wrapper `@lit/react`, dizendo que o React não atribui propriedades; a doc atual do React descreve suporte direto. A recomendação é não usar wrapper e confirmar com um teste no bootstrap.
 

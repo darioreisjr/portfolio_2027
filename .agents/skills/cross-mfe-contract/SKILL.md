@@ -23,11 +23,11 @@ Apps só conversam por eventos tipados de `packages/contracts`. É a única depe
 
 ## Alterar um evento existente
 
-| Mudança | Como fazer |
-|---|---|
-| Campo opcional novo no `detail` | Seguro; atualize o tipo e a doc |
+| Mudança                                   | Como fazer                                                    |
+| ----------------------------------------- | ------------------------------------------------------------- |
+| Campo opcional novo no `detail`           | Seguro; atualize o tipo e a doc                               |
 | Campo obrigatório novo, renomear, remover | Quebra: atualize emissor e todos os ouvintes na mesma mudança |
-| Renomear o evento | Quebra: mesma regra |
+| Renomear o evento                         | Quebra: mesma regra                                           |
 
 Não existe deploy independente por app (ADR 0004), então não é preciso manter duas versões no ar. É preciso que tudo mude junto.
 

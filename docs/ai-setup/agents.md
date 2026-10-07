@@ -18,12 +18,29 @@ No Codex não existe lista de ferramentas por agente; a restrição é só o `sa
   "read-web": {
     "claude": ["Read", "Grep", "Glob", "WebFetch", "WebSearch"],
     "codex": "read-only",
-    "gemini": ["read_file", "read_many_files", "list_directory", "glob", "grep_search", "web_fetch", "google_web_search"]
+    "gemini": [
+      "read_file",
+      "read_many_files",
+      "list_directory",
+      "glob",
+      "grep_search",
+      "web_fetch",
+      "google_web_search"
+    ]
   },
   "write": {
     "claude": ["Read", "Grep", "Glob", "Edit", "Write", "Bash"],
     "codex": "workspace-write",
-    "gemini": ["read_file", "read_many_files", "list_directory", "glob", "grep_search", "write_file", "replace", "run_shell_command"]
+    "gemini": [
+      "read_file",
+      "read_many_files",
+      "list_directory",
+      "glob",
+      "grep_search",
+      "write_file",
+      "replace",
+      "run_shell_command"
+    ]
   }
 }
 ```

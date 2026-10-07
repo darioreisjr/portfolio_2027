@@ -1,0 +1,35 @@
+{
+  "name": "mfe-angular",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "ng build --watch",
+    "dev:solo": "ng serve --port 4200",
+    "build": "ng build",
+    "typecheck": "ngc -p tsconfig.app.json --noEmit",
+    "test": "ng test --watch=false"
+  },
+  "dependencies": {
+    "@angular/common": "catalog:",
+    "@angular/compiler": "catalog:",
+    "@angular/core": "catalog:",
+    "@angular/elements": "catalog:",
+    "@angular/platform-browser": "catalog:",
+    "@portfolio/content": "workspace:*",
+    "@portfolio/contracts": "workspace:*",
+    "rxjs": "catalog:",
+    "tslib": "catalog:"
+  },
+  "devDependencies": {
+    "@angular/build": "catalog:",
+    "@angular/cli": "catalog:",
+    "@angular/compiler-cli": "catalog:",
+    "@portfolio/config": "workspace:*",
+    "@portfolio/design-system": "workspace:*",
+    "@portfolio/tokens": "workspace:*",
+    "jsdom": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

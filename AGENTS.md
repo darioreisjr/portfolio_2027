@@ -8,26 +8,26 @@ Portfólio pessoal de um desenvolvedor full-stack. Site estático, sem backend, 
 
 Quatro públicos, uma área por público, cada área em uma tecnologia:
 
-| Área | Rota (pt-BR) | App | Tecnologia |
-|---|---|---|---|
-| Home, Comunidade, Como foi feito | `/`, `/comunidade`, `/como-foi-feito` | `apps/web-next` | Next.js (export estático) |
-| Recrutador | `/recrutador` | `apps/mfe-vue` | Vue |
-| Técnica | `/tecnico` | `apps/mfe-angular` | Angular |
-| Cliente | `/clientes` | `apps/mfe-react` | React |
-| Casca das três áreas acima | | `apps/shell` | JavaScript puro |
+| Área                             | Rota (pt-BR)                          | App                | Tecnologia                |
+| -------------------------------- | ------------------------------------- | ------------------ | ------------------------- |
+| Home, Comunidade, Como foi feito | `/`, `/comunidade`, `/como-foi-feito` | `apps/web-next`    | Next.js (export estático) |
+| Recrutador                       | `/recrutador`                         | `apps/mfe-vue`     | Vue                       |
+| Técnica                          | `/tecnico`                            | `apps/mfe-angular` | Angular                   |
+| Cliente                          | `/clientes`                           | `apps/mfe-react`   | React                     |
+| Casca das três áreas acima       |                                       | `apps/shell`       | JavaScript puro           |
 
 Idiomas: pt-BR (padrão, sem prefixo), en, es, pt-PT (com prefixo e rotas traduzidas).
 
 ## Leia antes de qualquer tarefa
 
-| Documento | Para quê |
-|---|---|
-| `docs/product/brief.md` | Públicos, áreas, escopo |
-| `docs/content/schema.md` | Modelo dos dados JSON |
-| `docs/architecture/mfe-map.md` | Área por app, tabela de rotas por idioma |
-| `docs/architecture/adr/` | Decisões aceitas (0001 a 0004) |
-| `docs/quality/budgets.md` | Limites de performance, acessibilidade e SEO |
-| `docs/open-questions.md` | O que ainda não foi decidido |
+| Documento                      | Para quê                                     |
+| ------------------------------ | -------------------------------------------- |
+| `docs/product/brief.md`        | Públicos, áreas, escopo                      |
+| `docs/content/schema.md`       | Modelo dos dados JSON                        |
+| `docs/architecture/mfe-map.md` | Área por app, tabela de rotas por idioma     |
+| `docs/architecture/adr/`       | Decisões aceitas (0001 a 0004)               |
+| `docs/quality/budgets.md`      | Limites de performance, acessibilidade e SEO |
+| `docs/open-questions.md`       | O que ainda não foi decidido                 |
 
 Se um documento contradiz o código, pare e avise. Não escolha um dos dois em silêncio.
 
@@ -56,15 +56,15 @@ Cada app tem um `AGENTS.md` próprio com comandos e convenções do framework.
 
 O monorepo ainda não foi criado. Os comandos abaixo passam a valer depois do bootstrap; até lá só o primeiro existe.
 
-| Comando | O que faz |
-|---|---|
-| `node scripts/ai-sync.mjs` | Gera as configurações nativas das três ferramentas |
-| `node scripts/ai-sync.mjs --check` | Falha se algo gerado estiver fora de sincronia |
-| `pnpm install` | Instala dependências |
-| `pnpm dev` | Sobe o shell e os apps |
-| `pnpm build` | Builda o que mudou |
-| `pnpm lint`, `pnpm typecheck`, `pnpm test` | Verificações |
-| `pnpm test:e2e` | Playwright atravessando os MFEs |
+| Comando                                    | O que faz                                          |
+| ------------------------------------------ | -------------------------------------------------- |
+| `node scripts/ai-sync.mjs`                 | Gera as configurações nativas das três ferramentas |
+| `node scripts/ai-sync.mjs --check`         | Falha se algo gerado estiver fora de sincronia     |
+| `pnpm install`                             | Instala dependências                               |
+| `pnpm dev`                                 | Sobe o shell e os apps                             |
+| `pnpm build`                               | Builda o que mudou                                 |
+| `pnpm lint`, `pnpm typecheck`, `pnpm test` | Verificações                                       |
+| `pnpm test:e2e`                            | Playwright atravessando os MFEs                    |
 
 ## Regras de fronteira
 
@@ -115,11 +115,11 @@ Claude Code é a ferramenta principal. Codex e Gemini são usados para revisão 
 
 ## Setup dos agentes
 
-| O quê | Fonte (edite aqui) | Gerado por `scripts/ai-sync.mjs` |
-|---|---|---|
-| Instruções | `AGENTS.md` (raiz e por app) | `CLAUDE.md` e `GEMINI.md` por app |
-| Skills | `.agents/skills/<nome>/SKILL.md` | `.claude/skills/` |
-| Subagentes | `docs/ai-setup/agents.md` | `.claude/agents/`, `.codex/agents/`, `.gemini/agents/` |
-| MCP | `docs/ai-setup/mcp.json` | `.mcp.json`, `.codex/config.toml`, `.gemini/settings.json` |
+| O quê      | Fonte (edite aqui)               | Gerado por `scripts/ai-sync.mjs`                           |
+| ---------- | -------------------------------- | ---------------------------------------------------------- |
+| Instruções | `AGENTS.md` (raiz e por app)     | `CLAUDE.md` e `GEMINI.md` por app                          |
+| Skills     | `.agents/skills/<nome>/SKILL.md` | `.claude/skills/`                                          |
+| Subagentes | `docs/ai-setup/agents.md`        | `.claude/agents/`, `.codex/agents/`, `.gemini/agents/`     |
+| MCP        | `docs/ai-setup/mcp.json`         | `.mcp.json`, `.codex/config.toml`, `.gemini/settings.json` |
 
 Depois de editar uma fonte, rode `node scripts/ai-sync.mjs`. Detalhes de cada ferramenta em `docs/ai-setup/capability-matrix.md`.

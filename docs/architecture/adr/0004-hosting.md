@@ -9,15 +9,15 @@ Cinco apps estáticos precisam aparecer como um site só, em um domínio, sem se
 
 ## Opções
 
-| Critério | GitHub Pages | Cloudflare Pages | Netlify | Vercel |
-|---|---|---|---|---|
-| Serve o export estático do Next.js | Sim | Sim | Sim | Sim |
-| Reescrita por caminho (status 200) | **Não** (a doc não descreve regras) | Sim, arquivo `_redirects`, só destinos do próprio site | Sim, `_redirects` ou `netlify.toml` | Sim, `vercel.json` |
-| Arquivo existente vence a reescrita | Não se aplica | **Não**: regras valem antes dos arquivos | Sim, por padrão | Não verificado |
-| `404.html` | Um só, na raiz | O mais próximo subindo a árvore de diretórios | Não verificado | Não verificado |
-| Limite de regras | Não se aplica | 2.000 estáticas e 100 dinâmicas | Não verificado | Não verificado |
-| Preview por pull request | Não | Sim (não verificado nesta rodada) | Sim (não verificado) | Sim |
-| Preços e limites do plano gratuito | Não verificado | Não verificado | Não verificado | Não verificado |
+| Critério                            | GitHub Pages                        | Cloudflare Pages                                       | Netlify                             | Vercel             |
+| ----------------------------------- | ----------------------------------- | ------------------------------------------------------ | ----------------------------------- | ------------------ |
+| Serve o export estático do Next.js  | Sim                                 | Sim                                                    | Sim                                 | Sim                |
+| Reescrita por caminho (status 200)  | **Não** (a doc não descreve regras) | Sim, arquivo `_redirects`, só destinos do próprio site | Sim, `_redirects` ou `netlify.toml` | Sim, `vercel.json` |
+| Arquivo existente vence a reescrita | Não se aplica                       | **Não**: regras valem antes dos arquivos               | Sim, por padrão                     | Não verificado     |
+| `404.html`                          | Um só, na raiz                      | O mais próximo subindo a árvore de diretórios          | Não verificado                      | Não verificado     |
+| Limite de regras                    | Não se aplica                       | 2.000 estáticas e 100 dinâmicas                        | Não verificado                      | Não verificado     |
+| Preview por pull request            | Não                                 | Sim (não verificado nesta rodada)                      | Sim (não verificado)                | Sim                |
+| Preços e limites do plano gratuito  | Não verificado                      | Não verificado                                         | Não verificado                      | Não verificado     |
 
 O Next.js em export estático ao lado do shell funciona nos quatro, porque toda rota conhecida vira um arquivo real (ADR 0002). A diferença aparece nas sub-rotas de MFE não geradas no build: sem reescrita, um link direto para elas dá 404. O GitHub Pages fica de fora por isso.
 
@@ -40,15 +40,15 @@ Netlify é a alternativa equivalente e tem uma vantagem: arquivo existente vence
 
 ## Estrutura do diretório publicado
 
-| Caminho | Origem |
-|---|---|
-| `/`, `/comunidade/`, `/como-foi-feito/`, `/_next/`, `/404.html` | `apps/web-next` (`out/`) |
-| `/recrutador/`, `/tecnico/`, `/clientes/` (só HTML) | `apps/shell` |
-| `/en/...`, `/es/...`, `/pt-pt/...` | Os dois acima, por idioma, com nomes de rota traduzidos (tabela em `docs/architecture/mfe-map.md`) |
-| `/_shell/` | Scripts e estilos do shell |
-| `/_mfe/vue/`, `/_mfe/angular/`, `/_mfe/react/` | Bundle de cada MFE |
-| `/_ds/` | Design system e tokens |
-| `/_redirects`, `/_headers` | Gerados na montagem |
+| Caminho                                                         | Origem                                                                                             |
+| --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `/`, `/comunidade/`, `/como-foi-feito/`, `/_next/`, `/404.html` | `apps/web-next` (`out/`)                                                                           |
+| `/recrutador/`, `/tecnico/`, `/clientes/` (só HTML)             | `apps/shell`                                                                                       |
+| `/en/...`, `/es/...`, `/pt-pt/...`                              | Os dois acima, por idioma, com nomes de rota traduzidos (tabela em `docs/architecture/mfe-map.md`) |
+| `/_shell/`                                                      | Scripts e estilos do shell                                                                         |
+| `/_mfe/vue/`, `/_mfe/angular/`, `/_mfe/react/`                  | Bundle de cada MFE                                                                                 |
+| `/_ds/`                                                         | Design system e tokens                                                                             |
+| `/_redirects`, `/_headers`                                      | Gerados na montagem                                                                                |
 
 ## Estratégia de deploy
 

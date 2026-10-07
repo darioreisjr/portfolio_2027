@@ -27,11 +27,11 @@ Fonte da verdade do modelo: `docs/content/schema.md`. Leia antes de mexer.
 
 ## Mudar o schema
 
-| Mudança | Risco | O que fazer |
-|---|---|---|
-| Campo opcional novo | Seguro | Atualize o schema e `docs/content/schema.md` |
+| Mudança                                   | Risco  | O que fazer                                                |
+| ----------------------------------------- | ------ | ---------------------------------------------------------- |
+| Campo opcional novo                       | Seguro | Atualize o schema e `docs/content/schema.md`               |
 | Campo obrigatório novo, renomear, remover | Quebra | Atualize na mesma mudança todos os apps que leem o arquivo |
-| Valor novo em enumeração | Quebra | Procure tratamentos exaustivos nos apps e atualize |
+| Valor novo em enumeração                  | Quebra | Procure tratamentos exaustivos nos apps e atualize         |
 
 Passos:
 

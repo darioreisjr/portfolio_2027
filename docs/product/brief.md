@@ -10,12 +10,12 @@ A ideia central: **uma área por público, cada área em uma tecnologia diferent
 
 ## Públicos e o que cada um precisa achar em 10 segundos
 
-| Público | Precisa achar em 10 segundos | Ação esperada |
-|---|---|---|
-| Recrutadores e RH | Resumo e stack; experiência; currículo em PDF; formação e certificados | Baixar o currículo, chamar para vaga |
-| Tech leads e devs | Projetos com decisões técnicas; skills com filtro; como o site foi feito; GitHub | Ver código e projetos |
-| Clientes freelance | Serviços; depoimentos; projetos contados pelo resultado; canal de orçamento | Pedir orçamento |
-| Comunidade dev | Artigos; como o site foi feito; open source e GitHub; design system | Ler, ver o código, seguir |
+| Público            | Precisa achar em 10 segundos                                                     | Ação esperada                        |
+| ------------------ | -------------------------------------------------------------------------------- | ------------------------------------ |
+| Recrutadores e RH  | Resumo e stack; experiência; currículo em PDF; formação e certificados           | Baixar o currículo, chamar para vaga |
+| Tech leads e devs  | Projetos com decisões técnicas; skills com filtro; como o site foi feito; GitHub | Ver código e projetos                |
+| Clientes freelance | Serviços; depoimentos; projetos contados pelo resultado; canal de orçamento      | Pedir orçamento                      |
+| Comunidade dev     | Artigos; como o site foi feito; open source e GitHub; design system              | Ler, ver o código, seguir            |
 
 Não há uma ação principal única: cada área tem a sua.
 
@@ -37,12 +37,12 @@ Sobre, Projetos, Experiência, Skills, Formação e certificados, Serviços free
 
 ## Idiomas
 
-| Código | Idioma | Papel |
-|---|---|---|
-| `pt-BR` | Português do Brasil | Padrão e idioma de origem do conteúdo |
-| `en` | Inglês | Tradução |
-| `es` | Espanhol | Tradução |
-| `pt-PT` | Português de Portugal | Tradução |
+| Código  | Idioma                | Papel                                 |
+| ------- | --------------------- | ------------------------------------- |
+| `pt-BR` | Português do Brasil   | Padrão e idioma de origem do conteúdo |
+| `en`    | Inglês                | Tradução                              |
+| `es`    | Espanhol              | Tradução                              |
+| `pt-PT` | Português de Portugal | Tradução                              |
 
 O autor escreve em pt-BR. As outras três versões são traduzidas com apoio de IA e revisadas pelo autor antes de publicar. Nenhuma tradução vai ao ar sem revisão.
 

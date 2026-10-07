@@ -27,18 +27,23 @@ Não é ADR: detalhe de implementação dentro de um app, ou ajuste de teto em `
 - Data: AAAA-MM-DD
 
 ## Contexto
+
 O problema e as restrições. O que já está decidido e não se reabre.
 
 ## Opções
+
 Tabela comparando as alternativas reais pelos critérios que importam aqui.
 
 ## Decisão recomendada
+
 A escolha, o motivo, e onde a documentação pesa contra ela.
 
 ## Consequências
+
 O que fica mais fácil, o que fica mais difícil, o que passa a ser regra.
 
 ## Fontes
+
 Links da documentação atual que sustentam cada afirmação.
 ```
 
