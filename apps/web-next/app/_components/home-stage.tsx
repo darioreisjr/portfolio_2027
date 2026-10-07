@@ -28,7 +28,7 @@ function PersonaLink({ persona, enter, first }: PersonaLinkProps) {
           height={persona.figure.height}
           // No carrossel os outros três estão fora da tela; só baixam quando chegam perto.
           loading={first ? 'eager' : 'lazy'}
-          fetchPriority={first ? 'high' : 'auto'}
+          fetchPriority={first ? 'high' : 'low'}
           decoding="async"
         />
       </picture>

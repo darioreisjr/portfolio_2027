@@ -39,11 +39,13 @@
 
 ## Como a arte final entra
 
-Cada personagem tem uma entrada na tabela `figures` de `apps/web-next/lib/home.ts`, com arquivo, largura e altura. A arte chega em PNG grande; ela é aparada nas bordas transparentes, reduzida para 720 px de altura e salva em WebP em `apps/web-next/public/_home/personas/`. Depois, atualiza-se a entrada e mede-se de novo com `pnpm lhci`.
+Cada personagem tem uma entrada na tabela `figures` de `apps/web-next/lib/home.ts`, com arquivo, largura e altura. A arte chega em PNG grande; ela é aparada nas bordas transparentes, reduzida para 640 px de altura e salva em AVIF, com WebP de reserva, em `apps/web-next/public/_home/personas/`. Depois, atualiza-se a entrada e mede-se de novo com `pnpm lhci`.
 
 A primeira arte final entrou em 2026-10-07: o recrutador ("Estou contratando", feito em Vue). O PNG de 1 MB (1086 por 1448) virou um WebP de 49 kB (287 por 720). A segunda, do técnico ("Quero ver o código", feito em Angular), entrou no mesmo dia.
 
 Com duas imagens em WebP o LCP da home passou do limite (2,54 s de 2,5 s). As duas passaram a ser servidas em AVIF, com 24 kB cada, e o WebP ficou de reserva para navegadores sem AVIF; o LCP voltou para 2,3 s. Só a primeira imagem carrega com prioridade.
+
+A terceira, do cliente ("Tenho um projeto", feito em React), levou o LCP para 2,45 a 2,49 s. As três imagens foram refeitas com 640 px de altura e qualidade 50 (18 kB cada em AVIF), e as que não são a primeira passaram a carregar com prioridade baixa: o LCP ficou em 2,4 s.
 
 ## Medido
 
