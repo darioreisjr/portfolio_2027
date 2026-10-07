@@ -1,0 +1,18 @@
+{
+  "$comment": "Tetos de JavaScript comprimido (gzip), em kB. Cobrados por scripts/check-budgets.mjs. Explicação e histórico em budgets.md; mantenha os dois arquivos iguais.",
+  "parts": {
+    "shell": { "dir": "_shell", "maxKb": 10 },
+    "design-system": { "dir": "_ds", "maxKb": 20 },
+    "mfe-vue": { "dir": "_mfe/vue", "maxKb": 60 },
+    "mfe-react": { "dir": "_mfe/react", "maxKb": 80 },
+    "mfe-angular": { "dir": "_mfe/angular", "maxKb": 110 }
+  },
+  "routes": {
+    "/": 150,
+    "/comunidade/": 150,
+    "/como-foi-feito/": 150,
+    "/recrutador/": 90,
+    "/clientes/": 110,
+    "/tecnico/": 140
+  }
+}

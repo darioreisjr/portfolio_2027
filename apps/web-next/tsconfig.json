@@ -1,0 +1,12 @@
+{
+  "extends": "@portfolio/config/tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "incremental": true,
+    "allowJs": true,
+    "types": ["node"],
+    "plugins": [{ "name": "next" }]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

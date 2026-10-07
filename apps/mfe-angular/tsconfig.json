@@ -1,0 +1,14 @@
+{
+  "extends": "@portfolio/config/tsconfig.base.json",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "importHelpers": true
+  },
+  "angularCompilerOptions": {
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  },
+  "files": [],
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.spec.json" }]
+}

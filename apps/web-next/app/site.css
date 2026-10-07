@@ -1,0 +1,28 @@
+main {
+  padding: var(--space-block-lg) var(--space-inline-md);
+}
+
+main h1 {
+  margin: 0 0 var(--space-block-md);
+  font-size: var(--text-size-title);
+}
+
+.hello {
+  display: flex;
+  align-items: center;
+  gap: var(--space-inline-sm);
+  margin: 0 0 var(--space-block-lg);
+}
+
+nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-inline-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav a {
+  color: var(--color-text);
+}
