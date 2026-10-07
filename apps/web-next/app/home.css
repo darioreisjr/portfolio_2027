@@ -345,30 +345,54 @@
     min-height: 0;
   }
 
+  /* Duas linhas compartilhadas por todos os personagens: a das figuras, com o
+     espaço que sobra, e a das legendas, com a altura da maior. Assim os quatro
+     ficam do mesmo tamanho, mesmo com legendas de comprimentos diferentes. */
   .personas {
+    display: grid;
     flex: 1;
-    align-items: stretch;
+    grid-template-rows: minmax(0, 1fr) auto;
+    grid-auto-columns: 100%;
+    grid-auto-flow: column;
+    row-gap: 0;
     min-height: 0;
   }
 
-  .personas > li {
-    display: flex;
-    min-height: 0;
-  }
-
+  .personas > li,
   .persona {
-    flex: 1;
+    display: grid;
+    grid-row: span 2;
+    grid-template-rows: subgrid;
     min-width: 0;
     min-height: 0;
   }
 
+  .persona {
+    row-gap: var(--space-block-md);
+    justify-items: center;
+  }
+
+  /* Linha explícita: a colocação automática punha figura e legenda na mesma célula. */
+  .persona-caption {
+    grid-row: 2;
+  }
+
   .persona-figure {
-    flex: 1 1 0;
+    grid-row: 1;
+    align-self: end;
     width: 100%;
+    height: 100%;
     min-height: 0;
     max-height: 20rem;
     object-fit: contain;
     object-position: center bottom;
+  }
+}
+
+@media (min-height: 40rem) and (min-width: 48rem) {
+  .personas {
+    grid-auto-columns: minmax(0, 15rem);
+    justify-content: center;
   }
 }
 
