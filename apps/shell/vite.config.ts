@@ -23,6 +23,7 @@ const contentTypes: Record<string, string> = {
   '.js': 'text/javascript',
   '.css': 'text/css',
   '.map': 'application/json',
+  '.svg': 'image/svg+xml',
 };
 
 function resolvePublished(pathname: string): string | undefined {

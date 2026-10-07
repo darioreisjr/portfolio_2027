@@ -61,6 +61,53 @@ ds-theme-toggle:not(:defined) {
   block-size: var(--ds-theme-toggle-size);
   visibility: hidden;
 }
+
+/* Grupo fixo no canto inferior direito de todo documento. Sem custom element:
+   a marcação é do dono do documento e a aparência é esta (ADR 0006). */
+.ds-dock {
+  position: fixed;
+  inset-block-end: var(--ds-dock-offset-block);
+  inset-inline-end: var(--ds-dock-offset-inline);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+}
+
+.ds-language-switcher ul {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* O alvo de toque é maior que a bandeira. */
+.ds-language-switcher a {
+  display: grid;
+  place-items: center;
+  inline-size: var(--ds-language-switcher-size);
+  block-size: var(--ds-language-switcher-size);
+  border-radius: var(--radius-full);
+}
+
+.ds-language-switcher a:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: calc(var(--focus-ring-width) * -1);
+}
+
+.ds-language-switcher img {
+  display: block;
+  inline-size: var(--ds-language-switcher-flag-size);
+  block-size: var(--ds-language-switcher-flag-size);
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  outline: var(--ds-language-switcher-ring-width) solid var(--ds-language-switcher-edge);
+}
+
+/* Idioma em uso: um segundo anel, afastado da bandeira. Não depende só de cor. */
+.ds-language-switcher a[aria-current='page'] img {
+  outline-color: var(--ds-language-switcher-current);
+  outline-offset: var(--ds-language-switcher-ring-width);
+}
 `;
 
 const publicNames = [

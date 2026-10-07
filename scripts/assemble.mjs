@@ -12,6 +12,9 @@ import { fileURLToPath } from 'node:url';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
+// Uma bandeira por idioma (ADR 0006).
+const FLAGS = ['pt-BR', 'en', 'es', 'pt-PT'];
+
 /**
  * `only` limita a cópia a alguns arquivos da origem.
  * `flattenNextSegments` corrige os arquivos de pré-carga do Next.js (ver abaixo).
@@ -22,11 +25,22 @@ export const sources = [
   { from: 'apps/mfe-vue/dist', to: '_mfe/vue' },
   { from: 'apps/mfe-react/dist', to: '_mfe/react' },
   { from: 'apps/mfe-angular/dist/browser', to: '_mfe/angular' },
-  { from: 'packages/design-system/dist', to: '_ds', only: ['ds.js'] },
+  {
+    from: 'packages/design-system/dist',
+    to: '_ds',
+    only: ['ds.js', ...FLAGS.map((flag) => `flags/${flag}.svg`)],
+  },
   { from: 'packages/tokens/dist', to: '_ds', only: ['tokens.css'] },
 ];
 
-const REQUIRED = ['index.html', '404.html', '_shell/shell.js', '_ds/ds.js', '_ds/tokens.css'];
+const REQUIRED = [
+  'index.html',
+  '404.html',
+  '_shell/shell.js',
+  '_ds/ds.js',
+  '_ds/tokens.css',
+  ...FLAGS.map((flag) => `_ds/flags/${flag}.svg`),
+];
 
 function walk(dir, prefix = '') {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
