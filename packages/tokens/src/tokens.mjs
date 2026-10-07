@@ -20,8 +20,6 @@ export const primitives = {
   'color-indigo-950': '#0f1535',
   'color-indigo-600': '#45488a',
   'color-cream-100': '#f6efd9',
-  'color-mist-light': '#f4f6fbcc',
-  'color-mist-dark': '#141a3ccc',
   'color-cloud-light': '#ffffffb3',
   'color-cloud-dark': '#a9aee04d',
   // Sol do hinomaru, no seletor de tema.
@@ -74,7 +72,8 @@ export const semantic = {
     'color-scene-blossom': 'var(--color-pink-200)',
     'color-scene-blossom-core': 'var(--color-pink-500)',
     'color-scene-petal': 'var(--color-pink-300)',
-    'color-scene-veil': 'var(--color-mist-light)',
+    // Contorno da letra sobre o cenário: o tom do alto do céu.
+    'color-scene-outline': 'var(--color-sky-200)',
     'color-celestial': 'var(--color-red-600)',
   },
   dark: {
@@ -96,7 +95,7 @@ export const semantic = {
     'color-scene-blossom': 'var(--color-pink-50)',
     'color-scene-blossom-core': 'var(--color-pink-200)',
     'color-scene-petal': 'var(--color-pink-50)',
-    'color-scene-veil': 'var(--color-mist-dark)',
+    'color-scene-outline': 'var(--color-indigo-950)',
     'color-celestial': 'var(--color-cream-100)',
   },
 };
@@ -112,6 +111,7 @@ export const semanticStatic = {
   'space-block-lg': 'var(--space-6)',
   'focus-ring-width': 'var(--border-width-thick)',
   'border-width-control': 'var(--border-width-medium)',
+  'text-outline-width': 'var(--border-width-medium)',
   'size-control': 'var(--size-11)',
   'focus-ring-offset': 'var(--space-1)',
   'motion-duration-md': 'var(--duration-200)',

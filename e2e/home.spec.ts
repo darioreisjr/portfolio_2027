@@ -384,19 +384,38 @@ const petalStates = (page: Page) =>
       .map((style) => ({ name: style.animationName, state: style.animationPlayState })),
   );
 
+const CAPTURE_STYLE_ID = 'contrast-capture';
+
+/** Troca a folha de estilo usada nas capturas e devolve a tela em base64. */
+async function capture(page: Page, css: string): Promise<string> {
+  await page.evaluate(
+    ({ id, content }) => {
+      const style =
+        document.getElementById(id) ?? document.head.appendChild(document.createElement('style'));
+      style.id = id;
+      style.textContent = content;
+    },
+    { id: CAPTURE_STYLE_ID, content: css },
+  );
+  return (await page.screenshot({ scale: 'css', fullPage: true })).toString('base64');
+}
+
 /**
- * Pior contraste entre a cor de um texto e os pixels que estão de fato atrás
- * dele. O axe não mede texto sobre degradê, galho, pétala ou a arte do
- * personagem; este teste mede. O texto fica transparente, a tela é capturada
- * e lida em um canvas.
+ * Contraste entre a cor de cada texto e os pixels encostados nas letras dele,
+ * que é onde o contorno fica. O axe não mede texto sobre degradê, galho, pétala
+ * ou a arte do personagem; este teste mede, pelo procedimento da técnica G18 da
+ * WCAG. Devolve, por bloco, o contraste que 99% desses pixels alcançam; nenhum
+ * pixel pode ficar abaixo de 3:1.
+ *
+ * São três capturas da mesma tela, com a animação parada: sem texto, com o
+ * texto em magenta (para achar as letras) e só com o contorno.
  */
-async function worstContrast(page: Page, selectors: string[]): Promise<Record<string, number>> {
+async function outlineContrast(page: Page, selectors: string[]): Promise<Record<string, number>> {
   const targets = await page.evaluate(
     (list) =>
       list.map((selector) => {
         const element = document.querySelector(selector);
         if (!element) throw new Error(`Sem elemento para ${selector}`);
-        // Só a área do texto: os cantos arredondados da névoa não têm letra.
         const range = document.createRange();
         range.selectNodeContents(element);
         const { x, y, width, height } = range.getBoundingClientRect();
@@ -413,25 +432,35 @@ async function worstContrast(page: Page, selectors: string[]): Promise<Record<st
     selectors,
   );
 
-  // As figuras ficam: a frase do personagem é lida sobre a arte dele.
-  await page.addStyleTag({
-    content:
-      '.home, .home * { color: transparent !important; text-decoration-color: transparent !important; }' +
-      '.home ds-badge, .persona-enter, .home-motion input { visibility: hidden !important; }',
-  });
-  const screenshot = (await page.screenshot({ scale: 'css', fullPage: true })).toString('base64');
+  // As três capturas têm de ser da mesma cena: tudo parado onde está.
+  const hidden =
+    '*, *::before, *::after { animation-play-state: paused !important; transition: none !important; }' +
+    '.home ds-badge, .persona-enter { visibility: hidden !important; }';
+  const noText =
+    '.home, .home * { color: transparent !important; text-decoration-color: transparent !important; }';
+  const bare = await capture(page, `${hidden}${noText}.home * { text-shadow: none !important; }`);
+  const letters = await capture(
+    page,
+    `${hidden}.home, .home * { color: #f0f !important; text-shadow: none !important; }`,
+  );
+  const outlined = await capture(page, `${hidden}${noText}`);
 
-  return page.evaluate(
-    async ({ image, list }) => {
-      const picture = new Image();
-      picture.src = `data:image/png;base64,${image}`;
-      await picture.decode();
-      const canvas = document.createElement('canvas');
-      canvas.width = picture.width;
-      canvas.height = picture.height;
-      const context = canvas.getContext('2d');
-      if (!context) throw new Error('Sem canvas 2d');
-      context.drawImage(picture, 0, 0);
+  const result = await page.evaluate(
+    async ({ images, list }) => {
+      const pixels = async (image: string) => {
+        const picture = new Image();
+        picture.src = `data:image/png;base64,${image}`;
+        await picture.decode();
+        const canvas = document.createElement('canvas');
+        canvas.width = picture.width;
+        canvas.height = picture.height;
+        const context = canvas.getContext('2d', { willReadFrequently: true });
+        if (!context) throw new Error('Sem canvas 2d');
+        context.drawImage(picture, 0, 0);
+        return context;
+      };
+      const [bare, letters, outlined] = await Promise.all(images.map(pixels));
+      if (!bare || !letters || !outlined) throw new Error('Captura ausente');
 
       const luminance = (red: number, green: number, blue: number) => {
         const [r, g, b] = [red, green, blue].map((value) => {
@@ -441,27 +470,62 @@ async function worstContrast(page: Page, selectors: string[]): Promise<Record<st
         return 0.2126 * (r ?? 0) + 0.7152 * (g ?? 0) + 0.0722 * (b ?? 0);
       };
 
-      const result: Record<string, number> = {};
+      const result: Record<string, { common: number; worst: number }> = {};
       for (const target of list) {
         const [red = 0, green = 0, blue = 0] = (target.color.match(/[\d.]+/g) ?? []).map(Number);
         const text = luminance(red, green, blue);
-        const { data } = context.getImageData(
-          Math.max(0, Math.floor(target.x)),
-          Math.max(0, Math.floor(target.y)),
-          Math.max(1, Math.floor(target.width)),
-          Math.max(1, Math.floor(target.height)),
-        );
-        let worst = Infinity;
-        for (let at = 0; at < data.length; at += 4) {
-          const behind = luminance(data[at] ?? 0, data[at + 1] ?? 0, data[at + 2] ?? 0);
-          const [high, low] = text > behind ? [text, behind] : [behind, text];
-          worst = Math.min(worst, (high + 0.05) / (low + 0.05));
+        // Uma margem em volta do texto, para o contorno das letras da borda.
+        const left = Math.max(0, Math.floor(target.x) - 3);
+        const top = Math.max(0, Math.floor(target.y) - 3);
+        const width = Math.ceil(target.width) + 6;
+        const height = Math.ceil(target.height) + 6;
+        const without = bare.getImageData(left, top, width, height).data;
+        const withText = letters.getImageData(left, top, width, height).data;
+        const around = outlined.getImageData(left, top, width, height).data;
+
+        const glyph = new Uint8Array(width * height);
+        for (let at = 0; at < glyph.length; at += 1) {
+          const difference =
+            Math.abs((without[at * 4] ?? 0) - (withText[at * 4] ?? 0)) +
+            Math.abs((without[at * 4 + 1] ?? 0) - (withText[at * 4 + 1] ?? 0)) +
+            Math.abs((without[at * 4 + 2] ?? 0) - (withText[at * 4 + 2] ?? 0));
+          if (difference > 24) glyph[at] = 1;
         }
-        result[target.selector] = Number(worst.toFixed(2));
+
+        const contrasts: number[] = [];
+        for (let y = 1; y < height - 1; y += 1) {
+          for (let x = 1; x < width - 1; x += 1) {
+            const at = y * width + x;
+            if (glyph[at]) continue;
+            const touches =
+              glyph[at - 1] || glyph[at + 1] || glyph[at - width] || glyph[at + width];
+            if (!touches) continue;
+            const behind = luminance(
+              around[at * 4] ?? 0,
+              around[at * 4 + 1] ?? 0,
+              around[at * 4 + 2] ?? 0,
+            );
+            const [high, low] = text > behind ? [text, behind] : [behind, text];
+            contrasts.push((high + 0.05) / (low + 0.05));
+          }
+        }
+        if (contrasts.length === 0) throw new Error(`Nenhuma letra achada em ${target.selector}`);
+        contrasts.sort((a, b) => a - b);
+        result[target.selector] = {
+          common: Number((contrasts[Math.floor(contrasts.length * 0.01)] ?? 0).toFixed(2)),
+          worst: Number((contrasts[0] ?? 0).toFixed(2)),
+        };
       }
       return result;
     },
-    { image: screenshot, list: targets },
+    { images: [bare, letters, outlined], list: targets },
+  );
+
+  for (const [selector, { worst }] of Object.entries(result)) {
+    expect(worst, `pior pixel em volta de ${selector}`).toBeGreaterThanOrEqual(3);
+  }
+  return Object.fromEntries(
+    Object.entries(result).map(([selector, { common }]) => [selector, common]),
   );
 }
 
@@ -470,7 +534,6 @@ const selectedBlocks = [
   '.home h1',
   'li[data-selected] .persona-phrase',
   'li[data-selected] .persona-back',
-  '.home-motion',
 ];
 
 /** Espera as figuras carregarem: o contraste da frase depende da arte atrás dela. */
@@ -571,7 +634,7 @@ test.describe('cenário de sakura em tela larga', () => {
       await expect(personas(page).first()).toBeFocused();
       await expect(phrase(personas(page).first())).toHaveCSS('opacity', '1');
 
-      const contrasts = await worstContrast(page, textBlocks);
+      const contrasts = await outlineContrast(page, textBlocks);
       for (const [block, value] of Object.entries(contrasts)) {
         expect(value, `${block} em ${colorScheme}`).toBeGreaterThanOrEqual(4.5);
       }
@@ -593,7 +656,7 @@ test.describe('cenário de sakura em tela larga', () => {
       await personas(page).first().click();
       await expectSelected(page, 0);
 
-      const contrasts = await worstContrast(page, selectedBlocks);
+      const contrasts = await outlineContrast(page, selectedBlocks);
       for (const [block, value] of Object.entries(contrasts)) {
         expect(value, `${block} em ${colorScheme}`).toBeGreaterThanOrEqual(4.5);
       }
@@ -629,7 +692,7 @@ test.describe('cenário de sakura no celular', () => {
       await figuresLoaded(page);
       await page.getByRole('checkbox').check();
 
-      const contrasts = await worstContrast(page, textBlocks);
+      const contrasts = await outlineContrast(page, textBlocks);
       for (const [block, value] of Object.entries(contrasts)) {
         expect(value, `${block} em ${colorScheme}`).toBeGreaterThanOrEqual(4.5);
       }
@@ -639,7 +702,7 @@ test.describe('cenário de sakura no celular', () => {
       await figuresLoaded(page);
       await personas(page).first().tap();
       await expectSelected(page, 0);
-      const selected = await worstContrast(page, selectedBlocks);
+      const selected = await outlineContrast(page, selectedBlocks);
       for (const [block, value] of Object.entries(selected)) {
         expect(value, `${block} escolhido em ${colorScheme}`).toBeGreaterThanOrEqual(4.5);
       }

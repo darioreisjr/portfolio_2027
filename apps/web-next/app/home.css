@@ -47,7 +47,7 @@
   initial-value: transparent;
 }
 
-@property --home-veil {
+@property --home-outline {
   syntax: '<color>';
   inherits: true;
   initial-value: transparent;
@@ -69,7 +69,7 @@
   --home-blossom-core: var(--color-scene-blossom-core);
   --home-blossom: var(--color-scene-blossom);
   --home-petal: var(--color-scene-petal);
-  --home-veil: var(--color-scene-veil);
+  --home-outline: var(--color-scene-outline);
   --home-daylight: var(--scene-daylight);
   transition:
     --home-sky-top var(--motion-duration-theme) var(--motion-ease-out),
@@ -79,7 +79,7 @@
     --home-blossom-core var(--motion-duration-theme) var(--motion-ease-out),
     --home-blossom var(--motion-duration-theme) var(--motion-ease-out),
     --home-petal var(--motion-duration-theme) var(--motion-ease-out),
-    --home-veil var(--motion-duration-theme) var(--motion-ease-out),
+    --home-outline var(--motion-duration-theme) var(--motion-ease-out),
     --home-daylight calc(var(--motion-duration-theme) * 2) var(--motion-ease-out);
 
   display: flex;
@@ -96,17 +96,38 @@
   text-align: center;
 }
 
-/* Névoa atrás de cada bloco de texto: uma pétala, um galho, a lua ou a própria
-   arte do personagem por trás não derrubam o contraste (ver o teste de
-   contraste dos tokens). */
+/* O texto fica direto sobre o cenário. Um contorno na cor do céu em volta de
+   cada letra, como legenda de anime, mantém a leitura sobre pétala, galho, lua
+   ou a arte do personagem (ver o teste de contraste dos tokens). Duas voltas,
+   a meia largura e à largura inteira, para não sobrar vão em traço fino. */
 .home-identity,
 .home h1,
 .persona-phrase,
 .home-motion {
+  --o: var(--text-outline-width);
+  --h: calc(var(--text-outline-width) / 2);
+  --n: calc(var(--text-outline-width) * -1);
+  --m: calc(var(--text-outline-width) / -2);
+
   padding: var(--space-block-xs) var(--space-inline-sm);
-  border-radius: var(--radius-md);
-  background: var(--home-veil);
-  box-shadow: 0 0 var(--space-block-sm) var(--space-block-xs) var(--home-veil);
+  text-shadow:
+    var(--h) 0 var(--home-outline),
+    var(--m) 0 var(--home-outline),
+    0 var(--h) var(--home-outline),
+    0 var(--m) var(--home-outline),
+    var(--h) var(--h) var(--home-outline),
+    var(--h) var(--m) var(--home-outline),
+    var(--m) var(--h) var(--home-outline),
+    var(--m) var(--m) var(--home-outline),
+    var(--o) 0 var(--home-outline),
+    var(--n) 0 var(--home-outline),
+    0 var(--o) var(--home-outline),
+    0 var(--n) var(--home-outline),
+    var(--o) var(--o) var(--home-outline),
+    var(--o) var(--n) var(--home-outline),
+    var(--n) var(--o) var(--home-outline),
+    var(--n) var(--n) var(--home-outline),
+    0 0 var(--o) var(--home-outline);
 }
 
 .home-identity {
@@ -188,8 +209,7 @@
   height: var(--figure-height);
 }
 
-/* Sempre em `--color-text`: é o único tom que passa em AA sobre a névoa com
-   qualquer cor da arte atrás. */
+/* Fica sobre a arte do personagem; quem garante a leitura é o contorno. */
 .persona-phrase {
   grid-area: 1 / 1;
   align-self: end;

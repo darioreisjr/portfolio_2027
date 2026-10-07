@@ -32,8 +32,8 @@ describe('tokens', () => {
   });
 });
 
-// O texto da home fica sobre o céu ou sobre a névoa, que deixa passar 20% do que
-// está atrás dela. Em qualquer dos casos o contraste tem de ser AA (4,5:1).
+// O texto da home fica direto sobre o cenário, com um contorno na cor do céu em
+// volta de cada letra. Letra contra contorno tem de dar AA (4,5:1).
 describe('cenário de sakura', () => {
   const hex = (theme, name) => {
     const value = { ...semanticStatic, ...semantic[theme] }[name];
@@ -52,27 +52,6 @@ describe('cenário de sakura', () => {
     const [high, low] = [luminance(a), luminance(b)].sort((x, y) => y - x);
     return (high + 0.05) / (low + 0.05);
   };
-  const over = (top, bottom) => {
-    const alpha = top[3] / 255;
-    return [0, 1, 2].map((at) => top[at] * alpha + bottom[at] * (1 - alpha));
-  };
-
-  // A frase do personagem fica sobre a arte dele, que pode ter qualquer cor. Os
-  // extremos são preto e branco; passando neles, passa em tudo.
-  for (const theme of ['light', 'dark']) {
-    it(`color-text passa em AA sobre a névoa com qualquer cor atrás (${theme})`, () => {
-      const textColor = channels(hex(theme, 'color-text'));
-      const veil = channels(hex(theme, 'color-scene-veil'));
-
-      for (const behind of ['#000000', '#ffffff']) {
-        const background = over(veil, channels(behind));
-        expect(contrast(textColor, background), `névoa sobre ${behind}`).toBeGreaterThanOrEqual(
-          4.5,
-        );
-      }
-    });
-  }
-
   // O seletor de tema tem disco próprio; ícone e borda precisam de 3:1 sobre ele.
   for (const theme of ['light', 'dark']) {
     it(`o seletor de tema tem ícone e borda com 3:1 sobre o disco (${theme})`, () => {
@@ -82,22 +61,16 @@ describe('cenário de sakura', () => {
     });
   }
 
-  const sceneColors = Object.keys(semantic.light).filter(
-    (name) => name.startsWith('color-scene-') && name !== 'color-scene-veil',
-  );
-
   for (const theme of ['light', 'dark']) {
     for (const text of ['color-text', 'color-text-muted']) {
-      it(`${text} passa em AA sobre o céu e sobre a névoa (${theme})`, () => {
+      it(`${text} passa em AA sobre o contorno e sobre o céu (${theme})`, () => {
         const textColor = channels(hex(theme, text));
-        const veil = channels(hex(theme, 'color-scene-veil'));
-
-        for (const sky of ['color-scene-sky-top', 'color-scene-sky-bottom']) {
-          expect(contrast(textColor, channels(hex(theme, sky)))).toBeGreaterThanOrEqual(4.5);
-        }
-        for (const behind of sceneColors) {
-          const background = over(veil, channels(hex(theme, behind)));
-          expect(contrast(textColor, background), `névoa sobre ${behind}`).toBeGreaterThanOrEqual(
+        for (const behind of [
+          'color-scene-outline',
+          'color-scene-sky-top',
+          'color-scene-sky-bottom',
+        ]) {
+          expect(contrast(textColor, channels(hex(theme, behind))), behind).toBeGreaterThanOrEqual(
             4.5,
           );
         }
