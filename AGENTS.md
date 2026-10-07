@@ -25,7 +25,7 @@ Idiomas: pt-BR (padrão, sem prefixo), en, es, pt-PT (com prefixo e rotas traduz
 | `docs/product/brief.md`        | Públicos, áreas, escopo                      |
 | `docs/content/schema.md`       | Modelo dos dados JSON                        |
 | `docs/architecture/mfe-map.md` | Área por app, tabela de rotas por idioma     |
-| `docs/architecture/adr/`       | Decisões aceitas (0001 a 0004)               |
+| `docs/architecture/adr/`       | Decisões aceitas (0001 a 0005)               |
 | `docs/quality/budgets.md`      | Limites de performance, acessibilidade e SEO |
 | `docs/open-questions.md`       | O que ainda não foi decidido                 |
 

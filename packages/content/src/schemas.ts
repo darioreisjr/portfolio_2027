@@ -21,6 +21,8 @@ export const uiSchema = z
     siteName: text,
     hello: text,
     loadError: text,
+    /** Nome acessível do seletor de tema; o estado vai em `aria-pressed`. */
+    themeToggle: text,
     areas: z
       .object({
         home: areaTextSchema,

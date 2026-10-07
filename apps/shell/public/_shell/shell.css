@@ -37,3 +37,8 @@ main h1 {
   margin: 0 0 var(--space-block-md);
   font-size: var(--text-size-title);
 }
+
+/* Seletor de tema no fim do cabeçalho, empurrado para a direita. */
+.shell-header ds-theme-toggle {
+  margin-inline-start: auto;
+}

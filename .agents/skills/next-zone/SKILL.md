@@ -36,7 +36,7 @@ Se a tarefa parece precisar de um deles, pare: é mudança de arquitetura e pede
 - O layout carrega tokens e o bundle do design system uma vez.
 - Os componentes não renderizam no servidor. O conteúdo vai no light DOM e precisa ser legível antes do upgrade; nada acima da dobra depende de um componente para existir.
 - Tags direto no JSX, com a declaração de tipos de `packages/design-system`. Sem wrapper.
-- Script inline no `<head>` aplica o tema antes da primeira pintura, igual ao do shell.
+- O layout põe `THEME_INIT_SCRIPT` de `packages/contracts` no `<head>` (o mesmo texto que o shell usa) e o `<ds-theme-toggle>` em toda página. É a única leitura de `localStorage` fora de efeito, e fica em script inline, não em componente.
 
 ## SEO
 

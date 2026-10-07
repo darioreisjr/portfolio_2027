@@ -12,7 +12,7 @@ Contexto: `apps/shell/AGENTS.md` e `docs/architecture/adr/0002-composition.md`.
 - Gera um HTML por rota de MFE e por idioma.
 - Mostra cabeçalho e rodapé com componentes do design system.
 - Carrega o script do MFE da rota e insere o custom element.
-- Cuida de tema, idioma, foco e título.
+- Cuida de idioma, foco e título. O tema é do design system (ADR 0005): o shell só põe o script e o botão no documento.
 
 O que não faz: lógica de área, leitura de conteúdo além dos textos de interface, renderização das páginas Next.js.
 
@@ -30,12 +30,13 @@ O que não faz: lógica de área, leitura de conteúdo além dos textos de inter
 
 - `<html lang>` do idioma da rota.
 - `<title>`, descrição, `canonical` e `hreflang` para as quatro versões.
-- Script inline no `<head>` que lê a preferência salva e aplica `data-theme` antes da primeira pintura.
+- `THEME_INIT_SCRIPT` de `packages/contracts` inline no `<head>`, antes das folhas de estilo: aplica o tema salvo antes da primeira pintura.
+- `<ds-theme-toggle>` no fim do cabeçalho, com o rótulo de `ui.themeToggle`.
 - Link de pular para o conteúdo, e um `<main>` onde a tag do MFE entra.
 
 ## Tema e idioma
 
-- Tema: atributo `data-theme` no `<html>`, salvo em `localStorage`, anunciado por evento de `packages/contracts`. Sem escolha salva, vale `prefers-color-scheme`.
+- Tema: o `<ds-theme-toggle>` aplica `data-theme` no `<html>`, guarda a escolha e emite o evento de `packages/contracts`. Sem escolha salva, vale `prefers-color-scheme`. O shell não tem código de tema.
 - Idioma: a troca navega para a mesma área no outro idioma, pelo caminho da tabela de rotas.
 
 ## Acessibilidade na fronteira

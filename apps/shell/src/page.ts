@@ -1,5 +1,11 @@
 import type { Ui } from '@portfolio/content/schemas';
-import { pathFor, routes, type Locale, type RouteEntry } from '@portfolio/contracts';
+import {
+  pathFor,
+  routes,
+  THEME_INIT_SCRIPT,
+  type Locale,
+  type RouteEntry,
+} from '@portfolio/contracts';
 
 const escapeHtml = (value: string): string =>
   value.replace(
@@ -27,6 +33,7 @@ export function renderPage(entry: RouteEntry, locale: Locale, ui: Ui): string {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>${THEME_INIT_SCRIPT}</script>
     <title>${escapeHtml(area.title)} | ${escapeHtml(ui.siteName)}</title>
     <meta name="description" content="${escapeHtml(area.description)}" />
     <link rel="stylesheet" href="/_ds/tokens.css" />
@@ -43,6 +50,7 @@ export function renderPage(entry: RouteEntry, locale: Locale, ui: Ui): string {
           ${links}
         </ul>
       </nav>
+      <ds-theme-toggle label="${escapeHtml(ui.themeToggle)}"></ds-theme-toggle>
     </header>
     <main data-area="${entry.area}" data-load-error="${escapeHtml(ui.loadError)}">
       <h1>${escapeHtml(area.title)}</h1>

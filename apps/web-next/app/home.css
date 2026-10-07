@@ -3,7 +3,75 @@
    destaque até o visitante apontar ou focar um personagem.
    (A mesma largura está em _components/persona-list.tsx.) */
 
+/* As cores do cenário passam por propriedades registradas: só assim o navegador
+   consegue interpolar o degradê do céu quando o tema troca. */
+@property --home-sky-top {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --home-sky-bottom {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --home-orb {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --home-branch {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --home-blossom-core {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --home-blossom {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --home-petal {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --home-veil {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
 .home {
+  --home-sky-top: var(--color-scene-sky-top);
+  --home-sky-bottom: var(--color-scene-sky-bottom);
+  --home-orb: var(--color-scene-orb);
+  --home-branch: var(--color-scene-branch);
+  --home-blossom-core: var(--color-scene-blossom-core);
+  --home-blossom: var(--color-scene-blossom);
+  --home-petal: var(--color-scene-petal);
+  --home-veil: var(--color-scene-veil);
+  transition:
+    --home-sky-top var(--motion-duration-theme) var(--motion-ease-out),
+    --home-sky-bottom var(--motion-duration-theme) var(--motion-ease-out),
+    --home-orb var(--motion-duration-theme) var(--motion-ease-out),
+    --home-branch var(--motion-duration-theme) var(--motion-ease-out),
+    --home-blossom-core var(--motion-duration-theme) var(--motion-ease-out),
+    --home-blossom var(--motion-duration-theme) var(--motion-ease-out),
+    --home-petal var(--motion-duration-theme) var(--motion-ease-out),
+    --home-veil var(--motion-duration-theme) var(--motion-ease-out);
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,8 +80,9 @@
   /* Mantém o cenário, que tem z-index negativo, dentro desta tela. */
   isolation: isolate;
   min-height: 100svh;
-  padding: var(--space-block-lg) 0;
-  background: linear-gradient(var(--color-scene-sky-top), var(--color-scene-sky-bottom));
+  /* O topo fica livre para o seletor de tema. */
+  padding: calc(var(--size-control) + var(--space-block-lg)) 0 var(--space-block-lg);
+  background: linear-gradient(var(--home-sky-top), var(--home-sky-bottom));
   text-align: center;
 }
 
@@ -26,8 +95,8 @@
 .home-motion {
   padding: var(--space-block-xs) var(--space-inline-sm);
   border-radius: var(--radius-md);
-  background: var(--color-scene-veil);
-  box-shadow: 0 0 var(--space-block-sm) var(--space-block-xs) var(--color-scene-veil);
+  background: var(--home-veil);
+  box-shadow: 0 0 var(--space-block-sm) var(--space-block-xs) var(--home-veil);
 }
 
 .home-identity {
@@ -283,8 +352,8 @@
   width: var(--orb-size);
   height: var(--orb-size);
   border-radius: var(--radius-full);
-  background: var(--color-scene-orb);
-  box-shadow: 0 0 var(--space-inline-lg) var(--space-block-sm) var(--color-scene-orb);
+  background: var(--home-orb);
+  box-shadow: 0 0 var(--space-inline-lg) var(--space-block-sm) var(--home-orb);
   opacity: 0.85;
 }
 
@@ -313,23 +382,23 @@
 
 .sakura-wood {
   fill: none;
-  stroke: var(--color-scene-branch);
+  stroke: var(--home-branch);
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .sakura-blossom-petal,
 .sakura-bud {
-  fill: var(--color-scene-blossom);
+  fill: var(--home-blossom);
 }
 
 .sakura-core {
-  fill: var(--color-scene-blossom-core);
+  fill: var(--home-blossom-core);
 }
 
 .sakura-stamen {
   fill: none;
-  stroke: var(--color-scene-blossom-core);
+  stroke: var(--home-blossom-core);
   stroke-width: 2;
   stroke-linecap: round;
 }
@@ -341,7 +410,7 @@
   width: calc(var(--petal-size) * var(--size));
   height: calc(var(--petal-size) * var(--size) * 1.1);
   overflow: visible;
-  fill: var(--color-scene-petal);
+  fill: var(--home-petal);
   opacity: var(--depth);
   /* Atraso negativo: a tela já abre com pétalas no meio do caminho. */
   animation: sakura-fall calc(var(--motion-duration-drift) * var(--pace)) linear
@@ -400,10 +469,20 @@
   .sakura-branch-right {
     width: 46vw;
   }
+
+  /* No celular o astro desce e vai para a esquerda do seletor de tema. */
+  .sakura-orb {
+    top: 11%;
+    right: 24%;
+  }
 }
 
 /* Movimento reduzido: as pétalas ficam paradas no ar e não há o que pausar. */
 @media (prefers-reduced-motion: reduce) {
+  .home {
+    transition: none;
+  }
+
   .sakura-petal,
   .sakura-branch {
     animation: none;

@@ -8,6 +8,7 @@ declare module 'react' {
   namespace JSX {
     interface IntrinsicElements {
       'ds-badge': CustomElementProps;
+      'ds-theme-toggle': CustomElementProps & { label: string };
     }
   }
 }

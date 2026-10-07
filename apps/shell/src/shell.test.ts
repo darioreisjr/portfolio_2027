@@ -30,6 +30,20 @@ describe('documento de uma área', () => {
     expect(html).toContain('href="/en/recruiter/" aria-current="page"');
   });
 
+  it('aplica o tema salvo antes de carregar qualquer estilo', () => {
+    const html = renderPage(recruiter, 'pt-BR', ui['pt-BR']);
+    const script = html.indexOf('localStorage.getItem("portfolio:tema")');
+    expect(script).toBeGreaterThan(-1);
+    expect(script).toBeLessThan(html.indexOf('rel="stylesheet"'));
+  });
+
+  it('tem o seletor de tema com o rótulo do idioma', () => {
+    for (const locale of locales) {
+      const html = renderPage(recruiter, locale, ui[locale]);
+      expect(html).toContain(`<ds-theme-toggle label="${ui[locale].themeToggle}">`);
+    }
+  });
+
   it('escapa texto vindo do conteúdo', () => {
     const html = renderPage(recruiter, 'pt-BR', { ...ui['pt-BR'], siteName: '<b>x</b>' });
     expect(html).not.toContain('<b>x</b>');

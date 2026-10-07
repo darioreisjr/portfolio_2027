@@ -637,6 +637,9 @@ importers:
 
   packages/design-system:
     dependencies:
+      '@portfolio/contracts':
+        specifier: workspace:*
+        version: link:../contracts
       lit:
         specifier: 'catalog:'
         version: 3.3.3

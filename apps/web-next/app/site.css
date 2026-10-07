@@ -1,3 +1,11 @@
+/* Ferramentas do site (hoje só o seletor de tema), no canto superior direito. */
+.site-tools {
+  position: absolute;
+  top: var(--space-block-md);
+  right: var(--space-inline-md);
+  z-index: 1;
+}
+
 main {
   padding: var(--space-block-lg) var(--space-inline-md);
 }

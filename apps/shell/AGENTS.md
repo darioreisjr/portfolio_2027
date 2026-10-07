@@ -9,9 +9,10 @@ Casca das áreas de MFE: gera o documento HTML de cada rota e idioma, mostra cab
 - Manifesto `rota -> { script, tag }` montado a partir da tabela de rotas de `packages/contracts`.
 - Carrega o MFE com `import()` e cria a tag. Ao sair da área, remove o elemento; nunca reinsere o mesmo.
 - Carrega o design system e os tokens uma vez por documento.
-- Dono de: troca de tema, troca de idioma, foco e título ao trocar de área.
+- O documento leva o script de tema de `packages/contracts` no `<head>`, antes das folhas de estilo, e o `<ds-theme-toggle>` no fim do cabeçalho. A troca de tema é do design system (ADR 0005); o shell não tem código de tema.
+- Dono de: troca de idioma, foco e título ao trocar de área.
 - Um HTML por rota e idioma, com `<title>`, descrição, `hreflang` e `canonical` próprios.
-- Ainda não implementado: troca de tema e de idioma, script inline de tema, foco e título ao trocar de área, `hreflang` e `canonical`.
+- Ainda não implementado: troca de idioma, foco e título ao trocar de área, `hreflang` e `canonical`.
 - Teto de JavaScript: ver `docs/quality/budgets.md`.
 
 ## Comandos

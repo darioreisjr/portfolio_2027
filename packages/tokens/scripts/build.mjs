@@ -53,6 +53,14 @@ ds-badge:not(:defined) {
   font-weight: var(--text-weight-strong);
   line-height: var(--text-line-height);
 }
+
+/* Só funciona com JavaScript: fica oculto até o upgrade, com o espaço reservado (ADR 0005). */
+ds-theme-toggle:not(:defined) {
+  display: inline-block;
+  inline-size: var(--ds-theme-toggle-size);
+  block-size: var(--ds-theme-toggle-size);
+  visibility: hidden;
+}
 `;
 
 const publicNames = [

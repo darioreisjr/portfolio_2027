@@ -180,6 +180,8 @@ Textos da tela de escolha de perfil. Sem `status`, como `ui`. Ficam fora de `ui`
 
 Sem `status`: é texto de interface, não conteúdo sobre o autor.
 
+Inclui `themeToggle`, o nome acessível do seletor de tema.
+
 Textos de interface (rótulos de navegação, botões, títulos de seção), separados do conteúdo sobre o autor. Chaves idênticas nos quatro arquivos; a validação falha se alguma faltar.
 
 ## Quem consome o quê

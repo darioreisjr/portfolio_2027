@@ -2,6 +2,7 @@
   "siteName": "Portafolio",
   "hello": "Hola",
   "loadError": "No se pudo cargar esta área. Intenta recargar la página.",
+  "themeToggle": "Tema oscuro",
   "areas": {
     "home": {
       "title": "Inicio",

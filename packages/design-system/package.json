@@ -21,6 +21,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@portfolio/contracts": "workspace:*",
     "lit": "catalog:"
   },
   "devDependencies": {

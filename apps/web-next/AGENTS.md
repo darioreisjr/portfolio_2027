@@ -16,6 +16,8 @@ Páginas com HTML completo para SEO: `/`, `/comunidade`, `/como-foi-feito` e as 
 - Next.js fixado em 16.3.8. O `404.html` gerado ainda sai sem `lang`.
 - Server Components por padrão. Client Component só onde há interação ou uso de custom element.
 - O layout carrega o design system e os tokens uma vez. Componentes do design system não renderizam no servidor: o conteúdo precisa ser legível antes do upgrade (ADR 0003).
+- O layout também põe o script de tema de `packages/contracts` no `<head>` e o `<ds-theme-toggle>` em um `<header class="site-tools">`, no canto superior direito de toda página. O `<html>` leva `suppressHydrationWarning` porque o script aplica `data-theme` antes da hidratação.
+- Na home, as cores do cenário passam por propriedades `--home-*` registradas com `@property`, para o céu interpolar na troca de tema.
 - Links para as áreas de MFE usam `<a>`, nunca `<Link>`.
 - Não usa Module Federation.
 - Dados de `packages/content` usados hoje: `profile`, `home`, `ui`. Previstos: `articles`, `projects` (com `openSource`), `contacts`.

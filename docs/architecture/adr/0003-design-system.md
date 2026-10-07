@@ -30,6 +30,8 @@ Motivo: o monorepo já tem quatro toolchains; Lit não acrescenta um quinto. O p
 - CSS global dos tokens inclui regras `:not(:defined)` que reservam espaço e aplicam tipografia.
 - Nada que esteja acima da dobra depende de um componente para existir.
 
+Exceção registrada no ADR 0005: controles que só funcionam com JavaScript, como o seletor de tema, ficam ocultos até o upgrade, com o espaço reservado.
+
 Medido no bootstrap: CLS de 0,000 e LCP de até 2,1 s nas páginas Next.js, com a mitigação aplicada ao `<ds-badge>`. A medição precisa ser repetida quando houver cabeçalho e conteúdo reais; se piorar, este ADR é reaberto.
 
 ## Tokens

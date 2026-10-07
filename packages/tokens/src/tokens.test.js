@@ -57,6 +57,15 @@ describe('cenário de sakura', () => {
     return [0, 1, 2].map((at) => top[at] * alpha + bottom[at] * (1 - alpha));
   };
 
+  // O seletor de tema tem disco próprio; ícone e borda precisam de 3:1 sobre ele.
+  for (const theme of ['light', 'dark']) {
+    it(`o seletor de tema tem ícone e borda com 3:1 sobre o disco (${theme})`, () => {
+      const disc = channels(hex(theme, 'color-surface'));
+      expect(contrast(channels(hex(theme, 'color-celestial')), disc)).toBeGreaterThanOrEqual(3);
+      expect(contrast(channels(hex(theme, 'color-text-muted')), disc)).toBeGreaterThanOrEqual(3);
+    });
+  }
+
   const sceneColors = Object.keys(semantic.light).filter(
     (name) => name.startsWith('color-scene-') && name !== 'color-scene-veil',
   );

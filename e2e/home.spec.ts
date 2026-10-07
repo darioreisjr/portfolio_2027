@@ -101,6 +101,9 @@ test.describe('home em tela larga (palco)', () => {
 
   test('teclado: Tab destaca, setas andam, Enter abre', async ({ page }) => {
     await page.goto('/');
+    // O primeiro Tab cai no seletor de tema, que vem antes na tela e no documento.
+    await page.keyboard.press('Tab');
+    await expect(page.getByRole('button', { name: 'Tema escuro' })).toBeFocused();
     await page.keyboard.press('Tab');
     await expect(personas(page).nth(0)).toBeFocused();
     await expect(caption(personas(page).nth(0))).toHaveCSS('opacity', '1');
@@ -231,7 +234,15 @@ async function worstContrast(page: Page, selectors: string[]): Promise<Record<st
         const range = document.createRange();
         range.selectNodeContents(element);
         const { x, y, width, height } = range.getBoundingClientRect();
-        return { selector, x, y, width, height, color: getComputedStyle(element).color };
+        // Coordenadas do documento: a captura é da página inteira.
+        return {
+          selector,
+          x: x + scrollX,
+          y: y + scrollY,
+          width,
+          height,
+          color: getComputedStyle(element).color,
+        };
       }),
     selectors,
   );
@@ -241,7 +252,7 @@ async function worstContrast(page: Page, selectors: string[]): Promise<Record<st
       '.home, .home * { color: transparent !important; text-decoration-color: transparent !important; }' +
       '.home img, .home ds-badge, .persona-enter, .home-motion input { visibility: hidden !important; }',
   });
-  const screenshot = (await page.screenshot({ scale: 'css' })).toString('base64');
+  const screenshot = (await page.screenshot({ scale: 'css', fullPage: true })).toString('base64');
 
   return page.evaluate(
     async ({ image, list }) => {
@@ -373,7 +384,7 @@ test.describe('cenário de sakura em tela larga', () => {
       await page.goto('/');
       await page.getByRole('checkbox').check();
       // Com foco de teclado, a legenda do primeiro personagem fica visível.
-      await page.locator('body').click({ position: { x: 5, y: 5 } });
+      await page.getByRole('button', { name: 'Tema escuro' }).focus();
       await page.keyboard.press('Tab');
       await expect(personas(page).first()).toBeFocused();
       await expect(caption(personas(page).first())).toHaveCSS('opacity', '1');

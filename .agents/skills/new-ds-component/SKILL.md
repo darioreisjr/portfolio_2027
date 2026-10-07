@@ -25,6 +25,7 @@ Decisões: `docs/architecture/adr/0003-design-system.md`. Leia antes.
 - Melhoria progressiva obrigatória, porque não há renderização no servidor:
   - O conteúdo vai no light DOM, por slots, e é legível antes do upgrade.
   - Há regra `:not(:defined)` no CSS global reservando espaço e tipografia.
+- Exceção (ADR 0005): controle que só funciona com JavaScript fica oculto até o upgrade, com o espaço reservado. Vale para controles, nunca para conteúdo.
 - Não registre a mesma tag duas vezes. O bundle do design system é carregado uma vez por documento.
 - Sem dependência de framework e sem ler `packages/content`.
 
