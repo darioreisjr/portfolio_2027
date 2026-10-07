@@ -47,6 +47,8 @@ Com duas imagens em WebP o LCP da home passou do limite (2,54 s de 2,5 s). As du
 
 A terceira, do cliente ("Tenho um projeto", feito em React), levou o LCP para 2,45 a 2,49 s. As três imagens foram refeitas com 640 px de altura e qualidade 50 (18 kB cada em AVIF), e as que não são a primeira passaram a carregar com prioridade baixa: o LCP ficou em 2,4 s.
 
+A quarta, da comunidade ("Vim aprender e trocar ideias", feito em Next.js), fechou o conjunto com 16 kB em AVIF; o LCP continuou em 2,4 s. Não há mais silhueta provisória.
+
 ## Medido
 
 O JavaScript é estável entre execuções; os números do Lighthouse variaram bastante em três execuções na mesma máquina, então valem como faixa.

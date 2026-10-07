@@ -77,6 +77,8 @@ Com o cenário de sakura (2026-10-07), a rota `/` mantém 144,7 kB de JavaScript
 
 Com o seletor de tema (2026-10-07), o design system foi de 6,6 para 7,8 kB e todas as rotas ganharam cerca de 1,2 kB: `/` 145,9 kB, `/recrutador` 38,6 kB, `/tecnico` 46,5 kB, `/clientes` 86,3 kB. Lighthouse de `/`: Performance 99, LCP de 2,2 s, TBT de 35 ms, CLS 0.
 
+Com as quatro artes finais dos personagens (2026-10-07, AVIF de 16 a 18 kB cada), a rota `/` mede Performance 98, LCP de 2,4 s, TBT de 45 ms e CLS 0. O JavaScript não mudou.
+
 As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um terço do teto. O React e o Next.js já nascem perto do teto, com folga de cerca de 3 kB e, depois da tela de escolha de perfil, 5 kB; a primeira feature dessas áreas vai exigir carga sob demanda ou a decisão registrada de subir o teto.
 
 ## Outros recursos

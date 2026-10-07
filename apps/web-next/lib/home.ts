@@ -21,7 +21,7 @@ const figures: Record<PersonaArea, { file: string; avif?: string; width: number;
     recruiter: { file: 'recruiter.webp', avif: 'recruiter.avif', width: 255, height: 640 },
     tech: { file: 'tech.webp', avif: 'tech.avif', width: 257, height: 640 },
     client: { file: 'client.webp', avif: 'client.avif', width: 257, height: 640 },
-    community: { file: 'community.svg', width: 120, height: 320 },
+    community: { file: 'community.webp', avif: 'community.avif', width: 234, height: 640 },
   };
 
 export interface Persona {
