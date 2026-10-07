@@ -1,0 +1,142 @@
+# Matriz de capacidades: Claude Code x Codex CLI x Gemini CLI
+
+Verificado em 2026-10-06 contra a documentação oficial (links ao fim de cada seção).
+Legenda: **NÃO EXISTE** = a doc lida não descreve o recurso. **NÃO VERIFICADO** = não li a página que confirmaria.
+
+Versões instaladas nesta máquina no momento da verificação:
+
+| Ferramenta | Versão local | Observação |
+|---|---|---|
+| Claude Code (CLI) | 2.1.177 | Abaixo de 2.1.277, então o CLI local **não** lê `AGENTS.md` nativamente. A extensão do VS Code pode estar em outra versão (não verificado). |
+| Codex CLI | 0.45.0 | A doc não informa versão mínima para skills e custom agents. Não verificado se 0.45.0 já os suporta. |
+| Gemini CLI | não instalado | Nada pode ser validado localmente até instalar. |
+| pnpm | shim quebrado | `pnpm --version` falha; precisa ser corrigido antes da Fase 3. |
+
+## 1. Instruções de projeto
+
+| Recurso | Claude Code | Codex CLI | Gemini CLI |
+|---|---|---|---|
+| Arquivo nativo | `CLAUDE.md` ou `.claude/CLAUDE.md` | `AGENTS.md` | `GEMINI.md` |
+| Lê `AGENTS.md` | Sim, a partir da v2.1.277, **somente se não houver** `CLAUDE.md`, `.claude/CLAUDE.md` ou `CLAUDE.local.md` no diretório de trabalho ou acima. Havendo `CLAUDE.md`, lê só ele. | Nativo | Só se configurado: `"context": {"fileName": ["AGENTS.md", "GEMINI.md"]}` em `.gemini/settings.json` |
+| Import de outro arquivo | `@caminho/arquivo`, relativo ao arquivo que importa, até 4 níveis; ignorado dentro de crases e blocos de código | **NÃO EXISTE** | `@./arquivo.md`, relativo ou absoluto (limite de profundidade não verificado) |
+| Global do usuário | `~/.claude/CLAUDE.md` | `~/.codex/AGENTS.md` | `~/.gemini/GEMINI.md` |
+| Arquivo pessoal não versionado | `CLAUDE.local.md` | `AGENTS.override.md` (substitui o `AGENTS.md` do mesmo nível) | **NÃO EXISTE** |
+| Arquivos em subdiretórios | Ancestrais carregam no início; subdiretórios carregam sob demanda quando o Claude lê arquivos ali | Concatena da raiz do Git até o diretório atual; os mais próximos vêm por último | Ancestrais no início; subdiretórios sob demanda (just-in-time) quando uma ferramenta acessa arquivos ali |
+| Regras por caminho (glob) | `.claude/rules/*.md` com frontmatter `paths:` | **NÃO EXISTE** (usar `AGENTS.md` aninhado) | **NÃO EXISTE** (usar `GEMINI.md` aninhado) |
+| Limite de tamanho | Recomendado menos de 200 linhas por arquivo | 32 KiB somados (`project_doc_max_bytes`) | Não verificado |
+| Nomes alternativos | Não (só import ou symlink) | `project_doc_fallback_filenames` em `config.toml` | `context.fileName` (string ou lista) |
+| Conferir o que carregou | `/context` (seção Memory files), `/memory` | `codex --ask-for-approval never "Summarize the current instructions."` | `/memory show`, `/memory reload` |
+
+Docs: [Claude memory](https://code.claude.com/docs/en/memory) · [Codex AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md) · [Gemini GEMINI.md](https://geminicli.com/docs/cli/gemini-md/)
+
+## 2. Skills (`SKILL.md`)
+
+As três seguem o padrão aberto [Agent Skills](https://agentskills.io): pasta com `SKILL.md` (frontmatter YAML + corpo Markdown) e arquivos de apoio opcionais.
+
+| Recurso | Claude Code | Codex CLI | Gemini CLI |
+|---|---|---|---|
+| Caminho no projeto | `.claude/skills/<nome>/SKILL.md` | `.agents/skills/<nome>/SKILL.md` | `.agents/skills/<nome>/SKILL.md` (alias, tem precedência) ou `.gemini/skills/<nome>/SKILL.md` |
+| Lê `.agents/skills` | **NÃO** (a doc não lista) | Sim | Sim |
+| Caminho do usuário | `~/.claude/skills/` | `~/.agents/skills/` | `~/.gemini/skills/` ou `~/.agents/skills/` |
+| Monorepo | Sobe do diretório atual até a raiz; `<subdir>/.claude/skills/` carrega sob demanda | Varre `.agents/skills` do diretório atual até a raiz do repo | Não verificado para subdiretórios |
+| Segue symlink de pasta | Sim | Sim | Não verificado |
+| Frontmatter portátil | `name`, `description` (todos opcionais; campos desconhecidos são ignorados) | `name`, `description` (obrigatórios) | `name`, `description` |
+| Extras exclusivos | `allowed-tools`, `disable-model-invocation`, `paths`, `context: fork`, `agent`, `model` e outros | `agents/openai.yaml` ao lado do `SKILL.md` (UI, `allow_implicit_invocation`, dependências MCP) | Não há extras documentados |
+| Invocação explícita | `/nome-da-skill` | `$nome-da-skill` | Automática via `activate_skill`, com confirmação do usuário |
+| Listar | `/skills`, `/context` | `/skills` | `/skills list`, `gemini skills list --all` |
+| Desativar | `skillOverrides` em settings | `[[skills.config]]` com `path` e `enabled = false` | `/skills disable <nome>`, `skills.disabled` |
+
+Docs: [Claude skills](https://code.claude.com/docs/en/skills) · [Codex skills](https://learn.chatgpt.com/docs/build-skills) · [Gemini skills](https://geminicli.com/docs/cli/skills/)
+
+## 3. Subagentes
+
+| Recurso | Claude Code | Codex CLI | Gemini CLI |
+|---|---|---|---|
+| Caminho no projeto | `.claude/agents/<nome>.md` | `.codex/agents/<nome>.toml` (só em projeto confiável) | `.gemini/agents/<nome>.md` |
+| Formato | Markdown com frontmatter YAML; corpo = prompt de sistema | TOML; prompt em `developer_instructions` | Markdown com frontmatter YAML; corpo = prompt de sistema |
+| Campos obrigatórios | `name`, `description` | `name`, `description`, `developer_instructions` | `name`, `description` |
+| Restrição de ferramentas | `tools` (lista de permissão) e `disallowedTools` | **NÃO EXISTE** por ferramenta; só `sandbox_mode` (`read-only`, `workspace-write`) | `tools` (lista; curingas `*`, `mcp_*`, `mcp_<servidor>_*`) |
+| Somente leitura | `tools: Read, Grep, Glob` | `sandbox_mode = "read-only"` | `tools: [read_file, grep_search, ...]` (lista completa de nomes não verificada) |
+| MCP por agente | `mcpServers` | `mcp_servers` | `mcpServers` |
+| Skills por agente | `skills` (pré-carrega) | `skills.config` | Não documentado |
+| Modelo | `model` | `model`, `model_reasoning_effort` | `model`, `temperature` |
+| Limites | `maxTurns` | `agents.max_concurrent_threads_per_session` (global) | `max_turns`, `timeout_mins` |
+| Embutidos | Explore, Plan, general-purpose | `default`, `worker`, `explorer` | `codebase_investigator`, `cli_help`, `generalist`, `browser_agent` |
+| Subagente chama subagente | Limitado por profundidade | Não verificado | Não |
+| Invocar / listar | Delegação automática, `claude --agent <nome>`, `/agents` | `/agent` | `@nome tarefa`, `/agents` |
+| Validar arquivo | `claude plugin validate .claude/agents` (v2.1.233+) | Não verificado | Não verificado |
+
+Docs: [Claude subagents](https://code.claude.com/docs/en/sub-agents) · [Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) · [Gemini subagents](https://geminicli.com/docs/core/subagents/)
+
+## 4. MCP
+
+| Recurso | Claude Code | Codex CLI | Gemini CLI |
+|---|---|---|---|
+| Arquivo do projeto | `.mcp.json` na raiz | `.codex/config.toml` (só em projeto confiável) | `.gemini/settings.json` |
+| Chave | `mcpServers` (JSON) | `[mcp_servers.<nome>]` (TOML) | `mcpServers` (JSON) |
+| stdio | `command`, `args`, `env` | `command`, `args`, `env`, `env_vars`, `cwd` | `command`, `args`, `env`, `cwd` |
+| HTTP | `"type": "http"`, `url`, `headers` (`type` é obrigatório) | `url`, `bearer_token_env_var`, `http_headers`, `env_http_headers` | `httpUrl` (streamable) ou `url` (SSE), `headers` |
+| Segredo por variável de ambiente | `${VAR}` e `${VAR:-padrao}` em `command`, `args`, `env`, `url`, `headers` | Sem interpolação: `env_vars = ["VAR"]` repassa a variável; `bearer_token_env_var = "VAR"` para HTTP | `$VAR` ou `${VAR}` em `env`. Variáveis com TOKEN, SECRET, KEY etc. são removidas do ambiente do servidor, salvo se declaradas no bloco `env` |
+| Filtro de ferramentas | Regras de permissão `mcp__servidor__ferramenta` | `enabled_tools`, `disabled_tools` | `includeTools`, `excludeTools` |
+| Aprovação | Pergunta antes de usar servidores de `.mcp.json` | Confiança no projeto | `trust` por servidor |
+| Lê `.env` sozinho | Não verificado | Não verificado | Sim (diretório atual, ancestrais, `~/.env`) |
+| CLI | `claude mcp add`, `list`, `get`, `remove` | `codex mcp add`, `list` | `gemini mcp add`, `list`, `remove` |
+| Listar na sessão | `/mcp` | `/mcp` | `/mcp` |
+
+Docs: [Claude MCP](https://code.claude.com/docs/en/mcp) · [Codex MCP](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) · [Gemini MCP](https://geminicli.com/docs/tools/mcp-server/)
+
+## 5. Configuração, hooks e comandos
+
+| Recurso | Claude Code | Codex CLI | Gemini CLI |
+|---|---|---|---|
+| Config do projeto | `.claude/settings.json` (versionado), `.claude/settings.local.json` (pessoal) | `.codex/config.toml` (só em projeto confiável) | `.gemini/settings.json` |
+| Config do usuário | `~/.claude/settings.json` | `~/.codex/config.toml` | `~/.gemini/settings.json` |
+| Precedência | Gerenciado, CLI, local, projeto, usuário | CLI `-c`, projeto, perfil, usuário, sistema | Sistema (override), projeto, usuário, padrões |
+| Permissões | `permissions.allow`, `ask`, `deny`, `defaultMode` | `approval_policy`, `sandbox_mode` | `trust` por servidor MCP; demais não verificado |
+| Hooks | `hooks` em `settings.json`; eventos `PreToolUse`, `PostToolUse`, `SessionStart`, `Stop` e outros | `.codex/hooks.json` ou `[hooks]` em `config.toml`; exige a feature `hooks` ligada. Lista de eventos não verificada | `hooks` em `settings.json`; eventos `BeforeTool`, `AfterTool`, `BeforeAgent`, `AfterAgent`, `SessionStart` e outros |
+| Código de saída 2 em hook | Bloqueia | Não verificado | Bloqueia |
+| Comandos customizados | `.claude/commands/*.md` (legado; skills são o formato preferido) | **NÃO VERIFICADO** (a doc aponta para skills) | `.gemini/commands/*.toml` com `prompt` e `description`; `{{args}}`, `!{shell}`, `@{arquivo}` |
+
+Docs: [Claude settings](https://code.claude.com/docs/en/settings) · [Claude hooks](https://code.claude.com/docs/en/hooks) · [Codex config](https://learn.chatgpt.com/docs/config-file/config-basic) · [Codex config avançada](https://learn.chatgpt.com/docs/config-file/config-advanced) · [Gemini configuração](https://geminicli.com/docs/reference/configuration/) · [Gemini hooks](https://geminicli.com/docs/hooks/) · [Gemini comandos](https://geminicli.com/docs/cli/custom-commands/)
+
+## 6. O que a matriz decide para a Fase 2
+
+| Artefato | Caminhos nativos coincidem? | Mecanismo |
+|---|---|---|
+| Instruções da raiz | Não, mas há import | `AGENTS.md` canônico. `CLAUDE.md` com `@AGENTS.md` e `GEMINI.md` com `@./AGENTS.md`. |
+| Instruções por app | Não | `apps/*/AGENTS.md` canônico. Codex lê nativo. `CLAUDE.md` e `GEMINI.md` de uma linha ao lado, gerados, porque com `CLAUDE.md` na raiz o Claude ignora `AGENTS.md` aninhado e o Gemini só lê `GEMINI.md`. |
+| Skills | Codex e Gemini sim (`.agents/skills`); Claude não | Fonte em `.agents/skills/`; cópia gerada em `.claude/skills/`. |
+| Subagentes | Não (três formatos) | Fonte em `docs/ai-setup/agents.md`; gerar `.claude/agents/*.md`, `.codex/agents/*.toml`, `.gemini/agents/*.md`. |
+| MCP | Não (três formatos) | Uma definição; gerar `.mcp.json`, `.codex/config.toml`, bloco `mcpServers` de `.gemini/settings.json`. |
+
+Como os caminhos divergem em skills, subagentes e MCP, o script de sincronização com `--check` (item 6 da Fase 2) é necessário.
+
+## 7. Onde a doc contradiz ou restringe o plano original
+
+1. **AGENTS.md por app não chega ao Claude Code sozinho.** Com `CLAUDE.md` na raiz, o modo padrão lê apenas arquivos `CLAUDE.md`. A alternativa `claude-md-and-agents-md` só vale em configuração de usuário, não de projeto. Solução: adaptador `CLAUDE.md` de uma linha em cada app.
+2. **Gemini tem dois caminhos para ler AGENTS.md**, e usar os dois duplica o conteúdo: (a) `GEMINI.md` com `@AGENTS.md`, que exige um `GEMINI.md` adaptador por app; (b) `context.fileName: ["AGENTS.md", "GEMINI.md"]`, que lê todos os `AGENTS.md` nativamente e deixa o `GEMINI.md` da raiz só com o que for específico, sem import. O plano original pede (a). **Decidido pelo autor em 2026-10-06: (a)**, com os adaptadores por app gerados pelo script.
+3. **"Skills escritas uma vez" exige cópia para o Claude Code.** Symlink resolveria, mas a própria doc do Claude desaconselha symlinks versionados no Windows (o Git os grava como arquivo texto sem `core.symlinks`). Solução: cópia gerada e verificada no CI. **Decidido pelo autor em 2026-10-06: cópia gerada, sem symlink.**
+4. **Codex não tem lista de ferramentas por agente.** "Mínimo de permissões" no Codex se resume a `sandbox_mode = "read-only"` para os agentes de leitura. `architect` e `design-system-guardian` ficam mais grossos lá do que no Claude e no Gemini.
+5. **Codex ignora `.codex/` de projeto não confiável**, incluindo agentes, MCP e hooks. A validação da Fase 3 depende de marcar o repositório como confiável.
+6. **Gemini remove do ambiente dos servidores MCP variáveis com nome sensível** (TOKEN, KEY etc.). O token do GitHub precisa ser declarado no bloco `env` do servidor.
+7. **A doc do Codex mudou de endereço**: `developers.openai.com/codex/*` redireciona para `learn.chatgpt.com/docs/*`.
+
+## 8. Não verificado
+
+- Suporte a skills e custom agents no Codex CLI 0.45.0 instalado.
+- Versão do Claude Code embutida na extensão do VS Code.
+- Lista de eventos de hooks do Codex e comandos customizados do Codex.
+- Lista completa de nomes de ferramentas internas do Gemini para o campo `tools`.
+- Se subagentes do Gemini conseguem ativar skills.
+- Se o Gemini segue symlinks em pastas de skills e se descobre `.agents/skills` em subdiretórios.
+- Se o Codex e o Claude Code expandem variáveis de ambiente em todos os campos usados em `docs/ai-setup/mcp.json` na versão instalada; só a validação da Fase 3 confirma.
+
+## 9. Servidores MCP (conferido na Fase 2)
+
+| Servidor | Para quê | Conexão | Segredo | Doc |
+|---|---|---|---|---|
+| `context7` | Documentação de bibliotecas | HTTP, `https://mcp.context7.com/mcp` | `CONTEXT7_API_KEY` (a doc atual diz que a chave é obrigatória) | [Context7: clientes](https://context7.com/docs/resources/all-clients) |
+| `playwright` | Navegador | stdio, `npx @playwright/mcp@latest` | Nenhum | [Playwright MCP](https://github.com/microsoft/playwright-mcp) |
+| `github` | Repositório, issues, PRs, Actions | HTTP, `https://api.githubcopilot.com/mcp/`, restrito por `X-MCP-Toolsets` | `GITHUB_PERSONAL_ACCESS_TOKEN` | [GitHub MCP: servidor remoto](https://github.com/github/github-mcp-server/blob/main/docs/remote-server.md) |
+
+Correção à seção 4: a referência de configuração do Gemini diz que qualquer valor de texto do `settings.json` aceita `$VAR`, `${VAR}` e `${VAR:-padrao}`, não só o bloco `env`. O guia do GitHub para o Gemini usa `"Authorization": "Bearer $VAR"` em `headers`. A página de MCP do Gemini só menciona `env`; a validação da Fase 3 confirma qual vale.

@@ -1,0 +1,25 @@
+{
+  "servers": {
+    "context7": {
+      "purpose": "Documentação atual de bibliotecas",
+      "transport": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "bearerEnv": "CONTEXT7_API_KEY"
+    },
+    "playwright": {
+      "purpose": "Navegador para testes e verificação visual",
+      "transport": "stdio",
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "github": {
+      "purpose": "Repositório, issues, pull requests e Actions",
+      "transport": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "bearerEnv": "GITHUB_PERSONAL_ACCESS_TOKEN",
+      "headers": {
+        "X-MCP-Toolsets": "repos,issues,pull_requests,actions"
+      }
+    }
+  }
+}

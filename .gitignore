@@ -1,0 +1,16 @@
+# Segredos e configuração pessoal
+.env
+.env.*
+!.env.example
+CLAUDE.local.md
+AGENTS.override.md
+.claude/settings.local.json
+
+# Dependências e saídas de build
+node_modules/
+dist/
+out/
+.next/
+.turbo/
+.angular/
+coverage/
