@@ -1,0 +1,8 @@
+{
+  "status": "draft",
+  "name": "Pessoa de Exemplo",
+  "role": { "pt-BR": "EXEMPLO FICTÍCIO: cargo" },
+  "tagline": { "pt-BR": "EXEMPLO FICTÍCIO: frase de apresentação" },
+  "summary": { "pt-BR": "EXEMPLO FICTÍCIO: este perfil não descreve o autor e não vai ao ar." },
+  "highlightSkills": []
+}

@@ -1,0 +1,30 @@
+{
+  "siteName": "Portafolio",
+  "hello": "Hola",
+  "areas": {
+    "home": {
+      "title": "Inicio",
+      "description": "Página de inicio del portafolio."
+    },
+    "recruiter": {
+      "title": "Reclutador",
+      "description": "Resumen, experiencia y formación para quien está contratando."
+    },
+    "tech": {
+      "title": "Técnico",
+      "description": "Proyectos y decisiones técnicas."
+    },
+    "client": {
+      "title": "Clientes",
+      "description": "Servicios y resultados para clientes."
+    },
+    "community": {
+      "title": "Comunidad",
+      "description": "Artículos y código abierto."
+    },
+    "how-it-was-built": {
+      "title": "Cómo se hizo",
+      "description": "La arquitectura de este sitio."
+    }
+  }
+}

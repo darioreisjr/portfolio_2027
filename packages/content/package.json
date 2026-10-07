@@ -23,6 +23,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
+  "dependencies": {
+    "@portfolio/contracts": "workspace:*"
+  },
   "devDependencies": {
     "@portfolio/config": "workspace:*",
     "@types/node": "catalog:",

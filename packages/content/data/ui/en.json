@@ -1,0 +1,30 @@
+{
+  "siteName": "Portfolio",
+  "hello": "Hello",
+  "areas": {
+    "home": {
+      "title": "Home",
+      "description": "Portfolio home page."
+    },
+    "recruiter": {
+      "title": "Recruiter",
+      "description": "Summary, experience and education for those who are hiring."
+    },
+    "tech": {
+      "title": "Tech",
+      "description": "Projects and technical decisions."
+    },
+    "client": {
+      "title": "Clients",
+      "description": "Services and results for clients."
+    },
+    "community": {
+      "title": "Community",
+      "description": "Articles and open source."
+    },
+    "how-it-was-built": {
+      "title": "How it was built",
+      "description": "The architecture of this site."
+    }
+  }
+}

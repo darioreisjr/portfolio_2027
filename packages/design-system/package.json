@@ -13,8 +13,8 @@
     }
   },
   "scripts": {
-    "dev": "vite build --watch",
-    "build": "vite build && tsc -p tsconfig.build.json",
+    "dev": "vite build -c vite.lib.config.ts --watch",
+    "build": "vite build -c vite.lib.config.ts && tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "storybook": "storybook dev -p 6006",
