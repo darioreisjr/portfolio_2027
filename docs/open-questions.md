@@ -54,7 +54,7 @@ Atualizado em 2026-10-07. **Bloqueante** = precisa de resposta antes do bootstra
 | B12 | Cenário de sakura: conferir a animação em celular de verdade e a pausa no Firefox e no Safari (ver `docs/plans/home-sakura.md`)                                                                                                                                                                 | Publicação            |
 | B13 | O teto de CSS (20 kB) não é cobrado por `scripts/check-budgets.mjs`; hoje a home usa cerca de 4,5 kB                                                                                                                                                                                            | Nada                  |
 | B14 | Seletor de tema: a página `404.html` do Next.js não tem o script nem o botão; uma política de segurança de conteúdo futura terá de liberar o script inline por hash; conferir em Firefox e Safari                                                                                               | Publicação            |
-| B15 | Em telas largas e baixas (800 px de altura), o link "Como foi feito" e o controle de pausa da home ficam abaixo da dobra                                                                                                                                                                        | Nada                  |
+| B15 | **Resolvido em 2026-10-07:** a home passou a caber na janela sem rolagem; só volta a rolar abaixo de 40rem de altura                                                                                                                                                                            | Nada                  |
 
 ## Não verificado na documentação
 
