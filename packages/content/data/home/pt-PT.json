@@ -1,6 +1,7 @@
 {
   "title": "Escolha o seu caminho",
   "enter": "Entrar",
+  "pauseMotion": "Pausar animação",
   "madeIn": "Feito em {tech}",
   "personas": {
     "recruiter": {

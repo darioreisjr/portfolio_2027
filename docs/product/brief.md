@@ -21,7 +21,7 @@ Não há uma ação principal única: cada área tem a sua.
 
 ## Estrutura
 
-- **Entrada (home):** tela de escolha de perfil, decidida em 2026-10-07. Quatro personagens de corpo inteiro, um por público, sob a chamada "Escolha seu caminho" e uma linha discreta com nome e cargo do autor. Ao apontar ou focar um personagem ele ganha destaque e mostra uma frase em primeira pessoa, um resumo da área e a tecnologia em que ela foi feita. No celular é um carrossel, um personagem por vez. Detalhes em `docs/plans/home-perfis.md`.
+- **Entrada (home):** tela de escolha de perfil, decidida em 2026-10-07. Quatro personagens de corpo inteiro, um por público, sob a chamada "Escolha seu caminho" e uma linha discreta com nome e cargo do autor. Ao apontar ou focar um personagem ele ganha destaque e mostra uma frase em primeira pessoa, um resumo da área e a tecnologia em que ela foi feita. No celular é um carrossel, um personagem por vez. Detalhes em `docs/plans/home-perfis.md`. O fundo é um cenário animado de sakura, de dia no tema claro e à noite no escuro (`docs/plans/home-sakura.md`).
 - **Área do recrutador:** resumo e stack, experiência (linha do tempo), formação e certificados, currículo em PDF.
 - **Área técnica:** projetos na visão técnica (problema, arquitetura, trade-offs, código), skills filtráveis, GitHub.
 - **Área do cliente:** serviços, depoimentos, projetos na visão de resultado, canal de orçamento.

@@ -8,9 +8,26 @@
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
+  position: relative;
+  /* Mantém o cenário, que tem z-index negativo, dentro desta tela. */
+  isolation: isolate;
   min-height: 100svh;
   padding: var(--space-block-lg) 0;
+  background: linear-gradient(var(--color-scene-sky-top), var(--color-scene-sky-bottom));
   text-align: center;
+}
+
+/* Névoa atrás de cada bloco de texto: uma pétala, um galho ou a lua passando
+   por trás não derruba o contraste (ver o teste de contraste dos tokens). */
+.home-identity,
+.home h1,
+.persona-caption,
+.home-more,
+.home-motion {
+  padding: var(--space-block-xs) var(--space-inline-sm);
+  border-radius: var(--radius-md);
+  background: var(--color-scene-veil);
+  box-shadow: 0 0 var(--space-block-sm) var(--space-block-xs) var(--color-scene-veil);
 }
 
 .home-identity {
@@ -206,5 +223,198 @@
 
   .persona-figure {
     scale: 1;
+  }
+}
+
+/* Controle de pausa da animação (WCAG 2.2.2). Sem JavaScript: o CSS lê a caixa. */
+.home-motion {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-inline-sm);
+  margin: var(--space-block-md) var(--space-inline-md) 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-size-sm);
+}
+
+.home-motion input {
+  margin: 0;
+  accent-color: var(--color-accent);
+}
+
+.home-motion input:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Cenário de sakura: decorativo, atrás de tudo e sem receber cliques. */
+.sakura {
+  /* Só da cena: tamanho da pétala e distância da queda. */
+  --petal-size: 1.1rem;
+  --fall: 112svh;
+
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: clip;
+  pointer-events: none;
+  container-type: size;
+}
+
+/* Onde houver unidades de contêiner, a queda acompanha a altura real da tela. */
+@supports (height: 1cqh) {
+  .sakura {
+    --fall: 112cqh;
+  }
+}
+
+.sakura-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* Sol enevoado de dia, lua à noite: a cor vem do tema. */
+.sakura-orb {
+  --orb-size: clamp(4rem, 11vw, 7.5rem);
+
+  position: absolute;
+  top: 6%;
+  right: 8%;
+  width: var(--orb-size);
+  height: var(--orb-size);
+  border-radius: var(--radius-full);
+  background: var(--color-scene-orb);
+  box-shadow: 0 0 var(--space-inline-lg) var(--space-block-sm) var(--color-scene-orb);
+  opacity: 0.85;
+}
+
+.sakura-branch {
+  position: absolute;
+  top: 0;
+  overflow: visible;
+}
+
+/* Assimétrico: o galho maior vem da esquerda, o menor da direita. */
+.sakura-branch-left {
+  left: 0;
+  width: min(40vw, 30rem);
+  transform-origin: left top;
+  animation: sakura-sway calc(var(--motion-duration-sway) * 2) ease-in-out infinite alternate;
+}
+
+.sakura-branch-right {
+  right: 0;
+  width: min(34vw, 24rem);
+  /* Espelhado no próprio lugar; por isso a origem fica no centro. */
+  scale: -1 1;
+  transform-origin: center top;
+  animation: sakura-sway calc(var(--motion-duration-sway) * 2.6) ease-in-out infinite alternate;
+}
+
+.sakura-wood {
+  fill: none;
+  stroke: var(--color-scene-branch);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sakura-blossom-petal,
+.sakura-bud {
+  fill: var(--color-scene-blossom);
+}
+
+.sakura-core {
+  fill: var(--color-scene-blossom-core);
+}
+
+.sakura-stamen {
+  fill: none;
+  stroke: var(--color-scene-blossom-core);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.sakura-petal {
+  position: absolute;
+  top: calc(var(--petal-size) * -2);
+  left: var(--x);
+  width: calc(var(--petal-size) * var(--size));
+  height: calc(var(--petal-size) * var(--size) * 1.1);
+  overflow: visible;
+  fill: var(--color-scene-petal);
+  opacity: var(--depth);
+  /* Atraso negativo: a tela já abre com pétalas no meio do caminho. */
+  animation: sakura-fall calc(var(--motion-duration-drift) * var(--pace)) linear
+    calc(var(--motion-duration-drift) * var(--pace) * var(--offset) * -1) infinite;
+}
+
+/* Uma animação só por pétala: queda, balanço e giro juntos, tudo no compositor. */
+@keyframes sakura-fall {
+  from {
+    translate: 0 0;
+    rotate: var(--turn);
+  }
+
+  25% {
+    translate: var(--sway) calc(var(--fall) * 0.25);
+  }
+
+  50% {
+    translate: calc(var(--sway) * -0.6) calc(var(--fall) * 0.5);
+  }
+
+  75% {
+    translate: var(--sway) calc(var(--fall) * 0.75);
+  }
+
+  to {
+    translate: calc(var(--sway) * 0.4) var(--fall);
+    rotate: calc(var(--turn) + 540deg);
+  }
+}
+
+@keyframes sakura-sway {
+  from {
+    rotate: -0.8deg;
+  }
+
+  to {
+    rotate: 0.8deg;
+  }
+}
+
+.home:has(.home-motion input:checked) :is(.sakura-petal, .sakura-branch) {
+  animation-play-state: paused;
+}
+
+/* No celular, metade das pétalas e galhos proporcionalmente maiores. */
+@media (max-width: 47.99rem) {
+  .sakura-petal:nth-child(even) {
+    display: none;
+  }
+
+  .sakura-branch-left {
+    width: 68vw;
+  }
+
+  .sakura-branch-right {
+    width: 46vw;
+  }
+}
+
+/* Movimento reduzido: as pétalas ficam paradas no ar e não há o que pausar. */
+@media (prefers-reduced-motion: reduce) {
+  .sakura-petal,
+  .sakura-branch {
+    animation: none;
+  }
+
+  .sakura-petal {
+    top: var(--y);
+    rotate: var(--turn);
+  }
+
+  .home-motion {
+    display: none;
   }
 }

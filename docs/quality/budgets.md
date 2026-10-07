@@ -73,6 +73,8 @@ Acessibilidade e SEO do Lighthouse: 100 nas cinco rotas.
 
 Depois da tela de escolha de perfil (2026-10-07), a rota `/` mede 144,7 kB de JavaScript. O Lighthouse variou entre execuções na mesma máquina: Performance de 97 a 100, LCP de 1,6 a 2,3 s, TBT de 59 a 150 ms, CLS 0. As demais rotas não mudaram.
 
+Com o cenário de sakura (2026-10-07), a rota `/` mantém 144,7 kB de JavaScript e mede 3,1 kB de CSS do Next.js, 5,9 kB de HTML, Performance 98 a 99, LCP de 2,3 s, TBT de 45 ms e CLS 0. O CSS não é cobrado pelo script de orçamentos; os números vieram de medição manual sobre o `dist/`.
+
 As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um terço do teto. O React e o Next.js já nascem perto do teto, com folga de cerca de 3 kB e, depois da tela de escolha de perfil, 5 kB; a primeira feature dessas áreas vai exigir carga sob demanda ou a decisão registrada de subir o teto.
 
 ## Outros recursos

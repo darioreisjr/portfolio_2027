@@ -1,6 +1,7 @@
 {
   "title": "Choose your path",
   "enter": "Enter",
+  "pauseMotion": "Pause animation",
   "madeIn": "Built with {tech}",
   "personas": {
     "recruiter": {

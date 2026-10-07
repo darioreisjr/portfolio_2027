@@ -203,3 +203,219 @@ test.describe('home no celular (carrossel)', () => {
     await expect(page).toHaveURL(/\/tecnico\/$/);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Cenário de sakura
+// ---------------------------------------------------------------------------
+
+const petalStates = (page: Page) =>
+  page.locator('.sakura-petal').evaluateAll((petals) =>
+    petals
+      .map((petal) => getComputedStyle(petal))
+      .filter((style) => style.display !== 'none')
+      .map((style) => ({ name: style.animationName, state: style.animationPlayState })),
+  );
+
+/**
+ * Pior contraste entre a cor de um texto e os pixels que estão de fato atrás
+ * dele. O axe não mede texto sobre degradê, galho ou pétala; este teste mede.
+ * O texto fica transparente, a tela é capturada e lida em um canvas.
+ */
+async function worstContrast(page: Page, selectors: string[]): Promise<Record<string, number>> {
+  const targets = await page.evaluate(
+    (list) =>
+      list.map((selector) => {
+        const element = document.querySelector(selector);
+        if (!element) throw new Error(`Sem elemento para ${selector}`);
+        // Só a área do texto: os cantos arredondados da névoa não têm letra.
+        const range = document.createRange();
+        range.selectNodeContents(element);
+        const { x, y, width, height } = range.getBoundingClientRect();
+        return { selector, x, y, width, height, color: getComputedStyle(element).color };
+      }),
+    selectors,
+  );
+
+  await page.addStyleTag({
+    content:
+      '.home, .home * { color: transparent !important; text-decoration-color: transparent !important; }' +
+      '.home img, .home ds-badge, .persona-enter, .home-motion input { visibility: hidden !important; }',
+  });
+  const screenshot = (await page.screenshot({ scale: 'css' })).toString('base64');
+
+  return page.evaluate(
+    async ({ image, list }) => {
+      const picture = new Image();
+      picture.src = `data:image/png;base64,${image}`;
+      await picture.decode();
+      const canvas = document.createElement('canvas');
+      canvas.width = picture.width;
+      canvas.height = picture.height;
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('Sem canvas 2d');
+      context.drawImage(picture, 0, 0);
+
+      const luminance = (red: number, green: number, blue: number) => {
+        const [r, g, b] = [red, green, blue].map((value) => {
+          const unit = value / 255;
+          return unit <= 0.03928 ? unit / 12.92 : ((unit + 0.055) / 1.055) ** 2.4;
+        });
+        return 0.2126 * (r ?? 0) + 0.7152 * (g ?? 0) + 0.0722 * (b ?? 0);
+      };
+
+      const result: Record<string, number> = {};
+      for (const target of list) {
+        const [red = 0, green = 0, blue = 0] = (target.color.match(/[\d.]+/g) ?? []).map(Number);
+        const text = luminance(red, green, blue);
+        const { data } = context.getImageData(
+          Math.max(0, Math.floor(target.x)),
+          Math.max(0, Math.floor(target.y)),
+          Math.max(1, Math.floor(target.width)),
+          Math.max(1, Math.floor(target.height)),
+        );
+        let worst = Infinity;
+        for (let at = 0; at < data.length; at += 4) {
+          const behind = luminance(data[at] ?? 0, data[at + 1] ?? 0, data[at + 2] ?? 0);
+          const [high, low] = text > behind ? [text, behind] : [behind, text];
+          worst = Math.min(worst, (high + 0.05) / (low + 0.05));
+        }
+        result[target.selector] = Number(worst.toFixed(2));
+      }
+      return result;
+    },
+    { image: screenshot, list: targets },
+  );
+}
+
+const textBlocks = [
+  '.home h1',
+  '.persona .persona-phrase',
+  '.persona .persona-summary',
+  '.home-more a',
+  '.home-motion',
+];
+
+test.describe('cenário de sakura em tela larga', () => {
+  test.use({ viewport: { width: 1280, height: 800 }, colorScheme: 'light' });
+
+  test('é decorativo: fora da árvore de acessibilidade, do foco e dos cliques', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    const scene = page.locator('.sakura');
+
+    await expect(scene).toHaveAttribute('aria-hidden', 'true');
+    await expect(scene).toHaveCSS('pointer-events', 'none');
+    await expect(scene.locator('a, button, input, [tabindex]')).toHaveCount(0);
+    await expect(scene.locator('.sakura-branch')).toHaveCount(2);
+  });
+
+  test('tem vinte pétalas caindo', async ({ page }) => {
+    await page.goto('/');
+    const states = await petalStates(page);
+
+    expect(states).toHaveLength(20);
+    for (const state of states) expect(state).toEqual({ name: 'sakura-fall', state: 'running' });
+  });
+
+  test('a animação pausa e volta pelo teclado', async ({ page }) => {
+    await page.goto('/');
+    const pause = page.getByRole('checkbox', { name: 'Pausar animação' });
+
+    await pause.focus();
+    await page.keyboard.press('Space');
+    await expect(pause).toBeChecked();
+    expect((await petalStates(page)).every((petal) => petal.state === 'paused')).toBe(true);
+    await expect(page.locator('.sakura-branch').first()).toHaveCSS(
+      'animation-play-state',
+      'paused',
+    );
+
+    await page.keyboard.press('Space');
+    expect((await petalStates(page)).every((petal) => petal.state === 'running')).toBe(true);
+  });
+
+  test('movimento reduzido: pétalas paradas à vista e sem controle de pausa', async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      viewport: { width: 1280, height: 800 },
+      reducedMotion: 'reduce',
+    });
+    const page = await context.newPage();
+    await page.goto('/');
+
+    const states = await petalStates(page);
+    expect(states).toHaveLength(20);
+    for (const state of states) expect(state.name).toBe('none');
+    await expect(page.locator('.sakura-branch').first()).toHaveCSS('animation-name', 'none');
+
+    const inView = await page.locator('.sakura-petal').evaluateAll(
+      (petals) =>
+        petals.filter((petal) => {
+          const { top, bottom } = petal.getBoundingClientRect();
+          return top >= 0 && bottom <= innerHeight;
+        }).length,
+    );
+    expect(inView).toBeGreaterThanOrEqual(15);
+
+    await expect(page.locator('.home-motion')).toBeHidden();
+    await context.close();
+  });
+
+  for (const colorScheme of ['light', 'dark'] as const) {
+    test(`o texto tem contraste AA sobre o cenário (${colorScheme})`, async ({ browser }) => {
+      const context = await browser.newContext({
+        viewport: { width: 1280, height: 800 },
+        colorScheme,
+      });
+      const page = await context.newPage();
+      await page.goto('/');
+      await page.getByRole('checkbox').check();
+      // Com foco de teclado, a legenda do primeiro personagem fica visível.
+      await page.locator('body').click({ position: { x: 5, y: 5 } });
+      await page.keyboard.press('Tab');
+      await expect(personas(page).first()).toBeFocused();
+      await expect(caption(personas(page).first())).toHaveCSS('opacity', '1');
+
+      const contrasts = await worstContrast(page, textBlocks);
+      for (const [block, value] of Object.entries(contrasts)) {
+        expect(value, `${block} em ${colorScheme}`).toBeGreaterThanOrEqual(4.5);
+      }
+      await context.close();
+    });
+  }
+});
+
+test.describe('cenário de sakura no celular', () => {
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+
+  test('tem dez pétalas e não cria rolagem lateral', async ({ page }) => {
+    await page.goto('/');
+
+    expect(await petalStates(page)).toHaveLength(10);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      390,
+    );
+  });
+
+  for (const colorScheme of ['light', 'dark'] as const) {
+    test(`o texto tem contraste AA sobre o cenário (${colorScheme})`, async ({ browser }) => {
+      const context = await browser.newContext({
+        viewport: { width: 390, height: 844 },
+        hasTouch: true,
+        isMobile: true,
+        colorScheme,
+      });
+      const page = await context.newPage();
+      await page.goto('/');
+      await page.getByRole('checkbox').check();
+
+      const contrasts = await worstContrast(page, textBlocks);
+      for (const [block, value] of Object.entries(contrasts)) {
+        expect(value, `${block} em ${colorScheme}`).toBeGreaterThanOrEqual(4.5);
+      }
+      await context.close();
+    });
+  }
+});

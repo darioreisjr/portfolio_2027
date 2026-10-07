@@ -37,6 +37,7 @@ export interface HomeModel {
   identity: { name: string; role: string } | null;
   title: string;
   enter: string;
+  pauseMotion: string;
   personas: Persona[];
   more: { href: string; label: string; sameApp: boolean };
 }
@@ -57,6 +58,7 @@ export function buildHome(locale: Locale): HomeModel {
       : null,
     title: text.title,
     enter: text.enter,
+    pauseMotion: text.pauseMotion,
     personas: personaAreas.map((area) => {
       const route = routeOf(area);
       return {

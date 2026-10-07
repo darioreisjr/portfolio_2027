@@ -4,6 +4,7 @@ import type {} from '@portfolio/design-system/react';
 import Link from 'next/link';
 import { buildHome, type Persona } from '../../lib/home';
 import { PersonaList } from './persona-list';
+import { SakuraScene } from './sakura-scene';
 
 function PersonaLink({ persona, enter }: { persona: Persona; enter: string }) {
   const content = (
@@ -41,10 +42,11 @@ function PersonaLink({ persona, enter }: { persona: Persona; enter: string }) {
 }
 
 export function HomeStage({ locale }: { locale: Locale }) {
-  const { identity, title, enter, personas, more } = buildHome(locale);
+  const { identity, title, enter, pauseMotion, personas, more } = buildHome(locale);
 
   return (
     <main className="home">
+      <SakuraScene />
       {identity && (
         <p className="home-identity">
           <strong>{identity.name}</strong>
@@ -74,6 +76,11 @@ export function HomeStage({ locale }: { locale: Locale }) {
           <a href={more.href}>{more.label}</a>
         )}
       </p>
+      {/* No fim do documento: o primeiro Tab continua caindo no primeiro personagem. */}
+      <label className="home-motion">
+        <input type="checkbox" />
+        {pauseMotion}
+      </label>
     </main>
   );
 }
