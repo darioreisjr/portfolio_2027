@@ -222,7 +222,7 @@ test.describe('home em tela larga (palco)', () => {
     // Controles da página não desfazem a escolha.
     await page.getByRole('button', { name: 'Tema escuro' }).click();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-    await page.getByText('Pausar animação').click();
+    await page.getByRole('checkbox', { name: 'Pausar animação' }).check();
     await expect(page.getByRole('checkbox', { name: 'Pausar animação' })).toBeChecked();
     await expectSelected(page, 1);
 
@@ -529,7 +529,7 @@ async function outlineContrast(page: Page, selectors: string[]): Promise<Record<
   );
 }
 
-const textBlocks = ['.home h1', '.persona .persona-phrase', '.home-motion'];
+const textBlocks = ['.home h1', '.persona .persona-phrase'];
 const selectedBlocks = [
   '.home h1',
   'li[data-selected] .persona-phrase',

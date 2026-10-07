@@ -62,14 +62,14 @@ export function PersonaList({ children }: { children: ReactNode }) {
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === 'Escape') deselect(list);
     };
-    // Clicar fora desfaz. Controles da página (tema, pausa, links) não contam.
+    // Clicar fora desfaz. Controles da página (tema, pausa, idioma, links) não contam.
     const onClick = (event: globalThis.MouseEvent) => {
       // O personagem escolhido vai para o centro; o segundo clique de um duplo
       // clique cai onde ele estava, e não é um pedido para desfazer.
       if (event.detail > 1) return;
       const target = event.target as Element;
       if (selectedItem(list)?.contains(target)) return;
-      if (target.closest('a, button, input, label, ds-theme-toggle')) return;
+      if (target.closest('a, button, input, label, ds-theme-toggle, .ds-dock')) return;
       deselect(list);
     };
     document.addEventListener('keydown', onKeyDown);

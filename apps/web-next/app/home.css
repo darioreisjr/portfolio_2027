@@ -90,8 +90,8 @@
   /* Mantém o cenário, que tem z-index negativo, dentro desta tela. */
   isolation: isolate;
   min-height: 100svh;
-  /* O topo fica livre para o seletor de tema. */
-  padding: calc(var(--size-control) + var(--space-block-lg)) 0 var(--space-block-lg);
+  /* O topo fica livre para o seletor de tema, e o fim para as bandeiras. */
+  padding: calc(var(--size-control) + var(--space-block-lg)) 0 var(--ds-dock-reserve);
   background: linear-gradient(var(--home-sky-top), var(--home-sky-bottom));
   text-align: center;
 }
@@ -102,8 +102,7 @@
    a meia largura e à largura inteira, para não sobrar vão em traço fino. */
 .home-identity,
 .home h1,
-.persona-phrase,
-.home-motion {
+.persona-phrase {
   --o: var(--text-outline-width);
   --h: calc(var(--text-outline-width) / 2);
   --n: calc(var(--text-outline-width) * -1);
@@ -399,22 +398,59 @@
   }
 }
 
-/* Controle de pausa da animação (WCAG 2.2.2). Sem JavaScript: o CSS lê a caixa. */
+/* Controle de pausa da animação (WCAG 2.2.2). Fica no grupo fixo do canto, ao
+   lado das bandeiras, e por isso é renderizado pelo layout, fora de `.home`.
+   É uma caixa de seleção nativa com cara de botão: sem JavaScript, o CSS lê a
+   caixa. Ela cobre o alvo inteiro, invisível, e o disco mostra o estado. */
 .home-motion {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-inline-sm);
-  margin: var(--space-block-sm) var(--space-inline-md) 0;
-  color: var(--color-text-muted);
-  font-size: var(--text-size-sm);
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: var(--size-control);
+  block-size: var(--size-control);
 }
 
 .home-motion input {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  inline-size: 100%;
+  block-size: 100%;
   margin: 0;
-  accent-color: var(--color-accent);
+  opacity: 0;
+  cursor: pointer;
 }
 
-.home-motion input:focus-visible {
+.home-motion-disc {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: var(--size-icon);
+  block-size: var(--size-icon);
+  border: var(--border-width-control) solid var(--color-text-muted);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.home-motion-disc svg {
+  inline-size: var(--space-inline-md);
+  block-size: var(--space-inline-md);
+  scale: 0.75;
+  fill: currentColor;
+}
+
+/* Parado, o ícone vira o de tocar. */
+.home-motion-play,
+.home-motion input:checked ~ .home-motion-disc .home-motion-pause {
+  display: none;
+}
+
+.home-motion input:checked ~ .home-motion-disc .home-motion-play {
+  display: block;
+}
+
+.home-motion input:focus-visible ~ .home-motion-disc {
   outline: var(--focus-ring-width) solid var(--color-focus-ring);
   outline-offset: var(--focus-ring-offset);
 }
@@ -782,9 +818,9 @@
 }
 
 /* O halo vai à parte: pseudo-elemento não entra em :is(). */
-.home:has(.home-motion input:checked)
+body:has(.home-motion input:checked)
   :is(.sakura-petal, .sakura-branch, .sakura-flower, .sakura-cloud, .sakura-sky),
-.home:has(.home-motion input:checked) .sakura-orb::before {
+body:has(.home-motion input:checked) .sakura-orb::before {
   animation-play-state: paused;
 }
 

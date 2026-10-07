@@ -41,7 +41,7 @@ test.describe('a tela cabe na janela, sem rolagem', () => {
         const fit = await page.evaluate(() => ({
           page: document.documentElement.scrollHeight,
           window: innerHeight,
-          lastControl: document.querySelector('.home-motion')?.getBoundingClientRect().bottom ?? 0,
+          lastControl: document.querySelector('.ds-dock')?.getBoundingClientRect().bottom ?? 0,
           figure: document.querySelector('.persona-figure')?.getBoundingClientRect().height ?? 0,
         }));
 
@@ -70,7 +70,7 @@ test.describe('a tela cabe na janela, sem rolagem', () => {
         pageWidth: document.documentElement.scrollWidth,
         window: innerHeight,
         windowWidth: innerWidth,
-        lastControl: document.querySelector('.home-motion')?.getBoundingClientRect().bottom ?? 0,
+        lastControl: document.querySelector('.ds-dock')?.getBoundingClientRect().bottom ?? 0,
         back:
           document.querySelector('li[data-selected] .persona-back')?.getBoundingClientRect()
             .bottom ?? 0,

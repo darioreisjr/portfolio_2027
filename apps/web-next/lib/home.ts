@@ -40,7 +40,6 @@ export interface HomeModel {
   enter: string;
   /** Desfaz a escolha do personagem. */
   back: string;
-  pauseMotion: string;
   personas: Persona[];
 }
 
@@ -61,7 +60,6 @@ export function buildHome(locale: Locale): HomeModel {
     title: text.title,
     enter: text.enter,
     back: text.back,
-    pauseMotion: text.pauseMotion,
     personas: personaAreas.map((area) => {
       const route = routeOf(area);
       return {

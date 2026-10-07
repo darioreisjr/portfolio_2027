@@ -73,7 +73,7 @@ function PersonaItem({ persona, enter, back, first }: PersonaItemProps) {
 }
 
 export function HomeStage({ locale }: { locale: Locale }) {
-  const { identity, title, enter, back, pauseMotion, personas } = buildHome(locale);
+  const { identity, title, enter, back, personas } = buildHome(locale);
 
   return (
     <main className="home">
@@ -104,11 +104,6 @@ export function HomeStage({ locale }: { locale: Locale }) {
           ))}
         </div>
       </nav>
-      {/* No fim do documento, depois dos personagens na ordem do Tab. */}
-      <label className="home-motion">
-        <input type="checkbox" />
-        {pauseMotion}
-      </label>
     </main>
   );
 }
