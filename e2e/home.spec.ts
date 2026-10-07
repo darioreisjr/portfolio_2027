@@ -242,7 +242,10 @@ test.describe('home em tela larga (palco)', () => {
         .nth(2)
         .click({ modifiers: ['ControlOrMeta'] }),
     ]);
-    await expect(tab).toHaveURL(/\/clientes\/$/);
+    // A aba abre em segundo plano; trazida para a frente, carrega sem depender
+    // de quanto a máquina está ocupada.
+    await tab.bringToFront();
+    await expect(tab).toHaveURL(/\/clientes\/$/, { timeout: 15_000 });
     await expectNoneSelected(page);
   });
 

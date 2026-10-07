@@ -195,6 +195,9 @@
   color: var(--color-text);
   text-decoration: none;
   cursor: pointer;
+  /* Sem o retângulo de toque do navegador sobre a figura: quem mostra a
+     escolha é a própria tela. */
+  -webkit-tap-highlight-color: transparent;
 }
 
 .persona:focus-visible {
