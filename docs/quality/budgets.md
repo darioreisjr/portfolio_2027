@@ -71,9 +71,9 @@ Só o "olá" de cada app, sem nenhuma feature. Medido por `pnpm budgets` (gzip) 
 
 Acessibilidade e SEO do Lighthouse: 100 nas cinco rotas.
 
-Depois da tela de escolha de perfil (2026-10-07), a rota `/` mede 144,6 kB de JavaScript, Performance 98, LCP de 2,2 s, TBT de 102 ms e CLS 0. As demais rotas não mudaram.
+Depois da tela de escolha de perfil (2026-10-07), a rota `/` mede 144,7 kB de JavaScript. O Lighthouse variou entre execuções na mesma máquina: Performance de 97 a 100, LCP de 1,6 a 2,3 s, TBT de 59 a 150 ms, CLS 0. As demais rotas não mudaram.
 
-As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um terço do teto. O React e o Next.js já nascem perto do teto, com folga de cerca de 3 kB e 6 kB; a primeira feature dessas áreas vai exigir carga sob demanda ou a decisão registrada de subir o teto.
+As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um terço do teto. O React e o Next.js já nascem perto do teto, com folga de cerca de 3 kB e, depois da tela de escolha de perfil, 5 kB; a primeira feature dessas áreas vai exigir carga sob demanda ou a decisão registrada de subir o teto.
 
 ## Outros recursos
 

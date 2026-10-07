@@ -43,14 +43,26 @@ Troque os quatro arquivos em `apps/web-next/public/_home/personas/` mantendo os 
 
 ## Medido
 
-| Medida                   | Antes    | Depois   | Limite   |
-| ------------------------ | -------- | -------- | -------- |
-| JavaScript de `/`        | 144,2 kB | 144,6 kB | 150 kB   |
-| Performance (Lighthouse) | 99       | 98       | 90       |
-| LCP                      | 2,1 s    | 2,2 s    | 2,5 s    |
-| TBT                      | 38 ms    | 102 ms   | 200 ms   |
-| CLS                      | 0        | 0        | 0,1      |
-| Acessibilidade e SEO     | 100      | 100      | 100 e 95 |
+O JavaScript é estável entre execuções; os números do Lighthouse variaram bastante em três execuções na mesma máquina, então valem como faixa.
+
+| Medida                   | Antes    | Depois      | Limite   |
+| ------------------------ | -------- | ----------- | -------- |
+| JavaScript de `/`        | 144,2 kB | 144,7 kB    | 150 kB   |
+| Performance (Lighthouse) | 99       | 97 a 100    | 90       |
+| LCP                      | 2,1 s    | 1,6 a 2,3 s | 2,5 s    |
+| TBT                      | 38 ms    | 59 a 150 ms | 200 ms   |
+| CLS                      | 0        | 0           | 0,1      |
+| Acessibilidade e SEO     | 100      | 100         | 100 e 95 |
+
+## Revisão
+
+Os três revisores do fluxo não acharam bloqueio. Aplicado depois da revisão: recuo do carrossel como propriedade local, token sem uso removido, pontinhos com mais contraste, link "Como foi feito" respeitando o dono da rota, caminho dos arquivos da home como constante em `packages/contracts`, destaque único (foco e toque não deixam dois personagens destacados), só dedo conta como toque, e o foco acompanha o primeiro toque.
+
+Em aberto, por depender de decisão do autor ou de teste em aparelho:
+
+- Manter a frase de cada personagem sempre visível em tela larga, em vez de só no destaque. Ajuda quem usa tablet e controle por voz, e reduz a dependência das silhuetas, que têm pouco contraste entre si.
+- Conferir em iPad com VoiceOver e em Android com TalkBack se o primeiro toque de um leitor de tela abre a área ou só destaca.
+- Nome acessível de cada link: hoje junta frase, resumo e selo.
 
 ## Fora desta tarefa
 
@@ -60,4 +72,4 @@ Arte final, botão de tema, troca de idioma (as homes dos outros idiomas seguem 
 
 - O autor revisa as traduções da home e do cargo. Enquanto o perfil for `draft`, a linha com nome e cargo só aparece em desenvolvimento (`pnpm dev`).
 - `budgets.md` cita 130 kB para a parte "Página Next.js", sem cobrança em `budgets.json`; o medido é perto de 138 kB. Falta decidir entre corrigir a linha, removê-la ou cobrar.
-- O LCP e o TBT de `/` ficaram mais perto do limite. Medir de novo quando a arte final chegar.
+- Medir LCP e TBT de novo quando a arte final chegar.

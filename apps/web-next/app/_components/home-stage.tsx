@@ -65,7 +65,11 @@ export function HomeStage({ locale }: { locale: Locale }) {
         </div>
       </nav>
       <p className="home-more">
-        <Link href={more.href}>{more.label}</Link>
+        {more.sameApp ? (
+          <Link href={more.href}>{more.label}</Link>
+        ) : (
+          <a href={more.href}>{more.label}</a>
+        )}
       </p>
     </main>
   );

@@ -24,6 +24,9 @@ export interface RouteEntry {
   paths: Record<Locale, string>;
 }
 
+/** Arquivos estáticos da home, servidos pelo app Next.js. */
+export const HOME_ASSETS_PATH = '/_home/';
+
 // Fonte única das rotas. Espelha a tabela de docs/architecture/mfe-map.md.
 export const routes: readonly RouteEntry[] = [
   {

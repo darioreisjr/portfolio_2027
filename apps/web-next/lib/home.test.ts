@@ -45,7 +45,11 @@ describe('tela de escolha de perfil', () => {
   });
 
   it('liga para "Como foi feito" no idioma', () => {
-    expect(buildHome('pt-BR').more).toEqual({ href: '/como-foi-feito/', label: 'Como foi feito' });
+    expect(buildHome('pt-BR').more).toEqual({
+      href: '/como-foi-feito/',
+      label: 'Como foi feito',
+      sameApp: true,
+    });
   });
 
   it('omite a apresentação sem perfil e a mostra no idioma quando há', () => {

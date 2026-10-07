@@ -185,7 +185,7 @@ Textos de interface (rótulos de navegação, botões, títulos de seção), sep
 
 | Área       | Arquivos                                                                       |
 | ---------- | ------------------------------------------------------------------------------ |
-| Home       | `profile`, `contacts`, `ui`                                                    |
+| Home       | `profile`, `home`, `ui` (`contacts` quando houver uso)                         |
 | Recrutador | `profile`, `experiences`, `education`, `skills`, `contacts`, `ui`              |
 | Técnica    | `projects` (narrativa `technical`), `skills`, `contacts`, `ui`                 |
 | Cliente    | `services`, `testimonials`, `projects` (narrativa `outcome`), `contacts`, `ui` |

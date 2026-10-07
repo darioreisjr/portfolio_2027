@@ -41,12 +41,14 @@
   --lift: 0.12;
   --recede: 0.06;
   --fade: 0.6;
+  /* Quanto do vizinho aparece de cada lado no carrossel. */
+  --peek: 12%;
 
   display: flex;
   flex-wrap: nowrap;
   gap: var(--space-inline-md);
   margin: 0;
-  padding: var(--space-block-md) 12%;
+  padding: var(--space-block-md) var(--peek);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   list-style: none;
@@ -120,7 +122,7 @@
   width: var(--dot-size);
   height: var(--dot-size);
   border-radius: var(--radius-full);
-  background: var(--color-border);
+  background: var(--color-text-muted);
 }
 
 .personas:not([data-slide]) ~ .persona-dots span:nth-child(1),

@@ -2,7 +2,7 @@ import { createReadStream, existsSync, statSync } from 'node:fs';
 import { extname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ui } from '@portfolio/content/ui';
-import { findRoute, routesOwnedBy } from '@portfolio/contracts';
+import { findRoute, HOME_ASSETS_PATH, routesOwnedBy } from '@portfolio/contracts';
 import { defineConfig, type Plugin } from 'vite';
 import { renderPage } from './src/page.ts';
 
@@ -74,8 +74,8 @@ const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$
 const nextPaths = routesOwnedBy('web-next')
   .flatMap((route) => Object.values(route.paths))
   .map((path) => `${escapeRegex(path.replace(/\/$/, ''))}/?`);
-// /_home/ são os arquivos estáticos da home (pasta public do Next.js).
-const nextProxyPattern = `^(?:/_next/|/__nextjs|/_home/|(?:${nextPaths.join('|')})$)`;
+// Inclui os arquivos estáticos da home (pasta public do Next.js).
+const nextProxyPattern = `^(?:/_next/|/__nextjs|${HOME_ASSETS_PATH}|(?:${nextPaths.join('|')})$)`;
 
 export default defineConfig({
   plugins: [composedDev()],
