@@ -4,6 +4,9 @@
   top: var(--space-block-md);
   right: var(--space-inline-md);
   z-index: 1;
+  /* Sem caixa de linha: uma linha vazia faria o navegador baixar o peso normal
+     da fonte só para medir a altura dela, mesmo na home, que não tem texto normal. */
+  display: flex;
 }
 
 /* O fim da página fica livre para o grupo fixo das bandeiras. */

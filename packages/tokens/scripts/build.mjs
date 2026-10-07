@@ -1,9 +1,41 @@
 // Gera dist/tokens.css e a lista tipada de nomes de token.
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { component, primitives, semantic, semanticStatic } from '../src/tokens.mjs';
 
 const outDir = fileURLToPath(new URL('../dist', import.meta.url));
+
+// Fonte do site: M PLUS Rounded 1c, só o subconjunto latino, nos dois pesos que
+// o site usa. Os arquivos vêm do pacote @fontsource e são publicados em
+// /_ds/fonts/, o mesmo endereço para o shell e para o Next.js (ADR 0006).
+const FONT_FAMILY = 'M PLUS Rounded 1c';
+const FONT_WEIGHTS = [400, 700];
+const FONT_SOURCE = new URL(
+  '../node_modules/@fontsource/m-plus-rounded-1c/files/',
+  import.meta.url,
+);
+const fontFile = (weight) => `m-plus-rounded-1c-latin-${weight}-normal.woff2`;
+// Largura da fonte em relação à Arial, medida no navegador com as frases do
+// site: 1,04 no peso 400 e 1,01 no 700. Com o ajuste, a fonte de reserva ocupa
+// quase o mesmo espaço e o texto não muda de quebra quando a fonte chega.
+const FALLBACK_ADJUST = '103%';
+
+const fontFaces = [
+  ...FONT_WEIGHTS.map(
+    (weight) => `@font-face {
+  font-family: '${FONT_FAMILY}';
+  font-style: normal;
+  font-weight: ${weight};
+  font-display: swap;
+  src: url('/_ds/fonts/${fontFile(weight)}') format('woff2');
+}`,
+  ),
+  `@font-face {
+  font-family: '${FONT_FAMILY} Fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('Roboto'), local('Liberation Sans');
+  size-adjust: ${FALLBACK_ADJUST};
+}`,
+].join('\n\n');
 
 const declarations = (tokens, indent = '  ') =>
   Object.entries(tokens)
@@ -11,6 +43,8 @@ const declarations = (tokens, indent = '  ') =>
     .join('\n');
 
 const css = `/* GERADO por packages/tokens/scripts/build.mjs. Edite src/tokens.mjs. */
+
+${fontFaces}
 
 :root {
   color-scheme: light;
@@ -118,7 +152,10 @@ const publicNames = [
   ...Object.keys(component),
 ];
 
-mkdirSync(outDir, { recursive: true });
+mkdirSync(`${outDir}/fonts`, { recursive: true });
+for (const weight of FONT_WEIGHTS) {
+  copyFileSync(new URL(fontFile(weight), FONT_SOURCE), `${outDir}/fonts/${fontFile(weight)}`);
+}
 writeFileSync(`${outDir}/tokens.css`, css);
 writeFileSync(
   `${outDir}/index.js`,

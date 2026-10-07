@@ -32,6 +32,9 @@ catalog:
   tslib: 2.8.1
   lit: 3.3.3
 
+  # Fonte do site (só os arquivos latinos, copiados por packages/tokens)
+  '@fontsource/m-plus-rounded-1c': 5.3.0
+
   # Build
   vite: 8.3.3
   '@vitejs/plugin-react': 6.1.2

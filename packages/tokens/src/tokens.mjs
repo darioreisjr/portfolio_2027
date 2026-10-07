@@ -42,12 +42,14 @@ export const primitives = {
   'ease-out': 'cubic-bezier(0.2, 0, 0, 1)',
   'radius-12': '0.75rem',
   'radius-pill': '999px',
-  'font-sans': "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+  // Arredondada de origem japonesa; só o alfabeto latino é publicado. A face
+  // "Fallback" é uma fonte do sistema ajustada à largura dela (scripts/build.mjs).
+  'font-sans': "'M PLUS Rounded 1c', 'M PLUS Rounded 1c Fallback', system-ui, sans-serif",
   'font-size-100': '0.875rem',
   'font-size-200': '1rem',
   'font-size-300': '1.25rem',
   'font-size-500': '1.75rem',
-  'font-weight-strong': '600',
+  'font-weight-strong': '700',
   'line-height-body': '1.5',
 };
 

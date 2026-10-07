@@ -14,6 +14,8 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 // Uma bandeira por idioma (ADR 0006).
 const FLAGS = ['pt-BR', 'en', 'es', 'pt-PT'];
+// Os dois pesos da fonte do site, só no alfabeto latino.
+const FONTS = [400, 700].map((weight) => `fonts/m-plus-rounded-1c-latin-${weight}-normal.woff2`);
 
 /**
  * `only` limita a cópia a alguns arquivos da origem.
@@ -30,7 +32,7 @@ export const sources = [
     to: '_ds',
     only: ['ds.js', ...FLAGS.map((flag) => `flags/${flag}.svg`)],
   },
-  { from: 'packages/tokens/dist', to: '_ds', only: ['tokens.css'] },
+  { from: 'packages/tokens/dist', to: '_ds', only: ['tokens.css', ...FONTS] },
 ];
 
 const REQUIRED = [
@@ -40,6 +42,7 @@ const REQUIRED = [
   '_ds/ds.js',
   '_ds/tokens.css',
   ...FLAGS.map((flag) => `_ds/flags/${flag}.svg`),
+  ...FONTS.map((font) => `_ds/${font}`),
 ];
 
 function walk(dir, prefix = '') {

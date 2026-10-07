@@ -62,6 +62,10 @@
 }
 
 .home {
+  /* Todo texto desta tela é negrito. Declarado aqui, o navegador não baixa o
+     peso normal da fonte só para medir linhas sem texto (figuras, cenário). */
+  font-weight: var(--text-weight-strong);
+
   --home-sky-top: var(--color-scene-sky-top);
   --home-sky-bottom: var(--color-scene-sky-bottom);
   --home-cloud: var(--color-scene-cloud);
@@ -137,6 +141,7 @@
   margin: 0 var(--space-inline-md) var(--space-block-md);
   color: var(--color-text-muted);
   font-size: var(--text-size-sm);
+  font-weight: normal;
 }
 
 .home-identity strong {

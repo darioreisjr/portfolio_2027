@@ -15,6 +15,7 @@
     "test": "vitest run"
   },
   "devDependencies": {
+    "@fontsource/m-plus-rounded-1c": "catalog:",
     "vitest": "catalog:"
   }
 }

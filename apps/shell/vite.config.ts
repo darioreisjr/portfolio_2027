@@ -13,6 +13,7 @@ const NEXT_DEV = 'http://localhost:3000';
 // caminhos do site publicado, lendo os `dist` que os outros apps geram em watch.
 const publishedDirs: Record<string, string> = {
   '/_ds/tokens.css': 'packages/tokens/dist/tokens.css',
+  '/_ds/fonts/': 'packages/tokens/dist/fonts/',
   '/_ds/': 'packages/design-system/dist/',
   '/_mfe/vue/': 'apps/mfe-vue/dist/',
   '/_mfe/react/': 'apps/mfe-react/dist/',
@@ -24,6 +25,7 @@ const contentTypes: Record<string, string> = {
   '.css': 'text/css',
   '.map': 'application/json',
   '.svg': 'image/svg+xml',
+  '.woff2': 'font/woff2',
 };
 
 function resolvePublished(pathname: string): string | undefined {

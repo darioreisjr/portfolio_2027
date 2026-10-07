@@ -21,6 +21,8 @@ O site não tem coleta de dados de campo (analytics está em aberto), então o C
 | CLS                                                | até 0,1    | CLS de campo                                                |
 | Nota de Performance                                | 90 ou mais | Visão geral                                                 |
 
+**Exceção da home, autorizada pelo autor em 2026-10-07:** o LCP de laboratório de `/` pode ir até 2,7 s. Motivo: a fonte da identidade visual (M PLUS Rounded 1c, um arquivo de 23 kB na home) custa cerca de 0,1 s na simulação de celular lento, e a home já estava a 0,1 s do limite. As demais rotas continuam em 2,5 s. O `lighthouserc.json` cobra os dois valores.
+
 ## JavaScript inicial por rota
 
 Tamanho transferido (comprimido) de todo o JavaScript necessário para a rota ficar interativa. Os tetos abaixo foram estimados antes do bootstrap e mantidos depois da medição. Os números cobrados no CI ficam em `docs/quality/budgets.json`; mantenha os dois arquivos iguais. Scripts `nomodule` não contam, porque navegadores atuais não os baixam.
@@ -81,17 +83,19 @@ Com as quatro artes finais dos personagens (2026-10-07, AVIF de 16 a 18 kB cada)
 
 Com a escolha do personagem na própria home (2026-10-07), a rota `/` mede 146,1 kB de JavaScript, Performance 98, LCP de 2,4 s, TBT de 45 a 58 ms e CLS 0.
 
+Com as bandeiras de idioma, o contorno no texto e a fonte M PLUS Rounded 1c (2026-10-07), o JavaScript não mudou em nenhuma rota (nada disso usa script). Na rota `/`: Performance 97, LCP de 2,58 a 2,62 s, TBT de 39 a 51 ms e CLS 0,001. Medições de controle na mesma máquina: só com as bandeiras, sem a fonte, o LCP fica em 2,46 a 2,50 s; com a fonte nos dois pesos, 2,77 s (a home passou a baixar só o peso 700); com `font-display: optional` não muda. As áreas do shell medem LCP de 1,4 a 1,6 s e `/como-foi-feito`, 1,9 s.
+
 As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um terço do teto. O React e o Next.js já nascem perto do teto, com folga de cerca de 3 kB e, depois da tela de escolha de perfil, 5 kB; a primeira feature dessas áreas vai exigir carga sob demanda ou a decisão registrada de subir o teto.
 
 ## Outros recursos
 
-| Recurso              | Limite                                                                  |
-| -------------------- | ----------------------------------------------------------------------- |
-| CSS inicial por rota | 20 kB comprimido                                                        |
-| Fontes               | No máximo 2 arquivos, com `font-display: swap` e pré-carga da principal |
-| Imagem do LCP        | Dimensões declaradas, formato moderno, sem carregamento tardio          |
-| Demais imagens       | `loading="lazy"` e dimensões declaradas                                 |
-| Scripts de terceiros | Nenhum sem registro neste arquivo                                       |
+| Recurso              | Limite                                                                                                                                                                                 |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CSS inicial por rota | 20 kB comprimido                                                                                                                                                                       |
+| Fontes               | No máximo 2 arquivos, com `font-display: swap`. Sem pré-carga enquanto o LCP da home for a imagem do personagem: a pré-carga disputaria banda com ela (decisão do autor em 2026-10-07) |
+| Imagem do LCP        | Dimensões declaradas, formato moderno, sem carregamento tardio                                                                                                                         |
+| Demais imagens       | `loading="lazy"` e dimensões declaradas                                                                                                                                                |
+| Scripts de terceiros | Nenhum sem registro neste arquivo                                                                                                                                                      |
 
 ## Acessibilidade (WCAG 2.2 nível AA)
 
