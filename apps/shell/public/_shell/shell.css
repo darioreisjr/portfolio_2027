@@ -29,8 +29,9 @@
   list-style: none;
 }
 
+/* O fim da página fica livre para o grupo fixo das bandeiras. */
 main {
-  padding: var(--space-block-lg) var(--space-inline-md);
+  padding: var(--space-block-lg) var(--space-inline-md) var(--ds-dock-reserve);
 }
 
 main h1 {

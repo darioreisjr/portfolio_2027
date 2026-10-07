@@ -75,6 +75,8 @@ ds-theme-toggle:not(:defined) {
 
 .ds-language-switcher ul {
   display: flex;
+  flex-wrap: nowrap;
+  gap: 0;
   margin: 0;
   padding: 0;
   list-style: none;

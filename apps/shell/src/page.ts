@@ -1,5 +1,6 @@
 import type { Ui } from '@portfolio/content/schemas';
 import {
+  languageAlternates,
   pathFor,
   routes,
   THEME_INIT_SCRIPT,
@@ -25,6 +26,15 @@ export function renderPage(entry: RouteEntry, locale: Locale, ui: Ui): string {
     .map((route) => {
       const current = route.area === entry.area ? ' aria-current="page"' : '';
       return `<li><a href="${pathFor(route.area, locale)}"${current}>${escapeHtml(ui.areas[route.area].title)}</a></li>`;
+    })
+    .join('\n          ');
+
+  // Troca de idioma: links comuns para a mesma área (ADR 0006). A marcação de
+  // referência está na story `ds-language-switcher` do design system.
+  const languages = languageAlternates(entry.area, locale)
+    .map(({ locale: target, name, href, flag, current }) => {
+      const mark = current ? ' aria-current="page"' : '';
+      return `<li><a href="${href}" lang="${target}" hreflang="${target}" aria-label="${escapeHtml(name)}" title="${escapeHtml(name)}"${mark}><img src="${flag}" alt="" width="28" height="28" loading="lazy" decoding="async" /></a></li>`;
     })
     .join('\n          ');
 
@@ -55,6 +65,13 @@ export function renderPage(entry: RouteEntry, locale: Locale, ui: Ui): string {
     <main data-area="${entry.area}" data-load-error="${escapeHtml(ui.loadError)}">
       <h1>${escapeHtml(area.title)}</h1>
     </main>
+    <footer class="ds-dock">
+      <nav class="ds-language-switcher" aria-label="${escapeHtml(ui.languageSwitcher)}">
+        <ul>
+          ${languages}
+        </ul>
+      </nav>
+    </footer>
   </body>
 </html>
 `;

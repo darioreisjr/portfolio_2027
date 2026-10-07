@@ -44,6 +44,25 @@ describe('documento de uma área', () => {
     }
   });
 
+  it('tem as quatro bandeiras, cada uma levando à mesma área no outro idioma', () => {
+    const html = renderPage(recruiter, 'es', ui.es);
+    expect(html).toContain(
+      `<nav class="ds-language-switcher" aria-label="${ui.es.languageSwitcher}">`,
+    );
+    for (const locale of locales) {
+      expect(html).toContain(
+        `<a href="${recruiter.paths[locale]}" lang="${locale}" hreflang="${locale}"`,
+      );
+      expect(html).toContain(`src="/_ds/flags/${locale}.svg" alt=""`);
+    }
+    expect(
+      html.match(/hreflang="[^"]+" aria-label="[^"]+" title="[^"]+" aria-current="page"/g),
+    ).toHaveLength(1);
+    expect(html).toContain('aria-label="Español" title="Español" aria-current="page"');
+    // Depois do conteúdo, para o Tab chegar nele por último.
+    expect(html.indexOf('class="ds-dock"')).toBeGreaterThan(html.indexOf('</main>'));
+  });
+
   it('escapa texto vindo do conteúdo', () => {
     const html = renderPage(recruiter, 'pt-BR', { ...ui['pt-BR'], siteName: '<b>x</b>' });
     expect(html).not.toContain('<b>x</b>');
