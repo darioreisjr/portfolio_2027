@@ -12,6 +12,7 @@ Web Components em Lit, agnósticos de framework (ADR 0003). Hoje: `<ds-badge>` e
 - Elemento sem comportamento não vira custom element (ADR 0006): o seletor de idioma é marcação mais CSS dos tokens. A marcação de referência é a story `ds-language-switcher`, e o teste `ds-language-switcher.test.ts` cobre a aparência.
 - `assets/` guarda recursos estáticos compartilhados. As bandeiras de `assets/flags/` vão para `dist/flags/` e são publicadas em `/_ds/flags/`; as cores de cada bandeira ficam no próprio arquivo.
 - Depende de `packages/contracts` para as constantes e o evento de tema.
+- Comportamento usado por uma rota só não vem para cá: mora no app dono da rota e só é promovido ao design system quando outro app precisar (ADR 0008).
 - O build gera um bundle único, `dist/ds.js`, com o Lit dentro. Ele é carregado uma vez por documento, pelo shell ou pelo layout do Next.js. Os MFEs usam só os tipos.
 - Tag nova entra em `HTMLElementTagNameMap` (`src/index.ts`) e em `react.d.ts`.
 - Sem decorators: propriedades estáticas do Lit.

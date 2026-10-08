@@ -28,7 +28,7 @@ O que não se reabre: Web Components como contrato entre apps (ADR 0002), design
 **Comportamento usado por uma única rota mora no app dono da rota, na tecnologia dele.**
 
 1. Comportamento usado em mais de um documento ou em mais de um app continua sendo Web Component do design system (ADRs 0003 e 0005). É o caso do seletor de tema.
-2. Comportamento de uma rota só fica no app dessa rota. Na home, são Client Components do Next.js: `persona-list.tsx` e `music-toggle.tsx`. Um segundo uso em outro app promove o comportamento ao design system.
+2. Comportamento de uma rota só fica no app dessa rota. Na home é o Client Component `persona-list.tsx`, que também monta o botão da música (`music-toggle.tsx`). Um segundo uso em outro app promove o comportamento ao design system.
 3. Controle que só funciona com JavaScript segue o ADR 0005 também dentro do app: fica invisível até funcionar e reserva o próprio espaço, para não haver controle morto nem deslocamento de layout.
 4. Estado guardado no navegador por um app só usa chave com o prefixo `portfolio:` e é definido no próprio app enquanto só ele o ler. Se outro app precisar, a chave vai para `packages/contracts`.
 5. Mídia pesada, como áudio, nunca é pedida na carga da página: só depois de um gesto do visitante.

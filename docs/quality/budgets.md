@@ -87,6 +87,8 @@ Com as bandeiras de idioma, o contorno no texto e a fonte M PLUS Rounded 1c (202
 
 Com o painel do personagem em estilo menu de RPG (2026-10-08), só HTML e CSS mudaram: a rota `/` continua em 146,1 kB de JavaScript e pedindo um só arquivo de fonte. LCP de 2,62 a 2,65 s, contra 2,59 a 2,65 s medidos antes da mudança na mesma máquina; TBT de 37 a 45 ms e CLS 0,001.
 
+Com o botão da música de fundo (2026-10-08), as três páginas Next.js vão de 146,1 para 146,8 kB de JavaScript; as áreas do shell não mudam. LCP de `/` de 2,62 a 2,63 s, TBT de 37 a 39 ms e CLS 0,001. Uma primeira versão, com o botão em um arquivo de script próprio, media 147,0 kB e LCP de 2,71 a 2,73 s, acima do teto: o custo era do download a mais, não dos bytes. Nenhum áudio é pedido na carga; a faixa só é baixada quando a música toca.
+
 As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um terço do teto. O React e o Next.js já nascem perto do teto, com folga de cerca de 3 kB e, depois da tela de escolha de perfil, 5 kB; a primeira feature dessas áreas vai exigir carga sob demanda ou a decisão registrada de subir o teto.
 
 ## Outros recursos
@@ -95,6 +97,7 @@ As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um ter
 | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | CSS inicial por rota | 20 kB comprimido                                                                                                                                                                       |
 | Fontes               | No máximo 2 arquivos, com `font-display: swap`. Sem pré-carga enquanto o LCP da home for a imagem do personagem: a pré-carga disputaria banda com ela (decisão do autor em 2026-10-07) |
+| Áudio                | Um arquivo, de até 2,5 MB, nunca pedido na carga da página: só depois de o visitante ligar a música (ou no primeiro gesto de quem já tinha ligado)                                     |
 | Imagem do LCP        | Dimensões declaradas, formato moderno, sem carregamento tardio                                                                                                                         |
 | Demais imagens       | `loading="lazy"` e dimensões declaradas                                                                                                                                                |
 | Scripts de terceiros | Nenhum sem registro neste arquivo                                                                                                                                                      |
