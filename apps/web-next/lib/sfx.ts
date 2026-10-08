@@ -88,11 +88,11 @@ export function sfx(kind: number, index?: number): void {
   if (kind < PICK) {
     if (context.state !== 'running' || at - lastAt < 30) return;
     lastAt = at;
-  } else {
+  } else if (kind < ON) {
     // Escolher e desfazer mudam os personagens de lugar, e o navegador avisa que
-    // o ponteiro "entrou" em quem foi parar embaixo dele. Por um instante, isso
-    // não conta como passar o mouse.
-    lastAt = at + 250;
+    // o ponteiro "entrou" em quem foi parar embaixo dele. Enquanto dura a
+    // animação de chegada (home.css), isso não conta como passar o mouse.
+    lastAt = at + 900;
   }
   const now = context.currentTime;
 

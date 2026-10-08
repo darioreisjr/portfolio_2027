@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
+import { settled } from './support/motion';
 
 const homes = [
   {
@@ -135,7 +136,11 @@ test.describe('home em tela larga (palco)', () => {
     expect(await glow(1)).toBe('0');
     await personas(page).nth(1).click();
     await expectSelected(page, 1);
-    await expect.poll(() => glow(1)).toBe('0.45');
+    // Depois do clarão da escolha o brilho fica pulsando, entre 0,45 e 0,6.
+    await settled(page);
+    const pulse = Number(await glow(1));
+    expect(pulse).toBeGreaterThanOrEqual(0.45);
+    expect(pulse).toBeLessThanOrEqual(0.6);
 
     // "Entrar" na cor da área; "Voltar" neutro.
     const fill = (selector: string) =>
@@ -190,6 +195,18 @@ test.describe('home em tela larga (palco)', () => {
     await expect(back(page)).not.toHaveCSS('outline-style', 'none');
   });
 
+  // Brilho e escala da figura de cada personagem, como o navegador os aplica.
+  const figureLook = (page: Page) =>
+    page.locator('img.persona-figure').evaluateAll((figures) =>
+      figures.map((figure) => {
+        const style = getComputedStyle(figure);
+        return `${style.filter} ${style.scale}`;
+      }),
+    );
+  const DIM = 'brightness(0.45) 0.94';
+  const REST = 'none 1';
+  const LIFTED = 'none 1.12';
+
   test('em repouso não há texto; a frase aparece só no personagem sob o mouse', async ({
     page,
   }) => {
@@ -199,14 +216,54 @@ test.describe('home em tela larga (palco)', () => {
     for (const persona of await personas(page).all()) {
       await expect(phrase(persona)).toHaveCSS('opacity', '0');
     }
+    expect(await figureLook(page)).toEqual([REST, REST, REST, REST]);
 
     await second.hover();
     await expect(phrase(second)).toHaveCSS('opacity', '1');
     await expect(phrase(first)).toHaveCSS('opacity', '0');
-    // Os outros continuam inteiros, sem esmaecer.
-    await expect(first.locator('.persona-figure')).toHaveCSS('opacity', '1');
     // E nada aparece abaixo do personagem.
     await expect(page.locator('.persona-actions:visible')).toHaveCount(0);
+  });
+
+  test('o personagem apontado cresce e os outros três escurecem e recuam', async ({ page }) => {
+    await openHome(page);
+    await personas(page).nth(1).hover();
+    await expect.poll(() => figureLook(page)).toEqual([DIM, LIFTED, DIM, DIM]);
+    // Escurece sem apagar: a figura continua opaca, por cima do cenário.
+    await expect(personas(page).nth(0).locator('.persona-figure')).toHaveCSS('opacity', '1');
+
+    // Tirar o ponteiro devolve os quatro ao repouso.
+    await page.mouse.move(640, 60);
+    await expect.poll(() => figureLook(page)).toEqual([REST, REST, REST, REST]);
+
+    // Pelo teclado é igual.
+    await page.getByRole('button', { name: 'Tema escuro' }).focus();
+    await page.keyboard.press('Tab');
+    await expect(personas(page).nth(0)).toBeFocused();
+    await expect.poll(() => figureLook(page)).toEqual([LIFTED, DIM, DIM, DIM]);
+  });
+
+  test('com um personagem escolhido ninguém fica escurecido', async ({ page }) => {
+    await openHome(page);
+    await personas(page).nth(2).click();
+    await expectSelected(page, 2);
+    await back(page).hover();
+    const looks = await figureLook(page);
+    expect(looks.filter((look) => look.startsWith('brightness'))).toEqual([]);
+  });
+
+  test('com movimento reduzido os outros escurecem na hora, sem animação', async ({ browser }) => {
+    const context = await browser.newContext({
+      viewport: { width: 1280, height: 800 },
+      reducedMotion: 'reduce',
+    });
+    const page = await context.newPage();
+    await openHome(page);
+    await personas(page).nth(1).hover();
+    // Escurecer e recuar são estado, não movimento: valem, mas sem transição.
+    expect(await figureLook(page)).toEqual([DIM, REST, DIM, DIM]);
+    await expect(page.locator('img.persona-figure').first()).toHaveCSS('transition-duration', '0s');
+    await context.close();
   });
 
   test('teclado: Tab mostra a frase, setas andam, Enter escolhe e "Entrar" abre', async ({
@@ -357,8 +414,24 @@ test.describe('home em tela larga (palco)', () => {
     await openHome(page);
     await expect(page.locator('.persona-figure').first()).toHaveCSS('transition-duration', '0s');
     await expect(page.locator('.persona-phrase').first()).toHaveCSS('transition-duration', '0s');
+    // Nada de entrada, chegada, clarão, respirar ou seta.
+    const animated = () =>
+      page.evaluate(() =>
+        document
+          .getAnimations()
+          .map((animation) => (animation as CSSAnimation).animationName)
+          .filter((name) => name?.startsWith('persona-') || name === 'home-title'),
+      );
+    expect(await animated()).toEqual([]);
     await personas(page).nth(0).click();
     await expect(items(page).nth(0)).toHaveCSS('animation-name', 'none');
+    expect(await animated()).toEqual([]);
+    // O brilho do escolhido fica fixo, sem pulsar.
+    expect(
+      await personas(page)
+        .nth(0)
+        .evaluate((persona) => getComputedStyle(persona, '::before').opacity),
+    ).toBe('0.45');
     await context.close();
   });
 
@@ -386,6 +459,15 @@ test.describe('home em tela larga com toque', () => {
 
   test('tocar escolhe o personagem; "Entrar" abre a área', async ({ page }) => {
     await openHome(page);
+    // Sem mouse não há "apontar": ninguém escurece.
+    const dimmed = () =>
+      page
+        .locator('img.persona-figure')
+        .evaluateAll(
+          (figures) =>
+            figures.filter((figure) => getComputedStyle(figure).filter !== 'none').length,
+        );
+    expect(await dimmed()).toBe(0);
 
     await personas(page).nth(0).tap();
     await expect(page).toHaveURL(/localhost:\d+\/$/);
@@ -490,6 +572,8 @@ async function capture(page: Page, css: string): Promise<string> {
  * texto em magenta (para achar as letras) e só com o contorno.
  */
 async function outlineContrast(page: Page, selectors: string[]): Promise<Record<string, number>> {
+  // As entradas e o clarão da escolha têm de ter terminado: a captura congela a cena.
+  await settled(page);
   // As três capturas têm de ser da mesma cena: tudo parado onde está.
   const hidden =
     '*, *::before, *::after { animation-play-state: paused !important; transition: none !important; }' +

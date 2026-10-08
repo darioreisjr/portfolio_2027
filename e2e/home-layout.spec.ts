@@ -14,7 +14,8 @@ for (const viewport of [
   test(`os quatro personagens têm a mesma altura e a mesma base em ${viewport.width}x${viewport.height}`, async ({
     browser,
   }) => {
-    const context = await browser.newContext({ viewport });
+    // Sem movimento: as caixas são as do layout, sem a animação de entrada.
+    const context = await browser.newContext({ viewport, reducedMotion: 'reduce' });
     const page = await context.newPage();
     // Em espanhol as frases têm comprimentos diferentes entre si.
     await page.goto('/es/');
@@ -41,6 +42,7 @@ test('no celular a frase fica sobre a figura e o painel abaixo dela', async ({ b
     viewport: { width: 390, height: 844 },
     hasTouch: true,
     isMobile: true,
+    reducedMotion: 'reduce',
   });
   const page = await context.newPage();
   await page.goto('/');

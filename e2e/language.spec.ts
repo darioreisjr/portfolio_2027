@@ -131,6 +131,14 @@ test('fica no canto inferior direito, e a lista abre em coluna para cima', async
   }
 });
 
+test('a bandeira dá um pulo sob o mouse, sem mexer na área de clique', async ({ page }) => {
+  await page.goto('/tecnico/');
+  const before = await current(page).boundingBox();
+  await current(page).hover();
+  await expect(current(page).locator('img')).toHaveCSS('animation-name', 'ds-hop');
+  expect(await current(page).boundingBox()).toEqual(before);
+});
+
 test('fechada, a lista não baixa as outras bandeiras', async ({ page }) => {
   const requested: string[] = [];
   page.on('request', (request) => {

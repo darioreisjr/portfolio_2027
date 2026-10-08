@@ -568,7 +568,6 @@ li[data-selected] > .persona::before {
     flex-direction: row;
     justify-content: center;
     gap: var(--space-inline-lg);
-    animation: persona-arrive var(--motion-duration-md) var(--motion-ease-out);
   }
 
   li[data-selected] .persona-figure {
@@ -590,9 +589,229 @@ li[data-selected] > .persona::before {
   }
 }
 
-@keyframes persona-arrive {
+/* Com um personagem apontado, os outros três escurecem e recuam: a impressão é
+   de que ele está sendo escolhido. Vale para o foco de teclado em tela larga e,
+   onde há mouse, para o ponteiro. Escurece a figura, não o link: a área de
+   clique e o som de passar o mouse não mudam. */
+@media (min-width: 48rem) {
+  .personas:not([data-selected]):has(.persona:focus-visible)
+    > li:not(:has(.persona:focus-visible))
+    .persona-figure {
+    filter: brightness(0.45);
+    scale: 0.94;
+  }
+}
+
+@media (min-width: 48rem) and (hover: hover) {
+  .personas:not([data-selected]):has(.persona:is(:hover, :focus-visible))
+    > li:not(:has(.persona:is(:hover, :focus-visible)))
+    .persona-figure {
+    filter: brightness(0.45);
+    scale: 0.94;
+  }
+}
+
+/* Movimento da tela, em ritmo de cena. Tudo aqui só existe para quem não pediu
+   menos movimento ao sistema. As animações contínuas (respirar, pulsar, seta)
+   também param com o botão de pausa, mais abaixo (WCAG 2.2.2). */
+@media (prefers-reduced-motion: no-preference) {
+  /* Entrada da tela: o título desce. Pode usar opacidade porque não é o maior
+     elemento da dobra; os personagens, que são, só usam deslocamento. */
+  .home h1 {
+    animation: home-title var(--motion-duration-xl) var(--motion-ease-out) backwards;
+  }
+
+  /* Escolha: um clarão na cor da área, e depois o brilho pulsa devagar. */
+  li[data-selected] > .persona::before {
+    animation:
+      persona-flash var(--motion-duration-lg) var(--motion-ease-out),
+      persona-glow var(--motion-duration-sway) var(--motion-ease-in-out) var(--motion-duration-lg)
+        infinite;
+  }
+
+  /* O painel entra como caixa de diálogo: a descrição e, em seguida, as opções. */
+  .persona-description {
+    --n: 0;
+  }
+
+  .persona-enter {
+    --n: 1;
+  }
+
+  .persona-back {
+    --n: 2;
+  }
+
+  li[data-selected] .persona-actions > * {
+    animation: persona-pop var(--motion-duration-lg) var(--motion-ease-out) backwards;
+    animation-delay: calc(var(--panel-delay, 0ms) + var(--motion-duration-md) * 0.5 * var(--n));
+  }
+
+  li[data-selected] .persona-description {
+    animation-name: persona-dialog;
+  }
+
+  /* A seta do menu balança na opção em foco ou sob o ponteiro. É fundo do
+     miolo: a caixa do botão não se mexe. */
+  :is(.persona-enter, .persona-back):is(:hover, :focus)::after {
+    animation: persona-arrow calc(var(--motion-duration-lg) * 2) var(--motion-ease-in-out) infinite
+      alternate;
+  }
+
+  /* As opções afundam ao clicar, e o "Entrar" inverte as cores num clarão que
+     se desfaz enquanto a página seguinte carrega. */
+  .persona-enter,
+  .persona-back {
+    transition:
+      translate var(--motion-duration-md) var(--motion-ease-out),
+      scale var(--motion-duration-md) var(--motion-ease-out),
+      color var(--motion-duration-lg) var(--motion-ease-out);
+  }
+
+  :is(.persona-enter, .persona-back):active {
+    translate: 0 var(--border-width-control);
+    scale: 0.97;
+  }
+
+  .persona-enter::after {
+    transition: background-color var(--motion-duration-lg) var(--motion-ease-out);
+  }
+
+  .persona-enter:active {
+    --fill: var(--persona-on-color);
+    --ink: var(--persona-color);
+
+    transition-duration: 0s;
+  }
+
+  .persona-enter:active::after {
+    transition-duration: 0s;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (hover: hover) {
+  /* O mesmo pulo das bandeiras (tokens), no disco do som e no da pausa. */
+  :is(.home-music, .home-motion):hover :is(.home-music-disc, .home-motion-disc) {
+    animation: ds-hop calc(var(--motion-duration-md) * 2) var(--motion-ease-out);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (min-width: 48rem) {
+  .personas {
+    /* Passo entre um personagem e o seguinte na entrada. */
+    --step: 90ms;
+    --panel-delay: var(--motion-duration-md);
+  }
+
+  /* `--n` é a ordem de entrada; `--from`, de que lado do centro o personagem
+     está, para o escolhido chegar vindo de lá. */
+  .personas > li:nth-child(1) {
+    --n: 0;
+    --from: -1.5;
+  }
+
+  .personas > li:nth-child(2) {
+    --n: 1;
+    --from: -0.5;
+  }
+
+  .personas > li:nth-child(3) {
+    --n: 2;
+    --from: 0.5;
+  }
+
+  .personas > li:nth-child(4) {
+    --n: 3;
+    --from: 1.5;
+  }
+
+  /* Entrada: os quatro sobem para o lugar, um depois do outro. Só deslocamento:
+     a imagem do primeiro é o LCP e tem de estar pintada desde o primeiro quadro.
+     Ao desfazer uma escolha, os quatro reentram do mesmo jeito. */
+  .personas > li {
+    animation: persona-enter var(--motion-duration-xl) var(--motion-ease-out)
+      calc(var(--n) * var(--step)) backwards;
+  }
+
+  /* O escolhido desliza para o centro, vindo do lado onde estava. */
+  .personas > li[data-selected] {
+    animation: persona-arrive var(--motion-duration-xl) var(--motion-ease-in-out) backwards;
+  }
+
+  /* Destaque e recuo mais lentos que o padrão dos controles. */
+  .persona-figure {
+    transition:
+      scale var(--motion-duration-lg) var(--motion-ease-in-out),
+      filter var(--motion-duration-lg) var(--motion-ease-in-out);
+  }
+
+  /* Parado, o escolhido respira. Só no palco: no carrossel a figura não muda
+     de tamanho ao ser escolhida. */
+  li[data-selected] .persona-figure {
+    animation: persona-breathe var(--motion-duration-sway) var(--motion-ease-in-out)
+      var(--motion-duration-xl) infinite alternate;
+  }
+}
+
+@keyframes home-title {
   from {
     opacity: 0;
+    translate: 0 -1rem;
+  }
+}
+
+@keyframes persona-enter {
+  from {
+    translate: 0 2rem;
+  }
+}
+
+/* Sem opacidade: o clarão da escolha, atrás da figura, tem de aparecer. */
+@keyframes persona-arrive {
+  from {
+    translate: calc(var(--from) * min(5rem, 4vw)) 0;
+  }
+}
+
+@keyframes persona-flash {
+  from {
+    opacity: 1;
+    scale: 0.7;
+  }
+}
+
+@keyframes persona-glow {
+  50% {
+    opacity: 0.6;
+    scale: 1.05;
+  }
+}
+
+@keyframes persona-breathe {
+  to {
+    scale: 1.015;
+  }
+}
+
+@keyframes persona-dialog {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+@keyframes persona-pop {
+  from {
+    opacity: 0;
+    translate: -0.75rem 0;
+  }
+}
+
+@keyframes persona-arrow {
+  to {
+    background-position:
+      calc(var(--i3) + var(--space-inline-sm) + 0.25em) 50%,
+      0 0;
   }
 }
 
@@ -605,10 +824,6 @@ li[data-selected] > .persona::before {
 
   .persona-figure {
     scale: 1;
-  }
-
-  .personas > li[data-selected] {
-    animation: none;
   }
 }
 
@@ -1078,6 +1293,18 @@ body:has(.home-motion input:checked)
   :is(.sakura-petal, .sakura-branch, .sakura-flower, .sakura-cloud, .sakura-sky),
 body:has(.home-motion input:checked) .sakura-orb::before {
   animation-play-state: paused;
+}
+
+/* A pausa também para o movimento contínuo do personagem escolhido: o respirar
+   e a seta do menu. */
+body:has(.home-motion input:checked) li[data-selected] .persona-figure,
+body:has(.home-motion input:checked) :is(.persona-enter, .persona-back)::after {
+  animation-play-state: paused;
+}
+
+/* No brilho, só o pulso para: o clarão da escolha é curto e tem de terminar. */
+body:has(.home-motion input:checked) li[data-selected] > .persona::before {
+  animation-play-state: running, paused;
 }
 
 /* No celular: metade das pétalas, duas nuvens e galhos proporcionalmente maiores. */

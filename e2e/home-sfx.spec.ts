@@ -60,8 +60,11 @@ function silence(): Buffer {
   return Buffer.concat([header, Buffer.alloc(samples, 0x80)]);
 }
 
-/** Logo depois de confirmar ou cancelar, passar o mouse fica mudo por um instante. */
-const settle = (page: Page) => page.waitForTimeout(350);
+/**
+ * Depois de confirmar ou cancelar, passar o mouse fica mudo enquanto os
+ * personagens se movem (0,9 s em lib/sfx.ts).
+ */
+const settle = (page: Page) => page.waitForTimeout(1000);
 
 const contexts = (page: Page) =>
   page.evaluate(() => (window as unknown as { spy: Spy }).spy.contexts.length);

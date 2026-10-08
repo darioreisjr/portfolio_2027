@@ -34,7 +34,8 @@ test.describe('a tela cabe na janela, sem rolagem', () => {
   for (const viewport of windows) {
     for (const path of ['/', '/es/']) {
       test(`${path} em ${viewport.width}x${viewport.height}`, async ({ browser }) => {
-        const context = await browser.newContext({ viewport });
+        // Sem movimento: mede o layout, não um quadro da entrada.
+        const context = await browser.newContext({ viewport, reducedMotion: 'reduce' });
         const page = await context.newPage();
         await page.goto(path);
 
@@ -56,7 +57,7 @@ test.describe('a tela cabe na janela, sem rolagem', () => {
     test(`com um personagem escolhido em ${viewport.width}x${viewport.height}`, async ({
       browser,
     }) => {
-      const context = await browser.newContext({ viewport });
+      const context = await browser.newContext({ viewport, reducedMotion: 'reduce' });
       const page = await context.newPage();
       await page.goto('/es/');
       const figure = page.locator('.persona-figure').first();
@@ -151,6 +152,115 @@ test.describe('movimento do cenário', () => {
     const phone = await context.newPage();
     await phone.goto('/');
     await expect(phone.locator('.sakura-cloud:visible')).toHaveCount(2);
+    await context.close();
+  });
+});
+
+test.describe('movimento do personagem escolhido', () => {
+  test.use({ viewport: { width: 1280, height: 800 }, colorScheme: 'light' });
+
+  // Contínuas do escolhido: respirar (figura), pulsar (brilho) e balançar (seta).
+  const idle = async (page: Page) => ({
+    breathe: await motion(page, 'li[data-selected] .persona-figure'),
+    glow: await page.locator('li[data-selected] > .persona').evaluate((persona) => {
+      const style = getComputedStyle(persona, '::before');
+      return { name: style.animationName, state: style.animationPlayState };
+    }),
+    arrow: await motion(page, 'li[data-selected] .persona-enter', '::after'),
+  });
+
+  async function choose(page: Page): Promise<void> {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Estou contratando' }).click();
+    await expect(page.getByRole('link', { name: 'Entrar' })).toBeFocused();
+  }
+
+  test('respira, o brilho pulsa e a seta balança na opção em foco', async ({ page }) => {
+    await choose(page);
+    expect(await idle(page)).toEqual({
+      breathe: { name: 'persona-breathe', state: 'running' },
+      glow: { name: 'persona-flash, persona-glow', state: 'running, running' },
+      arrow: { name: 'persona-arrow', state: 'running' },
+    });
+  });
+
+  test('"Pausar animação" para as três, mas deixa o clarão da escolha terminar', async ({
+    page,
+  }) => {
+    await choose(page);
+    await page.getByRole('checkbox', { name: 'Pausar animação' }).check();
+    // O foco foi para a caixa de pausa; a seta volta com o ponteiro no "Entrar".
+    await page.getByRole('link', { name: 'Entrar' }).hover();
+    expect(await idle(page)).toEqual({
+      breathe: { name: 'persona-breathe', state: 'paused' },
+      glow: { name: 'persona-flash, persona-glow', state: 'running, paused' },
+      arrow: { name: 'persona-arrow', state: 'paused' },
+    });
+  });
+
+  test('com movimento reduzido não existem', async ({ browser }) => {
+    const context = await browser.newContext({
+      viewport: { width: 1280, height: 800 },
+      reducedMotion: 'reduce',
+    });
+    const page = await context.newPage();
+    await choose(page);
+    expect(await idle(page)).toEqual({
+      breathe: { name: 'none', state: 'running' },
+      glow: { name: 'none', state: 'running' },
+      arrow: { name: 'none', state: 'running' },
+    });
+    await context.close();
+  });
+
+  test('no celular o escolhido não respira: a figura não muda de tamanho', async ({ browser }) => {
+    const context = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      hasTouch: true,
+      isMobile: true,
+    });
+    const page = await context.newPage();
+    await page.goto('/');
+    await expect(page.locator('a.persona').first()).toHaveAttribute('role', 'button');
+    await page.locator('a.persona').first().tap();
+    await expect(page.getByRole('button', { name: 'Voltar' })).toBeVisible();
+    expect((await motion(page, 'li[data-selected] .persona-figure')).name).toBe('none');
+    await context.close();
+  });
+});
+
+test.describe('entrada da tela', () => {
+  test.use({ viewport: { width: 1280, height: 800 }, colorScheme: 'light' });
+
+  test('o título desce e os personagens entram um depois do outro, só com deslocamento', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    expect((await motion(page, '.home h1')).name).toBe('home-title');
+    const entries = await page.locator('ul.personas > li').evaluateAll((items) =>
+      items.map((item) => {
+        const style = getComputedStyle(item);
+        return { name: style.animationName, delay: style.animationDelay };
+      }),
+    );
+    expect(entries.map((entry) => entry.name)).toEqual(Array(4).fill('persona-enter'));
+    // Cada um começa depois do anterior; o primeiro, sem atraso.
+    expect(entries.map((entry) => entry.delay)).toEqual(['0s', '0.09s', '0.18s', '0.27s']);
+
+    // A imagem do primeiro personagem é o LCP: nunca fica transparente.
+    await expect(page.locator('img.persona-figure').first()).toHaveCSS('opacity', '1');
+    await expect(page.locator('ul.personas > li').first()).toHaveCSS('opacity', '1');
+  });
+
+  test('no celular os personagens não têm entrada', async ({ browser }) => {
+    const context = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      hasTouch: true,
+      isMobile: true,
+    });
+    const page = await context.newPage();
+    await page.goto('/');
+    await expect(page.locator('ul.personas > li').first()).toHaveCSS('animation-name', 'none');
     await context.close();
   });
 });
