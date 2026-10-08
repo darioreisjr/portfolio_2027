@@ -53,15 +53,17 @@ A home não carrega a folha: o teste "a home não carrega a folha das páginas i
 
 ## O que as medições obrigaram a mudar
 
-As três áreas do shell passaram de primeira. As duas páginas Next.js saíram acima do teto de LCP de 2,5 s e levaram quatro ajustes, todos dentro da folha ou do componente:
+As três áreas do shell passaram de primeira. As duas páginas Next.js saíram acima do teto de LCP de 2,5 s e levaram três ajustes, todos dentro da folha ou do componente:
 
-| Problema medido                                                                 | Ajuste                                             |
-| ------------------------------------------------------------------------------- | -------------------------------------------------- |
-| A frase em peso normal fazia a página baixar o segundo arquivo de fonte         | O palco inteiro usa o peso forte, como a home      |
-| O `<Link>` do menu buscava as outras páginas antes da hora                      | `prefetch={false}` no menu de áreas                |
-| O menu quebrava de linha quando a fonte chegava e deslocava o palco (CLS 0,105) | No celular o menu é uma grade fixa de duas colunas |
-| O personagem era o maior elemento da tela estreita                              | No celular ele ocupa menos área que a frase        |
-| A mensagem entrava com opacidade zero                                           | Entrada só com deslocamento                        |
+| Problema medido                                                         | Ajuste                                        |
+| ----------------------------------------------------------------------- | --------------------------------------------- |
+| A frase em peso normal fazia a página baixar o segundo arquivo de fonte | O palco inteiro usa o peso forte, como a home |
+| O personagem era o maior elemento da tela estreita                      | No celular ele ocupa menos área que a frase   |
+| A mensagem entrava com opacidade zero                                   | Entrada só com deslocamento                   |
+
+## Sem menu
+
+Depois de ver a tela, o autor pediu a retirada dos menus (2026-10-08): o cabeçalho do shell, com a marca e os links das áreas, e a lista de outras áreas das páginas Next.js. Sobra o seletor de tema no canto de cima. Troca-se de área voltando à escolha de perfil. "Como foi feito" não tem link em nenhuma página: só abre pelo endereço.
 
 ## Medido (2026-10-08, `pnpm lhci`, três execuções por rota)
 

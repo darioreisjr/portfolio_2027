@@ -1,6 +1,5 @@
 import { ui } from '@portfolio/content/ui';
-import { pathFor, personaFigure, routes, type AreaId, type Locale } from '@portfolio/contracts';
-import Link from 'next/link';
+import { pathFor, personaFigure, type AreaId, type Locale } from '@portfolio/contracts';
 
 /**
  * Tela "em construção" das páginas internas deste app (ADR 0009). O palco e a
@@ -53,32 +52,10 @@ export function AreaConstruction({ area, locale }: { area: AreaId; locale: Local
             </div>
           </section>
         </div>
-        {/* A home e as áreas do shell são outro documento: <a>, nunca <Link>. */}
+        {/* <a>, nunca <Link>: a home tem outro CSS e precisa de carga completa. */}
         <a className="area-back" href={pathFor('home', locale)}>
           {text.construction.back}
         </a>
-        {/* Este documento não tem cabeçalho com menu: as outras áreas ficam aqui. */}
-        <nav className="area-nav">
-          <ul>
-            {routes
-              .filter((route) => route.area !== area && route.area !== 'home')
-              .map((route) => {
-                const href = pathFor(route.area, locale);
-                const label = text.areas[route.area].title;
-                return (
-                  <li key={route.area}>
-                    {route.owner === 'web-next' ? (
-                      <Link href={href} prefetch={false}>
-                        {label}
-                      </Link>
-                    ) : (
-                      <a href={href}>{label}</a>
-                    )}
-                  </li>
-                );
-              })}
-          </ul>
-        </nav>
       </main>
     </>
   );

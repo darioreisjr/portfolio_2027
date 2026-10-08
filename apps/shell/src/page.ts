@@ -3,7 +3,6 @@ import {
   languageAlternates,
   pathFor,
   personaFigure,
-  routes,
   THEME_INIT_SCRIPT,
   type Locale,
   type RouteEntry,
@@ -28,14 +27,6 @@ const escapeHtml = (value: string): string =>
  */
 export function renderPage(entry: RouteEntry, locale: Locale, ui: Ui): string {
   const area = ui.areas[entry.area];
-  const links = routes
-    .filter((route) => route.area !== 'home')
-    .map((route) => {
-      const current = route.area === entry.area ? ' aria-current="page"' : '';
-      return `<li><a href="${pathFor(route.area, locale)}"${current}>${escapeHtml(ui.areas[route.area].title)}</a></li>`;
-    })
-    .join('\n          ');
-
   // Troca de idioma (ADR 0006): a bandeira do idioma em uso abre os outros três,
   // que são links comuns para a mesma área. Sem script. A marcação de referência
   // está na story `ds-language-switcher` do design system.
@@ -77,12 +68,6 @@ export function renderPage(entry: RouteEntry, locale: Locale, ui: Ui): string {
   </head>
   <body>
     <header class="shell-header">
-      <a class="shell-brand" href="${pathFor('home', locale)}">${escapeHtml(ui.siteName)}</a>
-      <nav>
-        <ul>
-          ${links}
-        </ul>
-      </nav>
       <ds-theme-toggle label="${escapeHtml(ui.themeToggle)}"></ds-theme-toggle>
     </header>
     <main class="area-stage" data-area="${entry.area}">

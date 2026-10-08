@@ -23,7 +23,7 @@
   display: grid;
   /* Um peso só, o da home: o texto não espera um segundo arquivo de fonte. */
   font-weight: var(--text-weight-strong);
-  grid-template-areas: 'title' 'figure' 'outlet' 'back' 'nav';
+  grid-template-areas: 'title' 'figure' 'outlet' 'back';
   justify-items: center;
   align-content: center;
   gap: var(--space-block-md);
@@ -193,14 +193,6 @@
   outline-offset: var(--focus-ring-offset);
 }
 
-/* Menu das outras áreas, nas páginas que não têm cabeçalho com menu. */
-.area-nav {
-  grid-area: nav;
-  position: relative;
-  padding: var(--space-block-sm) var(--space-inline-md);
-  background: var(--color-surface);
-}
-
 /* Botão de pausa do cenário (WCAG 2.2.2), no grupo do canto. É uma caixa de
    seleção nativa com cara de botão: sem JavaScript, o CSS lê a caixa. A mesma
    aparência do botão de pausa da home, que não carrega esta folha (ADR 0009). */
@@ -266,9 +258,8 @@
       'figure title'
       'figure outlet'
       'figure back'
-      'figure nav'
       'figure .';
-    grid-template-rows: 1fr auto auto auto auto 1fr;
+    grid-template-rows: 1fr auto auto auto 1fr;
     grid-template-columns: auto minmax(0, 24rem);
     justify-content: center;
     justify-items: start;
@@ -282,7 +273,7 @@
 
   /* Área sem personagem: uma coluna só, centralizada. */
   .area-stage:not(:has(.area-figure)) {
-    grid-template-areas: 'title' 'outlet' 'back' 'nav';
+    grid-template-areas: 'title' 'outlet' 'back';
     grid-template-rows: none;
     grid-template-columns: minmax(0, 24rem);
   }
@@ -607,14 +598,6 @@
 
 /* No celular os cenários ficam mais leves: metade das folhas. */
 @media (max-width: 47.99rem) {
-  /* Duas colunas fixas: a altura do menu não depende da largura das letras,
-     e a chegada da fonte não desloca o palco, que é centralizado. */
-  .area-nav ul {
-    display: grid;
-    grid-template-columns: repeat(2, auto);
-    justify-items: center;
-  }
-
   .area-stage:is([data-area='recruiter'], [data-area='tech']) .area-particles > i:nth-child(even) {
     display: none;
   }

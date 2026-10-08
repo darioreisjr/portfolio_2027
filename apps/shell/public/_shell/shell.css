@@ -1,4 +1,4 @@
-/* O palco da área (areas.css) ocupa o que sobra abaixo do cabeçalho. */
+/* O palco da área (areas.css) ocupa a tela inteira. */
 body {
   display: flex;
   flex-direction: column;
@@ -10,38 +10,13 @@ main.area-stage {
   min-block-size: 0;
 }
 
+/* Só o seletor de tema, no canto de cima, sobre o palco: a navegação entre
+   áreas passa pela tela de escolha de perfil. Flex, para não haver caixa de
+   linha vazia pedindo o peso normal da fonte. */
 .shell-header {
+  position: absolute;
+  top: var(--space-block-md);
+  right: var(--space-inline-md);
+  z-index: 1;
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-inline-md);
-  padding: var(--space-block-md) var(--space-inline-md);
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-surface-muted);
-}
-
-.shell-brand {
-  font-weight: var(--text-weight-strong);
-}
-
-.shell-header a {
-  color: var(--color-text);
-}
-
-.shell-header a[aria-current='page'] {
-  font-weight: var(--text-weight-strong);
-}
-
-.shell-header ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-inline-md);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-/* Seletor de tema no fim do cabeçalho, empurrado para a direita. */
-.shell-header ds-theme-toggle {
-  margin-inline-start: auto;
 }

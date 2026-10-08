@@ -68,7 +68,7 @@ for (const path of nextPages) {
   });
 }
 
-test('navega da home pelas três áreas de MFE e volta ao Next.js', async ({ page }) => {
+test('navega da home a uma área, volta e entra em outra', async ({ page }) => {
   const errors = failOnBrowserErrors(page);
   await page.goto('/');
 
@@ -79,17 +79,16 @@ test('navega da home pelas três áreas de MFE e volta ao Next.js', async ({ pag
   await expect(page).toHaveURL(/\/recrutador\/$/);
   await expect(page.locator('mfe-recrutador')).toContainText('Fase em construção');
 
-  await page.getByRole('link', { name: 'Técnico' }).click();
+  // As páginas internas não têm menu: troca-se de área voltando à escolha de perfil.
+  await page.getByRole('link', { name: 'Voltar à escolha de perfil' }).click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole('link', { name: 'Técnico' })).toHaveCount(0);
+
+  await page.getByRole('button', { name: 'Quero ver o código' }).click();
+  await page.getByRole('link', { name: 'Entrar' }).click();
   await expect(page).toHaveURL(/\/tecnico\/$/);
   await expect(page.locator('mfe-tecnico')).toContainText('Fase em construção');
-
-  await page.getByRole('link', { name: 'Clientes' }).click();
-  await expect(page).toHaveURL(/\/clientes\/$/);
-  await expect(page.locator('mfe-clientes')).toContainText('Fase em construção');
-
-  await page.getByRole('link', { name: 'Como foi feito' }).click();
-  await expect(page).toHaveURL(/\/como-foi-feito\/$/);
-  await expect(page.locator('h1')).toHaveText('Como foi feito');
+  await expect(page.locator('header a, main nav')).toHaveCount(0);
 
   expect(errors).toEqual([]);
 });

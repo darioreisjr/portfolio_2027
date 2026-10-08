@@ -47,7 +47,7 @@ Consequências das rotas traduzidas:
 | Página Next.js  | `/`, `/comunidade`, `/como-foi-feito` e versões por idioma  | `next build` com export estático                                                          |
 | Página do shell | `/recrutador`, `/tecnico`, `/clientes` e versões por idioma | Build do shell: um HTML por rota e idioma, com `<title>`, descrição e `hreflang` próprios |
 
-Navegar entre os dois tipos recarrega o documento (link `<a>` comum). Navegar dentro de uma área é do próprio framework. O cabeçalho e o rodapé são os mesmos Web Components do design system nos dois tipos, então a troca não é visível como mudança de layout.
+Navegar entre os dois tipos recarrega o documento (link `<a>` comum). Navegar dentro de uma área é do próprio framework. O seletor de tema e o grupo do canto são os mesmos nos dois tipos, então a troca não é visível como mudança de layout. As páginas internas não têm menu: troca-se de área pela tela de escolha de perfil.
 
 ## Contrato de cada MFE
 

@@ -26,7 +26,7 @@ Não há uma ação principal única: cada área tem a sua.
 - **Área técnica:** projetos na visão técnica (problema, arquitetura, trade-offs, código), skills filtráveis, GitHub.
 - **Área do cliente:** serviços, depoimentos, projetos na visão de resultado, canal de orçamento.
 - **Área da comunidade:** artigos, open source, vitrine do design system.
-- **Como foi feito** (`/como-foi-feito`): explica a arquitetura do próprio site. Aparece nas áreas técnica e da comunidade.
+- **Como foi feito** (`/como-foi-feito`): explica a arquitetura do próprio site. Aparece nas áreas técnica e da comunidade. Enquanto as áreas estão "em construção" e sem menu, nenhuma página liga para ela: só abre pelo endereço.
 - **Sobre e Contato:** presentes em todo o site.
 
 O mesmo projeto aparece em duas áreas com narrativas diferentes: técnica para o tech lead, de resultado para o cliente.

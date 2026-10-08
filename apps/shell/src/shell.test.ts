@@ -23,11 +23,11 @@ describe('documento de uma área', () => {
     expect(html).toContain('/_ds/tokens.css');
   });
 
-  it('liga as outras áreas pelos caminhos do idioma da página', () => {
+  it('não tem menu de áreas: o único caminho é a volta à escolha de perfil', () => {
     const html = renderPage(recruiter, 'en', ui.en);
-    expect(html).toContain('href="/en/tech/"');
-    expect(html).toContain('href="/en/how-it-was-built/"');
-    expect(html).toContain('href="/en/recruiter/" aria-current="page"');
+    expect(html).not.toContain('href="/en/tech/"');
+    expect(html).not.toContain('href="/en/how-it-was-built/"');
+    expect(html).toContain('<a class="area-back" href="/en/">');
   });
 
   it('aplica o tema salvo antes de carregar qualquer estilo', () => {
