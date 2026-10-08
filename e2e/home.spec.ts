@@ -438,7 +438,9 @@ test.describe('home em tela larga (palco)', () => {
   test('sem JavaScript, o personagem continua sendo um link e o painel não aparece', async ({
     browser,
   }) => {
-    const context = await browser.newContext({ javaScriptEnabled: false });
+    // Sem a entrada animada: com o JavaScript desligado o Playwright não repete
+    // a checagem de elemento parado, e um clique dado durante a entrada trava.
+    const context = await browser.newContext({ javaScriptEnabled: false, reducedMotion: 'reduce' });
     const page = await context.newPage();
     await page.goto('/');
     await expect(page.locator('.persona-actions:visible')).toHaveCount(0);
