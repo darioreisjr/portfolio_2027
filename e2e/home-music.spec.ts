@@ -32,7 +32,7 @@ async function watchAudio(page: Page): Promise<{ count: () => number }> {
   return { count: () => requests };
 }
 
-const music = (page: Page) => page.getByRole('button', { name: 'Música de fundo' });
+const music = (page: Page) => page.getByRole('button', { name: 'Som' });
 const playing = (page: Page) =>
   page.evaluate(() => [...document.querySelectorAll('audio')].some((audio) => !audio.paused));
 const stored = (page: Page) => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY);
@@ -230,7 +230,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
         await page.addInitScript((key) => localStorage.setItem(key, 'on'), STORAGE_KEY);
       }
       await openHome(page, '/en/');
-      await expect(page.getByRole('button', { name: 'Background music' })).toHaveAttribute(
+      await expect(page.getByRole('button', { name: 'Sound' })).toHaveAttribute(
         'aria-pressed',
         pressed,
       );
@@ -242,16 +242,21 @@ for (const colorScheme of ['light', 'dark'] as const) {
   }
 }
 
-test('se o arquivo de áudio falhar, o botão volta a desligado e nada é lembrado', async ({
+test('se o arquivo da música falhar, o botão continua ligado: os efeitos não dependem dela', async ({
   page,
 }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(error.message));
   await page.route('**/_home/audio/**', (route) => route.fulfill({ status: 404, body: '' }));
   await openHome(page);
 
   await music(page).click();
-  await expect(music(page)).toHaveAttribute('aria-pressed', 'false');
+  await expect(music(page)).toHaveAttribute('aria-pressed', 'true');
+  expect(await stored(page)).toBe('on');
+  // Sem música, mas também sem erro.
+  await page.locator('h1').click();
   expect(await playing(page)).toBe(false);
-  expect(await stored(page)).toBeNull();
+  expect(errors).toEqual([]);
 });
 
 test('em 360 px o grupo com seis controles cabe e não encosta no painel', async ({ browser }) => {
