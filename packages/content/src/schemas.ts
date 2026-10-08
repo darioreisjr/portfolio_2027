@@ -51,8 +51,6 @@ export const homeSchema = z
     back: text,
     /** Rótulo do controle que pausa a animação do cenário. */
     pauseMotion: text,
-    /** Precisa conter `{tech}`, trocado pelo nome da tecnologia da área. */
-    madeIn: text.refine((value) => value.includes('{tech}'), 'Falta o marcador {tech}'),
     personas: z
       .object({
         recruiter: personaTextSchema,

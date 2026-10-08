@@ -69,12 +69,15 @@ describe('validação', () => {
     expect(() => loadContent(broken, { includeDrafts: true })).toThrow(/ui\/en\.json/);
   });
 
-  it('recusa texto da home com chave faltando ou sem o marcador de tecnologia', () => {
+  it('recusa texto da home com chave faltando ou personagem sem descrição', () => {
     const missing = dataWith('home/es.json', (json) => delete json.enter);
     expect(() => loadContent(missing, { includeDrafts: true })).toThrow(/home\/es\.json/);
 
-    const noMarker = dataWith('home/en.json', (json) => (json.madeIn = 'Built with care'));
-    expect(() => loadContent(noMarker, { includeDrafts: true })).toThrow(/\{tech\}/);
+    const noDescription = dataWith(
+      'home/en.json',
+      (json) => delete (json.personas as { tech: Json }).tech.description,
+    );
+    expect(() => loadContent(noDescription, { includeDrafts: true })).toThrow(/home\/en\.json/);
   });
 
   it('recusa item publicado sem os quatro idiomas', () => {

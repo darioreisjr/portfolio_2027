@@ -3,7 +3,6 @@
   "enter": "Enter",
   "back": "Back",
   "pauseMotion": "Pause animation",
-  "madeIn": "Built with {tech}",
   "personas": {
     "recruiter": {
       "phrase": "I'm hiring",

@@ -174,7 +174,6 @@ Textos da tela de escolha de perfil. Sem `status`, como `ui`. Ficam fora de `ui`
 | `enter`                         | string (rótulo do link que abre a área)                       | sim         |
 | `back`                          | string (rótulo do botão que desfaz a escolha)                 | sim         |
 | `pauseMotion`                   | string (rótulo do controle que pausa a animação)              | sim         |
-| `madeIn`                        | string com o marcador `{tech}`                                | sim         |
 | `personas.<perfil>.phrase`      | string, para `recruiter`, `tech`, `client` e `community`      | sim         |
 | `personas.<perfil>.description` | string: o que a área traz e para quem, no tom daquele público | sim         |
 
