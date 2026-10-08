@@ -4,18 +4,18 @@ Atualizado em 2026-10-07. **Bloqueante** = precisa de resposta antes do bootstra
 
 ## Decisões pendentes do autor
 
-| #   | Questão                                                                             | Suposição em uso                                                                          | Bloqueante?                       |
-| --- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------- |
-| 1   | Aprovação dos ADRs 0002, 0003 e 0004 e do `budgets.md`                              | **Resolvido:** aceitos em 2026-10-06                                                      | Não                               |
-| 2   | Nomes das rotas das áreas                                                           | **Resolvido:** rotas traduzidas, tabela em `mfe-map.md`. Os nomes em en e es são proposta | Não                               |
-| 3   | Idioma na URL                                                                       | **Resolvido:** pt-BR sem prefixo; `/en`, `/es`, `/pt-pt` com prefixo                      | Não                               |
-| 4   | Artigos têm corpo dentro do site ou só link externo?                                | Só lista em JSON com link externo                                                         | Não                               |
-| 5   | Formulário de contato                                                               | Adiado; só links diretos                                                                  | Não                               |
-| 6   | Analytics                                                                           | Nenhum; sem dados de campo para Core Web Vitals                                           | Não                               |
-| 7   | Domínio próprio                                                                     | Não definido; usar o domínio do host até decidir                                          | Não                               |
-| 8   | Conta no Cloudflare e conferência do plano gratuito                                 | Não conferido                                                                             | Não (só antes do primeiro deploy) |
-| 9   | Vitrine pública do design system: Storybook publicado ou página própria no Next.js? | Não decidido                                                                              | Não                               |
-| 10  | Um currículo em PDF por idioma ou um só?                                            | Um por idioma, opcional                                                                   | Não                               |
+| #   | Questão                                                                                         | Suposição em uso                                                                          | Bloqueante?                       |
+| --- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------- |
+| 1   | Aprovação dos ADRs 0002, 0003 e 0004 e do `budgets.md`                                          | **Resolvido:** aceitos em 2026-10-06                                                      | Não                               |
+| 2   | Nomes das rotas das áreas                                                                       | **Resolvido:** rotas traduzidas, tabela em `mfe-map.md`. Os nomes em en e es são proposta | Não                               |
+| 3   | Idioma na URL                                                                                   | **Resolvido:** pt-BR sem prefixo; `/en`, `/es`, `/pt-pt` com prefixo                      | Não                               |
+| 4   | Artigos têm corpo dentro do site ou só link externo?                                            | Só lista em JSON com link externo                                                         | Não                               |
+| 5   | Formulário de contato                                                                           | Adiado; só links diretos                                                                  | Não                               |
+| 6   | Analytics                                                                                       | Nenhum; sem dados de campo para Core Web Vitals                                           | Não                               |
+| 7   | Domínio próprio                                                                                 | Não definido; usar o domínio do host até decidir                                          | Não                               |
+| 8   | Projeto na Vercel e segredos (VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID) no GitHub Actions | Não configurado                                                                           | Não (só antes do primeiro deploy) |
+| 9   | Vitrine pública do design system: Storybook publicado ou página própria no Next.js?             | Não decidido                                                                              | Não                               |
+| 10  | Um currículo em PDF por idioma ou um só?                                                        | Um por idioma, opcional                                                                   | Não                               |
 
 ## Suposições de conteúdo
 

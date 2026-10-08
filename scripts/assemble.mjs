@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 // Junta as saídas de build dos apps em dist/, o diretório único que é publicado
-// (ADR 0004). Falha se dois apps emitirem o mesmo caminho.
+// (ADR 0004 e ADR 0007). Falha se dois apps emitirem o mesmo caminho.
 //
 //   node scripts/assemble.mjs
 //
 // Rode depois de `pnpm build`.
 
-import { cpSync, existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { routes } from '../packages/contracts/src/routes.ts';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -91,6 +92,81 @@ export function planAssembly(root, sourceList = sources) {
   return plan;
 }
 
+/**
+ * Constrói a configuração da Vercel (ADR 0007) com base na tabela canônica de rotas.
+ * Mapeia sub-rotas dos microfrontends geridos pelo shell para seus respectivos index.html
+ * e define cabeçalhos de cache agressivos para assets imutáveis e revalidação para HTML.
+ */
+export function buildVercelConfig(routesList = routes) {
+  const shellRoutes = routesList.filter((route) => route.owner === 'shell');
+  const rewrites = [];
+
+  for (const route of shellRoutes) {
+    for (const locale of Object.keys(route.paths)) {
+      const p = route.paths[locale];
+      const base = p.replace(/\/$/, '');
+      rewrites.push({
+        source: `${base}/:path*`,
+        destination: `${base}/index.html`,
+      });
+    }
+  }
+
+  return {
+    $schema: 'https://openapi.vercel.sh/vercel.json',
+    cleanUrls: true,
+    trailingSlash: true,
+    rewrites,
+    headers: [
+      {
+        source: '/_next/static/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/_ds/fonts/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/_ds/flags/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/_mfe/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/(.*)\\.html',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate',
+          },
+        ],
+      },
+    ],
+  };
+}
+
 export function assemble(root, outDir = join(root, 'dist')) {
   const plan = planAssembly(root);
   const missing = REQUIRED.filter((file) => !plan.has(file));
@@ -102,7 +178,11 @@ export function assemble(root, outDir = join(root, 'dist')) {
     mkdirSync(dirname(target), { recursive: true });
     cpSync(join(root, origin), target);
   }
-  return plan.size;
+
+  const vercelConfig = buildVercelConfig();
+  writeFileSync(join(outDir, 'vercel.json'), `${JSON.stringify(vercelConfig, null, 2)}\n`);
+
+  return plan.size + 1;
 }
 
 if (import.meta.main) {

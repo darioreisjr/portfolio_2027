@@ -1,6 +1,6 @@
 # ADR 0004: Hospedagem e deploy
 
-- Status: **aceito** pelo autor em 2026-10-06
+- Status: **substituído por [ADR 0007](0007-deploy-vercel.md)** em 2026-10-07
 - Data: 2026-10-06
 
 ## Contexto

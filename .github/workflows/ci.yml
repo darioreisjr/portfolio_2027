@@ -16,6 +16,10 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       # Histórico completo: com clone raso o Turborepo trata tudo como alterado.
       - uses: actions/checkout@v7
@@ -76,6 +80,20 @@ jobs:
         run: pnpm test:e2e
       - name: Lighthouse CI
         run: pnpm lhci
+
+      - name: Deploy Preview na Vercel (Pull Request)
+        if: github.event_name == 'pull_request' && env.VERCEL_TOKEN != ''
+        run: |
+          PREVIEW_URL=$(pnpm dlx vercel@latest deploy dist --yes)
+          echo "### 🚀 Preview na Vercel" >> $GITHUB_STEP_SUMMARY
+          echo "URL: $PREVIEW_URL" >> $GITHUB_STEP_SUMMARY
+
+      - name: Deploy Produção na Vercel (Push na main)
+        if: github.event_name == 'push' && env.VERCEL_TOKEN != ''
+        run: |
+          PROD_URL=$(pnpm dlx vercel@latest deploy dist --prod --yes)
+          echo "### 🚀 Produção na Vercel" >> $GITHUB_STEP_SUMMARY
+          echo "URL: $PROD_URL" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v7
         if: failure()
