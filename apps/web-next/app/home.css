@@ -635,7 +635,8 @@ li[data-selected] > .persona::before {
   cursor: pointer;
 }
 
-.home-motion-disc {
+.home-motion-disc,
+.home-music-disc {
   display: grid;
   place-items: center;
   box-sizing: border-box;
@@ -647,7 +648,8 @@ li[data-selected] > .persona::before {
   color: var(--color-text);
 }
 
-.home-motion-disc svg {
+.home-motion-disc svg,
+.home-music-disc svg {
   inline-size: var(--space-inline-md);
   block-size: var(--space-inline-md);
   scale: 0.75;
@@ -665,6 +667,45 @@ li[data-selected] > .persona::before {
 }
 
 .home-motion input:focus-visible ~ .home-motion-disc {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Botão da música de fundo, no mesmo grupo e com o mesmo disco da pausa. Só
+   funciona com JavaScript: até lá fica invisível, com o lugar guardado, para
+   não haver botão morto nem os vizinhos mudarem de lugar (ADRs 0005 e 0008). */
+.home-music {
+  display: grid;
+  place-items: center;
+  inline-size: var(--size-control);
+  block-size: var(--size-control);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.home-music:not([data-ready]) {
+  visibility: hidden;
+}
+
+/* Desligada, a nota fica riscada. */
+.home-music-slash {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.home-music[aria-pressed='true'] .home-music-slash {
+  display: none;
+}
+
+.home-music:focus-visible {
+  outline: none;
+}
+
+.home-music:focus-visible .home-music-disc {
   outline: var(--focus-ring-width) solid var(--color-focus-ring);
   outline-offset: var(--focus-ring-offset);
 }
