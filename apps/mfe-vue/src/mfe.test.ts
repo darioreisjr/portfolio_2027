@@ -17,20 +17,27 @@ function mount(locale: string): Promise<{ element: HTMLElement; ready: MfeReadyD
 }
 
 describe('mfe-recrutador', () => {
-  it('mostra o olá do idioma recebido e avisa o shell', async () => {
+  it('mostra a mensagem no idioma recebido e avisa o shell', async () => {
     const { element, ready } = await mount('en');
-    expect(element.shadowRoot?.textContent).toContain('Hello');
+    expect(element.shadowRoot?.textContent).toContain('Stage under construction');
     expect(ready).toEqual({ area: 'recruiter', locale: 'en' });
   });
 
   it('usa pt-BR quando o idioma é desconhecido', async () => {
     const { element, ready } = await mount('xx');
-    expect(element.shadowRoot?.textContent).toContain('Olá');
+    expect(element.shadowRoot?.textContent).toContain('Fase em construção');
     expect(ready.locale).toBe('pt-BR');
   });
 
-  it('usa o componente do design system', async () => {
+  it('expõe as partes que a folha das páginas internas estiliza', async () => {
     const { element } = await mount('pt-BR');
-    expect(element.shadowRoot?.querySelector('ds-badge')).not.toBeNull();
+    const parts = [...(element.shadowRoot?.querySelectorAll('[part]') ?? [])].map((node) =>
+      node.getAttribute('part'),
+    );
+    expect(parts).toEqual(['message', 'title', 'text', 'bar', 'bar-fill']);
+    // A barra é enfeite: não há progresso de verdade para anunciar.
+    expect(element.shadowRoot?.querySelector('[part="bar"]')?.getAttribute('aria-hidden')).toBe(
+      'true',
+    );
   });
 });

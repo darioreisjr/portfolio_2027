@@ -72,6 +72,8 @@ describe('cenário de sakura', () => {
         for (const behind of ['color-surface', 'color-scene-sky-top', 'color-scene-sky-bottom']) {
           expect(contrast(color, channels(hex(theme, behind))), behind).toBeGreaterThanOrEqual(3);
         }
+        // Nas páginas internas a cor da área é a do título sobre a superfície.
+        expect(contrast(color, channels(hex(theme, 'color-surface')))).toBeGreaterThanOrEqual(4.5);
       });
     }
 

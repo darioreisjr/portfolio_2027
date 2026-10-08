@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
-const ACCENT_LIGHT = 'rgb(29, 78, 216)';
+const SURFACE_LIGHT = 'rgb(255, 255, 255)';
 
 const mfeAreas = [
   { path: '/recrutador/', area: 'recruiter', tag: 'mfe-recrutador', framework: 'Vue' },
@@ -30,7 +30,7 @@ async function expectAccessible(page: Page): Promise<void> {
 test.use({ colorScheme: 'light' });
 
 for (const { path, area, tag, framework } of mfeAreas) {
-  test(`${path} renderiza o olá do MFE ${framework} dentro do shell`, async ({ page }) => {
+  test(`${path} renderiza a mensagem do MFE ${framework} dentro do shell`, async ({ page }) => {
     const errors = failOnBrowserErrors(page);
     await page.goto(path);
 
@@ -39,11 +39,10 @@ for (const { path, area, tag, framework } of mfeAreas) {
 
     const mfe = page.locator(tag);
     await expect(mfe).toHaveAttribute('locale', 'pt-BR');
-    // "Olá" vem de packages/content; o selo é o componente do design system.
-    await expect(mfe).toContainText('Olá');
-    const badge = mfe.locator('ds-badge');
-    await expect(badge).toHaveText(framework);
-    await expect(badge).toHaveCSS('background-color', ACCENT_LIGHT);
+    // O texto vem de packages/content; a aparência, da folha das páginas
+    // internas, que alcança o shadow DOM do MFE pelos `part` (ADR 0009).
+    await expect(mfe).toContainText('Fase em construção');
+    await expect(mfe.locator('[part="message"]')).toHaveCSS('background-color', SURFACE_LIGHT);
 
     await expectAccessible(page);
     expect(errors).toEqual([]);
@@ -57,13 +56,11 @@ for (const path of nextPages) {
 
     await expect(page.locator('html')).toHaveAttribute('lang', 'pt-BR');
     await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('.hello')).toContainText('Olá');
-
-    const badge = page.locator('ds-badge');
-    await expect(badge).toHaveText('Next.js');
-    await expect(badge).toHaveCSS('background-color', ACCENT_LIGHT);
+    await expect(page.locator('.area-message')).toContainText('Fase em construção');
+    await expect(page.locator('.area-message')).toHaveCSS('background-color', SURFACE_LIGHT);
+    // O design system é carregado uma vez pelo layout.
     await expect
-      .poll(() => page.evaluate(() => Boolean(customElements.get('ds-badge'))))
+      .poll(() => page.evaluate(() => Boolean(customElements.get('ds-theme-toggle'))))
       .toBe(true);
 
     await expectAccessible(page);
@@ -80,15 +77,15 @@ test('navega da home pelas três áreas de MFE e volta ao Next.js', async ({ pag
   await page.getByRole('button', { name: 'Estou contratando' }).click();
   await page.getByRole('link', { name: 'Entrar' }).click();
   await expect(page).toHaveURL(/\/recrutador\/$/);
-  await expect(page.locator('mfe-recrutador')).toContainText('Olá');
+  await expect(page.locator('mfe-recrutador')).toContainText('Fase em construção');
 
   await page.getByRole('link', { name: 'Técnico' }).click();
   await expect(page).toHaveURL(/\/tecnico\/$/);
-  await expect(page.locator('mfe-tecnico')).toContainText('Olá');
+  await expect(page.locator('mfe-tecnico')).toContainText('Fase em construção');
 
   await page.getByRole('link', { name: 'Clientes' }).click();
   await expect(page).toHaveURL(/\/clientes\/$/);
-  await expect(page.locator('mfe-clientes')).toContainText('Olá');
+  await expect(page.locator('mfe-clientes')).toContainText('Fase em construção');
 
   await page.getByRole('link', { name: 'Como foi feito' }).click();
   await expect(page).toHaveURL(/\/como-foi-feito\/$/);
@@ -113,7 +110,7 @@ test('cada rota carrega só o MFE dela', async ({ page }) => {
 test('rota em inglês usa o idioma na página e no MFE', async ({ page }) => {
   await page.goto('/en/recruiter/');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(page.locator('mfe-recrutador')).toContainText('Hello');
+  await expect(page.locator('mfe-recrutador')).toContainText('Stage under construction');
   await expect(page.locator('h1')).toHaveText('Recruiter');
 });
 

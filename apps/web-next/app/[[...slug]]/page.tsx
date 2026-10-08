@@ -2,7 +2,7 @@ import { ui } from '@portfolio/content/ui';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { resolvePage, staticPageParams, type PageParams } from '../../lib/route';
-import { AreaPlaceholder } from '../_components/area-placeholder';
+import { AreaConstruction } from '../_components/area-construction';
 import { HomeStage } from '../_components/home-stage';
 
 interface PageProps {
@@ -32,6 +32,6 @@ export default async function Page({ params }: PageProps) {
   return entry.area === 'home' ? (
     <HomeStage locale={locale} />
   ) : (
-    <AreaPlaceholder area={entry.area} locale={locale} />
+    <AreaConstruction area={entry.area} locale={locale} />
   );
 }

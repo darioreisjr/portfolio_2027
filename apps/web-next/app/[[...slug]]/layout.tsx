@@ -1,6 +1,5 @@
 import '@portfolio/tokens/tokens.css';
 import '../site.css';
-import { home } from '@portfolio/content/home';
 import { ui } from '@portfolio/content/ui';
 import { defaultLocale, languageAlternates, THEME_INIT_SCRIPT } from '@portfolio/contracts';
 import type {} from '@portfolio/design-system/react';
@@ -45,13 +44,28 @@ export default async function RootLayout({
             {/* Só a home tem animação. Caixa de seleção nativa com cara de botão:
                 o CSS da home lê o estado, sem JavaScript (WCAG 2.2.2). */}
             {area === 'home' && (
-              <label className="home-motion" title={home[locale].pauseMotion}>
-                <input type="checkbox" aria-label={home[locale].pauseMotion} />
+              <label className="home-motion" title={ui[locale].pauseMotion}>
+                <input type="checkbox" aria-label={ui[locale].pauseMotion} />
                 <span className="home-motion-disc" aria-hidden="true">
                   <svg className="home-motion-pause" viewBox="0 0 16 16">
                     <path d="M3 2h4v12H3zM9 2h4v12H9z" />
                   </svg>
                   <svg className="home-motion-play" viewBox="0 0 16 16">
+                    <path d="M4 2l10 6-10 6z" />
+                  </svg>
+                </span>
+              </label>
+            )}
+            {/* Nas páginas internas a mesma pausa, com a aparência da folha delas
+                (ADR 0009): o cenário da área também se move sem parar. */}
+            {area !== 'home' && (
+              <label className="area-motion" title={ui[locale].pauseMotion}>
+                <input type="checkbox" aria-label={ui[locale].pauseMotion} />
+                <span className="area-motion-disc" aria-hidden="true">
+                  <svg className="area-motion-pause" viewBox="0 0 16 16">
+                    <path d="M3 2h4v12H3zM9 2h4v12H9z" />
+                  </svg>
+                  <svg className="area-motion-play" viewBox="0 0 16 16">
                     <path d="M4 2l10 6-10 6z" />
                   </svg>
                 </span>

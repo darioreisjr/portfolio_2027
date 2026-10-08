@@ -18,15 +18,18 @@ function mount(locale: string): Promise<{ element: HTMLElement; ready: MfeReadyD
 }
 
 describe('mfe-clientes', () => {
-  it('mostra o olá do idioma recebido e avisa o shell', async () => {
+  it('mostra a mensagem do idioma recebido e avisa o shell', async () => {
     const { element, ready } = await mount('es');
-    expect(element.shadowRoot?.textContent).toContain('Hola');
+    expect(element.shadowRoot?.textContent).toContain('Fase en construcción');
     expect(ready).toEqual({ area: 'client', locale: 'es' });
   });
 
-  it('usa o componente do design system', async () => {
+  it('expõe as partes que a folha das páginas internas estiliza', async () => {
     const { element } = await mount('pt-BR');
-    expect(element.shadowRoot?.querySelector('ds-badge')).not.toBeNull();
+    const parts = [...(element.shadowRoot?.querySelectorAll('[part]') ?? [])].map((node) =>
+      node.getAttribute('part'),
+    );
+    expect(parts).toEqual(['message', 'title', 'text', 'bar', 'bar-fill']);
   });
 
   it('desmonta ao sair do documento', async () => {

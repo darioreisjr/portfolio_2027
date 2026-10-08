@@ -3,7 +3,6 @@ import { expect, test, type Page } from '@playwright/test';
 
 const STORAGE_KEY = 'portfolio:tema';
 const SURFACE = { light: 'rgb(255, 255, 255)', dark: 'rgb(12, 14, 19)' };
-const ACCENT = { light: 'rgb(29, 78, 216)', dark: 'rgb(147, 197, 253)' };
 
 const allRoutes = [
   '/',
@@ -50,9 +49,9 @@ test.describe('escolha do visitante', () => {
     // Área do shell: o MFE muda de tema sem código próprio.
     await page.goto('/recrutador/');
     await expect(html(page)).toHaveAttribute('data-theme', 'dark');
-    await expect(page.locator('mfe-recrutador ds-badge')).toHaveCSS(
+    await expect(page.locator('mfe-recrutador [part="message"]')).toHaveCSS(
       'background-color',
-      ACCENT.dark,
+      SURFACE.dark,
     );
     await expect(toggle(page)).toHaveAttribute('aria-pressed', 'true');
 
@@ -66,7 +65,10 @@ test.describe('escolha do visitante', () => {
     await toggle(page).click();
     await expect(html(page)).toHaveAttribute('data-theme', 'light');
     await page.goto('/tecnico/');
-    await expect(page.locator('mfe-tecnico ds-badge')).toHaveCSS('background-color', ACCENT.light);
+    await expect(page.locator('mfe-tecnico [part="message"]')).toHaveCSS(
+      'background-color',
+      SURFACE.light,
+    );
   });
 
   test('o botão funciona pelo teclado no cabeçalho do shell', async ({ page }) => {

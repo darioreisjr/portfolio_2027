@@ -64,7 +64,7 @@ for (const viewport of [
 
 test('a fonte chega ao conteúdo de um MFE, dentro do shadow DOM', async ({ page }) => {
   await page.goto('/recrutador/');
-  await expect(page.locator('mfe-recrutador')).toContainText('Olá');
+  await expect(page.locator('mfe-recrutador')).toContainText('Fase em construção');
   const family = await page.locator('mfe-recrutador').evaluate((host) => {
     const inside = host.shadowRoot?.querySelector('*:not(style)') ?? host;
     return getComputedStyle(inside).fontFamily;

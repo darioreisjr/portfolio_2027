@@ -84,7 +84,7 @@ test('abrir e escolher uma bandeira troca o idioma da página e da área', async
   await page.getByRole('link', { name: 'Español' }).click();
   await expect(page).toHaveURL(/\/es\/reclutador\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
-  await expect(page.locator('mfe-recrutador')).toContainText('Hola');
+  await expect(page.locator('mfe-recrutador')).toContainText('Fase en construcción');
 });
 
 test('clicar de novo na bandeira fecha a lista', async ({ page }) => {
@@ -199,17 +199,17 @@ test('funciona sem JavaScript', async ({ browser }) => {
   await context.close();
 });
 
-test('só a home tem o botão de pausa, junto da bandeira', async ({ page }) => {
-  await page.goto('/');
-  const pause = page.locator('.ds-dock').getByRole('checkbox', { name: 'Pausar animação' });
-  await expect(pause).toBeVisible();
-  const [pauseBox, flagBox] = [await pause.boundingBox(), await current(page).boundingBox()];
-  expect(pauseBox?.y).toBe(flagBox?.y);
-  expect((pauseBox?.x ?? 0) + (pauseBox?.width ?? 0)).toBeLessThanOrEqual(flagBox?.x ?? 0);
-
-  for (const path of ['/comunidade/', '/recrutador/']) {
+test('o botão de pausa fica junto da bandeira, na home e nas páginas internas', async ({
+  page,
+}) => {
+  // Todas têm cenário animado; o teste das páginas internas está em areas.spec.ts.
+  for (const path of ['/', '/comunidade/', '/recrutador/']) {
     await page.goto(path);
-    await expect(page.getByRole('checkbox')).toHaveCount(0);
+    const pause = page.locator('.ds-dock').getByRole('checkbox', { name: 'Pausar animação' });
+    await expect(pause, path).toBeVisible();
+    const [pauseBox, flagBox] = [await pause.boundingBox(), await current(page).boundingBox()];
+    expect(pauseBox?.y, path).toBe(flagBox?.y);
+    expect((pauseBox?.x ?? 0) + (pauseBox?.width ?? 0), path).toBeLessThanOrEqual(flagBox?.x ?? 0);
   }
 });
 

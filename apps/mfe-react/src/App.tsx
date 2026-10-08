@@ -1,29 +1,19 @@
 import { ui } from '@portfolio/content/ui';
 import { emitMfeReady, type Locale } from '@portfolio/contracts';
-import type {} from '@portfolio/design-system/react';
 import { useEffect } from 'react';
 
-const styles = `
-  .hello {
-    display: flex;
-    align-items: center;
-    gap: var(--space-inline-sm);
-    margin: 0;
-    color: var(--color-text);
-    font-size: var(--text-size-md);
-  }
-`;
-
+/** Sem estilo próprio: a aparência vem de /_ds/areas.css, pelos `part` (ADR 0009). */
 export function App({ locale }: { locale: Locale }) {
   useEffect(() => emitMfeReady({ area: 'client', locale }), [locale]);
+  const text = ui[locale].construction;
 
   return (
-    <section>
-      <style>{styles}</style>
-      <p className="hello">
-        {ui[locale].hello}
-        <ds-badge>React</ds-badge>
-      </p>
+    <section part="message">
+      <h2 part="title">{text.title}</h2>
+      <p part="text">{text.text}</p>
+      <div part="bar" aria-hidden="true">
+        <span part="bar-fill" />
+      </div>
     </section>
   );
 }

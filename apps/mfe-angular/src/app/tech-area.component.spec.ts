@@ -5,23 +5,23 @@ import { TechAreaComponent } from './tech-area.component';
 const shadowText = (element: Element): string => element.shadowRoot?.textContent ?? '';
 
 describe('TechAreaComponent', () => {
-  it('mostra o olá do idioma e reage à troca, sem zone.js', async () => {
+  it('mostra a mensagem do idioma e reage à troca, sem zone.js', async () => {
     const fixture = TestBed.createComponent(TechAreaComponent);
 
     fixture.componentRef.setInput('locale', 'en');
     await fixture.whenStable();
-    expect(shadowText(fixture.nativeElement)).toContain('Hello');
+    expect(shadowText(fixture.nativeElement)).toContain('Stage under construction');
 
     fixture.componentRef.setInput('locale', 'es');
     await fixture.whenStable();
-    expect(shadowText(fixture.nativeElement)).toContain('Hola');
+    expect(shadowText(fixture.nativeElement)).toContain('Fase en construcción');
   });
 
   it('usa pt-BR quando o idioma é desconhecido', async () => {
     const fixture = TestBed.createComponent(TechAreaComponent);
     fixture.componentRef.setInput('locale', 'xx');
     await fixture.whenStable();
-    expect(shadowText(fixture.nativeElement)).toContain('Olá');
+    expect(shadowText(fixture.nativeElement)).toContain('Fase em construção');
   });
 });
 
@@ -43,10 +43,11 @@ describe('mfe-tecnico como custom element', () => {
     document.body.append(element);
 
     expect(await ready).toEqual({ area: 'tech', locale: 'en' });
-    expect(shadowText(element)).toContain('Hello');
-    expect(element.shadowRoot?.querySelector('ds-badge')).not.toBeNull();
+    expect(shadowText(element)).toContain('Stage under construction');
+    // As partes que a folha das páginas internas estiliza.
+    expect(element.shadowRoot?.querySelector('[part="bar-fill"]')).not.toBeNull();
 
     element.setAttribute('locale', 'es');
-    await vi.waitFor(() => expect(shadowText(element)).toContain('Hola'));
+    await vi.waitFor(() => expect(shadowText(element)).toContain('Fase en construcción'));
   });
 });

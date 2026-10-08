@@ -19,13 +19,6 @@ main h1 {
   font-size: var(--text-size-title);
 }
 
-.hello {
-  display: flex;
-  align-items: center;
-  gap: var(--space-inline-sm);
-  margin: 0 0 var(--space-block-lg);
-}
-
 nav ul {
   display: flex;
   flex-wrap: wrap;

@@ -13,6 +13,8 @@ import { routes } from '../packages/contracts/src/routes.ts';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
+// Folha de estilo das páginas internas; a home não a carrega (ADR 0009).
+const AREAS_CSS = 'areas.css';
 // Uma bandeira por idioma (ADR 0006).
 const FLAGS = ['pt-BR', 'en', 'es', 'pt-PT'];
 // Os dois pesos da fonte do site, só no alfabeto latino.
@@ -31,7 +33,7 @@ export const sources = [
   {
     from: 'packages/design-system/dist',
     to: '_ds',
-    only: ['ds.js', ...FLAGS.map((flag) => `flags/${flag}.svg`)],
+    only: ['ds.js', AREAS_CSS, ...FLAGS.map((flag) => `flags/${flag}.svg`)],
   },
   { from: 'packages/tokens/dist', to: '_ds', only: ['tokens.css', ...FONTS] },
 ];
@@ -42,6 +44,7 @@ const REQUIRED = [
   '_shell/shell.js',
   '_ds/ds.js',
   '_ds/tokens.css',
+  `_ds/${AREAS_CSS}`,
   ...FLAGS.map((flag) => `_ds/flags/${flag}.svg`),
   ...FONTS.map((font) => `_ds/${font}`),
 ];

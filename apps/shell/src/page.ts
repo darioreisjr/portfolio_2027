@@ -2,11 +2,18 @@ import type { Ui } from '@portfolio/content/schemas';
 import {
   languageAlternates,
   pathFor,
+  personaFigure,
   routes,
   THEME_INIT_SCRIPT,
   type Locale,
   type RouteEntry,
 } from '@portfolio/contracts';
+
+/** Cenário decorativo: três camadas e dez partículas, que a folha desenha por área. */
+const AREA_SCENE = `<div class="area-scene" aria-hidden="true">
+        <span class="area-scene-back"></span><span class="area-scene-mid"></span><span class="area-scene-front"></span>
+        <span class="area-particles">${'<i></i>'.repeat(10)}</span>
+      </div>`;
 
 const escapeHtml = (value: string): string =>
   value.replace(
@@ -44,6 +51,16 @@ export function renderPage(entry: RouteEntry, locale: Locale, ui: Ui): string {
     )
     .join('\n            ');
 
+  // Palco da tela "em construção" (ADR 0009): o cenário e o personagem já vêm
+  // no HTML; a mensagem é do MFE, que entra em `.area-outlet`.
+  const figure = personaFigure(entry.area);
+  const figureImage = figure
+    ? `<picture>
+        <source type="image/avif" srcset="${figure.avif}" />
+        <img class="area-figure" src="${figure.src}" alt="" width="${figure.width}" height="${figure.height}" loading="eager" fetchpriority="high" decoding="async" />
+      </picture>`
+    : '';
+
   return `<!doctype html>
 <html lang="${locale}">
   <head>
@@ -53,6 +70,7 @@ export function renderPage(entry: RouteEntry, locale: Locale, ui: Ui): string {
     <title>${escapeHtml(area.title)} | ${escapeHtml(ui.siteName)}</title>
     <meta name="description" content="${escapeHtml(area.description)}" />
     <link rel="stylesheet" href="/_ds/tokens.css" />
+    <link rel="stylesheet" href="/_ds/areas.css" />
     <link rel="stylesheet" href="/_shell/shell.css" />
     <script type="module" src="/_ds/ds.js"></script>
     <script type="module" src="/_shell/shell.js"></script>
@@ -60,7 +78,6 @@ export function renderPage(entry: RouteEntry, locale: Locale, ui: Ui): string {
   <body>
     <header class="shell-header">
       <a class="shell-brand" href="${pathFor('home', locale)}">${escapeHtml(ui.siteName)}</a>
-      <ds-badge>${escapeHtml(ui.hello)}</ds-badge>
       <nav>
         <ul>
           ${links}
@@ -68,10 +85,21 @@ export function renderPage(entry: RouteEntry, locale: Locale, ui: Ui): string {
       </nav>
       <ds-theme-toggle label="${escapeHtml(ui.themeToggle)}"></ds-theme-toggle>
     </header>
-    <main data-area="${entry.area}" data-load-error="${escapeHtml(ui.loadError)}">
-      <h1>${escapeHtml(area.title)}</h1>
+    <main class="area-stage" data-area="${entry.area}">
+      ${AREA_SCENE}
+      <h1 class="area-title">${escapeHtml(area.title)}</h1>
+      ${figureImage}
+      <div class="area-outlet" data-load-error="${escapeHtml(ui.loadError)}"></div>
+      <a class="area-back" href="${pathFor('home', locale)}">${escapeHtml(ui.construction.back)}</a>
     </main>
     <footer class="ds-dock">
+      <label class="area-motion" title="${escapeHtml(ui.pauseMotion)}">
+        <input type="checkbox" aria-label="${escapeHtml(ui.pauseMotion)}" />
+        <span class="area-motion-disc" aria-hidden="true">
+          <svg class="area-motion-pause" viewBox="0 0 16 16"><path d="M3 2h4v12H3zM9 2h4v12H9z" /></svg>
+          <svg class="area-motion-play" viewBox="0 0 16 16"><path d="M4 2l10 6-10 6z" /></svg>
+        </span>
+      </label>
       <nav aria-label="${escapeHtml(ui.languageSwitcher)}">
         <details class="ds-language-switcher">
           <summary title="${escapeHtml(currentLanguage?.name ?? '')}">${flagImage(currentLanguage?.flag ?? '', currentLanguage?.name ?? '')}</summary>

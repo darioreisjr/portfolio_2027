@@ -5,33 +5,20 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  CUSTOM_ELEMENTS_SCHEMA,
   input,
   ViewEncapsulation,
 } from '@angular/core';
 
 @Component({
   selector: 'app-tech-area',
+  // Sem estilo próprio: a aparência vem de /_ds/areas.css, pelos `part` (ADR 0009).
   template: `
-    <section>
-      <p class="hello">
-        {{ text().hello }}
-        <ds-badge>Angular</ds-badge>
-      </p>
+    <section part="message">
+      <h2 part="title">{{ text().title }}</h2>
+      <p part="text">{{ text().text }}</p>
+      <div part="bar" aria-hidden="true"><span part="bar-fill"></span></div>
     </section>
   `,
-  styles: `
-    .hello {
-      display: flex;
-      align-items: center;
-      gap: var(--space-inline-sm);
-      margin: 0;
-      color: var(--color-text);
-      font-size: var(--text-size-md);
-    }
-  `,
-  // ds-badge é um custom element do design system, não um componente Angular.
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   encapsulation: ViewEncapsulation.ShadowDom,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -43,7 +30,7 @@ export class TechAreaComponent {
   protected readonly resolvedLocale = computed<Locale>(
     () => locales.find((candidate) => candidate === this.locale()) ?? defaultLocale,
   );
-  protected readonly text = computed(() => ui[this.resolvedLocale()]);
+  protected readonly text = computed(() => ui[this.resolvedLocale()].construction);
 
   constructor() {
     afterNextRender(() => emitMfeReady({ area: 'tech', locale: this.resolvedLocale() }));

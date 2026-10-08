@@ -1,9 +1,14 @@
 {
   "siteName": "Portfolio",
-  "hello": "Hello",
   "loadError": "This area could not be loaded. Try reloading the page.",
   "themeToggle": "Dark theme",
   "languageSwitcher": "Language",
+  "pauseMotion": "Pause animation",
+  "construction": {
+    "title": "Stage under construction",
+    "text": "This area is still being forged. Come back soon.",
+    "back": "Back to profile selection"
+  },
   "areas": {
     "home": {
       "title": "Home",

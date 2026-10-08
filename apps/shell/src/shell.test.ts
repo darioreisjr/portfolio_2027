@@ -68,6 +68,31 @@ describe('documento de uma área', () => {
     expect(html.indexOf('class="ds-dock"')).toBeGreaterThan(html.indexOf('</main>'));
   });
 
+  it('monta o palco da área: cenário, título, personagem, lugar do MFE e volta', () => {
+    const html = renderPage(recruiter, 'en', ui.en);
+    expect(html).toContain('<link rel="stylesheet" href="/_ds/areas.css" />');
+    expect(html).toContain('<main class="area-stage" data-area="recruiter">');
+    expect(html).toContain('<div class="area-scene" aria-hidden="true">');
+    expect(html.match(/<i><\/i>/g)).toHaveLength(10);
+    expect(html).toContain('<h1 class="area-title">Recruiter</h1>');
+    // O personagem já vem no HTML, com as dimensões, e é o que carrega primeiro.
+    expect(html).toContain('<source type="image/avif" srcset="/_home/personas/recruiter.avif" />');
+    expect(html).toContain(
+      'src="/_home/personas/recruiter.webp" alt="" width="255" height="640" loading="eager" fetchpriority="high"',
+    );
+    expect(html).toContain(`<div class="area-outlet" data-load-error="${ui.en.loadError}"></div>`);
+    expect(html).toContain(`<a class="area-back" href="/en/">${ui.en.construction.back}</a>`);
+    // O selo de olá do cabeçalho saiu.
+    expect(html).not.toContain('ds-badge');
+  });
+
+  it('põe a pausa do cenário no grupo do canto, antes das bandeiras', () => {
+    const html = renderPage(recruiter, 'es', ui.es);
+    const pause = html.indexOf(`<input type="checkbox" aria-label="${ui.es.pauseMotion}" />`);
+    expect(pause).toBeGreaterThan(html.indexOf('class="ds-dock"'));
+    expect(pause).toBeLessThan(html.indexOf('class="ds-language-switcher"'));
+  });
+
   it('escapa texto vindo do conteúdo', () => {
     const html = renderPage(recruiter, 'pt-BR', { ...ui['pt-BR'], siteName: '<b>x</b>' });
     expect(html).not.toContain('<b>x</b>');

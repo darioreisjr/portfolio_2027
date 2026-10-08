@@ -38,7 +38,8 @@ describe('conteúdo do repositório', () => {
   it('é válido e tem textos de interface e da home nos quatro idiomas', () => {
     const { ui, home } = loadContent(dataDir, { includeDrafts: true });
     for (const locale of locales) {
-      expect(ui[locale].hello).not.toBe('');
+      expect(ui[locale].construction.title).not.toBe('');
+      expect(ui[locale].pauseMotion).not.toBe('');
       expect(home[locale].personas.recruiter.phrase).not.toBe('');
       expect(home[locale].personas.recruiter.description).not.toBe('');
       expect(home[locale].music).not.toBe('');
@@ -61,7 +62,7 @@ describe('rascunhos', () => {
 
 describe('validação', () => {
   it('recusa texto de interface com chave faltando', () => {
-    const broken = dataWith('ui/es.json', (json) => delete json.hello);
+    const broken = dataWith('ui/es.json', (json) => delete json.siteName);
     expect(() => loadContent(broken, { includeDrafts: true })).toThrow(/ui\/es\.json/);
   });
 

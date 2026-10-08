@@ -1,9 +1,14 @@
 {
   "siteName": "Portafolio",
-  "hello": "Hola",
   "loadError": "No se pudo cargar esta área. Intenta recargar la página.",
   "themeToggle": "Tema oscuro",
   "languageSwitcher": "Idioma",
+  "pauseMotion": "Pausar animación",
+  "construction": {
+    "title": "Fase en construcción",
+    "text": "Esta área todavía se está forjando. Vuelve pronto.",
+    "back": "Volver a la elección de perfil"
+  },
   "areas": {
     "home": {
       "title": "Inicio",

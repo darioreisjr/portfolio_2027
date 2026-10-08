@@ -19,12 +19,22 @@ const areaTextSchema = z.object({ title: text, description: text }).strict();
 export const uiSchema = z
   .object({
     siteName: text,
-    hello: text,
     loadError: text,
     /** Nome acessível do seletor de tema; o estado vai em `aria-pressed`. */
     themeToggle: text,
     /** Nome acessível do grupo de bandeiras que troca o idioma. */
     languageSwitcher: text,
+    /** Rótulo do controle que pausa a animação dos cenários, na home e nas páginas internas. */
+    pauseMotion: text,
+    /** Tela das páginas internas enquanto a área não tem conteúdo. */
+    construction: z
+      .object({
+        title: text,
+        text: text,
+        /** Rótulo do link que volta à tela de escolha de perfil. */
+        back: text,
+      })
+      .strict(),
     areas: z
       .object({
         home: areaTextSchema,
@@ -49,8 +59,6 @@ export const homeSchema = z
     enter: text,
     /** Desfaz a escolha do personagem. */
     back: text,
-    /** Rótulo do controle que pausa a animação do cenário. */
-    pauseMotion: text,
     /**
      * Nome acessível do botão de som da home (música de fundo e efeitos); o estado vai em
      * `aria-pressed`. O campo guarda o nome antigo, de quando o botão era só da música.

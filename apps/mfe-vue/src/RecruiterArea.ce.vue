@@ -8,27 +8,23 @@ const props = defineProps<{ locale?: string; basePath?: string }>();
 const locale = computed<Locale>(
   () => locales.find((candidate) => candidate === props.locale) ?? defaultLocale,
 );
-const text = computed(() => ui[locale.value]);
+const text = computed(() => ui[locale.value].construction);
 
 onMounted(() => emitMfeReady({ area: 'recruiter', locale: locale.value }));
 </script>
 
+<!-- Sem estilo próprio: a aparência vem de /_ds/areas.css, pelos `part` (ADR 0009). -->
 <template>
-  <section>
-    <p class="hello">
-      {{ text.hello }}
-      <ds-badge>Vue</ds-badge>
+  <section part="message">
+    <h2 part="title">
+      {{ text.title }}
+    </h2>
+    <p part="text">
+      {{ text.text }}
     </p>
+    <!-- eslint-disable-next-line vue/max-attributes-per-line -- o Prettier junta os dois -->
+    <div part="bar" aria-hidden="true">
+      <span part="bar-fill" />
+    </div>
   </section>
 </template>
-
-<style>
-.hello {
-  display: flex;
-  align-items: center;
-  gap: var(--space-inline-sm);
-  margin: 0;
-  color: var(--color-text);
-  font-size: var(--text-size-md);
-}
-</style>

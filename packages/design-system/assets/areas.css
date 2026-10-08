@@ -1,0 +1,806 @@
+/* Palco das páginas internas (ADR 0009): a tela "em construção" das cinco áreas.
+   Publicada em /_ds/areas.css e ligada só por elas: a home não carrega esta
+   folha. A marcação de referência está na story `areas` do design system.
+
+   Quem desenha o quê:
+   - o dono do documento (shell ou Next.js) escreve o palco, com as classes
+     `area-*`;
+   - nas áreas de MFE, a mensagem é do microfrontend, em shadow DOM, e chega
+     aqui por `::part()`. Cada regra da mensagem vale para a classe (Next.js) e
+     para a parte (MFE).
+
+   Só tokens: as cores dos cenários derivam da cor da área por `color-mix()`. */
+
+.area-stage {
+  --area-color: var(--color-accent);
+  /* Tons do cenário: a cor da área diluída na superfície do tema. */
+  --scene-wash: color-mix(in srgb, var(--area-color) 12%, var(--color-surface));
+  --scene-shape: color-mix(in srgb, var(--area-color) 30%, var(--color-surface));
+  --scene-strong: color-mix(in srgb, var(--area-color) 55%, var(--color-surface));
+  /* Canto cortado das caixas e do botão. */
+  --cut: var(--space-inline-sm);
+
+  display: grid;
+  /* Um peso só, o da home: o texto não espera um segundo arquivo de fonte. */
+  font-weight: var(--text-weight-strong);
+  grid-template-areas: 'title' 'figure' 'outlet' 'back' 'nav';
+  justify-items: center;
+  align-content: center;
+  gap: var(--space-block-md);
+  box-sizing: border-box;
+  position: relative;
+  /* Mantém o cenário, que tem z-index negativo, dentro do palco. */
+  isolation: isolate;
+  min-block-size: 100svh;
+  padding: var(--space-block-lg) var(--space-inline-md) var(--ds-dock-reserve);
+  overflow: clip;
+}
+
+.area-stage[data-area='recruiter'] {
+  --area-color: var(--color-area-recruiter);
+}
+
+.area-stage[data-area='tech'] {
+  --area-color: var(--color-area-tech);
+}
+
+.area-stage[data-area='client'] {
+  --area-color: var(--color-area-client);
+}
+
+/* "Como foi feito" é da mesma tecnologia da comunidade. */
+.area-stage:is([data-area='community'], [data-area='how-it-was-built']) {
+  --area-color: var(--color-area-community);
+}
+
+/* Nome da área, como etiqueta de fase. */
+.area-title {
+  grid-area: title;
+  margin: 0;
+  padding: var(--space-block-xs) var(--space-inline-md);
+  background: var(--area-color);
+  color: var(--color-on-area);
+  font-size: var(--text-size-lg);
+  clip-path: polygon(
+    var(--cut) 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%,
+    0 var(--cut)
+  );
+}
+
+/* O <picture> só escolhe o formato; quem entra no layout é a imagem. */
+.area-stage picture {
+  display: contents;
+}
+
+.area-figure {
+  grid-area: figure;
+  inline-size: auto;
+  /* Na tela estreita o personagem ocupa menos área que a frase da mensagem:
+     o maior elemento da página é texto, que não espera imagem (budgets.md). */
+  block-size: clamp(8rem, 22svh, 11rem);
+}
+
+/* Onde a mensagem fica. Nas áreas de MFE ela chega depois; o lugar já está
+   guardado, para o botão de volta não mudar de posição. */
+.area-outlet {
+  grid-area: outlet;
+  inline-size: min(100%, 24rem);
+  min-block-size: 9rem;
+}
+
+/* Mensagem: caixa de diálogo de fundo sólido, com a barra na cor da área. O
+   texto é lido contra esse fundo, não contra o cenário. */
+.area-message,
+.area-outlet > *::part(message) {
+  display: grid;
+  gap: var(--space-block-sm);
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--space-block-md) var(--space-inline-md);
+  border-inline-start: calc(var(--border-width-thick) * 2) solid var(--area-color);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%
+  );
+}
+
+.area-message-title,
+.area-outlet > *::part(title) {
+  margin: 0;
+  color: var(--area-color);
+  font-size: var(--text-size-title);
+  line-height: 1.2;
+}
+
+.area-message-text,
+.area-outlet > *::part(text) {
+  margin: 0;
+  font-size: var(--text-size-md);
+}
+
+/* Barra de progresso de enfeite: listras que andam, sem porcentagem. */
+.area-bar,
+.area-outlet > *::part(bar) {
+  block-size: var(--space-block-md);
+  margin-block-start: var(--space-block-xs);
+  border: var(--border-width-control) solid var(--area-color);
+  background: var(--scene-wash);
+  overflow: hidden;
+}
+
+.area-bar-fill,
+.area-outlet > *::part(bar-fill) {
+  --stripe: var(--space-inline-md);
+
+  display: block;
+  /* Um passo de listra mais larga que o trilho, para andar sem emenda. */
+  inline-size: calc(100% + var(--stripe) * 2);
+  block-size: 100%;
+  background: repeating-linear-gradient(
+    115deg,
+    var(--area-color) 0 var(--stripe),
+    var(--scene-strong) var(--stripe) calc(var(--stripe) * 2)
+  );
+}
+
+/* Voltar à escolha de perfil. O elemento fica retangular, para o anel de foco
+   e a área de clique ficarem inteiros; os cantos cortados são do fundo. */
+.area-back {
+  grid-area: back;
+  display: grid;
+  place-items: center;
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  min-block-size: var(--size-control);
+  padding: var(--space-block-sm) var(--space-inline-lg);
+  color: var(--color-on-area);
+  font-weight: var(--text-weight-strong);
+  text-align: center;
+  text-decoration: none;
+}
+
+.area-back::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--area-color);
+  content: '';
+  clip-path: polygon(
+    var(--cut) 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    var(--cut) 100%,
+    0 calc(100% - var(--cut)),
+    0 var(--cut)
+  );
+}
+
+.area-back:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Menu das outras áreas, nas páginas que não têm cabeçalho com menu. */
+.area-nav {
+  grid-area: nav;
+  position: relative;
+  padding: var(--space-block-sm) var(--space-inline-md);
+  background: var(--color-surface);
+}
+
+/* Botão de pausa do cenário (WCAG 2.2.2), no grupo do canto. É uma caixa de
+   seleção nativa com cara de botão: sem JavaScript, o CSS lê a caixa. A mesma
+   aparência do botão de pausa da home, que não carrega esta folha (ADR 0009). */
+.area-motion {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: var(--size-control);
+  block-size: var(--size-control);
+}
+
+.area-motion input {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.area-motion-disc {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: var(--size-icon);
+  block-size: var(--size-icon);
+  border: var(--border-width-control) solid var(--color-text-muted);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.area-motion-disc svg {
+  inline-size: var(--space-inline-md);
+  block-size: var(--space-inline-md);
+  scale: 0.75;
+  fill: currentColor;
+}
+
+.area-motion-play,
+.area-motion input:checked ~ .area-motion-disc .area-motion-pause {
+  display: none;
+}
+
+.area-motion input:checked ~ .area-motion-disc .area-motion-play {
+  display: block;
+}
+
+.area-motion input:focus-visible ~ .area-motion-disc {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Tela larga: personagem de um lado, etiqueta, mensagem e botão do outro. */
+@media (min-width: 48rem) {
+  .area-stage {
+    /* As linhas vazias de cima e de baixo absorvem a altura que sobra do
+       personagem: etiqueta, mensagem e botão ficam juntos, no meio. */
+    grid-template-areas:
+      'figure .'
+      'figure title'
+      'figure outlet'
+      'figure back'
+      'figure nav'
+      'figure .';
+    grid-template-rows: 1fr auto auto auto auto 1fr;
+    grid-template-columns: auto minmax(0, 24rem);
+    justify-content: center;
+    justify-items: start;
+    column-gap: var(--space-inline-lg);
+  }
+
+  .area-figure {
+    align-self: center;
+    block-size: clamp(14rem, 55svh, 26rem);
+  }
+
+  /* Área sem personagem: uma coluna só, centralizada. */
+  .area-stage:not(:has(.area-figure)) {
+    grid-template-areas: 'title' 'outlet' 'back' 'nav';
+    grid-template-rows: none;
+    grid-template-columns: minmax(0, 24rem);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Cenários: decorativos, atrás de tudo e sem receber cliques. A marcação é a
+   mesma nas cinco áreas (três camadas e dez partículas); cada área desenha o
+   seu com ela.
+   --------------------------------------------------------------------------- */
+
+.area-scene {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: clip;
+  background: linear-gradient(var(--color-surface), var(--scene-wash));
+  pointer-events: none;
+}
+
+.area-scene > span,
+.area-particles > i {
+  position: absolute;
+}
+
+.area-particles {
+  inset: 0;
+}
+
+/* Cada partícula tem um número, de onde saem a posição e o atraso, e o mesmo
+   número embaralhado (`--k`), para a altura não acompanhar a posição. */
+.area-particles > i:nth-child(1) {
+  --i: 0;
+  --k: 3;
+}
+
+.area-particles > i:nth-child(2) {
+  --i: 1;
+  --k: 7;
+}
+
+.area-particles > i:nth-child(3) {
+  --i: 2;
+  --k: 1;
+}
+
+.area-particles > i:nth-child(4) {
+  --i: 3;
+  --k: 9;
+}
+
+.area-particles > i:nth-child(5) {
+  --i: 4;
+  --k: 5;
+}
+
+.area-particles > i:nth-child(6) {
+  --i: 5;
+  --k: 0;
+}
+
+.area-particles > i:nth-child(7) {
+  --i: 6;
+  --k: 8;
+}
+
+.area-particles > i:nth-child(8) {
+  --i: 7;
+  --k: 2;
+}
+
+.area-particles > i:nth-child(9) {
+  --i: 8;
+  --k: 6;
+}
+
+.area-particles > i:nth-child(10) {
+  --i: 9;
+  --k: 4;
+}
+
+/* Folhas que caem (bambu e bordo). Paradas, ficam espalhadas pela tela; a
+   queda entra mais abaixo, só para quem não pediu menos movimento. */
+.area-stage:is([data-area='recruiter'], [data-area='tech']) .area-particles > i {
+  inset-block-start: calc(10% + var(--k) * 8%);
+  inset-inline-start: calc(3% + var(--i) * 10%);
+  background: var(--scene-strong);
+  rotate: calc(var(--i) * 40deg);
+}
+
+/* Bambuzal (recrutador, verde): colmos em duas profundidades, com os nós. */
+.area-stage[data-area='recruiter'] :is(.area-scene-back, .area-scene-mid) {
+  inset: -2rem;
+  transform-origin: center bottom;
+  mask:
+    repeating-linear-gradient(90deg, transparent 0 var(--gap), black var(--gap) var(--pitch)),
+    repeating-linear-gradient(0deg, black 0 6rem, transparent 6rem 6.25rem);
+  mask-composite: intersect;
+}
+
+.area-stage[data-area='recruiter'] .area-scene-back {
+  --gap: 6.5rem;
+  --pitch: 7.4rem;
+
+  background: var(--scene-shape);
+}
+
+.area-stage[data-area='recruiter'] .area-scene-mid {
+  --gap: 10rem;
+  --pitch: 11.4rem;
+
+  background: var(--scene-strong);
+}
+
+.area-stage[data-area='recruiter'] .area-particles > i {
+  inline-size: 1.2rem;
+  block-size: 0.5rem;
+  border-radius: 100% 0;
+}
+
+/* Torii (técnica, vermelho): sol ao fundo, portão e folhas de bordo. */
+.area-stage[data-area='tech'] .area-scene-back {
+  inset-block-start: 12%;
+  inset-inline-end: 12%;
+  inline-size: clamp(8rem, 26vw, 16rem);
+  aspect-ratio: 1;
+  border-radius: var(--radius-full);
+  background: var(--scene-shape);
+}
+
+.area-stage[data-area='tech'] .area-scene-mid {
+  inset-block-end: 0;
+  inset-inline-start: 6%;
+  inline-size: clamp(11rem, 34vw, 22rem);
+  aspect-ratio: 5 / 4;
+  background: var(--scene-strong);
+  /* Portão: duas vigas no alto e duas colunas. */
+  clip-path: polygon(
+    0 6%,
+    100% 6%,
+    97% 16%,
+    86% 16%,
+    86% 26%,
+    94% 26%,
+    94% 34%,
+    84% 34%,
+    82% 100%,
+    72% 100%,
+    74% 34%,
+    26% 34%,
+    28% 100%,
+    18% 100%,
+    16% 34%,
+    6% 34%,
+    6% 26%,
+    14% 26%,
+    14% 16%,
+    3% 16%
+  );
+}
+
+/* Névoa baixa, que passa devagar. */
+.area-stage[data-area='tech'] .area-scene-front {
+  inset-block-end: 10%;
+  inset-inline: -20%;
+  block-size: 6rem;
+  background: linear-gradient(transparent, var(--color-surface), transparent);
+  opacity: 0.7;
+}
+
+.area-stage[data-area='tech'] .area-particles > i {
+  inline-size: 1.4rem;
+  block-size: 1.4rem;
+  /* Folha de bordo: sete pontas e o cabinho. */
+  clip-path: polygon(
+    50% 0,
+    61% 24%,
+    82% 14%,
+    77% 38%,
+    100% 42%,
+    83% 58%,
+    90% 80%,
+    60% 72%,
+    54% 100%,
+    46% 100%,
+    40% 72%,
+    10% 80%,
+    17% 58%,
+    0 42%,
+    23% 38%,
+    18% 14%,
+    39% 24%
+  );
+}
+
+/* Ondas (cliente, azul): três faixas de crista e chuva fina. */
+.area-stage[data-area='client'] :is(.area-scene-back, .area-scene-mid, .area-scene-front) {
+  --tile: 8rem;
+
+  inset-inline: calc(var(--tile) * -1);
+  inset-block-end: 0;
+  /* Uma fileira de cristas arredondadas e, abaixo dela, a faixa cheia. */
+  mask:
+    radial-gradient(ellipse 50% 100% at 50% 100%, black 98%, transparent) 0 0 / var(--tile) 2rem
+      repeat-x,
+    linear-gradient(black, black) 0 2rem / 100% 100% no-repeat;
+}
+
+.area-stage[data-area='client'] .area-scene-back {
+  --tile: 11rem;
+
+  block-size: 34%;
+  background: var(--scene-wash);
+}
+
+.area-stage[data-area='client'] .area-scene-mid {
+  --tile: 8rem;
+
+  block-size: 24%;
+  background: var(--scene-shape);
+}
+
+.area-stage[data-area='client'] .area-scene-front {
+  --tile: 6rem;
+
+  block-size: 14%;
+  background: var(--scene-strong);
+}
+
+/* A chuva usa o contêiner das partículas: uma malha de riscos inclinados. */
+.area-stage[data-area='client'] .area-particles {
+  --drop: 4rem;
+
+  inset: calc(var(--drop) * -1);
+  background: linear-gradient(
+      100deg,
+      transparent 48.5%,
+      var(--scene-shape) 48.5% 50%,
+      transparent 50%
+    )
+    0 0 / var(--drop) var(--drop);
+  opacity: 0.7;
+}
+
+.area-stage[data-area='client'] .area-particles > i {
+  display: none;
+}
+
+/* Sumi-e (comunidade e como foi feito, preto e branco): sol vermelho,
+   pinceladas de tinta e lanternas de papel. */
+.area-stage:is([data-area='community'], [data-area='how-it-was-built']) .area-scene-back {
+  inset-block-start: 10%;
+  inset-inline-end: 10%;
+  inline-size: clamp(7rem, 22vw, 13rem);
+  aspect-ratio: 1;
+  border-radius: var(--radius-full);
+  background: var(--color-celestial);
+  opacity: 0.85;
+}
+
+.area-stage:is([data-area='community'], [data-area='how-it-was-built'])
+  :is(.area-scene-mid, .area-scene-front) {
+  inset-inline-start: -4%;
+  inline-size: 70%;
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--scene-strong) 12% 70%,
+    var(--scene-shape) 85%,
+    transparent
+  );
+  rotate: -5deg;
+}
+
+.area-stage:is([data-area='community'], [data-area='how-it-was-built']) .area-scene-mid {
+  inset-block-end: 26%;
+  block-size: 1.4rem;
+}
+
+.area-stage:is([data-area='community'], [data-area='how-it-was-built']) .area-scene-front {
+  inset-block-end: 14%;
+  inset-inline-start: 18%;
+  block-size: 0.9rem;
+  rotate: 3deg;
+}
+
+/* As três primeiras partículas viram lanternas penduradas; as outras somem. */
+.area-stage:is([data-area='community'], [data-area='how-it-was-built']) .area-particles > i {
+  display: none;
+}
+
+.area-stage:is([data-area='community'], [data-area='how-it-was-built'])
+  .area-particles
+  > i:nth-child(-n + 3) {
+  display: block;
+  inset-block-start: calc(1.5rem + var(--i) * 1rem);
+  inset-inline-start: calc(8% + var(--i) * 13%);
+  inline-size: 2rem;
+  block-size: 2.8rem;
+  border-radius: 45% / 35%;
+  background: repeating-linear-gradient(
+    0deg,
+    var(--color-celestial) 0 0.45rem,
+    var(--scene-strong) 0.45rem 0.55rem
+  );
+  transform-origin: 50% -1.5rem;
+}
+
+/* Cordão da lanterna. */
+.area-stage:is([data-area='community'], [data-area='how-it-was-built'])
+  .area-particles
+  > i:nth-child(-n + 3)::before {
+  position: absolute;
+  inset-block-end: 100%;
+  inset-inline-start: calc(50% - var(--border-width-control) / 2);
+  inline-size: var(--border-width-control);
+  block-size: 4rem;
+  background: var(--scene-strong);
+  content: '';
+}
+
+/* No celular os cenários ficam mais leves: metade das folhas. */
+@media (max-width: 47.99rem) {
+  /* Duas colunas fixas: a altura do menu não depende da largura das letras,
+     e a chegada da fonte não desloca o palco, que é centralizado. */
+  .area-nav ul {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    justify-items: center;
+  }
+
+  .area-stage:is([data-area='recruiter'], [data-area='tech']) .area-particles > i:nth-child(even) {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Movimento. Tudo aqui só existe para quem não pediu menos movimento ao
+   sistema, e o que é contínuo para com o botão de pausa (mais abaixo).
+   --------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* A mensagem entra como caixa de diálogo. */
+  .area-message,
+  .area-outlet > *::part(message) {
+    animation: area-pop var(--motion-duration-xl) var(--motion-ease-out) backwards;
+  }
+
+  .area-bar-fill,
+  .area-outlet > *::part(bar-fill) {
+    animation: area-bar calc(var(--motion-duration-lg) * 2) linear infinite;
+  }
+
+  .area-back {
+    transition:
+      translate var(--motion-duration-md) var(--motion-ease-out),
+      scale var(--motion-duration-md) var(--motion-ease-out);
+  }
+
+  .area-back:active {
+    translate: 0 var(--border-width-control);
+    scale: 0.97;
+  }
+
+  /* Folhas: caem do alto, cada uma no seu tempo. */
+  .area-stage:is([data-area='recruiter'], [data-area='tech']) .area-particles > i {
+    inset-block-start: -2rem;
+    animation: area-fall calc(var(--motion-duration-drift) * (0.7 + var(--i) * 0.06)) linear
+      calc(var(--motion-duration-drift) * var(--i) * -0.17) infinite;
+  }
+
+  .area-stage[data-area='recruiter'] .area-scene-back {
+    animation: area-sway calc(var(--motion-duration-sway) * 1.5) var(--motion-ease-in-out) infinite
+      alternate;
+  }
+
+  .area-stage[data-area='recruiter'] .area-scene-mid {
+    animation: area-sway var(--motion-duration-sway) var(--motion-ease-in-out)
+      calc(var(--motion-duration-sway) * -0.4) infinite alternate-reverse;
+  }
+
+  .area-stage[data-area='tech'] .area-scene-back {
+    animation: area-glow calc(var(--motion-duration-sway) * 1.5) var(--motion-ease-in-out) infinite
+      alternate;
+  }
+
+  .area-stage[data-area='tech'] .area-scene-front {
+    animation: area-drift calc(var(--motion-duration-drift) * 2) var(--motion-ease-in-out) infinite
+      alternate;
+  }
+
+  /* Cada faixa de onda anda um azulejo: o desenho se repete, e não há emenda. */
+  .area-stage[data-area='client'] .area-scene-back {
+    animation: area-tide calc(var(--motion-duration-drift) * 1.5) linear infinite;
+  }
+
+  .area-stage[data-area='client'] .area-scene-mid {
+    animation: area-tide var(--motion-duration-drift) linear infinite reverse;
+  }
+
+  .area-stage[data-area='client'] .area-scene-front {
+    animation: area-tide calc(var(--motion-duration-drift) * 0.6) linear infinite;
+  }
+
+  .area-stage[data-area='client'] .area-particles {
+    animation: area-rain calc(var(--motion-duration-lg) * 1.2) linear infinite;
+  }
+
+  .area-stage:is([data-area='community'], [data-area='how-it-was-built']) .area-scene-back {
+    animation: area-glow calc(var(--motion-duration-sway) * 1.5) var(--motion-ease-in-out) infinite
+      alternate;
+  }
+
+  /* As pinceladas se desenham uma vez, da esquerda para a direita. */
+  .area-stage:is([data-area='community'], [data-area='how-it-was-built']) .area-scene-mid {
+    animation: area-brush calc(var(--motion-duration-xl) * 2) var(--motion-ease-in-out) backwards;
+  }
+
+  .area-stage:is([data-area='community'], [data-area='how-it-was-built']) .area-scene-front {
+    animation: area-brush calc(var(--motion-duration-xl) * 2) var(--motion-ease-in-out)
+      var(--motion-duration-xl) backwards;
+  }
+
+  .area-stage:is([data-area='community'], [data-area='how-it-was-built'])
+    .area-particles
+    > i:nth-child(-n + 3) {
+    animation: area-swing calc(var(--motion-duration-sway) * (1 + var(--i) * 0.2))
+      var(--motion-ease-in-out) infinite alternate;
+  }
+}
+
+/* Sem opacidade: um texto que nasce invisível só conta como pintado no quadro
+   seguinte, e é ele o maior elemento da página (budgets.md). */
+@keyframes area-pop {
+  from {
+    translate: 0 0.75rem;
+  }
+}
+
+@keyframes area-bar {
+  to {
+    translate: calc(var(--stripe) * -2) 0;
+  }
+}
+
+@keyframes area-fall {
+  to {
+    translate: -6rem 115svh;
+    rotate: 540deg;
+  }
+}
+
+@keyframes area-sway {
+  from {
+    rotate: -0.5deg;
+  }
+
+  to {
+    rotate: 0.6deg;
+  }
+}
+
+@keyframes area-glow {
+  to {
+    scale: 1.06;
+    opacity: 0.7;
+  }
+}
+
+@keyframes area-drift {
+  to {
+    translate: 12% 0;
+  }
+}
+
+@keyframes area-tide {
+  to {
+    translate: calc(var(--tile) * -1) 0;
+  }
+}
+
+@keyframes area-rain {
+  to {
+    translate: calc(var(--drop) * -1) var(--drop);
+  }
+}
+
+@keyframes area-brush {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes area-swing {
+  from {
+    rotate: -4deg;
+  }
+
+  to {
+    rotate: 4deg;
+  }
+}
+
+/* Pausa: para o que se move sem parar, no cenário e na barra. */
+body:has(.area-motion input:checked) .area-stage .area-scene *,
+body:has(.area-motion input:checked) .area-bar-fill,
+body:has(.area-motion input:checked) .area-outlet > *::part(bar-fill) {
+  animation-play-state: paused;
+}
+
+/* Com movimento reduzido não há o que pausar. */
+@media (prefers-reduced-motion: reduce) {
+  .area-motion {
+    display: none;
+  }
+}
