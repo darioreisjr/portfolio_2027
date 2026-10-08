@@ -4,6 +4,8 @@
 - Origem: pedido e entrevista com o autor, `discovery-analyst` e `architect`
 - Decisão de arquitetura: `docs/architecture/adr/0008-comportamento-de-uma-rota.md`
 
+> Mudou em 2026-10-08 (`docs/plans/home-efeitos.md`): o botão passou a se chamar "Som" e liga também os efeitos de seleção; se a faixa falhar, o botão continua ligado.
+
 **Objetivo:** o visitante liga uma música lofi na home por um botão no grupo fixo do canto, e a escolha fica lembrada no navegador.
 
 ## Decisões do autor
