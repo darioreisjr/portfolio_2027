@@ -1,27 +1,15 @@
 import { home } from '@portfolio/content/home';
 import { profile } from '@portfolio/content/profile';
-import { HOME_ASSETS_PATH, pathFor, routes, type AreaId, type Locale } from '@portfolio/contracts';
-
-export const personaAreas = ['recruiter', 'tech', 'client', 'community'] as const;
-export type PersonaArea = (typeof personaAreas)[number];
-
-export interface Figure {
-  src: string;
-  /** Mesma arte em AVIF, mais leve; `src` fica de reserva para navegador sem AVIF. */
-  avif?: string;
-  width: number;
-  height: number;
-}
-
-// Arte de cada personagem, em public/_home/personas. Silhueta provisória onde a
-// arte final ainda não chegou; largura e altura são as do arquivo.
-const figures: Record<PersonaArea, { file: string; avif?: string; width: number; height: number }> =
-  {
-    recruiter: { file: 'recruiter.webp', avif: 'recruiter.avif', width: 255, height: 640 },
-    tech: { file: 'tech.webp', avif: 'tech.avif', width: 257, height: 640 },
-    client: { file: 'client.webp', avif: 'client.avif', width: 257, height: 640 },
-    community: { file: 'community.webp', avif: 'community.avif', width: 234, height: 640 },
-  };
+import {
+  pathFor,
+  personaAreas,
+  personaFigures,
+  routes,
+  type AreaId,
+  type Locale,
+  type PersonaArea,
+  type PersonaFigure,
+} from '@portfolio/contracts';
 
 export interface Persona {
   area: PersonaArea;
@@ -31,7 +19,7 @@ export interface Persona {
   phrase: string;
   /** O que a área traz e para quem, no tom daquele público. */
   description: string;
-  figure: Figure;
+  figure: PersonaFigure;
 }
 
 export interface HomeModel {
@@ -72,12 +60,7 @@ export function buildHome(locale: Locale): HomeModel {
         sameApp: route.owner === 'web-next',
         phrase: text.personas[area].phrase,
         description: text.personas[area].description,
-        figure: {
-          src: `${HOME_ASSETS_PATH}personas/${figures[area].file}`,
-          avif: figures[area].avif && `${HOME_ASSETS_PATH}personas/${figures[area].avif}`,
-          width: figures[area].width,
-          height: figures[area].height,
-        },
+        figure: personaFigures[area],
       };
     }),
   };

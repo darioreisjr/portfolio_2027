@@ -6,6 +6,8 @@ import {
   locales,
   onMfeReady,
   pathFor,
+  personaAreas,
+  personaFigure,
   routes,
   routesOwnedBy,
 } from './index.js';
@@ -72,6 +74,23 @@ describe('idiomas de uma área', () => {
   it('dá a cada idioma o nome no próprio idioma e a bandeira publicada', () => {
     const spanish = languageAlternates('home', 'en').find(({ locale }) => locale === 'es');
     expect(spanish).toMatchObject({ name: 'Español', flag: '/_ds/flags/es.svg', href: '/es/' });
+  });
+});
+
+describe('arte dos personagens', () => {
+  it('dá a cada área com personagem os dois formatos e as dimensões do arquivo', () => {
+    for (const area of personaAreas) {
+      const figure = personaFigure(area);
+      expect(figure?.src).toBe(`/_home/personas/${area}.webp`);
+      expect(figure?.avif).toBe(`/_home/personas/${area}.avif`);
+      expect(figure?.width).toBeGreaterThan(0);
+      expect(figure?.height).toBeGreaterThan(figure?.width ?? Infinity);
+    }
+  });
+
+  it('não inventa personagem para a home nem para "como foi feito"', () => {
+    expect(personaFigure('home')).toBeUndefined();
+    expect(personaFigure('how-it-was-built')).toBeUndefined();
   });
 });
 
