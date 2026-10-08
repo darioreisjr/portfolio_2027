@@ -61,6 +61,27 @@ describe('cenário de sakura', () => {
     });
   }
 
+  // Painel do personagem escolhido: a cor da área pinta o "Entrar" (com texto por
+  // cima), as linhas do "Voltar" (sobre a superfície) e a barra da descrição
+  // (sobre o céu). A descrição é texto comum sobre a superfície.
+  for (const theme of ['light', 'dark']) {
+    for (const area of ['recruiter', 'tech', 'client', 'community']) {
+      it(`a cor da área ${area} dá AA ao texto e 3:1 a bordas e barras (${theme})`, () => {
+        const color = channels(hex(theme, `color-area-${area}`));
+        expect(contrast(channels(hex(theme, 'color-on-area')), color)).toBeGreaterThanOrEqual(4.5);
+        for (const behind of ['color-surface', 'color-scene-sky-top', 'color-scene-sky-bottom']) {
+          expect(contrast(color, channels(hex(theme, behind))), behind).toBeGreaterThanOrEqual(3);
+        }
+      });
+    }
+
+    it(`a descrição do perfil passa em AA sobre a caixa (${theme})`, () => {
+      expect(
+        contrast(channels(hex(theme, 'color-text')), channels(hex(theme, 'color-surface'))),
+      ).toBeGreaterThanOrEqual(4.5);
+    });
+  }
+
   for (const theme of ['light', 'dark']) {
     for (const text of ['color-text', 'color-text-muted']) {
       it(`${text} passa em AA sobre o contorno e sobre o céu (${theme})`, () => {

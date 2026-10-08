@@ -22,8 +22,14 @@ export const primitives = {
   'color-cream-100': '#f6efd9',
   'color-cloud-light': '#ffffffb3',
   'color-cloud-dark': '#a9aee04d',
-  // Sol do hinomaru, no seletor de tema.
+  // Sol do hinomaru, no seletor de tema, e vermelho da área técnica.
   'color-red-600': '#bc002d',
+  // Cor de cada área na home: a da tecnologia que a serve, em um tom para cada tema.
+  'color-green-700': '#18794e',
+  'color-green-300': '#4fc08d',
+  'color-red-300': '#ff8087',
+  'color-cyan-700': '#0a6f94',
+  'color-cyan-300': '#61dafb',
   'ratio-0': '0',
   'ratio-1': '1',
   'space-1': '0.25rem',
@@ -78,6 +84,12 @@ export const semantic = {
     // Contorno da letra sobre o cenário: o tom do alto do céu.
     'color-scene-outline': 'var(--color-sky-200)',
     'color-celestial': 'var(--color-red-600)',
+    // Cor da área na tela de escolha de perfil, e a do texto sobre ela.
+    'color-area-recruiter': 'var(--color-green-700)',
+    'color-area-tech': 'var(--color-red-600)',
+    'color-area-client': 'var(--color-cyan-700)',
+    'color-area-community': 'var(--color-neutral-950)',
+    'color-on-area': 'var(--color-neutral-0)',
   },
   dark: {
     'color-surface': 'var(--color-neutral-950)',
@@ -100,6 +112,11 @@ export const semantic = {
     'color-scene-petal': 'var(--color-pink-50)',
     'color-scene-outline': 'var(--color-indigo-950)',
     'color-celestial': 'var(--color-cream-100)',
+    'color-area-recruiter': 'var(--color-green-300)',
+    'color-area-tech': 'var(--color-red-300)',
+    'color-area-client': 'var(--color-cyan-300)',
+    'color-area-community': 'var(--color-neutral-0)',
+    'color-on-area': 'var(--color-neutral-950)',
   },
 };
 
@@ -114,6 +131,7 @@ export const semanticStatic = {
   'space-block-lg': 'var(--space-6)',
   'focus-ring-width': 'var(--border-width-thick)',
   'border-width-control': 'var(--border-width-medium)',
+  'border-width-marker': 'var(--border-width-thick)',
   'text-outline-width': 'var(--border-width-medium)',
   'size-control': 'var(--size-11)',
   'size-icon': 'var(--size-7)',
