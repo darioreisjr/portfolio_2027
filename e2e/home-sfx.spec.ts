@@ -154,6 +154,7 @@ test('escolher confirma com a nota do personagem e a oitava; as opções têm a 
 
   await back(page).hover();
   expect(await takeNotes(page)).toEqual(OPTION);
+  await page.waitForTimeout(80);
   await enter(page).hover();
   expect(await takeNotes(page)).toEqual(OPTION);
 });
@@ -170,8 +171,11 @@ test('"Voltar", Esc e clicar fora cancelam com duas notas graves', async ({ page
 
   await page.mouse.move(640, 60);
   await personas(page).nth(0).click();
-  await takeNotes(page);
+  // O ponteiro sai de cima dos personagens: ao desfazer eles voltam ao lugar, e
+  // quem ficasse embaixo dele tocaria a própria nota.
+  await page.mouse.move(640, 60);
   await settle(page);
+  await takeNotes(page);
   await page.keyboard.press('Escape');
   expect(await takeNotes(page)).toEqual(CANCEL);
 
@@ -220,8 +224,12 @@ test('pelo teclado, chegar em um personagem ou em uma opção toca a nota', asyn
   await expect(personas(page).nth(0)).toBeFocused();
   expect(await takeNotes(page)).toEqual([PERSONAS[0]]);
 
+  // Duas notas de foco em menos de 30 ms viram uma só (de propósito); uma pessoa
+  // não aperta tão depressa, mas o teste sim.
+  await page.waitForTimeout(80);
   await page.keyboard.press('ArrowRight');
   expect(await takeNotes(page)).toEqual([PERSONAS[1]]);
+  await page.waitForTimeout(80);
   await page.keyboard.press('End');
   expect(await takeNotes(page)).toEqual([PERSONAS[3]]);
 
