@@ -41,7 +41,7 @@ export interface HomeModel {
   enter: string;
   /** Desfaz a escolha do personagem. */
   back: string;
-  /** Nome acessível do botão da música de fundo. */
+  /** Nome acessível do botão de som (música de fundo e efeitos). */
   music: string;
   personas: Persona[];
 }

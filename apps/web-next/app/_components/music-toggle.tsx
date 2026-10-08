@@ -1,11 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { MUSIC_STORAGE_KEY } from '../../lib/music';
+import { ON, closeSound, setSound, sfx, unlock } from '../../lib/sfx';
 
 /**
- * Botão da música de fundo da home (ADR 0008). Começa desligada. O arquivo só é
- * pedido quando a música vai tocar de fato, nunca na carga da página. A escolha
- * fica no navegador: quem ligou encontra o botão ligado na visita seguinte, e a
- * música começa no primeiro gesto, porque o navegador não deixa tocar antes.
+ * Botão de som da home (ADR 0008): liga a música de fundo e os efeitos de
+ * seleção (`lib/sfx.ts`). Começa desligado. O arquivo da música só é pedido
+ * quando ela vai tocar de fato, nunca na carga da página. A escolha fica no
+ * navegador: quem ligou encontra o botão ligado na visita seguinte, e o som
+ * começa no primeiro gesto, porque o navegador não deixa tocar antes.
  * O estado vive em `aria-pressed`; não há estado do React nem nova renderização.
  *
  * Só é renderizado no navegador, por `persona-list.tsx`: sem JavaScript o botão
@@ -21,7 +23,10 @@ export function MusicToggle({ label, src }: { label: string; src: string }) {
     if (!button || !audio) return;
 
     const wanted = () => button.getAttribute('aria-pressed') === 'true';
-    const setWanted = (on: boolean) => button.setAttribute('aria-pressed', String(on));
+    const setWanted = (on: boolean) => {
+      button.setAttribute('aria-pressed', String(on));
+      setSound(on);
+    };
     const remember = (on: boolean) => {
       try {
         if (on) localStorage.setItem(MUSIC_STORAGE_KEY, 'on');
@@ -35,13 +40,16 @@ export function MusicToggle({ label, src }: { label: string; src: string }) {
       remember(false);
       audio.pause();
     };
-    // Se o arquivo não puder ser tocado, o botão volta a desligado. Os outros
-    // motivos de recusa passam: falta de gesto só adia para o próximo, e uma
-    // pausa logo depois do pedido (aba escondida) não é erro.
+    // Se o arquivo não puder ser tocado, a música fica de fora nesta visita, mas
+    // o botão continua ligado: os efeitos não dependem dela. Os outros motivos
+    // de recusa passam: falta de gesto só adia para o próximo, e uma pausa logo
+    // depois do pedido (aba escondida) não é erro.
+    let broken = false;
     const play = () => {
+      if (broken) return;
       if (!audio.getAttribute('src')) audio.src = src;
       audio.play().catch((error: unknown) => {
-        if ((error as DOMException).name === 'NotSupportedError') turnOff();
+        broken = (error as DOMException).name === 'NotSupportedError';
       });
     };
 
@@ -52,16 +60,24 @@ export function MusicToggle({ label, src }: { label: string; src: string }) {
     } catch {
       // Sem armazenamento, começa desligada.
     }
+    // Numa remontagem o botão já está no DOM com o estado dele.
+    setSound(wanted());
     const onToggle = () => {
       if (wanted()) turnOff();
       else {
         setWanted(true);
         remember(true);
+        // Uma nota ao ligar: confirma que o som está funcionando.
+        unlock();
+        sfx(ON);
         play();
       }
     };
-    // Primeiro gesto de uma visita com a música lembrada, ou depois de uma pausa.
+    // Primeiro gesto de uma visita com o som lembrado, ou depois de uma pausa.
+    // Roda na captura, antes dos cliques da lista: o efeito do próprio gesto já
+    // encontra o contexto de áudio acordado.
     const onGesture = (event: Event) => {
+      unlock();
       if (button.contains(event.target as Node)) return;
       if (wanted() && audio.paused) play();
     };
@@ -84,6 +100,7 @@ export function MusicToggle({ label, src }: { label: string; src: string }) {
       // Sair da home por navegação do Next.js mantém o documento: a música para aqui.
       audio.pause();
       audio.removeAttribute('src');
+      closeSound();
       button.removeEventListener('click', onToggle);
       document.removeEventListener('click', onGesture, true);
       document.removeEventListener('keydown', onGesture, true);

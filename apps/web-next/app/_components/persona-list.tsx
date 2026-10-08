@@ -4,14 +4,17 @@ import {
   useEffect,
   useRef,
   useSyncExternalStore,
+  type FocusEvent,
   type KeyboardEvent,
   type MouseEvent,
+  type PointerEvent,
   type ReactNode,
   type UIEvent,
 } from 'react';
 
 import { createPortal } from 'react-dom';
 import { MUSIC_SLOT_ID } from '../../lib/music';
+import { CANCEL, ENTER, HOVER, OPTION, PICK, sfx } from '../../lib/sfx';
 import { MusicToggle } from './music-toggle';
 
 const personaLinks = (list: HTMLElement) => [
@@ -21,14 +24,33 @@ const personaLinks = (list: HTMLElement) => [
 const selectedItem = (list: HTMLElement) =>
   list.querySelector<HTMLLIElement>(':scope > li[data-selected]');
 
+// O que faz som ao passar o mouse ou receber o foco (lib/sfx.ts).
+const SOUNDING = 'a.persona, .persona-enter, .persona-back';
+
+/** Toque curto de quem recebeu o ponteiro ou o foco: cada personagem tem a nota dele. */
+function hoverSound(list: HTMLElement, hit: Element) {
+  if (hit.matches('a.persona')) sfx(HOVER, personaLinks(list).indexOf(hit as HTMLAnchorElement));
+  else sfx(OPTION);
+}
+
+// Verdadeiro enquanto o foco é movido por script: quem soa ali é o efeito de
+// confirmar ou de cancelar, não o toque de foco.
+let quiet = false;
+function focusQuietly(element: HTMLElement | null | undefined) {
+  quiet = true;
+  element?.focus({ preventScroll: true });
+  quiet = false;
+}
+
 /** Escolhe um personagem: os outros somem (CSS) e o painel dele aparece. */
 function select(list: HTMLElement, item: HTMLLIElement) {
   list.setAttribute('data-selected', '');
   item.setAttribute('data-selected', '');
   item.querySelector('a.persona')?.setAttribute('aria-expanded', 'true');
   item.querySelector('.persona-actions')?.removeAttribute('hidden');
+  sfx(PICK, [...list.children].indexOf(item));
   // O foco em "Entrar" faz o leitor de tela anunciar a frase e a descrição.
-  item.querySelector<HTMLAnchorElement>('.persona-enter')?.focus({ preventScroll: true });
+  focusQuietly(item.querySelector<HTMLAnchorElement>('.persona-enter'));
 }
 
 /** Desfaz a escolha e devolve o foco ao personagem que estava escolhido. */
@@ -40,7 +62,8 @@ function deselect(list: HTMLElement) {
   item.querySelector('.persona-actions')?.setAttribute('hidden', '');
   const link = item.querySelector<HTMLAnchorElement>('a.persona');
   link?.setAttribute('aria-expanded', 'false');
-  link?.focus({ preventScroll: true });
+  sfx(CANCEL);
+  focusQuietly(link);
 }
 
 /** O lugar do botão da música não muda depois de montado: não há o que assinar. */
@@ -50,8 +73,9 @@ const subscribeToNothing = () => () => {};
  * Parte interativa da home. Sem JavaScript, cada personagem é um link comum para
  * a área. Com JavaScript, o clique escolhe o personagem na própria tela, e a
  * área só abre pelo "Entrar". O estado fica em atributos do DOM (o CSS faz o
- * resto), sem estado do React. Também cuida das setas do teclado e da posição
- * do carrossel (`data-slide`).
+ * resto), sem estado do React. Também cuida das setas do teclado, da posição
+ * do carrossel (`data-slide`) e dos efeitos sonoros de seleção, que só tocam
+ * com o botão de som ligado.
  *
  * O botão da música também nasce aqui e é levado por portal para o lugar dele
  * no grupo do canto, que é do layout. Assim os dois comportamentos da home saem
@@ -114,6 +138,11 @@ export function PersonaList({
       deselect(list);
       return;
     }
+    // O "Entrar" navega em seguida; o som pode ser cortado pela troca de página.
+    if (target.closest('.persona-enter')) {
+      sfx(ENTER);
+      return;
+    }
 
     const link = target.closest<HTMLAnchorElement>('a.persona');
     const item = link?.closest('li');
@@ -156,6 +185,23 @@ export function PersonaList({
     next.focus();
   }
 
+  // Só o mouse faz som ao passar: no toque não existe "passar por cima".
+  function handlePointerOver(event: PointerEvent<HTMLUListElement>) {
+    if (event.pointerType !== 'mouse') return;
+    const hit = (event.target as Element).closest(SOUNDING);
+    // Mover o ponteiro dentro do mesmo personagem não repete a nota.
+    if (!hit || hit.contains(event.relatedTarget as Node | null)) return;
+    hoverSound(event.currentTarget, hit);
+  }
+
+  // Chegar pelo teclado soa como passar o mouse. Clique e toque também dão foco,
+  // mas sem `:focus-visible`, e aí quem soa é a confirmação.
+  function handleFocus(event: FocusEvent<HTMLUListElement>) {
+    const hit = (event.target as Element).closest(SOUNDING);
+    if (quiet || !hit?.matches(':focus-visible')) return;
+    hoverSound(event.currentTarget, hit);
+  }
+
   function handleScroll(event: UIEvent<HTMLUListElement>) {
     const list = event.currentTarget;
     const range = list.scrollWidth - list.clientWidth;
@@ -172,6 +218,8 @@ export function PersonaList({
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         onScroll={handleScroll}
+        onPointerOver={handlePointerOver}
+        onFocus={handleFocus}
       >
         {children}
       </ul>
