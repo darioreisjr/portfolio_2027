@@ -85,6 +85,8 @@ Com a escolha do personagem na própria home (2026-10-07), a rota `/` mede 146,1
 
 Com as bandeiras de idioma, o contorno no texto e a fonte M PLUS Rounded 1c (2026-10-07), o JavaScript não mudou em nenhuma rota (nada disso usa script). Na rota `/`: Performance 97, LCP de 2,58 a 2,62 s, TBT de 39 a 51 ms e CLS 0,001. Medições de controle na mesma máquina: só com as bandeiras, sem a fonte, o LCP fica em 2,46 a 2,50 s; com a fonte nos dois pesos, 2,77 s (a home passou a baixar só o peso 700); com `font-display: optional` não muda. As áreas do shell medem LCP de 1,4 a 1,6 s e `/como-foi-feito`, 1,9 s.
 
+Com o painel do personagem em estilo menu de RPG (2026-10-08), só HTML e CSS mudaram: a rota `/` continua em 146,1 kB de JavaScript e pedindo um só arquivo de fonte. LCP de 2,62 a 2,65 s, contra 2,59 a 2,65 s medidos antes da mudança na mesma máquina; TBT de 37 a 45 ms e CLS 0,001.
+
 As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um terço do teto. O React e o Next.js já nascem perto do teto, com folga de cerca de 3 kB e, depois da tela de escolha de perfil, 5 kB; a primeira feature dessas áreas vai exigir carga sob demanda ou a decisão registrada de subir o teto.
 
 ## Outros recursos

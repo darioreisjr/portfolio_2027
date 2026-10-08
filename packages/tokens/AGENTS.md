@@ -7,6 +7,7 @@ Tokens de design em propriedades CSS customizadas, em três camadas (ADR 0003).
 - Fonte: `src/tokens.mjs`. O arquivo `dist/tokens.css` é gerado; não edite.
 - Primitivos só aparecem aqui. Apps e componentes usam semânticos e de componente.
 - Token semântico de cor tem valor nos temas claro e escuro; o teste cobra isso.
+- `color-area-<área>` é a cor da tecnologia que serve cada área, em um tom por tema, e `color-on-area` é o texto sobre ela. O teste cobra 4,5:1 para o texto e 3:1 contra a superfície e contra o céu da home. Cor nova de área entra nessa lista do teste.
 - Token de componente aponta só para semânticos.
 - Componente novo do design system ganha aqui a regra `:not(:defined)` que reserva o espaço dele antes do upgrade (em `scripts/build.mjs`).
 - Elemento sem comportamento, como o grupo `ds-dock` e o seletor de idioma, tem a aparência definida aqui, em `scripts/build.mjs`, sem custom element (ADR 0006).

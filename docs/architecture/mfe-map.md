@@ -16,7 +16,7 @@ Status: **aprovado** pelo autor em 2026-10-06. Base: áreas do `docs/product/bri
 
 Isso mantém a proposta inicial (Next.js para entrada e SEO, React para projetos, Vue para linha do tempo, Angular para filtro, JavaScript puro para o shell) e encaixa cada framework em um público: Vue para recrutadores, Angular para tech leads, React para clientes, Next.js para a comunidade.
 
-A tecnologia de cada área também está no campo `framework` da tabela de rotas de `packages/contracts`, que a home usa no selo de cada personagem. Mude os dois juntos.
+A tecnologia de cada área também está no campo `framework` da tabela de rotas de `packages/contracts`, Mude os dois juntos. A home não mostra mais o nome da tecnologia: cada personagem usa a cor dela (`docs/plans/home-painel-rpg.md`).
 
 ## Idiomas nas rotas
 
