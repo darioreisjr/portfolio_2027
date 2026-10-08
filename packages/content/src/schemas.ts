@@ -51,6 +51,8 @@ export const homeSchema = z
     back: text,
     /** Rótulo do controle que pausa a animação do cenário. */
     pauseMotion: text,
+    /** Nome acessível do botão que liga a música de fundo; o estado vai em `aria-pressed`. */
+    music: text,
     personas: z
       .object({
         recruiter: personaTextSchema,
