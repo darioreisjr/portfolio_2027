@@ -283,7 +283,7 @@ test('em 360 px o grupo com seis controles cabe e não encosta no painel', async
 });
 
 test('a faixa de verdade é servida como áudio, inteira e em pedaços', async ({ request }) => {
-  const url = '/_home/audio/petals-on-the-water.v1.mp3';
+  const url = '/_home/audio/petals-on-the-water.v2.mp3';
   const whole = await request.get(url);
   expect(whole.status()).toBe(200);
   expect(whole.headers()['content-type']).toBe('audio/mpeg');

@@ -34,7 +34,7 @@
 | Recusa         | Falta de gesto só adia para o próximo. Se o arquivo não puder ser tocado, o botão volta a desligado e nada é lembrado. Nunca há erro no console                  |
 | Sair da home   | Outro documento encerra o áudio. Na navegação do Next.js para a comunidade o componente é desmontado e pausa                                                     |
 | Economia       | Com `Save-Data` ligado no navegador, a visita lembrada não retoma sozinha                                                                                        |
-| Arquivo        | `apps/web-next/public/_home/audio/petals-on-the-water.v1.mp3`: MP3 de 96 kbps, estéreo. A versão no nome substitui o hash; cache de um ano no `vercel.json`      |
+| Arquivo        | `apps/web-next/public/_home/audio/petals-on-the-water.v2.mp3`: MP3 de 96 kbps, estéreo. A versão no nome substitui o hash; cache de um ano no `vercel.json`      |
 | Volume         | Gravado no arquivo, porque o iPhone ignora o volume definido pelo site                                                                                           |
 | Servidor local | `scripts/serve-dist.mjs` passou a responder o tipo de `.mp3` e pedidos de intervalo (`Range`)                                                                    |
 | WCAG 1.4.2     | Atendido: nada toca sem escolha do visitante e sem gesto, e o botão desliga                                                                                      |
@@ -58,7 +58,7 @@ Verificação: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm budgets`, `pnpm
 
 ## A faixa
 
-O autor baixou o MP3 do Pixabay (256 kbps, 6,0 MB). Ele foi recodificado com o ffmpeg de uma imagem Docker, em contêiner sem rede, para 96 kbps estéreo, com o volume normalizado em -20 LUFS e fade de 0,5 s na entrada e 2 s na saída: 2,25 MB, dentro do teto de 2,5 MB. O original não entrou no repositório. Origem, licença, modificações e o comando estão em `docs/assets-de-terceiros.md`.
+O autor baixou o MP3 do Pixabay (256 kbps, 6,0 MB). Ele foi recodificado com o ffmpeg de uma imagem Docker, em contêiner sem rede, para 96 kbps estéreo, com o volume normalizado em -30 LUFS (a primeira versão, em -20, cobria os efeitos de seleção) e fade de 0,5 s na entrada e 2 s na saída: 2,25 MB, dentro do teto de 2,5 MB. O original não entrou no repositório. Origem, licença, modificações e o comando estão em `docs/assets-de-terceiros.md`.
 
 Dois testes usam a faixa de verdade: o servidor a entrega como `audio/mpeg`, inteira e em pedaços, e ela toca e avança no navegador, com 187 s de duração. Volume e emenda do loop só dá para julgar ouvindo.
 

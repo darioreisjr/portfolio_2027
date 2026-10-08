@@ -14,4 +14,4 @@ export const MUSIC_SLOT_ID = 'home-music-slot';
  * em cache por um ano, e trocar a faixa é trocar o nome. Origem e licença em
  * docs/assets-de-terceiros.md.
  */
-export const MUSIC_SRC = `${HOME_ASSETS_PATH}audio/petals-on-the-water.v1.mp3`;
+export const MUSIC_SRC = `${HOME_ASSETS_PATH}audio/petals-on-the-water.v2.mp3`;
