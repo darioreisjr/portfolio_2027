@@ -1,6 +1,6 @@
 # Plano: música de fundo na home
 
-- Status: **aprovado** pelo autor em 2026-10-08. Implementado, **menos a faixa**: falta o arquivo de áudio (etapa 5)
+- Status: **aprovado** pelo autor em 2026-10-08 e implementado
 - Origem: pedido e entrevista com o autor, `discovery-analyst` e `architect`
 - Decisão de arquitetura: `docs/architecture/adr/0008-comportamento-de-uma-rota.md`
 
@@ -52,18 +52,13 @@ A primeira versão tinha o botão como Client Component à parte, usado pelo lay
 | CLS de `/`                | 0,001         | 0,001         | 0,1    |
 | Áudio pedido na carga     | 0             | 0             | 0      |
 
-Verificação: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm budgets`, `pnpm test:e2e` (135 testes) e `pnpm lhci`. Os testes da música usam um segundo de silêncio gerado no próprio teste; não dependem da faixa.
+Verificação: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm budgets`, `pnpm test:e2e` (137 testes) e `pnpm lhci`. Os testes da música usam um segundo de silêncio gerado no próprio teste; não dependem da faixa.
 
-## Etapa 5, pendente: a faixa
+## A faixa
 
-1. O autor baixa o MP3 na página da faixa no Pixabay e deixa na pasta Downloads.
-2. Recodificar com o ffmpeg de uma imagem Docker, sem rede (não vira dependência do projeto): 96 kbps, estéreo, volume normalizado em -20 LUFS, fade de 0,5 s na entrada e 2 s na saída, etiquetas com título, autor e licença.
-3. Copiar para `apps/web-next/public/_home/audio/`. O original não entra no repositório.
-4. Registrar o crédito em `docs/assets-de-terceiros.md`.
-5. Teste de que o arquivo existe e tem até 2,5 MB, e de que o servidor o entrega com o tipo certo.
-6. O autor ouve em `pnpm dev`: volume e emenda do loop.
+O autor baixou o MP3 do Pixabay (256 kbps, 6,0 MB). Ele foi recodificado com o ffmpeg de uma imagem Docker, em contêiner sem rede, para 96 kbps estéreo, com o volume normalizado em -20 LUFS e fade de 0,5 s na entrada e 2 s na saída: 2,25 MB, dentro do teto de 2,5 MB. O original não entrou no repositório. Origem, licença, modificações e o comando estão em `docs/assets-de-terceiros.md`.
 
-Enquanto o arquivo não existir, ligar a música resulta em 404 e o botão volta a desligado. **Não publicar antes desta etapa.**
+Dois testes usam a faixa de verdade: o servidor a entrega como `audio/mpeg`, inteira e em pedaços, e ela toca e avança no navegador, com 187 s de duração. Volume e emenda do loop só dá para julgar ouvindo.
 
 ## Em aberto
 

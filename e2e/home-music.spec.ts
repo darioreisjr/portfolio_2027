@@ -276,3 +276,26 @@ test('em 360 px o grupo com seis controles cabe e não encosta no painel', async
   expect((back?.y ?? 0) + (back?.height ?? 0)).toBeLessThanOrEqual(dock.y);
   await context.close();
 });
+
+test('a faixa de verdade é servida como áudio, inteira e em pedaços', async ({ request }) => {
+  const url = '/_home/audio/petals-on-the-water.v1.mp3';
+  const whole = await request.get(url);
+  expect(whole.status()).toBe(200);
+  expect(whole.headers()['content-type']).toBe('audio/mpeg');
+
+  const part = await request.get(url, { headers: { Range: 'bytes=0-99' } });
+  expect(part.status()).toBe(206);
+  expect((await part.body()).length).toBe(100);
+});
+
+test('com a faixa de verdade, a música toca e avança', async ({ page }) => {
+  await openHome(page);
+  await music(page).click();
+  await expect.poll(() => playing(page)).toBe(true);
+  await expect
+    .poll(() => page.evaluate(() => document.querySelector('audio')?.currentTime ?? 0))
+    .toBeGreaterThan(0.3);
+  expect(
+    await page.evaluate(() => Math.round(document.querySelector('audio')?.duration ?? 0)),
+  ).toBe(187);
+});
