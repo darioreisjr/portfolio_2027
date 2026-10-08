@@ -4,6 +4,8 @@
 - Origem: pedido e entrevista com o autor, `discovery-analyst` e `architect`
 - Muda parte de `docs/plans/home-selecao.md` (selo de tecnologia, aparência do painel)
 
+> Mudou em 2026-10-08 (`docs/plans/home-animacoes.md`): o brilho atrás do escolhido passou a pulsar e a seta do menu a balançar; os dois param com o botão de pausa e não existem com movimento reduzido.
+
 **Objetivo:** ao escolher um personagem na home, o painel dele mostra uma descrição breve do perfil, no tom daquele público, e as opções "Entrar" e "Voltar" com cara de menu de jogo, na cor da tecnologia da área.
 
 ## Decisões do autor

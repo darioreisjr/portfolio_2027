@@ -93,6 +93,8 @@ Com os efeitos sonoros de seleção (2026-10-08), as três páginas Next.js vão
 
 Com o seletor de idioma em lista e a retomada do som (2026-10-08), as páginas Next.js medem 147,6 kB de JavaScript, em nove arquivos. Só a bandeira do idioma em uso é pedida na carga, em vez das quatro, e o LCP de `/` cai para 2,55 a 2,57 s; TBT de 40 a 55 ms e CLS 0,001.
 
+Com as animações da home (2026-10-08), tudo em CSS: o JavaScript não muda (147,6 kB, nove arquivos). O CSS de `/` mede 7,0 kB comprimido, de um teto de 20 kB. LCP de `/` de 2,55 a 2,62 s (mediana 2,55 s), TBT de 38 a 68 ms e CLS 0. A entrada dos personagens usa só deslocamento e não existe no perfil de celular, que é o medido.
+
 As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um terço do teto. O React e o Next.js já nascem perto do teto, com folga de cerca de 3 kB e, depois da tela de escolha de perfil, 5 kB; a primeira feature dessas áreas vai exigir carga sob demanda ou a decisão registrada de subir o teto.
 
 ## Outros recursos

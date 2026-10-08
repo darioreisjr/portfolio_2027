@@ -6,6 +6,8 @@
 
 > Mudou em 2026-10-08 (`docs/plans/home-som-e-bandeiras.md`): o botão só aparece ligado com som de fato, nasce desligado mesmo com a escolha lembrada, e a página tenta retomar o som ao trocar de idioma na mesma aba. Onde este plano diz que o botão "já vem ligado" ou que dá para desligar antes de ouvir, vale o plano novo.
 
+> Mudou em 2026-10-08 (`docs/plans/home-animacoes.md`): o silêncio do "passar o mouse" depois de escolher passou de 250 ms para 0,9 s, e ligar o som não o provoca mais.
+
 **Objetivo:** com o botão de som do canto ligado, a home toca notas curtas de corda dedilhada ao passar pelos personagens, escolher, entrar e voltar, no clima de menu de jogo japonês.
 
 ## Decisões do autor
