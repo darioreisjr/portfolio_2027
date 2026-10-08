@@ -107,16 +107,38 @@ ds-theme-toggle:not(:defined) {
   align-items: center;
 }
 
+/* Seletor de idioma: um <details>. Fechado, mostra só a bandeira do idioma em
+   uso; aberto, os outros três sobem em coluna. Sem JavaScript (ADR 0006). */
+.ds-language-switcher {
+  position: relative;
+}
+
+.ds-language-switcher summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.ds-language-switcher summary::-webkit-details-marker {
+  display: none;
+}
+
 .ds-language-switcher ul {
+  position: absolute;
+  inset-block-end: 100%;
+  inset-inline-end: 0;
   display: flex;
+  flex-direction: column;
   flex-wrap: nowrap;
   gap: 0;
   margin: 0;
   padding: 0;
+  border-radius: var(--radius-full);
+  background: var(--ds-language-switcher-edge);
   list-style: none;
 }
 
 /* O alvo de toque é maior que a bandeira. */
+.ds-language-switcher summary,
 .ds-language-switcher a {
   display: grid;
   place-items: center;
@@ -125,6 +147,7 @@ ds-theme-toggle:not(:defined) {
   border-radius: var(--radius-full);
 }
 
+.ds-language-switcher summary:focus-visible,
 .ds-language-switcher a:focus-visible {
   outline: var(--focus-ring-width) solid var(--color-focus-ring);
   outline-offset: calc(var(--focus-ring-width) * -1);
@@ -140,7 +163,7 @@ ds-theme-toggle:not(:defined) {
 }
 
 /* Idioma em uso: um segundo anel, afastado da bandeira. Não depende só de cor. */
-.ds-language-switcher a[aria-current='page'] img {
+.ds-language-switcher summary img {
   outline-color: var(--ds-language-switcher-current);
   outline-offset: var(--ds-language-switcher-ring-width);
 }
