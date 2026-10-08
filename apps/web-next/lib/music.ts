@@ -6,6 +6,12 @@ import { HOME_ASSETS_PATH } from '@portfolio/contracts';
  */
 export const MUSIC_STORAGE_KEY = 'portfolio:musica';
 
+/**
+ * Onde a música estava (em segundos) quando a página foi deixada com o som
+ * ativo. Fica em `sessionStorage`: a próxima página da mesma aba continua dali.
+ */
+export const MUSIC_TIME_KEY = 'portfolio:musica-tempo';
+
 /** Elemento do grupo do canto (no layout) onde o botão da música é posto. */
 export const MUSIC_SLOT_ID = 'home-music-slot';
 

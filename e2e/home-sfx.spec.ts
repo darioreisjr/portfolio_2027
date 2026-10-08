@@ -240,19 +240,35 @@ test('na visita com o som lembrado, passar o mouse só soa depois do primeiro ge
   await page.addInitScript((key) => localStorage.setItem(key, 'on'), STORAGE_KEY);
   await spyOnSound(page);
   await openHome(page);
-  await expect(sound(page)).toHaveAttribute('aria-pressed', 'true');
+  // Sem som ainda, o botão aparece desligado.
+  await expect(sound(page)).toHaveAttribute('aria-pressed', 'false');
 
   await personas(page).nth(1).hover();
   expect(await contexts(page)).toBe(0);
   expect(await takeNotes(page)).toEqual([]);
 
-  // O primeiro clique já é um gesto: o confirmar dele toca.
+  // O primeiro clique já é um gesto: liga o som, e o confirmar dele toca.
   await personas(page).nth(1).click();
   expect(await takeNotes(page)).toEqual([466.16, 932.33]);
+  await expect(sound(page)).toHaveAttribute('aria-pressed', 'true');
   await settle(page);
   await expect.poll(() => running(page)).toBe(true);
   await back(page).hover();
   expect(await takeNotes(page)).toEqual(OPTION);
+});
+
+test('depois de trocar de idioma os efeitos continuam', async ({ page }) => {
+  await openWithSound(page);
+  await page.locator('.ds-language-switcher summary').click();
+  await page.getByRole('link', { name: 'English' }).click();
+  await expect(page).toHaveURL(/\/en\/$/);
+  await expect(personas(page).first()).toHaveAttribute('role', 'button');
+  await expect(page.getByRole('button', { name: 'Sound' })).toHaveAttribute('aria-pressed', 'true');
+
+  // Escolher um personagem na página nova confirma com as notas dele.
+  await personas(page).nth(0).click();
+  const notes = await takeNotes(page);
+  expect(notes.slice(-2)).toEqual([440, 880]);
 });
 
 test('desligar o som cala os efeitos', async ({ page }) => {

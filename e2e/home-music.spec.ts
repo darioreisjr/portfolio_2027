@@ -109,38 +109,117 @@ test('funciona pelo teclado, com foco visível', async ({ page }) => {
   expect(await playing(page)).toBe(false);
 });
 
-test.describe('visita com a música lembrada', () => {
+test.describe('visita com o som lembrado', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript((key) => localStorage.setItem(key, 'on'), STORAGE_KEY);
   });
 
-  test('o botão já vem ligado e a música começa no primeiro gesto', async ({ page }) => {
+  test('o botão nasce desligado, e o som começa no primeiro gesto', async ({ page }) => {
     const audio = await watchAudio(page);
     await openHome(page);
 
-    await expect(music(page)).toHaveAttribute('aria-pressed', 'true');
-    // Em silêncio e sem baixar nada, até a pessoa interagir com a página.
-    expect(await playing(page)).toBe(false);
-    expect(audio.count()).toBe(0);
-
-    await page.locator('h1').click();
-    await expect.poll(() => playing(page)).toBe(true);
-    expect(audio.count()).toBeGreaterThan(0);
-  });
-
-  test('dá para desligar antes de qualquer som, sem baixar a faixa', async ({ page }) => {
-    const audio = await watchAudio(page);
-    await openHome(page);
-
-    await music(page).click();
+    // O botão diz a verdade: sem som, aparece desligado. E nada é baixado.
     await expect(music(page)).toHaveAttribute('aria-pressed', 'false');
     expect(await playing(page)).toBe(false);
     expect(audio.count()).toBe(0);
 
-    // Desligada, nenhum gesto a religa.
     await page.locator('h1').click();
+    await expect(music(page)).toHaveAttribute('aria-pressed', 'true');
+    await expect.poll(() => playing(page)).toBe(true);
+    expect(audio.count()).toBeGreaterThan(0);
+  });
+
+  test('clicar no botão liga; clicar de novo desliga e esquece a escolha', async ({ page }) => {
+    await watchAudio(page);
+    await openHome(page);
+
+    await music(page).click();
+    await expect(music(page)).toHaveAttribute('aria-pressed', 'true');
+    await expect.poll(() => playing(page)).toBe(true);
+
+    await music(page).click();
+    await expect(music(page)).toHaveAttribute('aria-pressed', 'false');
     expect(await playing(page)).toBe(false);
-    expect(audio.count()).toBe(0);
+    // Desligado pela pessoa, nenhum gesto religa.
+    await page.locator('h1').click();
+    await expect(music(page)).toHaveAttribute('aria-pressed', 'false');
+    expect(await playing(page)).toBe(false);
+  });
+});
+
+test.describe('ao trocar de idioma com o som ligado', () => {
+  const english = (page: Page) => page.getByRole('button', { name: 'Sound' });
+  const position = (page: Page) =>
+    page.evaluate(() => document.querySelector('audio')?.currentTime ?? 0);
+
+  test('a página nova continua a música sozinha, do ponto onde estava', async ({ page }) => {
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    page.on('console', (message) => {
+      if (message.type() === 'error') errors.push(message.text());
+    });
+    // Com a faixa de verdade: precisa de duração para haver "ponto onde estava".
+    await openHome(page);
+    await music(page).click();
+    // Sem saída de áudio, o relógio da faixa anda devagar no teste.
+    await expect.poll(() => position(page), { timeout: 15_000 }).toBeGreaterThan(0.4);
+    const left = await position(page);
+
+    await page.locator('.ds-language-switcher summary').click();
+    await page.getByRole('link', { name: 'English' }).click();
+    await expect(page).toHaveURL(/\/en\/$/);
+
+    // Sem nenhum gesto na página nova: botão ligado e música andando.
+    await expect(english(page)).toHaveAttribute('aria-pressed', 'true');
+    await expect.poll(() => playing(page)).toBe(true);
+    // Continua de onde estava, não do começo.
+    expect(await position(page)).toBeGreaterThanOrEqual(left);
+    expect(errors).toEqual([]);
+  });
+
+  test('se o navegador bloquear, o botão fica desligado e o som volta no primeiro clique', async ({
+    page,
+  }) => {
+    await watchAudio(page);
+    // Navegador que só deixa tocar depois de um clique nesta página, como o
+    // Safari, numa aba que vinha com o som ligado.
+    await page.addInitScript((key) => {
+      localStorage.setItem(key, 'on');
+      sessionStorage.setItem('portfolio:musica-tempo', '12');
+      let clicked = false;
+      addEventListener('click', () => (clicked = true), true);
+      const play = HTMLMediaElement.prototype.play;
+      HTMLMediaElement.prototype.play = function () {
+        return clicked
+          ? play.call(this)
+          : Promise.reject(new DOMException('sem gesto', 'NotAllowedError'));
+      };
+    }, STORAGE_KEY);
+    await openHome(page, '/en/');
+
+    await expect(english(page)).toHaveAttribute('aria-pressed', 'false');
+    expect(await playing(page)).toBe(false);
+
+    await page.locator('h1').click();
+    await expect(english(page)).toHaveAttribute('aria-pressed', 'true');
+    await expect.poll(() => playing(page)).toBe(true);
+  });
+
+  test('desligar apaga a marca: a página seguinte não tenta tocar', async ({ page }) => {
+    const audio = await watchAudio(page);
+    await openHome(page);
+    await music(page).click();
+    await expect.poll(() => playing(page)).toBe(true);
+    await music(page).click();
+    await expect(music(page)).toHaveAttribute('aria-pressed', 'false');
+
+    const before = audio.count();
+    await page.locator('.ds-language-switcher summary').click();
+    await page.getByRole('link', { name: 'English' }).click();
+    await expect(page).toHaveURL(/\/en\/$/);
+    await expect(page.locator('.home-music-slot .home-music')).toBeVisible();
+    await expect(english(page)).toHaveAttribute('aria-pressed', 'false');
+    expect(audio.count()).toBe(before);
   });
 });
 
@@ -225,15 +304,12 @@ for (const colorScheme of ['light', 'dark'] as const) {
     }) => {
       const context = await browser.newContext({ colorScheme });
       const page = await context.newPage();
-      // Ligada sem som: uma visita com a escolha lembrada, antes do primeiro gesto.
-      if (pressed === 'true') {
-        await page.addInitScript((key) => localStorage.setItem(key, 'on'), STORAGE_KEY);
-      }
+      // Ligado sem música tocando: a faixa falha e ficam só os efeitos.
+      await page.route('**/_home/audio/**', (route) => route.fulfill({ status: 404, body: '' }));
       await openHome(page, '/en/');
-      await expect(page.getByRole('button', { name: 'Sound' })).toHaveAttribute(
-        'aria-pressed',
-        pressed,
-      );
+      const button = page.getByRole('button', { name: 'Sound' });
+      if (pressed === 'true') await button.click();
+      await expect(button).toHaveAttribute('aria-pressed', pressed);
 
       const { violations } = await new AxeBuilder({ page }).include('.ds-dock').analyze();
       expect(violations.map((violation) => violation.id)).toEqual([]);

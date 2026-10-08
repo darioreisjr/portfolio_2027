@@ -63,8 +63,9 @@ export function setSound(value: boolean): void {
 }
 
 /**
- * Cria ou acorda o contexto de áudio. Só pode ser chamado dentro de um gesto
- * (clique ou tecla): fora dele o navegador recusa e avisa no console.
+ * Cria ou acorda o contexto de áudio. Chamado dentro de um gesto (clique ou
+ * tecla), ou depois de a música ter tocado sem gesto, que é o sinal de que o
+ * navegador já liberou o som nesta aba. Fora disso ele recusa e avisa no console.
  */
 export function unlock(): void {
   if (!on || !window.AudioContext) return;
