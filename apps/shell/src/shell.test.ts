@@ -44,21 +44,26 @@ describe('documento de uma área', () => {
     }
   });
 
-  it('tem as quatro bandeiras, cada uma levando à mesma área no outro idioma', () => {
+  it('mostra a bandeira do idioma em uso, que abre os outros três para a mesma área', () => {
     const html = renderPage(recruiter, 'es', ui.es);
-    expect(html).toContain(
-      `<nav class="ds-language-switcher" aria-label="${ui.es.languageSwitcher}">`,
+    const start = html.indexOf('<details class="ds-language-switcher">');
+    const switcher = html.slice(start, html.indexOf('</details>', start));
+    expect(start).toBeGreaterThan(html.indexOf(`<nav aria-label="${ui.es.languageSwitcher}">`));
+
+    // O idioma em uso é o <summary>: nome pela imagem, sem link.
+    expect(switcher).toContain(
+      '<summary title="Español"><img src="/_ds/flags/es.svg" alt="Español"',
     );
-    for (const locale of locales) {
-      expect(html).toContain(
+    expect(switcher).not.toContain('hreflang="es"');
+    expect(switcher).not.toContain('aria-current');
+
+    for (const locale of locales.filter((candidate) => candidate !== 'es')) {
+      expect(switcher).toContain(
         `<a href="${recruiter.paths[locale]}" lang="${locale}" hreflang="${locale}"`,
       );
-      expect(html).toContain(`src="/_ds/flags/${locale}.svg" alt=""`);
+      expect(switcher).toContain(`src="/_ds/flags/${locale}.svg" alt=""`);
     }
-    expect(
-      html.match(/hreflang="[^"]+" aria-label="[^"]+" title="[^"]+" aria-current="page"/g),
-    ).toHaveLength(1);
-    expect(html).toContain('aria-label="Español" title="Español" aria-current="page"');
+    expect(switcher.match(/<a /g)).toHaveLength(3);
     // Depois do conteúdo, para o Tab chegar nele por último.
     expect(html.indexOf('class="ds-dock"')).toBeGreaterThan(html.indexOf('</main>'));
   });
