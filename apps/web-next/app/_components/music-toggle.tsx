@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useRef } from 'react';
 import { MUSIC_STORAGE_KEY } from '../../lib/music';
 
@@ -9,6 +7,9 @@ import { MUSIC_STORAGE_KEY } from '../../lib/music';
  * fica no navegador: quem ligou encontra o botão ligado na visita seguinte, e a
  * música começa no primeiro gesto, porque o navegador não deixa tocar antes.
  * O estado vive em `aria-pressed`; não há estado do React nem nova renderização.
+ *
+ * Só é renderizado no navegador, por `persona-list.tsx`: sem JavaScript o botão
+ * não existe, e o lugar dele no grupo do canto fica guardado, vazio.
  */
 export function MusicToggle({ label, src }: { label: string; src: string }) {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -51,9 +52,6 @@ export function MusicToggle({ label, src }: { label: string; src: string }) {
     } catch {
       // Sem armazenamento, começa desligada.
     }
-    // Só agora o botão funciona: até aqui ficou invisível, com o lugar guardado.
-    button.dataset.ready = '';
-
     const onToggle = () => {
       if (wanted()) turnOff();
       else {
@@ -103,7 +101,6 @@ export function MusicToggle({ label, src }: { label: string; src: string }) {
         aria-pressed="false"
         aria-label={label}
         title={label}
-        suppressHydrationWarning
       >
         <span className="home-music-disc" aria-hidden="true">
           <svg viewBox="0 0 16 16">

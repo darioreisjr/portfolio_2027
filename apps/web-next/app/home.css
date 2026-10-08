@@ -672,21 +672,22 @@ li[data-selected] > .persona::before {
 }
 
 /* Botão da música de fundo, no mesmo grupo e com o mesmo disco da pausa. Só
-   funciona com JavaScript: até lá fica invisível, com o lugar guardado, para
-   não haver botão morto nem os vizinhos mudarem de lugar (ADRs 0005 e 0008). */
+   funciona com JavaScript: o lugar dele já vem guardado no HTML, vazio, e o
+   botão entra depois, para não haver botão morto nem os vizinhos mudarem de
+   lugar (ADRs 0005 e 0008). */
+.home-music-slot,
 .home-music {
   display: grid;
   place-items: center;
   inline-size: var(--size-control);
   block-size: var(--size-control);
+}
+
+.home-music {
   padding: 0;
   border: 0;
   background: none;
   cursor: pointer;
-}
-
-.home-music:not([data-ready]) {
-  visibility: hidden;
 }
 
 /* Desligada, a nota fica riscada. */

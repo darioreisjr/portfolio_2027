@@ -3,11 +3,16 @@
 import {
   useEffect,
   useRef,
+  useSyncExternalStore,
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
   type UIEvent,
 } from 'react';
+
+import { createPortal } from 'react-dom';
+import { MUSIC_SLOT_ID } from '../../lib/music';
+import { MusicToggle } from './music-toggle';
 
 const personaLinks = (list: HTMLElement) => [
   ...list.querySelectorAll<HTMLAnchorElement>('a.persona'),
@@ -38,14 +43,35 @@ function deselect(list: HTMLElement) {
   link?.focus({ preventScroll: true });
 }
 
+/** O lugar do botão da música não muda depois de montado: não há o que assinar. */
+const subscribeToNothing = () => () => {};
+
 /**
- * Único Client Component da home. Sem JavaScript, cada personagem é um link
- * comum para a área. Com JavaScript, o clique escolhe o personagem na própria
- * tela, e a área só abre pelo "Entrar". O estado fica em atributos do DOM (o
- * CSS faz o resto), sem estado do React, então a lista nunca re-renderiza.
- * Também cuida das setas do teclado e da posição do carrossel (`data-slide`).
+ * Parte interativa da home. Sem JavaScript, cada personagem é um link comum para
+ * a área. Com JavaScript, o clique escolhe o personagem na própria tela, e a
+ * área só abre pelo "Entrar". O estado fica em atributos do DOM (o CSS faz o
+ * resto), sem estado do React. Também cuida das setas do teclado e da posição
+ * do carrossel (`data-slide`).
+ *
+ * O botão da música também nasce aqui e é levado por portal para o lugar dele
+ * no grupo do canto, que é do layout. Assim os dois comportamentos da home saem
+ * no mesmo arquivo de script: um arquivo a mais na carga custa LCP, e a home
+ * está no limite (docs/plans/home-musica.md).
  */
-export function PersonaList({ children }: { children: ReactNode }) {
+export function PersonaList({
+  children,
+  music,
+}: {
+  children: ReactNode;
+  music: { label: string; src: string };
+}) {
+  // No servidor e na hidratação não há lugar; logo depois, o do grupo do canto.
+  const musicSlot = useSyncExternalStore(
+    subscribeToNothing,
+    () => document.getElementById(MUSIC_SLOT_ID),
+    () => null,
+  );
+
   const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -139,14 +165,17 @@ export function PersonaList({ children }: { children: ReactNode }) {
   }
 
   return (
-    <ul
-      ref={listRef}
-      className="personas"
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      onScroll={handleScroll}
-    >
-      {children}
-    </ul>
+    <>
+      <ul
+        ref={listRef}
+        className="personas"
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        onScroll={handleScroll}
+      >
+        {children}
+      </ul>
+      {musicSlot && createPortal(<MusicToggle {...music} />, musicSlot)}
+    </>
   );
 }

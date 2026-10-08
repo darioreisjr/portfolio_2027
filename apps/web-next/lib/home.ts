@@ -41,6 +41,8 @@ export interface HomeModel {
   enter: string;
   /** Desfaz a escolha do personagem. */
   back: string;
+  /** Nome acessível do botão da música de fundo. */
+  music: string;
   personas: Persona[];
 }
 
@@ -61,6 +63,7 @@ export function buildHome(locale: Locale): HomeModel {
     title: text.title,
     enter: text.enter,
     back: text.back,
+    music: text.music,
     personas: personaAreas.map((area) => {
       const route = routeOf(area);
       return {

@@ -37,10 +37,10 @@ const playing = (page: Page) =>
   page.evaluate(() => [...document.querySelectorAll('audio')].some((audio) => !audio.paused));
 const stored = (page: Page) => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY);
 
-/** Abre a home e espera o botão funcionar: até a hidratação ele fica invisível. */
+/** Abre a home e espera o botão existir: ele só entra depois da hidratação. */
 async function openHome(page: Page, path = '/'): Promise<void> {
   await page.goto(path);
-  await expect(page.locator('.home-music')).toHaveAttribute('data-ready', '');
+  await expect(page.locator('.home-music-slot .home-music')).toBeVisible();
 }
 
 test.use({ viewport: { width: 1280, height: 800 }, colorScheme: 'light' });
@@ -202,7 +202,7 @@ test('só a home tem o botão, no grupo do canto, antes da pausa', async ({ page
 
   for (const path of ['/comunidade/', '/recrutador/']) {
     await page.goto(path);
-    await expect(page.locator('.home-music')).toHaveCount(0);
+    await expect(page.locator('.home-music, .home-music-slot')).toHaveCount(0);
     await expect(page.locator('audio')).toHaveCount(0);
   }
 });
@@ -211,9 +211,10 @@ test('sem JavaScript o botão não aparece, mas o lugar dele fica guardado', asy
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('/');
-  const button = page.locator('.home-music');
-  await expect(button).toHaveCSS('visibility', 'hidden');
-  expect((await button.boundingBox())?.width).toBe(44);
+  await expect(page.locator('.home-music')).toHaveCount(0);
+  const slot = await page.locator('.home-music-slot').boundingBox();
+  expect(slot?.width).toBe(44);
+  expect(slot?.height).toBe(44);
   await context.close();
 });
 

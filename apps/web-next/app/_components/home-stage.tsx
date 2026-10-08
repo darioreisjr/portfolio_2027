@@ -2,6 +2,7 @@ import '../home.css';
 import type { Locale } from '@portfolio/contracts';
 import Link from 'next/link';
 import { buildHome, type Persona } from '../../lib/home';
+import { MUSIC_SRC } from '../../lib/music';
 import { PersonaList } from './persona-list';
 import { SakuraScene } from './sakura-scene';
 
@@ -74,7 +75,7 @@ function PersonaItem({ persona, enter, back, first }: PersonaItemProps) {
 }
 
 export function HomeStage({ locale }: { locale: Locale }) {
-  const { identity, title, enter, back, personas } = buildHome(locale);
+  const { identity, title, enter, back, music, personas } = buildHome(locale);
 
   return (
     <main className="home">
@@ -87,7 +88,7 @@ export function HomeStage({ locale }: { locale: Locale }) {
       )}
       <h1 id="home-title">{title}</h1>
       <nav aria-labelledby="home-title">
-        <PersonaList>
+        <PersonaList music={{ label: music, src: MUSIC_SRC }}>
           {personas.map((persona, index) => (
             <PersonaItem
               key={persona.area}

@@ -5,9 +5,8 @@ import { ui } from '@portfolio/content/ui';
 import { defaultLocale, languageAlternates, THEME_INIT_SCRIPT } from '@portfolio/contracts';
 import type {} from '@portfolio/design-system/react';
 import type { ReactNode } from 'react';
-import { MUSIC_SRC } from '../../lib/music';
+import { MUSIC_SLOT_ID } from '../../lib/music';
 import { resolvePage, type PageParams } from '../../lib/route';
-import { MusicToggle } from '../_components/music-toggle';
 
 export default async function RootLayout({
   children,
@@ -36,8 +35,10 @@ export default async function RootLayout({
         {/* Grupo fixo no canto inferior direito, depois do conteúdo na ordem do Tab. */}
         {area && (
           <footer className="ds-dock">
-            {/* Música de fundo, só na home (ADR 0008). */}
-            {area === 'home' && <MusicToggle label={home[locale].music} src={MUSIC_SRC} />}
+            {/* Lugar do botão da música de fundo, só na home (ADR 0008). O botão só
+                funciona com JavaScript: quem o põe aqui é `persona-list.tsx`, e até
+                lá o espaço fica guardado, vazio. */}
+            {area === 'home' && <span className="home-music-slot" id={MUSIC_SLOT_ID} />}
             {/* Só a home tem animação. Caixa de seleção nativa com cara de botão:
                 o CSS da home lê o estado, sem JavaScript (WCAG 2.2.2). */}
             {area === 'home' && (
