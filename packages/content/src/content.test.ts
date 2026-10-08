@@ -40,6 +40,7 @@ describe('conteúdo do repositório', () => {
     for (const locale of locales) {
       expect(ui[locale].hello).not.toBe('');
       expect(home[locale].personas.recruiter.phrase).not.toBe('');
+      expect(home[locale].personas.recruiter.description).not.toBe('');
     }
   });
 });

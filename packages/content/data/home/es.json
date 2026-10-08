@@ -6,16 +6,20 @@
   "madeIn": "Hecho con {tech}",
   "personas": {
     "recruiter": {
-      "phrase": "Estoy contratando"
+      "phrase": "Estoy contratando",
+      "description": "Para quien está evaluando a un candidato. Resumen profesional, experiencia y formación en orden, listos para tu preselección."
     },
     "tech": {
-      "phrase": "Quiero ver el código"
+      "phrase": "Quiero ver el código",
+      "description": "Para quien quiere mirar bajo el capó. Stack, proyectos filtrables por tecnología y las decisiones técnicas detrás de cada uno."
     },
     "client": {
-      "phrase": "Tengo un proyecto"
+      "phrase": "Tengo un proyecto",
+      "description": "Para quien tiene una idea o un problema por resolver. Servicios, proyectos contados por sus resultados y el camino para trabajar juntos."
     },
     "community": {
-      "phrase": "Vine a aprender e intercambiar ideas"
+      "phrase": "Vine a aprender e intercambiar ideas",
+      "description": "Para quien disfruta aprender y compartir. Artículos, código abierto y un espacio para intercambiar ideas sobre desarrollo."
     }
   }
 }

@@ -6,16 +6,20 @@
   "madeIn": "Built with {tech}",
   "personas": {
     "recruiter": {
-      "phrase": "I'm hiring"
+      "phrase": "I'm hiring",
+      "description": "For those evaluating a candidate. Professional summary, experience and education in order, ready for your screening."
     },
     "tech": {
-      "phrase": "I want to see the code"
+      "phrase": "I want to see the code",
+      "description": "For those who want to look under the hood. Stack, projects you can filter by technology, and the technical decisions behind each one."
     },
     "client": {
-      "phrase": "I have a project"
+      "phrase": "I have a project",
+      "description": "For those with an idea or a problem to solve. Services, projects told through their results, and the path to working together."
     },
     "community": {
-      "phrase": "I'm here to learn and share ideas"
+      "phrase": "I'm here to learn and share ideas",
+      "description": "For those who enjoy learning and sharing. Articles, open source, and a place to talk shop about development."
     }
   }
 }

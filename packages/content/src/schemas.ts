@@ -39,7 +39,8 @@ export const uiSchema = z
   .strict();
 export type Ui = z.infer<typeof uiSchema>;
 
-const personaTextSchema = z.object({ phrase: text }).strict();
+/** `phrase` é a fala do personagem; `description` diz, no tom do público, o que a área traz. */
+const personaTextSchema = z.object({ phrase: text, description: text }).strict();
 
 /** Textos da tela de escolha de perfil (home) em um idioma. */
 export const homeSchema = z
