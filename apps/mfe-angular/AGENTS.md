@@ -8,6 +8,7 @@ Projetos na narrativa técnica, skills com filtro, GitHub.
 - Componentes standalone, signals e TypeScript estrito.
 - `CUSTOM_ELEMENTS_SCHEMA` nos componentes que usam tags do design system.
 - Dados de `packages/content`: `projects` (narrativa `technical`), `skills`, `contacts`, `ui`.
+- Enquanto a área não tem conteúdo, o elemento mostra a mensagem "em construção" de `ui.construction`: uma `section` com `part="message"`, o título (`title`), a frase (`text`) e a barra (`bar`, `bar-fill`). O MFE não tem estilo próprio para ela: a folha `/_ds/areas.css` do documento a estiliza por `::part()` (ADR 0009). Rodando sozinho, a mensagem aparece sem estilo.
 - Não empacota o design system nem o Lit.
 - Sem zone.js: estado em signals. Raiz em shadow DOM (`ViewEncapsulation.ShadowDom`).
 - `outputHashing: none`: o shell carrega sempre `main.js`.

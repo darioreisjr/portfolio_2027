@@ -11,6 +11,7 @@ Todo o conteúdo do site em JSON (`data/`), validado com Zod e entregue aos apps
 - Dado de exemplo é `draft` e claramente fictício. Nunca invente conteúdo sobre o autor.
 - Zod fica só neste pacote; não entra no bundle de nenhum app.
 - Texto que só um app usa não entra em `ui`: os MFEs importam `ui` inteiro, e cada chave nova pesa nos três.
+- `ui.construction` (título, frase e rótulo do botão de volta da tela "em construção") e `ui.pauseMotion` ficam em `ui` porque o shell, os três MFEs e o Next.js usam.
 - Hoje existem `ui/<locale>.json`, `home/<locale>.json` e `profile.json`. Os demais arquivos do schema entram com as features.
 
 ## Comandos

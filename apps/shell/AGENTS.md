@@ -13,6 +13,7 @@ Casca das áreas de MFE: gera o documento HTML de cada rota e idioma, mostra cab
 - Dono de: foco e título ao trocar de área.
 - Um HTML por rota e idioma, com `<title>`, descrição, `hreflang` e `canonical` próprios.
 - Troca de idioma: o documento termina com `<footer class="ds-dock">`, com um `<details class="ds-language-switcher">`. O `<summary>` é a bandeira do idioma em uso; a lista, que abre para cima, tem os outros três como links comuns para a mesma área, vindos de `languageAlternates` de `packages/contracts`. O shell não tem código de troca (ADR 0006 e a emenda dele). O `main` reserva o espaço do grupo com `--ds-dock-reserve`.
+- Cada área é um palco (ADR 0009): o `main.area-stage` leva `data-area`, o cenário decorativo, o `h1.area-title`, o personagem da área (`personaFigure` de `packages/contracts`, no HTML inicial), o `.area-outlet`, onde o MFE é montado, e o botão de volta para a home. A aparência vem de `/_ds/areas.css`, ligada por `<link>`; o `shell.css` só cuida do cabeçalho e da altura. O botão de pausa do cenário (`label.area-motion`) fica no grupo do canto, antes da bandeira. Detalhes em `docs/plans/areas-em-construcao.md`.
 - Ainda não implementado: foco e título ao trocar de área, `hreflang` e `canonical`.
 - Teto de JavaScript: ver `docs/quality/budgets.md`.
 

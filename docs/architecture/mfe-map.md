@@ -56,6 +56,7 @@ Navegar entre os dois tipos recarrega o documento (link `<a>` comum). Navegar de
 - Fala com o shell só por eventos tipados de `packages/contracts`.
 - Lê dados só por `packages/content`.
 - Roda sozinho em desenvolvimento, com uma página HTML mínima própria.
+- É montado dentro do palco que o shell desenha (`.area-outlet`) e marca com `part` o que a folha das páginas internas estiliza (ADR 0009).
 
 ## Projetos em duas áreas
 

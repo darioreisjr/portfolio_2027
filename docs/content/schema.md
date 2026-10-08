@@ -173,7 +173,6 @@ Textos da tela de escolha de perfil. Sem `status`, como `ui`. Ficam fora de `ui`
 | `title`                         | string (a chamada)                                                 | sim         |
 | `enter`                         | string (rótulo do link que abre a área)                            | sim         |
 | `back`                          | string (rótulo do botão que desfaz a escolha)                      | sim         |
-| `pauseMotion`                   | string (rótulo do controle que pausa a animação)                   | sim         |
 | `music`                         | string (nome acessível do botão de som: música de fundo e efeitos) | sim         |
 | `personas.<perfil>.phrase`      | string, para `recruiter`, `tech`, `client` e `community`           | sim         |
 | `personas.<perfil>.description` | string: o que a área traz e para quem, no tom daquele público      | sim         |
@@ -182,7 +181,7 @@ Textos da tela de escolha de perfil. Sem `status`, como `ui`. Ficam fora de `ui`
 
 Sem `status`: é texto de interface, não conteúdo sobre o autor.
 
-Inclui `themeToggle`, o nome acessível do seletor de tema, e `languageSwitcher`, o do grupo de bandeiras que troca o idioma. Os nomes dos idiomas não ficam aqui: cada um aparece no próprio idioma e vem de `packages/contracts`.
+Inclui `themeToggle`, o nome acessível do seletor de tema, `languageSwitcher`, o do grupo de bandeiras que troca o idioma, `pauseMotion`, o do botão que pausa a animação (home e páginas internas), e `construction`, com `title`, `text` e `back`: o título, a frase e o rótulo do botão de volta da tela "em construção". Os nomes dos idiomas não ficam aqui: cada um aparece no próprio idioma e vem de `packages/contracts`.
 
 Textos de interface (rótulos de navegação, botões, títulos de seção), separados do conteúdo sobre o autor. Chaves idênticas nos quatro arquivos; a validação falha se alguma faltar.
 
