@@ -1,6 +1,5 @@
 import '../home.css';
 import type { Locale } from '@portfolio/contracts';
-import type {} from '@portfolio/design-system/react';
 import Link from 'next/link';
 import { buildHome, type Persona } from '../../lib/home';
 import { PersonaList } from './persona-list';
@@ -18,7 +17,7 @@ function PersonaItem({ persona, enter, back, first }: PersonaItemProps) {
   const ids = {
     actions: `persona-actions-${persona.area}`,
     phrase: `persona-phrase-${persona.area}`,
-    tech: `persona-tech-${persona.area}`,
+    description: `persona-description-${persona.area}`,
   };
 
   const figure = (
@@ -48,7 +47,7 @@ function PersonaItem({ persona, enter, back, first }: PersonaItemProps) {
   const Anchor = persona.sameApp ? Link : 'a';
 
   return (
-    <li>
+    <li data-area={persona.area}>
       {/* Sem JavaScript é um link para a área. Com JavaScript, persona-list.tsx
           faz dele o botão que escolhe o personagem e abre o painel abaixo.
           Sempre <a>: o <Link> navegaria antes de a lista tratar o clique. */}
@@ -56,11 +55,13 @@ function PersonaItem({ persona, enter, back, first }: PersonaItemProps) {
         {figure}
       </a>
       <div className="persona-actions" id={ids.actions} hidden>
-        <ds-badge id={ids.tech}>{persona.badge}</ds-badge>
+        <p className="persona-description" id={ids.description}>
+          {persona.description}
+        </p>
         <Anchor
           className="persona-enter"
           href={persona.href}
-          aria-describedby={`${ids.phrase} ${ids.tech}`}
+          aria-describedby={`${ids.phrase} ${ids.description}`}
         >
           {enter}
         </Anchor>

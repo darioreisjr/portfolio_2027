@@ -29,7 +29,8 @@ export interface Persona {
   /** Falso quando a área é de outro app: aí o link é `<a>`, nunca `<Link>`. */
   sameApp: boolean;
   phrase: string;
-  badge: string;
+  /** O que a área traz e para quem, no tom daquele público. */
+  description: string;
   figure: Figure;
 }
 
@@ -67,7 +68,7 @@ export function buildHome(locale: Locale): HomeModel {
         href: pathFor(area, locale),
         sameApp: route.owner === 'web-next',
         phrase: text.personas[area].phrase,
-        badge: text.madeIn.replace('{tech}', route.framework),
+        description: text.personas[area].description,
         figure: {
           src: `${HOME_ASSETS_PATH}personas/${figures[area].file}`,
           avif: figures[area].avif && `${HOME_ASSETS_PATH}personas/${figures[area].avif}`,

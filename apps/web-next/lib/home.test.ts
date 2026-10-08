@@ -23,14 +23,11 @@ describe('tela de escolha de perfil', () => {
     ]);
   });
 
-  it('mostra a tecnologia de cada área no selo', () => {
-    const badges = buildHome('pt-BR').personas.map((persona) => persona.badge);
-    expect(badges).toEqual([
-      'Feito em Vue',
-      'Feito em Angular',
-      'Feito em React',
-      'Feito em Next.js',
-    ]);
+  it('dá a cada perfil a descrição do idioma', () => {
+    const descriptions = buildHome('en').personas.map((persona) => persona.description);
+    expect(descriptions).toHaveLength(4);
+    expect(descriptions[0]).toMatch(/^For those evaluating a candidate\./);
+    expect(new Set(descriptions).size).toBe(4);
   });
 
   it('marca como mesmo app só a área servida pelo Next.js', () => {

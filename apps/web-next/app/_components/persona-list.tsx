@@ -22,7 +22,7 @@ function select(list: HTMLElement, item: HTMLLIElement) {
   item.setAttribute('data-selected', '');
   item.querySelector('a.persona')?.setAttribute('aria-expanded', 'true');
   item.querySelector('.persona-actions')?.removeAttribute('hidden');
-  // O foco em "Entrar" faz o leitor de tela anunciar a frase e a tecnologia.
+  // O foco em "Entrar" faz o leitor de tela anunciar a frase e a descrição.
   item.querySelector<HTMLAnchorElement>('.persona-enter')?.focus({ preventScroll: true });
 }
 

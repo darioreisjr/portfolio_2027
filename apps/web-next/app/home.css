@@ -164,6 +164,8 @@
   --figure-max-selected: 28rem;
   --lift: 0.12;
   --peek: 12%;
+  /* Largura do painel do personagem escolhido, em tela larga. */
+  --panel-measure: 22rem;
 
   display: flex;
   flex-wrap: nowrap;
@@ -173,6 +175,29 @@
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   list-style: none;
+}
+
+/* Cada área tem a cor da tecnologia que a serve. É enfeite: quem diz o que é o
+   perfil são a frase e a descrição. */
+.personas > li {
+  --persona-color: var(--color-accent);
+  --persona-on-color: var(--color-on-area);
+}
+
+.personas > li[data-area='recruiter'] {
+  --persona-color: var(--color-area-recruiter);
+}
+
+.personas > li[data-area='tech'] {
+  --persona-color: var(--color-area-tech);
+}
+
+.personas > li[data-area='client'] {
+  --persona-color: var(--color-area-client);
+}
+
+.personas > li[data-area='community'] {
+  --persona-color: var(--color-area-community);
 }
 
 .personas > li {
@@ -205,6 +230,22 @@
   outline-offset: var(--focus-ring-offset);
 }
 
+/* Brilho na cor da área atrás do personagem escolhido, como aura de seleção de
+   personagem. Fica na mesma célula da figura, por baixo dela. */
+.persona::before {
+  grid-area: 1 / 1;
+  align-self: stretch;
+  justify-self: stretch;
+  background: radial-gradient(closest-side, var(--persona-color), transparent);
+  opacity: 0;
+  content: '';
+  transition: opacity var(--motion-duration-md) var(--motion-ease-out);
+}
+
+li[data-selected] > .persona::before {
+  opacity: 0.45;
+}
+
 /* O <picture> só escolhe o formato; quem entra no layout é a imagem. */
 .persona picture {
   display: contents;
@@ -228,25 +269,74 @@
   font-weight: var(--text-weight-strong);
 }
 
-/* Painel do personagem escolhido. */
+/* Painel do personagem escolhido, em estilo menu de RPG: a descrição em uma
+   caixa de diálogo e as duas opções embaixo. No carrossel as opções ficam lado
+   a lado, para sobrar altura para a figura. */
 .persona-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-block-md);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-block-sm) var(--space-inline-sm);
+  box-sizing: border-box;
+  inline-size: 100%;
 }
 
 .persona-actions[hidden] {
   display: none;
 }
 
+/* Caixa de fundo sólido, com a barra na cor da área e os cantos do outro lado
+   cortados. O fundo é do próprio elemento, e é contra ele que o texto é lido. */
+.persona-description {
+  --cut: var(--space-inline-sm);
+
+  grid-column: 1 / -1;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--space-block-sm) var(--space-inline-md);
+  border-inline-start: calc(var(--border-width-marker) * 2) solid var(--persona-color);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--text-size-sm);
+  text-align: start;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%
+  );
+}
+
+/* Opções do menu: cantos cortados e borda dupla. O elemento continua um
+   retângulo, para o anel de foco e a área de clique ficarem inteiros; a forma
+   vem de dois pseudo-elementos recortados.
+   `--i1` a `--i3` são os recuos de cada linha e `--c0` a `--c3` os chanfros,
+   que diminuem para as linhas ficarem paralelas na diagonal. */
 .persona-enter,
 .persona-back {
+  --line: var(--border-width-control);
+  --i0: 0px;
+  --i1: var(--line);
+  --i2: calc(var(--line) * 2);
+  --i3: calc(var(--line) * 3);
+  --c0: var(--space-inline-sm);
+  --c1: calc(var(--c0) - var(--line) * 0.586);
+  --c2: calc(var(--c0) - var(--line) * 1.172);
+  --c3: calc(var(--c0) - var(--line) * 1.758);
+  /* Seta de cursor do menu: só na opção em foco ou sob o ponteiro. */
+  --arrow: transparent;
+
+  display: grid;
+  place-items: center;
+  position: relative;
+  isolation: isolate;
   box-sizing: border-box;
-  min-width: 9rem;
+  min-block-size: var(--size-control);
   padding: var(--space-block-sm) var(--space-inline-lg);
-  border: var(--border-width-control) solid transparent;
-  border-radius: var(--radius-full);
+  border: 0;
+  background: none;
+  color: var(--ink);
   font: inherit;
   font-weight: var(--text-weight-strong);
   text-align: center;
@@ -254,21 +344,117 @@
   cursor: pointer;
 }
 
+.persona-enter::before,
+.persona-enter::after,
+.persona-back::before,
+.persona-back::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: '';
+}
+
+/* Duas linhas na cor da área, com um vão entre elas. */
+.persona-enter::before,
+.persona-back::before {
+  background: var(--persona-color);
+  clip-path: polygon(
+    evenodd,
+    calc(var(--i0) + var(--c0)) var(--i0),
+    calc(100% - var(--i0) - var(--c0)) var(--i0),
+    calc(100% - var(--i0)) calc(var(--i0) + var(--c0)),
+    calc(100% - var(--i0)) calc(100% - var(--i0) - var(--c0)),
+    calc(100% - var(--i0) - var(--c0)) calc(100% - var(--i0)),
+    calc(var(--i0) + var(--c0)) calc(100% - var(--i0)),
+    var(--i0) calc(100% - var(--i0) - var(--c0)),
+    var(--i0) calc(var(--i0) + var(--c0)),
+    calc(var(--i0) + var(--c0)) var(--i0),
+    calc(var(--i1) + var(--c1)) var(--i1),
+    calc(100% - var(--i1) - var(--c1)) var(--i1),
+    calc(100% - var(--i1)) calc(var(--i1) + var(--c1)),
+    calc(100% - var(--i1)) calc(100% - var(--i1) - var(--c1)),
+    calc(100% - var(--i1) - var(--c1)) calc(100% - var(--i1)),
+    calc(var(--i1) + var(--c1)) calc(100% - var(--i1)),
+    var(--i1) calc(100% - var(--i1) - var(--c1)),
+    var(--i1) calc(var(--i1) + var(--c1)),
+    calc(var(--i1) + var(--c1)) var(--i1),
+    calc(var(--i0) + var(--c0)) var(--i0),
+    calc(var(--i2) + var(--c2)) var(--i2),
+    calc(100% - var(--i2) - var(--c2)) var(--i2),
+    calc(100% - var(--i2)) calc(var(--i2) + var(--c2)),
+    calc(100% - var(--i2)) calc(100% - var(--i2) - var(--c2)),
+    calc(100% - var(--i2) - var(--c2)) calc(100% - var(--i2)),
+    calc(var(--i2) + var(--c2)) calc(100% - var(--i2)),
+    var(--i2) calc(100% - var(--i2) - var(--c2)),
+    var(--i2) calc(var(--i2) + var(--c2)),
+    calc(var(--i2) + var(--c2)) var(--i2),
+    calc(var(--i0) + var(--c0)) var(--i0),
+    calc(var(--i3) + var(--c3)) var(--i3),
+    calc(100% - var(--i3) - var(--c3)) var(--i3),
+    calc(100% - var(--i3)) calc(var(--i3) + var(--c3)),
+    calc(100% - var(--i3)) calc(100% - var(--i3) - var(--c3)),
+    calc(100% - var(--i3) - var(--c3)) calc(100% - var(--i3)),
+    calc(var(--i3) + var(--c3)) calc(100% - var(--i3)),
+    var(--i3) calc(100% - var(--i3) - var(--c3)),
+    var(--i3) calc(var(--i3) + var(--c3)),
+    calc(var(--i3) + var(--c3)) var(--i3),
+    calc(var(--i0) + var(--c0)) var(--i0)
+  );
+}
+
+/* Miolo, com a seta à esquerda do rótulo. */
+.persona-enter::after,
+.persona-back::after {
+  background:
+    conic-gradient(from 240deg at 100% 50%, var(--arrow) 60deg, transparent 0)
+      calc(var(--i3) + var(--space-inline-sm)) 50% / 0.6em 0.7em no-repeat,
+    var(--fill);
+  clip-path: polygon(
+    calc(var(--i3) + var(--c3)) var(--i3),
+    calc(100% - var(--i3) - var(--c3)) var(--i3),
+    calc(100% - var(--i3)) calc(var(--i3) + var(--c3)),
+    calc(100% - var(--i3)) calc(100% - var(--i3) - var(--c3)),
+    calc(100% - var(--i3) - var(--c3)) calc(100% - var(--i3)),
+    calc(var(--i3) + var(--c3)) calc(100% - var(--i3)),
+    var(--i3) calc(100% - var(--i3) - var(--c3)),
+    var(--i3) calc(var(--i3) + var(--c3))
+  );
+}
+
 .persona-enter {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
+  --fill: var(--persona-color);
+  --ink: var(--persona-on-color);
 }
 
 .persona-back {
-  border-color: var(--color-text-muted);
-  background: var(--color-surface);
-  color: var(--color-text);
+  --fill: var(--color-surface);
+  --ink: var(--color-text);
+}
+
+/* `:focus`, e não `:focus-visible`: ao escolher o personagem o foco vai para o
+   "Entrar" por script, e a seta já nasce nele, também no toque. */
+:is(.persona-enter, .persona-back):is(:hover, :focus) {
+  --arrow: var(--ink);
+}
+
+/* Com o ponteiro em uma opção, a seta sai da outra. */
+.persona-actions:has(:is(.persona-enter, .persona-back):hover)
+  :is(.persona-enter, .persona-back):not(:hover) {
+  --arrow: transparent;
 }
 
 .persona-enter:focus-visible,
 .persona-back:focus-visible {
   outline: var(--focus-ring-width) solid var(--color-focus-ring);
   outline-offset: var(--focus-ring-offset);
+}
+
+/* Com cores forçadas os fundos somem: uma borda comum mantém o botão visível. */
+@media (forced-colors: active) {
+  .persona-enter,
+  .persona-back {
+    border: var(--line) solid;
+  }
 }
 
 /* Carrossel com um personagem escolhido: a rolagem trava no lugar e os outros
@@ -312,7 +498,7 @@
    de tamanho quando o personagem é escolhido. */
 @media (max-width: 47.99rem) {
   .persona-actions[hidden] {
-    display: flex;
+    display: grid;
     visibility: hidden;
   }
 }
@@ -334,6 +520,25 @@
 
   .persona-dots {
     display: none;
+  }
+
+  /* Menu em coluna ao lado do personagem. */
+  .persona-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-block-md);
+    inline-size: auto;
+    max-inline-size: var(--panel-measure);
+  }
+
+  .persona-description {
+    font-size: var(--text-size-md);
+  }
+
+  .persona-enter,
+  .persona-back {
+    min-inline-size: 11rem;
   }
 
   .persona:focus-visible,
@@ -393,7 +598,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .persona-figure,
-  .persona-phrase {
+  .persona-phrase,
+  .persona::before {
     transition: none;
   }
 

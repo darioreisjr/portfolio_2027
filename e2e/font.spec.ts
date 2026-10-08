@@ -35,6 +35,33 @@ for (const route of routes) {
   });
 }
 
+// O LCP da home está no limite: ela só pode pedir o peso 700, inclusive com o
+// painel do personagem aberto (a descrição também é em negrito).
+for (const viewport of [
+  { width: 1280, height: 800 },
+  { width: 390, height: 844 },
+]) {
+  test(`a home pede um só arquivo de fonte em ${viewport.width}x${viewport.height}`, async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ viewport });
+    const page = await context.newPage();
+    const requested = fontRequests(page);
+    await page.goto('/');
+    await expect(page.locator('a.persona').first()).toHaveAttribute('role', 'button');
+    await page.evaluate(() => document.fonts.ready);
+
+    await page.locator('a.persona').first().click();
+    await expect(page.locator('li[data-selected] .persona-description')).toBeVisible();
+    await page.evaluate(() => document.fonts.ready);
+
+    expect([...new Set(requested)]).toEqual([
+      '/_ds/fonts/m-plus-rounded-1c-latin-700-normal.woff2',
+    ]);
+    await context.close();
+  });
+}
+
 test('a fonte chega ao conteúdo de um MFE, dentro do shadow DOM', async ({ page }) => {
   await page.goto('/recrutador/');
   await expect(page.locator('mfe-recrutador')).toContainText('Olá');

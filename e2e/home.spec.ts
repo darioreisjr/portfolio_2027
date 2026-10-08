@@ -52,7 +52,7 @@ async function expectSelected(page: Page, index: number): Promise<void> {
   await expect(personas(page).nth(index)).toHaveAttribute('aria-expanded', 'true');
   await expect(page.locator('a.persona:visible')).toHaveCount(1);
   await expect(page.locator('.persona-actions:visible')).toHaveCount(1);
-  await expect(items(page).nth(index).locator('ds-badge')).toBeVisible();
+  await expect(items(page).nth(index).locator('.persona-description')).toBeVisible();
 }
 
 async function expectNoneSelected(page: Page): Promise<void> {
@@ -99,7 +99,7 @@ test.describe('home em tela larga (palco)', () => {
     });
   }
 
-  test('diz a frase de cada perfil e guarda a tecnologia para o painel', async ({ page }) => {
+  test('diz a frase de cada perfil e guarda a descrição para o painel', async ({ page }) => {
     await openHome(page);
     await expect(page.locator('.persona-phrase')).toHaveText([
       'Estou contratando',
@@ -107,13 +107,87 @@ test.describe('home em tela larga (palco)', () => {
       'Tenho um projeto',
       'Vim aprender e trocar ideias',
     ]);
-    await expect(page.locator('.persona-actions ds-badge')).toHaveText([
-      'Feito em Vue',
-      'Feito em Angular',
-      'Feito em React',
-      'Feito em Next.js',
+    await expect(page.locator('.persona-actions .persona-description')).toHaveText([
+      /^Para quem está avaliando um candidato\./,
+      /^Para quem quer olhar por baixo do capô\./,
+      /^Para quem tem uma ideia ou um problema para resolver\./,
+      /^Para quem gosta de aprender e compartilhar\./,
     ]);
-    await expect(page.locator('.persona-actions ds-badge:visible')).toHaveCount(0);
+    await expect(page.locator('.persona-description:visible')).toHaveCount(0);
+    // O selo com o nome da tecnologia saiu da tela.
+    await expect(page.locator('.home ds-badge')).toHaveCount(0);
+    await expect(page.locator('.home')).not.toContainText('Feito em');
+  });
+
+  test('cada área tem a cor da tecnologia, e o brilho só aparece no escolhido', async ({
+    page,
+  }) => {
+    await openHome(page);
+    const colors = await items(page).evaluateAll((list) =>
+      list.map((item) => getComputedStyle(item).getPropertyValue('--persona-color').trim()),
+    );
+    expect(colors).toEqual(['#18794e', '#bc002d', '#0a6f94', '#0c0e13']);
+
+    const glow = (index: number) =>
+      personas(page)
+        .nth(index)
+        .evaluate((persona) => getComputedStyle(persona, '::before').opacity);
+    expect(await glow(1)).toBe('0');
+    await personas(page).nth(1).click();
+    await expectSelected(page, 1);
+    await expect.poll(() => glow(1)).toBe('0.45');
+
+    // "Entrar" na cor da área; "Voltar" neutro.
+    const fill = (selector: string) =>
+      items(page)
+        .nth(1)
+        .locator(selector)
+        .evaluate((option) => getComputedStyle(option, '::after').backgroundColor);
+    expect(await fill('.persona-enter')).toBe('rgb(188, 0, 45)');
+    expect(await fill('.persona-back')).toBe('rgb(255, 255, 255)');
+  });
+
+  test('no tema escuro as cores das áreas são as do tema', async ({ browser }) => {
+    const context = await browser.newContext({ colorScheme: 'dark' });
+    const page = await context.newPage();
+    await openHome(page);
+    const colors = await items(page).evaluateAll((list) =>
+      list.map((item) => getComputedStyle(item).getPropertyValue('--persona-color').trim()),
+    );
+    // O build abrevia o branco.
+    expect(colors).toEqual(['#4fc08d', '#ff8087', '#61dafb', '#fff']);
+    await context.close();
+  });
+
+  test('as opções do painel são um menu: seta na opção em foco ou sob o ponteiro', async ({
+    page,
+  }) => {
+    await openHome(page);
+    await personas(page).nth(0).click();
+    await expectSelected(page, 0);
+
+    // A seta é desenho: os nomes continuam sendo só o rótulo.
+    await expect(enter(page)).toHaveAccessibleName('Entrar');
+    await expect(back(page)).toHaveAccessibleName('Voltar');
+
+    const arrow = (option: Locator) =>
+      option.evaluate((element) => getComputedStyle(element).getPropertyValue('--arrow').trim());
+    // O foco foi para o "Entrar" ao escolher: a seta já está nele.
+    await expect(enter(page)).toBeFocused();
+    expect(await arrow(enter(page))).not.toBe('transparent');
+    expect(await arrow(back(page))).toBe('transparent');
+
+    await back(page).hover();
+    expect(await arrow(back(page))).not.toBe('transparent');
+    expect(await arrow(enter(page))).toBe('transparent');
+
+    // Alvo de toque e foco visível, mesmo com os cantos cortados.
+    for (const option of [enter(page), back(page)]) {
+      expect((await option.boundingBox())?.height).toBeGreaterThanOrEqual(44);
+    }
+    await page.keyboard.press('Tab');
+    await expect(back(page)).toBeFocused();
+    await expect(back(page)).not.toHaveCSS('outline-style', 'none');
   });
 
   test('em repouso não há texto; a frase aparece só no personagem sob o mouse', async ({
@@ -158,7 +232,9 @@ test.describe('home em tela larga (palco)', () => {
     await expectSelected(page, 1);
     await expect(enter(page)).toBeFocused();
     // O leitor de tela ouve a frase e a tecnologia junto do "Entrar".
-    await expect(enter(page)).toHaveAccessibleDescription('Quero ver o código Feito em Angular');
+    await expect(enter(page)).toHaveAccessibleDescription(
+      /^Quero ver o código Para quem quer olhar por baixo do capô\./,
+    );
 
     await page.keyboard.press('Tab');
     await expect(back(page)).toBeFocused();
@@ -417,7 +493,7 @@ async function outlineContrast(page: Page, selectors: string[]): Promise<Record<
   // As três capturas têm de ser da mesma cena: tudo parado onde está.
   const hidden =
     '*, *::before, *::after { animation-play-state: paused !important; transition: none !important; }' +
-    '.home ds-badge, .persona-enter { visibility: hidden !important; }';
+    '';
 
   // A posição do texto só vale depois de a fonte chegar e de a cena parar: uma
   // fonte que troca no meio das capturas tira as letras do lugar medido.
@@ -542,6 +618,8 @@ const textBlocks = ['.home h1', '.persona .persona-phrase'];
 const selectedBlocks = [
   '.home h1',
   'li[data-selected] .persona-phrase',
+  'li[data-selected] .persona-description',
+  'li[data-selected] .persona-enter',
   'li[data-selected] .persona-back',
 ];
 
@@ -650,27 +728,29 @@ test.describe('cenário de sakura em tela larga', () => {
       await context.close();
     });
 
-    test(`com um personagem escolhido o texto tem contraste AA (${colorScheme})`, async ({
-      browser,
-    }) => {
-      // Sem a animação de entrada, a captura não pega o personagem pela metade.
-      const context = await browser.newContext({
-        viewport: { width: 1280, height: 800 },
-        colorScheme,
-        reducedMotion: 'reduce',
-      });
-      const page = await context.newPage();
-      await openHome(page);
-      await figuresLoaded(page);
-      await personas(page).first().click();
-      await expectSelected(page, 0);
+    for (const index of [0, 1, 2, 3]) {
+      test(`com o personagem ${index + 1} escolhido o texto tem contraste AA (${colorScheme})`, async ({
+        browser,
+      }) => {
+        // Sem a animação de entrada, a captura não pega o personagem pela metade.
+        const context = await browser.newContext({
+          viewport: { width: 1280, height: 800 },
+          colorScheme,
+          reducedMotion: 'reduce',
+        });
+        const page = await context.newPage();
+        await openHome(page);
+        await figuresLoaded(page);
+        await personas(page).nth(index).click();
+        await expectSelected(page, index);
 
-      const contrasts = await outlineContrast(page, selectedBlocks);
-      for (const [block, value] of Object.entries(contrasts)) {
-        expect(value, `${block} em ${colorScheme}`).toBeGreaterThanOrEqual(4.5);
-      }
-      await context.close();
-    });
+        const contrasts = await outlineContrast(page, selectedBlocks);
+        for (const [block, value] of Object.entries(contrasts)) {
+          expect(value, `${block} em ${colorScheme}`).toBeGreaterThanOrEqual(4.5);
+        }
+        await context.close();
+      });
+    }
   }
 });
 

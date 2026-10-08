@@ -83,6 +83,8 @@ test.describe('a tela cabe na janela, sem rolagem', () => {
       // Sozinho no palco o personagem não encolhe; no carrossel fica igual.
       const selected = (await figure.boundingBox())?.height ?? 0;
       expect(selected).toBeGreaterThanOrEqual(Math.floor(atRest));
+      // Com a descrição no painel, a figura ainda fica de bom tamanho.
+      expect(selected).toBeGreaterThanOrEqual(200);
       await context.close();
     });
   }
