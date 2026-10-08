@@ -18,6 +18,9 @@ export default async function RootLayout({
   const page = resolvePage(await params);
   const locale = page?.locale ?? defaultLocale;
   const area = page?.entry.area;
+  const alternates = area ? languageAlternates(area, locale) : [];
+  const currentLanguage = alternates.find((alternate) => alternate.current);
+  const otherLanguages = alternates.filter((alternate) => !alternate.current);
 
   return (
     // O script abaixo põe `data-theme` no <html> antes da hidratação; sem o
@@ -54,21 +57,26 @@ export default async function RootLayout({
                 </span>
               </label>
             )}
-            {/* Troca de idioma: links comuns para a mesma página (ADR 0006), nunca
-                <Link>: cada idioma é outro documento, com o próprio `lang`. */}
-            <nav className="ds-language-switcher" aria-label={ui[locale].languageSwitcher}>
-              <ul>
-                {languageAlternates(area, locale).map(
-                  ({ locale: target, name, href, flag, current }) => (
+            {/* Troca de idioma (ADR 0006): a bandeira do idioma em uso abre os outros
+                três, que são links comuns para a mesma página, nunca <Link>: cada
+                idioma é outro documento, com o próprio `lang`. Sem script. */}
+            <nav aria-label={ui[locale].languageSwitcher}>
+              <details className="ds-language-switcher">
+                <summary title={currentLanguage?.name}>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- export estático, sem otimizador */}
+                  <img
+                    src={currentLanguage?.flag}
+                    alt={currentLanguage?.name ?? ''}
+                    width={28}
+                    height={28}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </summary>
+                <ul>
+                  {otherLanguages.map(({ locale: target, name, href, flag }) => (
                     <li key={target}>
-                      <a
-                        href={href}
-                        lang={target}
-                        hrefLang={target}
-                        aria-label={name}
-                        title={name}
-                        aria-current={current ? 'page' : undefined}
-                      >
+                      <a href={href} lang={target} hrefLang={target} aria-label={name} title={name}>
                         {/* eslint-disable-next-line @next/next/no-img-element -- export estático, sem otimizador */}
                         <img
                           src={flag}
@@ -80,9 +88,9 @@ export default async function RootLayout({
                         />
                       </a>
                     </li>
-                  ),
-                )}
-              </ul>
+                  ))}
+                </ul>
+              </details>
             </nav>
           </footer>
         )}

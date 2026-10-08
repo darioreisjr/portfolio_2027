@@ -259,7 +259,9 @@ test('se o arquivo da música falhar, o botão continua ligado: os efeitos não 
   expect(errors).toEqual([]);
 });
 
-test('em 360 px o grupo com seis controles cabe e não encosta no painel', async ({ browser }) => {
+test('em 360 px o grupo com som, pausa e bandeira cabe e não encosta no painel', async ({
+  browser,
+}) => {
   // Com movimento: a pausa também está no grupo.
   const context = await browser.newContext({
     viewport: { width: 360, height: 740 },
@@ -272,7 +274,7 @@ test('em 360 px o grupo com seis controles cabe e não encosta no painel', async
   const dock = await page.locator('.ds-dock').boundingBox();
   if (!dock) throw new Error('sem grupo do canto');
   expect(dock.x).toBeGreaterThanOrEqual(0);
-  expect(dock.width).toBe(6 * 44);
+  expect(dock.width).toBe(3 * 44);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
 
   await page.locator('a.persona').first().tap();
