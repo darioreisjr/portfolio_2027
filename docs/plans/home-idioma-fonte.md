@@ -4,6 +4,8 @@
 - Origem: pedido e entrevista com o autor, `discovery-analyst` e `architect`
 - Decisão de arquitetura: `docs/architecture/adr/0006-troca-de-idioma.md`
 
+> Mudou em 2026-10-08 (`docs/plans/home-som-e-bandeiras.md`): só a bandeira do idioma em uso fica à vista; as outras três abrem em lista, para cima.
+
 **Objetivo:** cinco mudanças pedidas pelo autor, sem JavaScript novo e com a troca de idioma funcionando sem script em todos os documentos.
 
 ## Decisões do autor

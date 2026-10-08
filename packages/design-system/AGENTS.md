@@ -9,7 +9,7 @@ Web Components em Lit, agnósticos de framework (ADR 0003). Hoje: `<ds-badge>` e
 - Melhoria progressiva: conteúdo no light DOM (slots), legível antes do upgrade.
 - Exceção (ADR 0005): controle que só funciona com JavaScript, como o `<ds-theme-toggle>`, fica oculto até o upgrade, com o espaço reservado pela regra `:not(:defined)` dos tokens.
 - `<ds-theme-toggle>` é o dono da troca de tema: aplica `data-theme`, guarda a escolha e emite o evento. O nome acessível entra pelo atributo `label`; o componente não lê `packages/content`.
-- Elemento sem comportamento não vira custom element (ADR 0006): o seletor de idioma é marcação mais CSS dos tokens. A marcação de referência é a story `ds-language-switcher`, e o teste `ds-language-switcher.test.ts` cobre a aparência.
+- Elemento sem comportamento não vira custom element (ADR 0006): o seletor de idioma é marcação mais CSS dos tokens, um `<details>` cujo `<summary>` é a bandeira do idioma em uso e cuja lista abre para cima com os outros três. A marcação de referência é a story `ds-language-switcher`, e o teste `ds-language-switcher.test.ts` cobre a aparência.
 - `assets/` guarda recursos estáticos compartilhados. As bandeiras de `assets/flags/` vão para `dist/flags/` e são publicadas em `/_ds/flags/`; as cores de cada bandeira ficam no próprio arquivo.
 - Depende de `packages/contracts` para as constantes e o evento de tema.
 - Comportamento usado por uma rota só não vem para cá: mora no app dono da rota e só é promovido ao design system quando outro app precisar (ADR 0008).

@@ -12,7 +12,7 @@ Casca das áreas de MFE: gera o documento HTML de cada rota e idioma, mostra cab
 - O documento leva o script de tema de `packages/contracts` no `<head>`, antes das folhas de estilo, e o `<ds-theme-toggle>` no fim do cabeçalho. A troca de tema é do design system (ADR 0005); o shell não tem código de tema.
 - Dono de: foco e título ao trocar de área.
 - Um HTML por rota e idioma, com `<title>`, descrição, `hreflang` e `canonical` próprios.
-- Troca de idioma: o documento termina com `<footer class="ds-dock">`, com uma bandeira por idioma. São links comuns para a mesma área, vindos de `languageAlternates` de `packages/contracts`; o shell não tem código de troca (ADR 0006). O `main` reserva o espaço do grupo com `--ds-dock-reserve`.
+- Troca de idioma: o documento termina com `<footer class="ds-dock">`, com um `<details class="ds-language-switcher">`. O `<summary>` é a bandeira do idioma em uso; a lista, que abre para cima, tem os outros três como links comuns para a mesma área, vindos de `languageAlternates` de `packages/contracts`. O shell não tem código de troca (ADR 0006 e a emenda dele). O `main` reserva o espaço do grupo com `--ds-dock-reserve`.
 - Ainda não implementado: foco e título ao trocar de área, `hreflang` e `canonical`.
 - Teto de JavaScript: ver `docs/quality/budgets.md`.
 

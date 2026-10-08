@@ -6,6 +6,8 @@
 
 > Mudou em 2026-10-08 (`docs/plans/home-efeitos.md`): o botão passou a se chamar "Som" e liga também os efeitos de seleção; se a faixa falhar, o botão continua ligado.
 
+> Mudou em 2026-10-08 (`docs/plans/home-som-e-bandeiras.md`): o botão só aparece ligado com som de fato, nasce desligado mesmo com a escolha lembrada, e a página tenta retomar o som ao trocar de idioma na mesma aba. Onde este plano diz que o botão "já vem ligado" ou que dá para desligar antes de ouvir, vale o plano novo.
+
 **Objetivo:** o visitante liga uma música lofi na home por um botão no grupo fixo do canto, e a escolha fica lembrada no navegador.
 
 ## Decisões do autor
