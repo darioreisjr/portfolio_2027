@@ -167,6 +167,20 @@ ds-theme-toggle:not(:defined) {
   outline-color: var(--ds-language-switcher-current);
   outline-offset: var(--ds-language-switcher-ring-width);
 }
+
+/* Pequeno pulo de quem está sob o ponteiro, nos controles do grupo do canto.
+   Anima a imagem, não o alvo: a área de clique não se mexe. */
+@keyframes ds-hop {
+  40% {
+    translate: 0 calc(var(--space-block-xs) * -1);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .ds-language-switcher :is(summary, a):hover img {
+    animation: ds-hop calc(var(--motion-duration-md) * 2) var(--motion-ease-out);
+  }
+}
 `;
 
 const publicNames = [

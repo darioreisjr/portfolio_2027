@@ -43,9 +43,11 @@ export const primitives = {
   'size-11': '2.75rem',
   'duration-200': '200ms',
   'duration-500': '500ms',
+  'duration-700': '700ms',
   'duration-4000': '4s',
   'duration-12000': '12s',
   'ease-out': 'cubic-bezier(0.2, 0, 0, 1)',
+  'ease-in-out': 'cubic-bezier(0.65, 0, 0.35, 1)',
   'radius-12': '0.75rem',
   'radius-pill': '999px',
   // Arredondada de origem japonesa; só o alfabeto latino é publicado. A face
@@ -138,6 +140,10 @@ export const semanticStatic = {
   'focus-ring-offset': 'var(--space-1)',
   'motion-duration-md': 'var(--duration-200)',
   'motion-ease-out': 'var(--ease-out)',
+  // Movimento suave, de cena: entradas, escolha de personagem, destaque.
+  'motion-duration-lg': 'var(--duration-500)',
+  'motion-duration-xl': 'var(--duration-700)',
+  'motion-ease-in-out': 'var(--ease-in-out)',
   'motion-duration-theme': 'var(--duration-500)',
   'motion-duration-sway': 'var(--duration-4000)',
   'motion-duration-drift': 'var(--duration-12000)',
