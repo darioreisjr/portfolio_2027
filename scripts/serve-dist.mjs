@@ -21,6 +21,7 @@ const contentTypes = {
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
   '.woff2': 'font/woff2',
+  '.mp3': 'audio/mpeg',
 };
 
 function resolveFile(pathname) {
@@ -40,8 +41,29 @@ createServer((request, response) => {
   const { pathname } = new URL(request.url ?? '/', 'http://localhost');
   const file = resolveFile(pathname);
   const target = file ?? join(distDir, '404.html');
-  response.writeHead(file ? 200 : 404, {
-    'Content-Type': contentTypes[extname(target)] ?? 'application/octet-stream',
-  });
+  const type = contentTypes[extname(target)] ?? 'application/octet-stream';
+
+  // Navegadores pedem mídia em pedaços (o Safari exige): atende um intervalo só.
+  const range = file && /^bytes=(\d*)-(\d*)$/.exec(request.headers.range ?? '');
+  if (range && (range[1] || range[2])) {
+    const { size } = statSync(target);
+    const start = range[1] ? Number(range[1]) : Math.max(0, size - Number(range[2]));
+    const end = range[1] && range[2] ? Math.min(Number(range[2]), size - 1) : size - 1;
+    if (start > end || start >= size) {
+      response.writeHead(416, { 'Content-Range': `bytes */${size}` });
+      response.end();
+      return;
+    }
+    response.writeHead(206, {
+      'Content-Type': type,
+      'Accept-Ranges': 'bytes',
+      'Content-Range': `bytes ${start}-${end}/${size}`,
+      'Content-Length': end - start + 1,
+    });
+    createReadStream(target, { start, end }).pipe(response);
+    return;
+  }
+
+  response.writeHead(file ? 200 : 404, { 'Content-Type': type, 'Accept-Ranges': 'bytes' });
   createReadStream(target).pipe(response);
 }).listen(port, () => console.log(`dist/ em http://localhost:${port}`));

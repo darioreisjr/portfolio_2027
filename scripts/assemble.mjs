@@ -145,6 +145,16 @@ export function buildVercelConfig(routesList = routes) {
           },
         ],
       },
+      // O nome do arquivo de áudio leva a versão: trocar a faixa é trocar o nome.
+      {
+        source: '/_home/audio/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
       {
         source: '/_mfe/(.*)',
         headers: [

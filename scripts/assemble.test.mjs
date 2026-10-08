@@ -111,6 +111,10 @@ test('buildVercelConfig define cabeçalhos de cache para assets estáticos e HTM
   assert.ok(fonts);
   assert.equal(fonts.headers[0].value, 'public, max-age=31536000, immutable');
 
+  const audio = config.headers.find((h) => h.source === '/_home/audio/(.*)');
+  assert.ok(audio);
+  assert.equal(audio.headers[0].value, 'public, max-age=31536000, immutable');
+
   const html = config.headers.find((h) => h.source === '/(.*)\\.html');
   assert.ok(html);
   assert.equal(html.headers[0].value, 'public, max-age=0, must-revalidate');
