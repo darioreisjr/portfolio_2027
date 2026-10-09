@@ -99,6 +99,8 @@ Com a tela "em construção" das cinco páginas internas (2026-10-08, ADR 0009),
 
 Com o pop-up de imersão da home e a remoção do pt-PT (2026-10-09): `/` vai de 147,6 para 147,9 kB de JavaScript, ainda em nove arquivos; as outras rotas não mudam. O Lighthouse abre a home sem armazenamento, então mede com o pop-up aberto: LCP de 2,56 a 2,63 s, com a imagem do personagem como elemento do LCP, TBT de 37 a 40 ms e CLS 0. As bandeiras dos outros dois idiomas são pedidas quando o pop-up abre, depois do LCP. Detalhes em `docs/plans/home-imersao.md`.
 
+Com a página do recrutador e a transição de entrada (2026-10-09, ADR 0010): em produção quase nada muda, porque o conteúdo é rascunho e a página sai do bundle: `/` vai de 147,9 para 148,3 kB, ainda em nove arquivos, com LCP de 2,57 a 2,58 s; o MFE Vue vai de 29,8 para 30,2 kB e `/recrutador` de 38,8 para 38,9 kB, com LCP de 1,51 s. Com o conteúdo de exemplo (build com rascunhos), o MFE Vue mede 43,1 kB de 60 e `/recrutador` 51,8 kB de 90; a biblioteca de animação (`motion`, versão mini) responde por 4,4 kB. O LCP da página com conteúdo não foi medido. A `motion-v` foi medida e descartada: de 52 a 79 kB só no MFE. Detalhes em `docs/plans/recrutador-conteudo.md`.
+
 As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um terço do teto. O React e o Next.js já nascem perto do teto, com folga de cerca de 3 kB e, depois da tela de escolha de perfil, 5 kB; a primeira feature dessas áreas vai exigir carga sob demanda ou a decisão registrada de subir o teto.
 
 ## Outros recursos

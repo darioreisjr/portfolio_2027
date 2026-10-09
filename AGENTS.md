@@ -25,7 +25,7 @@ Idiomas: pt-BR (padrão, sem prefixo), en e es (com prefixo e rotas traduzidas).
 | `docs/product/brief.md`        | Públicos, áreas, escopo                      |
 | `docs/content/schema.md`       | Modelo dos dados JSON                        |
 | `docs/architecture/mfe-map.md` | Área por app, tabela de rotas por idioma     |
-| `docs/architecture/adr/`       | Decisões aceitas (0001 a 0009)               |
+| `docs/architecture/adr/`       | Decisões aceitas (0001 a 0010)               |
 | `docs/quality/budgets.md`      | Limites de performance, acessibilidade e SEO |
 | `docs/open-questions.md`       | O que ainda não foi decidido                 |
 
@@ -47,6 +47,7 @@ packages/
   contracts/      Eventos tipados e tabela de rotas
   config/         Configurações compartilhadas (TypeScript, lint)
 e2e/              Testes Playwright que atravessam os apps
+e2e-drafts/       Os mesmos, para páginas que só existem com conteúdo em rascunho
 docs/             Produto, arquitetura, qualidade, setup dos agentes
 scripts/          Montagem do dist, orçamentos, sincronização dos agentes
 ```
@@ -67,11 +68,12 @@ Node e pnpm são fixados no `package.json`; o pnpm baixa o Node certo sozinho. R
 | `pnpm assemble`                  | Junta os builds em `dist/`, o diretório publicado                                                       |
 | `pnpm preview`                   | Serve o `dist/` em `http://localhost:4173`                                                              |
 | `pnpm test:e2e`                  | Playwright e axe sobre o `dist/`                                                                        |
+| `pnpm test:e2e:drafts`           | Monta o `dist/` com rascunhos e testa as páginas que só existem com conteúdo de exemplo (`e2e-drafts/`) |
 | `pnpm budgets`                   | Cobra os tetos de JavaScript de `docs/quality/budgets.json`                                             |
 | `pnpm lhci`                      | Lighthouse CI sobre o `dist/`                                                                           |
 | `pnpm ai:sync`, `pnpm ai:check`  | Gera ou confere as configurações das três ferramentas                                                   |
 
-Um pacote só: `pnpm --filter <nome> <script>`. Antes de `test:e2e`, `budgets` e `lhci`: `pnpm build && pnpm assemble`.
+Um pacote só: `pnpm --filter <nome> <script>`. Antes de `test:e2e`, `budgets` e `lhci`: `pnpm build && pnpm assemble`. O `test:e2e:drafts` deixa o `dist/` com rascunhos; refaça o build de produção depois dele.
 
 ## Regras de fronteira
 

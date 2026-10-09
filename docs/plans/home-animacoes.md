@@ -69,3 +69,7 @@ Nos testes, `e2e/support/motion.ts` espera as animações que têm fim antes de 
 ## Fora desta tarefa
 
 View Transitions, no mesmo documento ou entre páginas; saída literal dos outros para os lados; entrada dos personagens no carrossel; animações nas outras páginas; biblioteca de animação.
+
+## Emenda de 2026-10-09
+
+O "Entrar" da área do recrutador passou a esperar 0,45 s antes de navegar, com a cortina da transição "corte de katana" (ADR 0010, `docs/plans/recrutador-conteudo.md`). Vale só para essa área e só para quem não pediu menos movimento; para os outros casos continua valendo que a página não espera.
