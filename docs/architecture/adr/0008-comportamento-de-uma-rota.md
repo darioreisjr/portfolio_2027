@@ -42,6 +42,10 @@ Este ADR esclarece o item 3 do ADR 0006 sem revogá-lo: ali a frase separa "marc
 - A aparência de um controle local usa os mesmos tokens dos componentes parecidos do design system, para não destoar.
 - Promover um comportamento ao design system é mudança de contrato entre apps e segue a skill `new-ds-component`.
 
+## Emenda de 2026-10-09
+
+Registrada em `docs/plans/home-imersao.md`. A home ganha um pop-up de primeira visita (idioma e imersão). Ele segue esta decisão: é comportamento de uma rota só, mora em `apps/web-next` (`lib/intro.ts`, chamado por `persona-list.tsx`) e não cria arquivo de script. A chave `portfolio:home-animacoes` é só da home (item 4) e guarda a resposta e, depois dela, o estado do botão de pausa. O item 3 ganha uma exceção: o pop-up é um `<dialog>` na camada superior, não ocupa lugar no layout e por isso não reserva espaço; sem JavaScript ele não aparece. O item 5 continua valendo: a primeira página de uma visita só pede áudio depois de um gesto, e o "Começar" com a caixa marcada é esse gesto.
+
 ## Fontes
 
 - [Next.js: Server e Client Components](https://nextjs.org/docs/app/getting-started/server-and-client-components), conferido na documentação que acompanha o Next.js 16.3.8 instalado.

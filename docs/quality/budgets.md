@@ -97,6 +97,8 @@ Com as animações da home (2026-10-08), tudo em CSS: o JavaScript não muda (14
 
 Com a tela "em construção" das cinco páginas internas (2026-10-08, ADR 0009), o JavaScript quase não muda: `/` e as outras páginas Next.js seguem em 147,6 kB e nove arquivos, `/recrutador` 38,8 kB, `/tecnico` 46,7 kB, `/clientes` 86,5 kB. As páginas internas ganham a folha `/_ds/areas.css`, de 5,9 kB comprimida, que a home não carrega. LCP: `/recrutador` 1,81 s, `/tecnico` 1,81 s, `/clientes` 1,96 s, `/como-foi-feito` 2,38 s, `/comunidade` de 2,41 a 2,55 s (passa pela melhor das três execuções, com pouca folga); CLS 0,001 em todas. `/` de 2,58 a 2,63 s, sem mudança. `/comunidade/` passou a ser medida pelo Lighthouse CI. O que foi preciso para as páginas Next.js caberem no teto está em `docs/plans/areas-em-construcao.md`.
 
+Com o pop-up de imersão da home e a remoção do pt-PT (2026-10-09): `/` vai de 147,6 para 147,9 kB de JavaScript, ainda em nove arquivos; as outras rotas não mudam. O Lighthouse abre a home sem armazenamento, então mede com o pop-up aberto: LCP de 2,56 a 2,63 s, com a imagem do personagem como elemento do LCP, TBT de 37 a 40 ms e CLS 0. As bandeiras dos outros dois idiomas são pedidas quando o pop-up abre, depois do LCP. Detalhes em `docs/plans/home-imersao.md`.
+
 As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um terço do teto. O React e o Next.js já nascem perto do teto, com folga de cerca de 3 kB e, depois da tela de escolha de perfil, 5 kB; a primeira feature dessas áreas vai exigir carga sob demanda ou a decisão registrada de subir o teto.
 
 ## Outros recursos

@@ -168,14 +168,15 @@ O corpo do artigo dentro do site não está modelado; ver `docs/open-questions.m
 
 Textos da tela de escolha de perfil. Sem `status`, como `ui`. Ficam fora de `ui` porque os MFEs importam `ui` inteiro e não precisam destes textos.
 
-| Campo                           | Tipo                                                               | Obrigatório |
-| ------------------------------- | ------------------------------------------------------------------ | ----------- |
-| `title`                         | string (a chamada)                                                 | sim         |
-| `enter`                         | string (rótulo do link que abre a área)                            | sim         |
-| `back`                          | string (rótulo do botão que desfaz a escolha)                      | sim         |
-| `music`                         | string (nome acessível do botão de som: música de fundo e efeitos) | sim         |
-| `personas.<perfil>.phrase`      | string, para `recruiter`, `tech`, `client` e `community`           | sim         |
-| `personas.<perfil>.description` | string: o que a área traz e para quem, no tom daquele público      | sim         |
+| Campo                                                                              | Tipo                                                                                                                                         | Obrigatório |
+| ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `title`                                                                            | string (a chamada)                                                                                                                           | sim         |
+| `enter`                                                                            | string (rótulo do link que abre a área)                                                                                                      | sim         |
+| `back`                                                                             | string (rótulo do botão que desfaz a escolha)                                                                                                | sim         |
+| `music`                                                                            | string (nome acessível do botão de som: música de fundo e efeitos)                                                                           | sim         |
+| `intro.title`, `intro.immersion`, `intro.hint`, `intro.hintReduced`, `intro.start` | strings do pop-up de primeira visita: título, rótulo da caixa de imersão, o que ela liga, o mesmo para quem pediu menos movimento, e o botão | sim         |
+| `personas.<perfil>.phrase`                                                         | string, para `recruiter`, `tech`, `client` e `community`                                                                                     | sim         |
+| `personas.<perfil>.description`                                                    | string: o que a área traz e para quem, no tom daquele público                                                                                | sim         |
 
 ### `ui/<locale>.json` (um por idioma)
 

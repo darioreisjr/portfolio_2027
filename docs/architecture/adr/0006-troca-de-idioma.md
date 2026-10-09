@@ -52,6 +52,8 @@ Registrada em `docs/plans/home-som-e-bandeiras.md`. O seletor passa a mostrar s�
 
 O português de Portugal foi removido por decisão do autor. Ficam três idiomas (pt-BR, en, es): onde este ADR diz "quatro links" e "os outros três", leia três e dois. A decisão não muda.
 
+No mesmo dia a home ganhou um terceiro lugar com os links de idioma: o pop-up de primeira visita (`docs/plans/home-imersao.md`). São os mesmos links comuns de `languageAlternates`; o idioma em uso aparece marcado e não é link. As bandeiras dos outros idiomas só são pedidas quando o pop-up abre.
+
 ## Fontes
 
 - [WCAG 2.2, técnica H58: atributo `lang` para mudança de idioma](https://www.w3.org/WAI/WCAG22/Techniques/html/H58)
