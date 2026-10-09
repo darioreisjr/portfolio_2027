@@ -1,0 +1,98 @@
+{
+  "example": {
+    "title": "Dados de exemplo",
+    "text": "Os projetos e as tecnologias abaixo são fictícios e mostram só o formato. O raio-x do site é real."
+  },
+  "intro": {
+    "kicker": "área técnica",
+    "title": "Código, arquitetura e decisões",
+    "text": "Para quem lê diff e pergunta \"por quê\". Estudos de caso com os trade-offs, a stack e as medições deste próprio site."
+  },
+  "terminal": {
+    "title": "Terminal",
+    "label": "Comando",
+    "placeholder": "digite ajuda",
+    "run": "Executar",
+    "shortcuts": "Comandos",
+    "output": "Saída do terminal",
+    "welcome": "Pronto. Digite um comando ou use os botões.",
+    "unknown": "Comando não encontrado: {command}. Digite ajuda.",
+    "goto": "Ir para a seção",
+    "commands": {
+      "projects": {
+        "name": "projetos",
+        "description": "estudos de caso"
+      },
+      "stack": {
+        "name": "stack",
+        "description": "tecnologias por categoria"
+      },
+      "xray": {
+        "name": "raio-x",
+        "description": "medições deste site"
+      },
+      "adr": {
+        "name": "adr",
+        "description": "decisões de arquitetura"
+      },
+      "help": {
+        "name": "ajuda",
+        "description": "lista os comandos"
+      },
+      "clear": {
+        "name": "limpar",
+        "description": "limpa a saída"
+      }
+    },
+    "replies": {
+      "projects": "{count} estudos de caso, com problema, arquitetura e trade-offs.",
+      "stack": "{count} tecnologias, filtráveis por categoria.",
+      "xray": "{count} áreas medidas contra o teto de JavaScript.",
+      "adr": "{count} decisões de arquitetura registradas."
+    }
+  },
+  "projects": {
+    "title": "Estudos de caso",
+    "problem": "Problema",
+    "architecture": "Arquitetura",
+    "tradeoffs": "Trade-offs",
+    "repo": "Código",
+    "demo": "Ver no ar"
+  },
+  "stack": {
+    "title": "Stack",
+    "all": "Todas",
+    "filter": "Filtrar por categoria",
+    "categories": {
+      "frontend": "Front-end",
+      "backend": "Back-end",
+      "database": "Banco de dados",
+      "devops": "DevOps",
+      "testing": "Testes",
+      "design": "Design",
+      "other": "Outras"
+    },
+    "levels": {
+      "learning": "aprendendo",
+      "working": "uso diário",
+      "advanced": "avançado"
+    }
+  },
+  "xray": {
+    "title": "Raio-x deste site",
+    "text": "Dados reais do repositório: cada área em uma tecnologia, com o JavaScript medido contra o teto.",
+    "measured": "Medido em",
+    "areasTitle": "Áreas e orçamento de JavaScript",
+    "area": "Área",
+    "framework": "Tecnologia",
+    "javascript": "JavaScript (gzip)",
+    "budget": "Teto",
+    "lcp": "LCP",
+    "performance": "Desempenho",
+    "accessibility": "Acessibilidade",
+    "usage": "{percent}% do teto",
+    "decisionsTitle": "Decisões de arquitetura (ADRs)",
+    "decision": "Decisão",
+    "status": "Situação"
+  }
+}

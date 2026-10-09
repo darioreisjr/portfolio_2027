@@ -1,0 +1,98 @@
+{
+  "example": {
+    "title": "Datos de ejemplo",
+    "text": "Los proyectos y las tecnologías de abajo son ficticios y solo muestran el formato. La radiografía del sitio es real."
+  },
+  "intro": {
+    "kicker": "área técnica",
+    "title": "Código, arquitectura y decisiones",
+    "text": "Para quien lee diffs y pregunta \"por qué\". Casos de estudio con sus trade-offs, el stack y las mediciones de este mismo sitio."
+  },
+  "terminal": {
+    "title": "Terminal",
+    "label": "Comando",
+    "placeholder": "escribe ayuda",
+    "run": "Ejecutar",
+    "shortcuts": "Comandos",
+    "output": "Salida del terminal",
+    "welcome": "Listo. Escribe un comando o usa los botones.",
+    "unknown": "Comando no encontrado: {command}. Escribe ayuda.",
+    "goto": "Ir a la sección",
+    "commands": {
+      "projects": {
+        "name": "proyectos",
+        "description": "casos de estudio"
+      },
+      "stack": {
+        "name": "stack",
+        "description": "tecnologías por categoría"
+      },
+      "xray": {
+        "name": "rayos-x",
+        "description": "mediciones de este sitio"
+      },
+      "adr": {
+        "name": "adr",
+        "description": "decisiones de arquitectura"
+      },
+      "help": {
+        "name": "ayuda",
+        "description": "lista los comandos"
+      },
+      "clear": {
+        "name": "limpiar",
+        "description": "limpia la salida"
+      }
+    },
+    "replies": {
+      "projects": "{count} casos de estudio, con problema, arquitectura y trade-offs.",
+      "stack": "{count} tecnologías, filtrables por categoría.",
+      "xray": "{count} áreas medidas contra el presupuesto de JavaScript.",
+      "adr": "{count} decisiones de arquitectura registradas."
+    }
+  },
+  "projects": {
+    "title": "Casos de estudio",
+    "problem": "Problema",
+    "architecture": "Arquitectura",
+    "tradeoffs": "Trade-offs",
+    "repo": "Código",
+    "demo": "Ver en línea"
+  },
+  "stack": {
+    "title": "Stack",
+    "all": "Todas",
+    "filter": "Filtrar por categoría",
+    "categories": {
+      "frontend": "Front-end",
+      "backend": "Back-end",
+      "database": "Base de datos",
+      "devops": "DevOps",
+      "testing": "Pruebas",
+      "design": "Diseño",
+      "other": "Otras"
+    },
+    "levels": {
+      "learning": "aprendiendo",
+      "working": "uso diario",
+      "advanced": "avanzado"
+    }
+  },
+  "xray": {
+    "title": "Radiografía de este sitio",
+    "text": "Datos reales del repositorio: cada área en una tecnología, con el JavaScript medido contra el presupuesto.",
+    "measured": "Medido el",
+    "areasTitle": "Áreas y presupuesto de JavaScript",
+    "area": "Área",
+    "framework": "Tecnología",
+    "javascript": "JavaScript (gzip)",
+    "budget": "Límite",
+    "lcp": "LCP",
+    "performance": "Rendimiento",
+    "accessibility": "Accesibilidad",
+    "usage": "{percent}% del límite",
+    "decisionsTitle": "Decisiones de arquitectura (ADRs)",
+    "decision": "Decisión",
+    "status": "Estado"
+  }
+}

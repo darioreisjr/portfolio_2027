@@ -37,7 +37,31 @@
         "es": "Resultado de ejemplo: qué cambió tras la entrega."
       }
     },
-    "featured": true
+    "featured": true,
+    "technical": {
+      "problem": {
+        "pt-BR": "Problema de exemplo: a aplicação carregava todas as telas em um único pacote, e a primeira abertura em rede móvel passava de cinco segundos.",
+        "en": "Example problem: the app shipped every screen in a single bundle, and the first load on a mobile network took over five seconds.",
+        "es": "Problema de ejemplo: la aplicación cargaba todas las pantallas en un único paquete, y la primera apertura en red móvil superaba los cinco segundos."
+      },
+      "architecture": {
+        "pt-BR": "Arquitetura de exemplo: divisão por rota com carga sob demanda, componentes de interface compartilhados em um pacote à parte e arquivos estáticos servidos na borda, com a versão no nome.",
+        "en": "Example architecture: route-level code splitting with lazy loading, shared UI components in a separate package and static files served from the edge, versioned by file name.",
+        "es": "Arquitectura de ejemplo: división por ruta con carga diferida, componentes de interfaz compartidos en un paquete aparte y archivos estáticos servidos en el borde, con la versión en el nombre."
+      },
+      "tradeoffs": [
+        {
+          "pt-BR": "Trade-off de exemplo: mais arquivos e mais requisições, em troca de uma carga inicial menor.",
+          "en": "Example trade-off: more files and more requests, in exchange for a smaller initial load.",
+          "es": "Trade-off de ejemplo: más archivos y más peticiones, a cambio de una carga inicial menor."
+        },
+        {
+          "pt-BR": "Trade-off de exemplo: cache de um ano exige disciplina com o nome dos arquivos; em troca, visitas repetidas não baixam nada de novo.",
+          "en": "Example trade-off: a one-year cache demands discipline with file names; in return, repeat visits download nothing new.",
+          "es": "Trade-off de ejemplo: una caché de un año exige disciplina con los nombres de archivo; a cambio, las visitas repetidas no descargan nada nuevo."
+        }
+      ]
+    }
   },
   {
     "id": "exemplo-projeto-dois",
@@ -73,6 +97,30 @@
         "en": "Another example result.",
         "es": "Otro resultado de ejemplo."
       }
+    },
+    "technical": {
+      "problem": {
+        "pt-BR": "Problema de exemplo: relatórios montados na hora, com consultas pesadas que travavam a API nos horários de pico.",
+        "en": "Example problem: reports built on demand, with heavy queries that stalled the API at peak hours.",
+        "es": "Problema de ejemplo: informes generados al momento, con consultas pesadas que bloqueaban la API en las horas pico."
+      },
+      "architecture": {
+        "pt-BR": "Arquitetura de exemplo: fila de trabalhos para os relatórios, resultados guardados em tabela própria e a API respondendo só com o estado do pedido.",
+        "en": "Example architecture: a job queue for reports, results stored in their own table and the API answering only with the request status.",
+        "es": "Arquitectura de ejemplo: cola de trabajos para los informes, resultados guardados en una tabla propia y la API respondiendo solo con el estado de la solicitud."
+      },
+      "tradeoffs": [
+        {
+          "pt-BR": "Trade-off de exemplo: o relatório deixa de ser imediato; em troca, a API fica estável sob carga.",
+          "en": "Example trade-off: reports are no longer instant; in return, the API stays stable under load.",
+          "es": "Trade-off de ejemplo: el informe deja de ser inmediato; a cambio, la API se mantiene estable bajo carga."
+        },
+        {
+          "pt-BR": "Trade-off de exemplo: mais uma peça para operar e monitorar, a fila.",
+          "en": "Example trade-off: one more piece to run and monitor, the queue.",
+          "es": "Trade-off de ejemplo: una pieza más que operar y monitorizar, la cola."
+        }
+      ]
     }
   }
 ]

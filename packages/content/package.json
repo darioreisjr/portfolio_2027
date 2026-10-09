@@ -21,6 +21,10 @@
       "types": "./dist/data/recruiter.d.ts",
       "default": "./dist/data/recruiter.js"
     },
+    "./tech": {
+      "types": "./dist/data/tech.d.ts",
+      "default": "./dist/data/tech.js"
+    },
     "./schemas": {
       "types": "./dist/schemas.d.ts",
       "default": "./dist/schemas.js"

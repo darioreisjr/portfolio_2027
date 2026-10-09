@@ -1,0 +1,98 @@
+{
+  "example": {
+    "title": "Example data",
+    "text": "The projects and technologies below are fictional and only show the format. The site x-ray is real."
+  },
+  "intro": {
+    "kicker": "tech area",
+    "title": "Code, architecture and decisions",
+    "text": "For people who read diffs and ask \"why\". Case studies with their trade-offs, the stack and the measurements of this very site."
+  },
+  "terminal": {
+    "title": "Terminal",
+    "label": "Command",
+    "placeholder": "type help",
+    "run": "Run",
+    "shortcuts": "Commands",
+    "output": "Terminal output",
+    "welcome": "Ready. Type a command or use the buttons.",
+    "unknown": "Command not found: {command}. Type help.",
+    "goto": "Go to section",
+    "commands": {
+      "projects": {
+        "name": "projects",
+        "description": "case studies"
+      },
+      "stack": {
+        "name": "stack",
+        "description": "technologies by category"
+      },
+      "xray": {
+        "name": "xray",
+        "description": "measurements of this site"
+      },
+      "adr": {
+        "name": "adr",
+        "description": "architecture decisions"
+      },
+      "help": {
+        "name": "help",
+        "description": "lists the commands"
+      },
+      "clear": {
+        "name": "clear",
+        "description": "clears the output"
+      }
+    },
+    "replies": {
+      "projects": "{count} case studies, with problem, architecture and trade-offs.",
+      "stack": "{count} technologies, filterable by category.",
+      "xray": "{count} areas measured against the JavaScript budget.",
+      "adr": "{count} architecture decisions on record."
+    }
+  },
+  "projects": {
+    "title": "Case studies",
+    "problem": "Problem",
+    "architecture": "Architecture",
+    "tradeoffs": "Trade-offs",
+    "repo": "Code",
+    "demo": "Live demo"
+  },
+  "stack": {
+    "title": "Stack",
+    "all": "All",
+    "filter": "Filter by category",
+    "categories": {
+      "frontend": "Front end",
+      "backend": "Back end",
+      "database": "Database",
+      "devops": "DevOps",
+      "testing": "Testing",
+      "design": "Design",
+      "other": "Other"
+    },
+    "levels": {
+      "learning": "learning",
+      "working": "daily use",
+      "advanced": "advanced"
+    }
+  },
+  "xray": {
+    "title": "X-ray of this site",
+    "text": "Real data from the repository: each area in one technology, with its JavaScript measured against the budget.",
+    "measured": "Measured on",
+    "areasTitle": "Areas and JavaScript budget",
+    "area": "Area",
+    "framework": "Technology",
+    "javascript": "JavaScript (gzip)",
+    "budget": "Budget",
+    "lcp": "LCP",
+    "performance": "Performance",
+    "accessibility": "Accessibility",
+    "usage": "{percent}% of the budget",
+    "decisionsTitle": "Architecture decisions (ADRs)",
+    "decision": "Decision",
+    "status": "Status"
+  }
+}

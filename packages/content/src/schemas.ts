@@ -312,3 +312,115 @@ function requireAllLocales(
     }
   }
 }
+
+const command = z.object({ name: text, description: text }).strict();
+
+/**
+ * Textos de interface da área técnica. Ficam fora de `ui` porque só o MFE dela
+ * os usa. Os comandos do terminal têm id fixo; o nome que se digita é traduzido.
+ */
+export const techUiSchema = z
+  .object({
+    /** Faixa dos blocos cujos dados são rascunho. */
+    example: labels(['title', 'text']),
+    intro: labels(['kicker', 'title', 'text']),
+    terminal: z
+      .object({
+        title: text,
+        label: text,
+        placeholder: text,
+        run: text,
+        /** Nome do grupo de botões que executam os comandos sem digitar. */
+        shortcuts: text,
+        output: text,
+        welcome: text,
+        /** `{command}` é trocado pelo que foi digitado. */
+        unknown: text,
+        goto: text,
+        commands: z
+          .object({
+            projects: command,
+            stack: command,
+            xray: command,
+            adr: command,
+            help: command,
+            clear: command,
+          })
+          .strict(),
+        /** Resposta de cada comando; `{count}` é trocado pela quantidade. */
+        replies: labels(['projects', 'stack', 'xray', 'adr']),
+      })
+      .strict(),
+    projects: labels(['title', 'problem', 'architecture', 'tradeoffs', 'repo', 'demo']),
+    stack: z
+      .object({
+        title: text,
+        all: text,
+        filter: text,
+        categories: labels([
+          'frontend',
+          'backend',
+          'database',
+          'devops',
+          'testing',
+          'design',
+          'other',
+        ]),
+        levels: labels(['learning', 'working', 'advanced']),
+      })
+      .strict(),
+    xray: z
+      .object({
+        title: text,
+        text: text,
+        measured: text,
+        areasTitle: text,
+        area: text,
+        framework: text,
+        javascript: text,
+        budget: text,
+        lcp: text,
+        performance: text,
+        accessibility: text,
+        /** Rótulo da barra de uso do teto; `{percent}` é trocado pelo número. */
+        usage: text,
+        decisionsTitle: text,
+        decision: text,
+        status: text,
+      })
+      .strict(),
+  })
+  .strict();
+export type TechUi = z.infer<typeof techUiSchema>;
+
+const kb = z.number().nonnegative();
+
+/**
+ * Raio-x do próprio site, gravado por `scripts/site-xray.mjs` (ADR 0012). Dado
+ * real do repositório: sem `status`, não é de exemplo nem sobre o autor.
+ */
+export const siteSchema = z
+  .object({
+    /** Data da última medição, `AAAA-MM-DD`. */
+    measuredAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    areas: z.array(
+      z
+        .object({
+          area: text,
+          framework: text,
+          owner: text,
+          path: text,
+          maxKb: kb,
+          jsKb: kb,
+          /** Medianas do Lighthouse; ausentes se a medição não rodou. */
+          performance: z.number().optional(),
+          accessibility: z.number().optional(),
+          lcpMs: z.number().optional(),
+        })
+        .strict(),
+    ),
+    parts: z.array(z.object({ name: text, maxKb: kb, jsKb: kb }).strict()),
+    decisions: z.array(z.object({ number: z.number().int(), title: text, status: text }).strict()),
+  })
+  .strict();
+export type Site = z.infer<typeof siteSchema>;

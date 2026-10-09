@@ -1,0 +1,160 @@
+{
+  "measuredAt": "2026-10-09",
+  "areas": [
+    {
+      "area": "home",
+      "framework": "Next.js",
+      "owner": "web-next",
+      "path": "/",
+      "maxKb": 150,
+      "jsKb": 148.3,
+      "performance": 97,
+      "accessibility": 100,
+      "lcpMs": 2564
+    },
+    {
+      "area": "recruiter",
+      "framework": "Vue",
+      "owner": "shell",
+      "path": "/recrutador/",
+      "maxKb": 90,
+      "jsKb": 52.1,
+      "performance": 99,
+      "accessibility": 100,
+      "lcpMs": 1809
+    },
+    {
+      "area": "tech",
+      "framework": "Angular",
+      "owner": "shell",
+      "path": "/tecnico/",
+      "maxKb": 140,
+      "jsKb": 68.8,
+      "performance": 99,
+      "accessibility": 100,
+      "lcpMs": 1959
+    },
+    {
+      "area": "client",
+      "framework": "React",
+      "owner": "shell",
+      "path": "/clientes/",
+      "maxKb": 110,
+      "jsKb": 86.7,
+      "performance": 99,
+      "accessibility": 100,
+      "lcpMs": 1959
+    },
+    {
+      "area": "community",
+      "framework": "Next.js",
+      "owner": "web-next",
+      "path": "/comunidade/",
+      "maxKb": 150,
+      "jsKb": 148.3,
+      "performance": 97,
+      "accessibility": 100,
+      "lcpMs": 2456
+    },
+    {
+      "area": "how-it-was-built",
+      "framework": "Next.js",
+      "owner": "web-next",
+      "path": "/como-foi-feito/",
+      "maxKb": 150,
+      "jsKb": 148.3,
+      "performance": 98,
+      "accessibility": 100,
+      "lcpMs": 2384
+    }
+  ],
+  "parts": [
+    {
+      "name": "shell",
+      "maxKb": 10,
+      "jsKb": 1.3
+    },
+    {
+      "name": "design-system",
+      "maxKb": 20,
+      "jsKb": 7.8
+    },
+    {
+      "name": "mfe-vue",
+      "maxKb": 60,
+      "jsKb": 43.1
+    },
+    {
+      "name": "mfe-react",
+      "maxKb": 80,
+      "jsKb": 77.7
+    },
+    {
+      "name": "mfe-angular",
+      "maxKb": 110,
+      "jsKb": 59.8
+    }
+  ],
+  "decisions": [
+    {
+      "number": 1,
+      "title": "Microfrontends com cinco tecnologias",
+      "status": "aceito"
+    },
+    {
+      "number": 2,
+      "title": "Composição dos microfrontends",
+      "status": "aceito"
+    },
+    {
+      "number": 3,
+      "title": "Design system",
+      "status": "aceito"
+    },
+    {
+      "number": 4,
+      "title": "Hospedagem e deploy",
+      "status": "substituído"
+    },
+    {
+      "number": 5,
+      "title": "Controle de tema no design system",
+      "status": "aceito"
+    },
+    {
+      "number": 6,
+      "title": "Troca de idioma por links, sem dono em tempo de execução",
+      "status": "aceito"
+    },
+    {
+      "number": 7,
+      "title": "Hospedagem e deploy na Vercel via GitHub Actions",
+      "status": "aceito"
+    },
+    {
+      "number": 8,
+      "title": "Comportamento de uma rota só mora no app dono da rota",
+      "status": "aceito"
+    },
+    {
+      "number": 9,
+      "title": "Folha de estilo e palco das páginas internas",
+      "status": "aceito"
+    },
+    {
+      "number": 10,
+      "title": "Palco de uma área com conteúdo e transição de entrada",
+      "status": "aceito"
+    },
+    {
+      "number": 11,
+      "title": "Transições entre a home e as áreas",
+      "status": "aceito"
+    },
+    {
+      "number": 12,
+      "title": "Raio-x do site em arquivo versionado",
+      "status": "aceito"
+    }
+  ]
+}

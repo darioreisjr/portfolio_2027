@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { locales, type Locale } from '@portfolio/contracts';
 import { z } from 'zod';
 import { buildRecruiter, type RecruiterContent } from './recruiter.js';
+import { buildTech, type TechContent } from './tech.js';
 import {
   contactSchema,
   educationSchema,
@@ -11,12 +12,16 @@ import {
   profileSchema,
   projectSchema,
   recruiterUiSchema,
+  siteSchema,
   skillSchema,
+  techUiSchema,
   uiSchema,
   type Home,
   type Profile,
   type RecruiterUi,
+  type Site,
   type Status,
+  type TechUi,
   type Ui,
 } from './schemas.js';
 
@@ -32,18 +37,24 @@ export interface Content {
    * assim que a área sabe que deve mostrar a tela "em construção".
    */
   recruiter: Record<Locale, RecruiterContent> | null;
+  /** Textos de interface da área técnica. */
+  techUi: Record<Locale, TechUi>;
+  /** Projetos e tecnologias da área técnica por idioma; `null` quando não há o que mostrar. */
+  tech: Record<Locale, TechContent> | null;
+  /** Raio-x do próprio site: dado real do repositório (ADR 0012). */
+  site: Site;
 }
 
 export interface LoadOptions {
   /** Rascunhos entram só em desenvolvimento; o build de produção os exclui. */
   includeDrafts: boolean;
   /**
-   * Publica a área do recrutador com os dados de exemplo enquanto o perfil for
-   * rascunho, com a faixa "Dados de exemplo" na página. Exceção à regra de que
-   * rascunho não vai ao ar, autorizada pelo autor em 2026-10-09
-   * (docs/plans/recrutador-conteudo.md). Não muda `profile` nem outra área.
+   * Publica uma área com os dados de exemplo (os rascunhos) enquanto ela não
+   * tiver conteúdo publicado, com a faixa "Dados de exemplo" na página. Exceção
+   * à regra de que rascunho não vai ao ar, autorizada pelo autor em 2026-10-09
+   * para o recrutador e para a área técnica. Não muda `profile` nem outra área.
    */
-  publishRecruiterExample?: boolean;
+  publishExample?: { recruiter?: boolean; tech?: boolean };
 }
 
 function parseFile<Schema extends z.ZodType>(
@@ -106,7 +117,7 @@ function checkSkillRefs(
 
 export function loadContent(
   dataDir: string,
-  { includeDrafts, publishRecruiterExample = false }: LoadOptions,
+  { includeDrafts, publishExample = {} }: LoadOptions,
 ): Content {
   const ui = Object.fromEntries(
     locales.map((locale) => [locale, parseFile(dataDir, `ui/${locale}.json`, uiSchema)]),
@@ -142,7 +153,7 @@ export function loadContent(
   const profile = rawProfile.status === 'published' || includeDrafts ? rawProfile : null;
   // Modo de exemplo: sem perfil publicado, a área do recrutador mostra os
   // rascunhos, que são os dados de exemplo. Com perfil publicado ele não existe.
-  const example = publishRecruiterExample && rawProfile.status === 'draft';
+  const example = Boolean(publishExample.recruiter) && rawProfile.status === 'draft';
   const visible = <Item extends Listed>(items: Item[]) =>
     items.filter((item) => item.status === 'published' || includeDrafts || example);
   const recruiterProfile = example ? rawProfile : profile;
@@ -155,10 +166,39 @@ export function loadContent(
     projects: visible(projects),
   };
 
+  const techUi = Object.fromEntries(
+    locales.map((locale) => [locale, parseFile(dataDir, `tech/${locale}.json`, techUiSchema)]),
+  ) as Record<Locale, TechUi>;
+  const site = parseFile(dataDir, 'site.json', siteSchema);
+
+  // Área técnica: com estudo de caso publicado, só o que é publicado. Sem
+  // nenhum, os rascunhos entram em desenvolvimento ou pela exceção de exemplo.
+  const isCase = (project: { technical?: unknown }) => project.technical !== undefined;
+  const published = <Item extends Listed>(items: Item[]) =>
+    items.filter((item) => item.status === 'published');
+  const hasPublishedCase = published(projects).some(isCase);
+  const techExample = !hasPublishedCase && (includeDrafts || Boolean(publishExample.tech));
+  const techSources =
+    hasPublishedCase || techExample
+      ? {
+          projects: techExample ? projects : published(projects),
+          skills: techExample ? skills : published(skills),
+          example: techExample,
+        }
+      : null;
+
   return {
     ui,
     home,
     profile,
+    techUi,
+    site,
+    tech:
+      techSources && techSources.projects.some(isCase)
+        ? (Object.fromEntries(
+            locales.map((locale) => [locale, buildTech(techSources, locale)]),
+          ) as Record<Locale, TechContent>)
+        : null,
     recruiterUi,
     recruiter:
       sources &&

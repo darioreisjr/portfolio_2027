@@ -105,7 +105,10 @@ describe('área do recrutador', () => {
   });
 
   it('com a exceção, vai ao ar só como exemplo, sem levar o perfil para o resto do site', () => {
-    const content = loadContent(dataDir, { includeDrafts: false, publishRecruiterExample: true });
+    const content = loadContent(dataDir, {
+      includeDrafts: false,
+      publishExample: { recruiter: true },
+    });
     // A faixa "Dados de exemplo" depende desta marca.
     for (const locale of locales) {
       expect(content.recruiter?.[locale].example).toBe(true);
@@ -119,7 +122,10 @@ describe('área do recrutador', () => {
     const dir = dataWith('profile.json', (json) => {
       Object.assign(json, { status: 'published', highlightSkills: [] });
     });
-    const { recruiter } = loadContent(dir, { includeDrafts: false, publishRecruiterExample: true });
+    const { recruiter } = loadContent(dir, {
+      includeDrafts: false,
+      publishExample: { recruiter: true },
+    });
     expect(recruiter?.['pt-BR'].example).toBe(false);
     expect(recruiter?.['pt-BR'].experiences).toEqual([]);
     expect(recruiter?.['pt-BR'].skills).toEqual([]);
