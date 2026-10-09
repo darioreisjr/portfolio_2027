@@ -1450,12 +1450,24 @@ body:has(.home-motion input:checked) li[data-selected] > .persona::before {
 }
 
 /* ---------------------------------------------------------------------------
-   Cortina da transição "corte de katana" (ADR 0010): ao entrar na área do
-   recrutador, duas metades na cor da área fecham a tela pela diagonal, com o
-   aviso no meio; a página da área abre do mesmo corte. Só aparece para quem
-   não pediu menos movimento (persona-list.tsx decide).
+   Transições entre a home e as áreas (ADR 0011). Saída: ao entrar em uma área
+   que tem transição, a cortina dela fecha a tela, com o aviso no meio
+   (persona-list.tsx). Chegada: quem volta de uma área traz uma marca; o script
+   do <head> liga `data-arrival` e a mesma cortina se abre. Cada área tem a
+   própria. O shell repete estas regras em shell.css: os dois apps não dividem
+   CSS. Nada aqui entra na regra de pausa: a cortina tem fim e não pode parar
+   fechada.
    --------------------------------------------------------------------------- */
-.home-enter {
+.home-arrival,
+.home-enter[hidden] {
+  display: none;
+}
+
+.home-enter:not([hidden]),
+html[data-arrival] .home-arrival {
+  /* Altura das faixas da falha de sinal. */
+  --stripe: var(--space-block-lg);
+
   display: grid;
   place-content: center;
   justify-items: center;
@@ -1465,55 +1477,101 @@ body:has(.home-motion input:checked) li[data-selected] > .persona::before {
   z-index: 2;
   color: var(--color-on-area);
   font-size: var(--text-size-title);
+  font-weight: var(--text-weight-strong);
   text-shadow: none;
 }
 
-.home-enter[hidden] {
-  display: none;
+html[data-arrival] .home-arrival {
+  pointer-events: none;
 }
 
-.home-enter::before,
-.home-enter::after {
+:is(.home-enter:not([hidden]), html[data-arrival] .home-arrival)::before,
+:is(.home-enter:not([hidden]), html[data-arrival] .home-arrival)::after {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: var(--color-area-recruiter);
+  background: var(--curtain);
   content: '';
-  animation: home-enter var(--motion-duration-md) var(--motion-ease-out) backwards;
 }
 
-.home-enter::before {
-  --from: -100%;
+:is(.home-enter[data-area='recruiter'], html[data-arrival='recruiter'] .home-arrival) {
+  --curtain: var(--color-area-recruiter);
+  --curtain-pace: var(--motion-ease-in-out);
+}
+
+:is(.home-enter[data-area='tech'], html[data-arrival='tech'] .home-arrival) {
+  --curtain: var(--color-area-tech);
+  /* Aos trancos, como sinal que falha. */
+  --curtain-pace: steps(5, jump-none);
+}
+
+/* Recrutador, corte de katana: duas metades separadas pela diagonal. */
+:is(.home-enter[data-area='recruiter'], html[data-arrival='recruiter'] .home-arrival)::before {
+  --away-x: -100%;
+  --away-y: -100%;
 
   clip-path: polygon(0 0, 100% 0, 0 100%);
 }
 
-.home-enter::after {
-  --from: 100%;
+:is(.home-enter[data-area='recruiter'], html[data-arrival='recruiter'] .home-arrival)::after {
+  --away-x: 100%;
+  --away-y: 100%;
 
   clip-path: polygon(100% 0, 100% 100%, 0 100%);
 }
 
-/* O aviso e a barra aparecem quando as metades se encontram. */
+/* Técnico, falha de sinal: faixas alternadas que correm para lados opostos. */
+:is(.home-enter[data-area='tech'], html[data-arrival='tech'] .home-arrival)::before {
+  --away-x: -100%;
+  --away-y: 0%;
+
+  mask: repeating-linear-gradient(
+    var(--color-pattern-ink) 0 var(--stripe),
+    transparent 0 calc(var(--stripe) * 2)
+  );
+}
+
+:is(.home-enter[data-area='tech'], html[data-arrival='tech'] .home-arrival)::after {
+  --away-x: 100%;
+  --away-y: 0%;
+
+  mask: repeating-linear-gradient(
+    transparent 0 var(--stripe),
+    var(--color-pattern-ink) 0 calc(var(--stripe) * 2)
+  );
+}
+
+/* Fechando: as partes chegam de fora. Abrindo: saem, depois de um instante. */
+:is(.home-enter:not([hidden]))::before,
+:is(.home-enter:not([hidden]))::after {
+  animation: curtain-close var(--motion-duration-md) var(--curtain-pace) backwards;
+}
+
+:is(html[data-arrival] .home-arrival)::before,
+:is(html[data-arrival] .home-arrival)::after {
+  animation: curtain-open var(--motion-duration-lg) var(--curtain-pace) var(--motion-duration-md)
+    forwards;
+}
+
+/* O aviso aparece quando as partes se encontram. */
 .home-enter span {
-  animation: home-enter-text var(--motion-duration-md) var(--motion-ease-out)
-    var(--motion-duration-md) backwards;
+  animation: curtain-text var(--motion-duration-md) var(--motion-ease-out) var(--motion-duration-md)
+    backwards;
 }
 
-.home-enter-bar {
-  inline-size: var(--space-inline-lg);
-  block-size: var(--border-width-marker);
-  background: currentcolor;
-  transform-origin: left;
-}
-
-@keyframes home-enter {
+@keyframes curtain-close {
   from {
-    translate: var(--from) var(--from);
+    translate: var(--away-x) var(--away-y);
   }
 }
 
-@keyframes home-enter-text {
+@keyframes curtain-open {
+  to {
+    translate: var(--away-x) var(--away-y);
+  }
+}
+
+@keyframes curtain-text {
   from {
     opacity: 0;
     scale: 0 1;
@@ -1547,6 +1605,11 @@ body:has(.home-motion input:checked) li[data-selected] > .persona::before {
   }
 
   .home-motion {
+    display: none;
+  }
+
+  /* Quem pediu menos movimento não passa pelas transições. */
+  html[data-arrival] .home-arrival {
     display: none;
   }
 

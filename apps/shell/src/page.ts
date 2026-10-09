@@ -1,6 +1,7 @@
 import type { Ui } from '@portfolio/content/schemas';
 import {
-  ARRIVAL_INIT_SCRIPT,
+  AREA_TRANSITIONS,
+  arrivalInitScript,
   languageAlternates,
   pathFor,
   personaFigure,
@@ -63,12 +64,22 @@ export function renderPage(
       </picture>`
     : '';
 
+  // Transições de entrada e de volta (ADR 0011), só nas áreas que as têm: o
+  // script de chegada, a cortina que abre e a que fecha ao voltar para a home.
+  const transition = AREA_TRANSITIONS.includes(entry.area);
+  const arrival = transition ? `;${arrivalInitScript([entry.area])}` : '';
+  const curtains = transition
+    ? `    <div class="area-arrival" aria-hidden="true"></div>
+    <div class="area-departure" data-area="${entry.area}" role="status" hidden><span>${escapeHtml(ui.leaving)}</span></div>
+`
+    : '';
+
   return `<!doctype html>
 <html lang="${locale}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>${THEME_INIT_SCRIPT};${ARRIVAL_INIT_SCRIPT}</script>
+    <script>${THEME_INIT_SCRIPT}${arrival}</script>
     <title>${escapeHtml(area.title)} | ${escapeHtml(ui.siteName)}</title>
     <meta name="description" content="${escapeHtml(area.description)}" />
     <link rel="stylesheet" href="/_ds/tokens.css" />
@@ -78,8 +89,7 @@ export function renderPage(
     <script type="module" src="/_shell/shell.js"></script>
   </head>
   <body>
-    <div class="area-arrival" aria-hidden="true"></div>
-    <header class="shell-header">
+${curtains}    <header class="shell-header">
       <ds-theme-toggle label="${escapeHtml(ui.themeToggle)}"></ds-theme-toggle>
     </header>
     <main class="area-stage" data-area="${entry.area}"${content ? ' data-content' : ''}>

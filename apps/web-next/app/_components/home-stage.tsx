@@ -159,12 +159,14 @@ export function HomeStage({ locale }: { locale: Locale }) {
         </div>
       </nav>
       <Intro intro={intro} />
-      {/* Cortina da transição "corte de katana" (ADR 0010). Nasce oculta; quem a
-          mostra é `persona-list.tsx`, ao clicar em "Entrar" no recrutador. */}
+      {/* Cortinas das transições (ADR 0011). A de saída nasce oculta; quem a
+          mostra é `persona-list.tsx`, ao clicar em "Entrar" em uma área que tem
+          transição. A de chegada abre para quem volta de uma área: o script do
+          <head> liga `data-arrival` e o CSS faz o resto. */}
       <div className="home-enter" id={ENTER_OVERLAY_ID} role="status" hidden>
         <span>{entering}</span>
-        <span className="home-enter-bar" aria-hidden="true" />
       </div>
+      <div className="home-arrival" aria-hidden="true" />
     </main>
   );
 }

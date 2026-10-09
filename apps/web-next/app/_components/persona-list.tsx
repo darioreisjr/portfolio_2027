@@ -15,8 +15,14 @@ import {
 import { createPortal } from 'react-dom';
 import { setupIntro } from '../../lib/intro';
 import { MUSIC_SLOT_ID } from '../../lib/music';
-import { ENTRY_STORAGE_KEY } from '@portfolio/contracts';
-import { ENTER_OVERLAY_ID, ENTER_DELAY_MS } from '../../lib/enter';
+import {
+  AREA_TRANSITIONS,
+  ENTRY_STORAGE_KEY,
+  entryMark,
+  TRANSITION_DELAY_MS,
+  type AreaId,
+} from '@portfolio/contracts';
+import { ENTER_OVERLAY_ID } from '../../lib/enter';
 import { CANCEL, ENTER, HOVER, OPTION, PICK, sfx, slash } from '../../lib/sfx';
 import { MusicToggle } from './music-toggle';
 
@@ -156,26 +162,31 @@ export function PersonaList({
     const enter = target.closest<HTMLAnchorElement>('.persona-enter');
     if (enter) {
       const overlay = document.getElementById(ENTER_OVERLAY_ID);
-      // Transição "corte de katana" (ADR 0010), só na área do recrutador e só
-      // para um clique comum de quem não pediu menos movimento nem pausou as
-      // animações. Fora disso o link navega na hora, como qualquer link.
+      const area = enter.closest('li')?.dataset.area as AreaId | undefined;
+      // Transição de entrada (ADR 0011), só nas áreas que a têm e só para um
+      // clique comum de quem não pediu menos movimento nem pausou as animações.
+      // Fora disso o link navega na hora, como qualquer link.
       if (
         overlay &&
-        enter.closest('li')?.dataset.area === 'recruiter' &&
+        area &&
+        AREA_TRANSITIONS.includes(area) &&
         !(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) &&
         !matchMedia('(prefers-reduced-motion: reduce)').matches &&
         !document.querySelector<HTMLInputElement>('.home-motion input')?.checked
       ) {
         event.preventDefault();
         try {
-          // A área lê a marca para abrir com a animação de chegada.
-          sessionStorage.setItem(ENTRY_STORAGE_KEY, String(Date.now()));
+          // A área lê a marca para abrir com a cortina dela.
+          sessionStorage.setItem(ENTRY_STORAGE_KEY, entryMark(area, Date.now()));
         } catch {
           // Sem armazenamento, a área abre sem a chegada.
         }
-        slash();
+        // O corte de lâmina é do recrutador; as outras áreas confirmam com as notas.
+        if (area === 'recruiter') slash();
+        else sfx(ENTER);
+        overlay.dataset.area = area;
         overlay.hidden = false;
-        setTimeout(() => location.assign(enter.href), ENTER_DELAY_MS);
+        setTimeout(() => location.assign(enter.href), TRANSITION_DELAY_MS);
       } else {
         // O link navega em seguida; o som pode ser cortado pela troca de página.
         sfx(ENTER);

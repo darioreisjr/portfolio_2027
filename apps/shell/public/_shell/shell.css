@@ -79,54 +79,133 @@ main.area-stage[data-content] .area-outlet {
 }
 
 /* ---------------------------------------------------------------------------
-   Chegada pela transição "corte de katana" (ADR 0010). Quem vem da home pelo
-   "Entrar" traz uma marca; o script do <head> liga `data-arrival` antes da
-   primeira pintura, e a cortina na cor da área se abre pela diagonal. Sem a
-   marca, a cortina não existe.
+   Transições entre a home e a área (ADR 0011). Chegada: quem vem da home pelo
+   "Entrar" traz uma marca; o script do <head> liga `data-arrival` com a área
+   antes da primeira pintura, e a cortina se abre. Saída: o clique no botão de
+   volta mostra a cortina que fecha (main.ts). Cada área tem a própria cortina.
+   A home repete estas regras em home.css: os dois apps não dividem CSS.
    --------------------------------------------------------------------------- */
-.area-arrival {
+.area-arrival,
+.area-departure[hidden] {
   display: none;
 }
 
+.area-departure:not([hidden]),
 html[data-arrival] .area-arrival {
-  display: block;
+  /* Altura das faixas da falha de sinal. */
+  --stripe: var(--space-block-lg);
+
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--space-block-sm);
   position: fixed;
   inset: 0;
   z-index: 2;
+  color: var(--color-on-area);
+  font-size: var(--text-size-title);
+  font-weight: var(--text-weight-strong);
+  text-shadow: none;
+}
+
+html[data-arrival] .area-arrival {
   pointer-events: none;
 }
 
-.area-arrival::before,
-.area-arrival::after {
+:is(.area-departure:not([hidden]), html[data-arrival] .area-arrival)::before,
+:is(.area-departure:not([hidden]), html[data-arrival] .area-arrival)::after {
   position: absolute;
   inset: 0;
-  background: var(--color-area-recruiter);
+  z-index: -1;
+  background: var(--curtain);
   content: '';
-  animation: area-arrival var(--motion-duration-lg) var(--motion-ease-in-out)
-    var(--motion-duration-md) forwards;
 }
 
-/* As duas metades do corte: uma sai para cima e à esquerda, a outra para baixo
-   e à direita. */
-.area-arrival::before {
-  --away: -100%;
+:is(.area-departure[data-area='recruiter'], html[data-arrival='recruiter'] .area-arrival) {
+  --curtain: var(--color-area-recruiter);
+  --curtain-pace: var(--motion-ease-in-out);
+}
+
+:is(.area-departure[data-area='tech'], html[data-arrival='tech'] .area-arrival) {
+  --curtain: var(--color-area-tech);
+  /* Aos trancos, como sinal que falha. */
+  --curtain-pace: steps(5, jump-none);
+}
+
+/* Recrutador, corte de katana: duas metades separadas pela diagonal. */
+:is(.area-departure[data-area='recruiter'], html[data-arrival='recruiter'] .area-arrival)::before {
+  --away-x: -100%;
+  --away-y: -100%;
 
   clip-path: polygon(0 0, 100% 0, 0 100%);
 }
 
-.area-arrival::after {
-  --away: 100%;
+:is(.area-departure[data-area='recruiter'], html[data-arrival='recruiter'] .area-arrival)::after {
+  --away-x: 100%;
+  --away-y: 100%;
 
   clip-path: polygon(100% 0, 100% 100%, 0 100%);
 }
 
-@keyframes area-arrival {
-  to {
-    translate: var(--away) var(--away);
+/* Técnico, falha de sinal: faixas alternadas que correm para lados opostos. */
+:is(.area-departure[data-area='tech'], html[data-arrival='tech'] .area-arrival)::before {
+  --away-x: -100%;
+  --away-y: 0%;
+
+  mask: repeating-linear-gradient(
+    var(--color-pattern-ink) 0 var(--stripe),
+    transparent 0 calc(var(--stripe) * 2)
+  );
+}
+
+:is(.area-departure[data-area='tech'], html[data-arrival='tech'] .area-arrival)::after {
+  --away-x: 100%;
+  --away-y: 0%;
+
+  mask: repeating-linear-gradient(
+    transparent 0 var(--stripe),
+    var(--color-pattern-ink) 0 calc(var(--stripe) * 2)
+  );
+}
+
+/* Fechando: as partes chegam de fora. Abrindo: saem, depois de um instante. */
+:is(.area-departure:not([hidden]))::before,
+:is(.area-departure:not([hidden]))::after {
+  animation: curtain-close var(--motion-duration-md) var(--curtain-pace) backwards;
+}
+
+:is(html[data-arrival] .area-arrival)::before,
+:is(html[data-arrival] .area-arrival)::after {
+  animation: curtain-open var(--motion-duration-lg) var(--curtain-pace) var(--motion-duration-md)
+    forwards;
+}
+
+/* O aviso aparece quando as partes se encontram. */
+.area-departure span {
+  animation: curtain-text var(--motion-duration-md) var(--motion-ease-out) var(--motion-duration-md)
+    backwards;
+}
+
+@keyframes curtain-close {
+  from {
+    translate: var(--away-x) var(--away-y);
   }
 }
 
-/* Quem pediu menos movimento não passa pela transição; se a marca existir
+@keyframes curtain-open {
+  to {
+    translate: var(--away-x) var(--away-y);
+  }
+}
+
+@keyframes curtain-text {
+  from {
+    opacity: 0;
+    scale: 0 1;
+  }
+}
+
+/* Quem pediu menos movimento não passa pelas transições; se a marca existir
    mesmo assim, a cortina não aparece. */
 @media (prefers-reduced-motion: reduce) {
   html[data-arrival] .area-arrival {

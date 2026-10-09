@@ -26,6 +26,8 @@ export const uiSchema = z
     languageSwitcher: text,
     /** Rótulo do controle que pausa a animação dos cenários, na home e nas páginas internas. */
     pauseMotion: text,
+    /** Mostrado na cortina, ao voltar de uma área para a home. */
+    leaving: text,
     /** Tela das páginas internas enquanto a área não tem conteúdo. */
     construction: z
       .object({

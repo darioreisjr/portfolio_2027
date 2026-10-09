@@ -1,7 +1,13 @@
 import '@portfolio/tokens/tokens.css';
 import '../site.css';
 import { ui } from '@portfolio/content/ui';
-import { defaultLocale, languageAlternates, THEME_INIT_SCRIPT } from '@portfolio/contracts';
+import {
+  AREA_TRANSITIONS,
+  arrivalInitScript,
+  defaultLocale,
+  languageAlternates,
+  THEME_INIT_SCRIPT,
+} from '@portfolio/contracts';
 import type {} from '@portfolio/design-system/react';
 import type { ReactNode } from 'react';
 import { MUSIC_SLOT_ID } from '../../lib/music';
@@ -26,8 +32,17 @@ export default async function RootLayout({
     // aviso suprimido o React reclamaria da diferença.
     <html lang={locale} suppressHydrationWarning>
       <head>
-        {/* Aplica o tema salvo antes da primeira pintura, para a página não piscar. */}
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        {/* Aplica o tema salvo antes da primeira pintura, para a página não piscar.
+            Na home, o mesmo script lê a marca de quem volta de uma área, para a
+            cortina da volta já estar na tela (ADR 0011). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              area === 'home'
+                ? `${THEME_INIT_SCRIPT};${arrivalInitScript(AREA_TRANSITIONS)}`
+                : THEME_INIT_SCRIPT,
+          }}
+        />
       </head>
       <body>
         <header className="site-tools">
