@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { settled } from './support/motion';
 
 const STORAGE_KEY = 'portfolio:tema';
 const SURFACE = { light: 'rgb(255, 255, 255)', dark: 'rgb(12, 14, 19)' };
@@ -167,6 +168,8 @@ test.describe('home no celular', () => {
   test('o botão de tema não encosta em texto nem no astro', async ({ page }) => {
     await page.goto('/');
     await expect(toggle(page)).toBeVisible();
+    // O título desce na entrada; a posição só vale com a animação terminada.
+    await settled(page);
 
     const overlaps = await page.evaluate(() => {
       const box = (selector: string) => document.querySelector(selector)?.getBoundingClientRect();
