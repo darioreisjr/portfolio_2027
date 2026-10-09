@@ -15,7 +15,9 @@ import {
 import { createPortal } from 'react-dom';
 import { setupIntro } from '../../lib/intro';
 import { MUSIC_SLOT_ID } from '../../lib/music';
-import { CANCEL, ENTER, HOVER, OPTION, PICK, sfx } from '../../lib/sfx';
+import { ENTRY_STORAGE_KEY } from '@portfolio/contracts';
+import { ENTER_OVERLAY_ID, ENTER_DELAY_MS } from '../../lib/enter';
+import { CANCEL, ENTER, HOVER, OPTION, PICK, sfx, slash } from '../../lib/sfx';
 import { MusicToggle } from './music-toggle';
 
 const personaLinks = (list: HTMLElement) => [
@@ -128,11 +130,18 @@ export function PersonaList({
       if (target.closest('a, button, input, label, ds-theme-toggle, .ds-dock')) return;
       deselect(list);
     };
+    // Voltar pelo navegador devolve a página como estava: a cortina sai.
+    const onPageShow = () => {
+      const overlay = document.getElementById(ENTER_OVERLAY_ID);
+      if (overlay) overlay.hidden = true;
+    };
     document.addEventListener('keydown', onKeyDown);
     document.addEventListener('click', onClick);
+    addEventListener('pageshow', onPageShow);
     return () => {
       document.removeEventListener('keydown', onKeyDown);
       document.removeEventListener('click', onClick);
+      removeEventListener('pageshow', onPageShow);
     };
   }, []);
 
@@ -144,9 +153,33 @@ export function PersonaList({
       deselect(list);
       return;
     }
-    // O "Entrar" navega em seguida; o som pode ser cortado pela troca de página.
-    if (target.closest('.persona-enter')) {
-      sfx(ENTER);
+    const enter = target.closest<HTMLAnchorElement>('.persona-enter');
+    if (enter) {
+      const overlay = document.getElementById(ENTER_OVERLAY_ID);
+      // Transição "corte de katana" (ADR 0010), só na área do recrutador e só
+      // para um clique comum de quem não pediu menos movimento nem pausou as
+      // animações. Fora disso o link navega na hora, como qualquer link.
+      if (
+        overlay &&
+        enter.closest('li')?.dataset.area === 'recruiter' &&
+        !(event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) &&
+        !matchMedia('(prefers-reduced-motion: reduce)').matches &&
+        !document.querySelector<HTMLInputElement>('.home-motion input')?.checked
+      ) {
+        event.preventDefault();
+        try {
+          // A área lê a marca para abrir com a animação de chegada.
+          sessionStorage.setItem(ENTRY_STORAGE_KEY, String(Date.now()));
+        } catch {
+          // Sem armazenamento, a área abre sem a chegada.
+        }
+        slash();
+        overlay.hidden = false;
+        setTimeout(() => location.assign(enter.href), ENTER_DELAY_MS);
+      } else {
+        // O link navega em seguida; o som pode ser cortado pela troca de página.
+        sfx(ENTER);
+      }
       return;
     }
 

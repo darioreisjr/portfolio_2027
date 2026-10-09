@@ -32,6 +32,8 @@ export interface HomeModel {
   enter: string;
   /** Desfaz a escolha do personagem. */
   back: string;
+  /** Texto da transição de entrada em uma área. */
+  entering: string;
   /** Nome acessível do botão de som (música de fundo e efeitos). */
   music: string;
   /** Pop-up da primeira visita: idioma e imersão. */
@@ -65,6 +67,7 @@ export function buildHome(locale: Locale): HomeModel {
     title: text.title,
     enter: text.enter,
     back: text.back,
+    entering: text.entering,
     music: text.music,
     intro: {
       ...text.intro,

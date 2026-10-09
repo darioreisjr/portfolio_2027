@@ -2,6 +2,7 @@ import '../home.css';
 import type { Locale } from '@portfolio/contracts';
 import Link from 'next/link';
 import { buildHome, type HomeModel, type Persona } from '../../lib/home';
+import { ENTER_OVERLAY_ID } from '../../lib/enter';
 import { INTRO_ID } from '../../lib/intro';
 import { MUSIC_SRC } from '../../lib/music';
 import { PersonaList } from './persona-list';
@@ -126,7 +127,7 @@ function Intro({ intro }: { intro: HomeModel['intro'] }) {
 }
 
 export function HomeStage({ locale }: { locale: Locale }) {
-  const { identity, title, enter, back, music, intro, personas } = buildHome(locale);
+  const { identity, title, enter, back, entering, music, intro, personas } = buildHome(locale);
 
   return (
     <main className="home">
@@ -158,6 +159,12 @@ export function HomeStage({ locale }: { locale: Locale }) {
         </div>
       </nav>
       <Intro intro={intro} />
+      {/* Cortina da transição "corte de katana" (ADR 0010). Nasce oculta; quem a
+          mostra é `persona-list.tsx`, ao clicar em "Entrar" no recrutador. */}
+      <div className="home-enter" id={ENTER_OVERLAY_ID} role="status" hidden>
+        <span>{entering}</span>
+        <span className="home-enter-bar" aria-hidden="true" />
+      </div>
     </main>
   );
 }

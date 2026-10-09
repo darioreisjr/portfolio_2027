@@ -118,6 +118,32 @@ export function sfx(kind: number, index?: number): void {
   }
 }
 
+/**
+ * Corte de lâmina, na transição de entrada em uma área: ruído que varre do
+ * agudo ao grave. Não é nota de corda, por isso fica fora de `notesFor`.
+ */
+export function slash(): void {
+  if (!on || !context || !master) return;
+  const now = context.currentTime;
+  const length = 0.3;
+  const buffer = context.createBuffer(1, context.sampleRate * length, context.sampleRate);
+  const samples = buffer.getChannelData(0);
+  for (let index = 0; index < samples.length; index += 1) samples[index] = Math.random() * 2 - 1;
+  const noise = context.createBufferSource();
+  noise.buffer = buffer;
+  const band = context.createBiquadFilter();
+  band.type = 'bandpass';
+  band.Q.value = 2;
+  band.frequency.setValueAtTime(6000, now);
+  band.frequency.exponentialRampToValueAtTime(1500, now + length);
+  const cut = context.createGain();
+  cut.gain.setValueAtTime(0, now);
+  cut.gain.linearRampToValueAtTime(1, now + 0.02);
+  cut.gain.exponentialRampToValueAtTime(0.0001, now + length);
+  noise.connect(band).connect(cut).connect(master);
+  noise.start(now);
+}
+
 /** Ao sair da home: nenhuma nota nova, e o contexto fecha depois da última. */
 export function closeSound(): void {
   on = false;

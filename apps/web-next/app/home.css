@@ -1449,6 +1449,77 @@ body:has(.home-motion input:checked) li[data-selected] > .persona::before {
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Cortina da transição "corte de katana" (ADR 0010): ao entrar na área do
+   recrutador, duas metades na cor da área fecham a tela pela diagonal, com o
+   aviso no meio; a página da área abre do mesmo corte. Só aparece para quem
+   não pediu menos movimento (persona-list.tsx decide).
+   --------------------------------------------------------------------------- */
+.home-enter {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--space-block-sm);
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  color: var(--color-on-area);
+  font-size: var(--text-size-title);
+  text-shadow: none;
+}
+
+.home-enter[hidden] {
+  display: none;
+}
+
+.home-enter::before,
+.home-enter::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-area-recruiter);
+  content: '';
+  animation: home-enter var(--motion-duration-md) var(--motion-ease-out) backwards;
+}
+
+.home-enter::before {
+  --from: -100%;
+
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.home-enter::after {
+  --from: 100%;
+
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+/* O aviso e a barra aparecem quando as metades se encontram. */
+.home-enter span {
+  animation: home-enter-text var(--motion-duration-md) var(--motion-ease-out)
+    var(--motion-duration-md) backwards;
+}
+
+.home-enter-bar {
+  inline-size: var(--space-inline-lg);
+  block-size: var(--border-width-marker);
+  background: currentcolor;
+  transform-origin: left;
+}
+
+@keyframes home-enter {
+  from {
+    translate: var(--from) var(--from);
+  }
+}
+
+@keyframes home-enter-text {
+  from {
+    opacity: 0;
+    scale: 0 1;
+  }
+}
+
 /* Movimento reduzido: nada se mexe, as pétalas ficam paradas no ar, o sol e a
    lua trocam na hora e não há o que pausar. */
 @media (prefers-reduced-motion: reduce) {
