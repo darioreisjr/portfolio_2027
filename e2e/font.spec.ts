@@ -72,7 +72,7 @@ test('a fonte chega ao conteúdo de um MFE, dentro do shadow DOM', async ({ page
   expect(family.startsWith(`"${FAMILY}"`)).toBe(true);
 });
 
-test('a fonte tem as letras acentuadas dos quatro idiomas', async ({ page }) => {
+test('a fonte tem as letras acentuadas dos três idiomas', async ({ page }) => {
   await page.goto('/comunidade/');
   await page.evaluate(() => document.fonts.ready);
 

@@ -5,7 +5,6 @@ export const localeNames: Record<Locale, string> = {
   'pt-BR': 'Português (Brasil)',
   en: 'English',
   es: 'Español',
-  'pt-PT': 'Português (Portugal)',
 };
 
 /** Bandeiras de idioma, publicadas pelo design system (ADR 0006). */
@@ -20,7 +19,7 @@ export interface LanguageAlternate {
   current: boolean;
 }
 
-/** Os quatro idiomas de uma área, na ordem da lista de idiomas, para o seletor. */
+/** Os idiomas de uma área, na ordem da lista de idiomas, para o seletor. */
 export function languageAlternates(area: AreaId, current: Locale): LanguageAlternate[] {
   return locales.map((locale) => ({
     locale,

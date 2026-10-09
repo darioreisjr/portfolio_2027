@@ -5,8 +5,8 @@ const text = z.string().trim().min(1);
 
 /** Texto traduzível. Só pt-BR é sempre obrigatório; ver `requireAllLocales`. */
 export const localizedSchema = z
-  .object({ 'pt-BR': text, en: z.string(), es: z.string(), 'pt-PT': z.string() })
-  .partial({ en: true, es: true, 'pt-PT': true })
+  .object({ 'pt-BR': text, en: z.string(), es: z.string() })
+  .partial({ en: true, es: true })
   .strict();
 export type Localized = z.infer<typeof localizedSchema>;
 
@@ -97,7 +97,7 @@ export const profileSchema = z
   });
 export type Profile = z.infer<typeof profileSchema>;
 
-/** Item publicado precisa dos quatro idiomas preenchidos. */
+/** Item publicado precisa de todos os idiomas preenchidos. */
 function requireAllLocales(value: Localized, path: string[], context: z.RefinementCtx): void {
   for (const locale of locales) {
     if (!value[locale]?.trim()) {

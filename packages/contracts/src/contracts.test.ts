@@ -49,7 +49,7 @@ describe('tabela de rotas', () => {
 });
 
 describe('idiomas de uma área', () => {
-  it('lista os quatro idiomas, com um só marcado como atual', () => {
+  it('lista os três idiomas, com um só marcado como atual', () => {
     for (const { area } of routes) {
       for (const current of locales) {
         const alternates = languageAlternates(area, current);

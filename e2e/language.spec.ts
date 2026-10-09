@@ -3,41 +3,36 @@ import { expect, test, type Page } from '@playwright/test';
 
 // Uma linha por área, um caminho por idioma. Escrito à mão de propósito: o teste
 // confere o site publicado contra a tabela de docs/architecture/mfe-map.md.
-const locales = ['pt-BR', 'en', 'es', 'pt-PT'] as const;
-const names = ['Português (Brasil)', 'English', 'Español', 'Português (Portugal)'];
+const locales = ['pt-BR', 'en', 'es'] as const;
+const names = ['Português (Brasil)', 'English', 'Español'];
 const areas = [
-  { area: 'home', paths: ['/', '/en/', '/es/', '/pt-pt/'] },
+  { area: 'home', paths: ['/', '/en/', '/es/'] },
   {
     area: 'recruiter',
-    paths: ['/recrutador/', '/en/recruiter/', '/es/reclutador/', '/pt-pt/recrutador/'],
+    paths: ['/recrutador/', '/en/recruiter/', '/es/reclutador/'],
   },
-  { area: 'tech', paths: ['/tecnico/', '/en/tech/', '/es/tecnico/', '/pt-pt/tecnico/'] },
-  { area: 'client', paths: ['/clientes/', '/en/clients/', '/es/clientes/', '/pt-pt/clientes/'] },
+  { area: 'tech', paths: ['/tecnico/', '/en/tech/', '/es/tecnico/'] },
+  { area: 'client', paths: ['/clientes/', '/en/clients/', '/es/clientes/'] },
   {
     area: 'community',
-    paths: ['/comunidade/', '/en/community/', '/es/comunidad/', '/pt-pt/comunidade/'],
+    paths: ['/comunidade/', '/en/community/', '/es/comunidad/'],
   },
   {
     area: 'how-it-was-built',
-    paths: [
-      '/como-foi-feito/',
-      '/en/how-it-was-built/',
-      '/es/como-se-hizo/',
-      '/pt-pt/como-foi-feito/',
-    ],
+    paths: ['/como-foi-feito/', '/en/how-it-was-built/', '/es/como-se-hizo/'],
   },
 ];
 
 const switcher = (page: Page) => page.locator('.ds-dock details.ds-language-switcher');
 /** A bandeira do idioma em uso: abre e fecha a lista. */
 const current = (page: Page) => switcher(page).locator('summary');
-/** As bandeiras dos outros três idiomas. */
+/** As bandeiras dos outros dois idiomas. */
 const flags = (page: Page) => switcher(page).locator('a');
 
 test.use({ viewport: { width: 1280, height: 800 }, colorScheme: 'light' });
 
 for (const { area, paths } of areas) {
-  test(`${area}: a bandeira do idioma em uso abre os outros três, para a mesma área`, async ({
+  test(`${area}: a bandeira do idioma em uso abre os outros dois, para a mesma área`, async ({
     page,
   }) => {
     for (const [index, path] of paths.entries()) {
@@ -46,7 +41,7 @@ for (const { area, paths } of areas) {
 
       // Fechado: só o idioma da página, pelo nome.
       await expect(current(page).getByRole('img')).toHaveAccessibleName(names[index] ?? '');
-      await expect(flags(page)).toHaveCount(3);
+      await expect(flags(page)).toHaveCount(2);
       for (const flag of await flags(page).all()) await expect(flag).toBeHidden();
       // O idioma em uso não é link nem leva marca de página atual.
       await expect(switcher(page).locator('[aria-current]')).toHaveCount(0);
@@ -115,7 +110,7 @@ test('fica no canto inferior direito, e a lista abre em coluna para cima', async
       expect(box.x, path).toBe(anchor.x);
       tops.push(box.y);
     }
-    expect(new Set(tops).size, path).toBe(3);
+    expect(new Set(tops).size, path).toBe(2);
     // Abrir não muda o tamanho do grupo do canto.
     expect((await page.locator('.ds-dock').boundingBox())?.width, path).toBe(dock.width);
 
@@ -127,7 +122,7 @@ test('fica no canto inferior direito, e a lista abre em coluna para cima', async
             images.map((image) => (image as HTMLImageElement).naturalWidth > 0),
           ),
       )
-      .toEqual([true, true, true, true]);
+      .toEqual([true, true, true]);
   }
 });
 
@@ -173,13 +168,12 @@ test('pelo teclado: abre com Enter, e o grupo é o último na ordem do Tab', asy
   await expect(flags(page).first()).toBeVisible();
   await page.keyboard.press('Tab');
   await page.keyboard.press('Tab');
-  await page.keyboard.press('Tab');
   await expect(flags(page).last()).toBeFocused();
   await expect(flags(page).last()).not.toHaveCSS('outline-style', 'none');
   expect(await lastFocusable()).toBe(true);
 
   await page.keyboard.press('Enter');
-  await expect(page).toHaveURL(/\/pt-pt\/comunidade\/$/);
+  await expect(page).toHaveURL(/\/es\/comunidad\/$/);
 });
 
 test('funciona sem JavaScript', async ({ browser }) => {
@@ -194,8 +188,8 @@ test('funciona sem JavaScript', async ({ browser }) => {
 
   await page.goto('/clientes/');
   await current(page).click();
-  await page.getByRole('link', { name: 'Português (Portugal)' }).click();
-  await expect(page).toHaveURL(/\/pt-pt\/clientes\/$/);
+  await page.getByRole('link', { name: 'English' }).click();
+  await expect(page).toHaveURL(/\/en\/clients\/$/);
   await context.close();
 });
 
@@ -219,7 +213,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
   }) => {
     const context = await browser.newContext({ colorScheme });
     const page = await context.newPage();
-    for (const path of ['/en/', '/es/tecnico/', '/pt-pt/comunidade/']) {
+    for (const path of ['/en/', '/es/tecnico/', '/comunidade/']) {
       await page.goto(path);
       for (const state of ['fechado', 'aberto']) {
         const { violations } = await new AxeBuilder({ page }).include('.ds-dock').analyze();

@@ -48,6 +48,10 @@ O que não se reabre: rotas traduzidas com prefixo de idioma, tabela de rotas em
 
 Registrada em `docs/plans/home-som-e-bandeiras.md`. O seletor passa a mostrar só a bandeira do idioma em uso, em um `<summary>`; os outros três idiomas são links comuns dentro do `<details>`, que abre para cima. Continua sem JavaScript e sem dono em tempo de execução. Sem script, a lista só fecha por outro clique na bandeira: não há Esc nem clique fora. O idioma em uso deixa de ser link e de levar `aria-current`. Onde este ADR diz "quatro links", leia-se "três links e o idioma em uso".
 
+## Emenda de 2026-10-09
+
+O português de Portugal foi removido por decisão do autor. Ficam três idiomas (pt-BR, en, es): onde este ADR diz "quatro links" e "os outros três", leia três e dois. A decisão não muda.
+
 ## Fontes
 
 - [WCAG 2.2, técnica H58: atributo `lang` para mudança de idioma](https://www.w3.org/WAI/WCAG22/Techniques/html/H58)

@@ -71,8 +71,8 @@ export default async function RootLayout({
                 </span>
               </label>
             )}
-            {/* Troca de idioma (ADR 0006): a bandeira do idioma em uso abre os outros
-                três, que são links comuns para a mesma página, nunca <Link>: cada
+            {/* Troca de idioma (ADR 0006): a bandeira do idioma em uso abre os
+                outros, que são links comuns para a mesma página, nunca <Link>: cada
                 idioma é outro documento, com o próprio `lang`. Sem script. */}
             <nav aria-label={ui[locale].languageSwitcher}>
               <details className="ds-language-switcher">

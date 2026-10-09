@@ -34,7 +34,7 @@ Percorra tudo. Marque como "não se aplica" só com motivo.
 - [ ] Só tokens semânticos ou de componente; nenhum valor literal.
 - [ ] Funciona nos temas claro e escuro.
 - [ ] Operável por teclado, com foco visível.
-- [ ] Textos novos nos quatro idiomas, em `ui/<locale>.json`.
+- [ ] Textos novos nos três idiomas, em `ui/<locale>.json` ou, se só uma tela usa, no arquivo dela (como `home/<locale>.json`).
 - [ ] Conteúdo legível antes do upgrade dos componentes.
 
 ## Qualidade

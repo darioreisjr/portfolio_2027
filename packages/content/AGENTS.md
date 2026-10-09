@@ -6,7 +6,7 @@ Todo o conteúdo do site em JSON (`data/`), validado com Zod e entregue aos apps
 
 - Modelo em `docs/content/schema.md`; schemas em `src/schemas.ts`. Mude os dois juntos.
 - Os apps importam só por subcaminho: `@portfolio/content/ui`, `@portfolio/content/home`, `@portfolio/content/profile`. Nunca leem `data/` direto.
-- O build falha se um JSON for inválido. Item `published` precisa dos quatro idiomas.
+- O build falha se um JSON for inválido. Item `published` precisa dos três idiomas (pt-BR, en, es).
 - O build de produção exclui `draft`. O `pnpm dev` da raiz já roda com `CONTENT_INCLUDE_DRAFTS=1`.
 - Dado de exemplo é `draft` e claramente fictício. Nunca invente conteúdo sobre o autor.
 - Zod fica só neste pacote; não entra no bundle de nenhum app.

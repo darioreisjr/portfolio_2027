@@ -121,7 +121,7 @@ Manual, a cada componente novo e a cada área nova (ferramentas automáticas peg
 
 - Tudo operável por teclado, com foco visível e ordem lógica.
 - Contraste de 4,5:1 para texto e 3:1 para texto grande e elementos de interface, nos dois temas.
-- `lang` correto no `<html>` para cada um dos quatro idiomas.
+- `lang` correto no `<html>` para cada um dos três idiomas.
 - Ao trocar de área, o foco vai para o conteúdo principal e o título da página muda.
 - `prefers-reduced-motion` respeitado.
 - Imagens com `alt`; ícones decorativos escondidos de leitores de tela.

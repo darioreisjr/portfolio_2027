@@ -29,7 +29,7 @@ O que não faz: lógica de área, leitura de conteúdo além dos textos de inter
 ## HTML de cada rota
 
 - `<html lang>` do idioma da rota.
-- `<title>`, descrição, `canonical` e `hreflang` para as quatro versões.
+- `<title>`, descrição, `canonical` e `hreflang` para as três versões.
 - `THEME_INIT_SCRIPT` de `packages/contracts` inline no `<head>`, antes das folhas de estilo: aplica o tema salvo antes da primeira pintura.
 - `<ds-theme-toggle>` no fim do cabeçalho, com o rótulo de `ui.themeToggle`.
 - Link de pular para o conteúdo, e um `<main>` onde a tag do MFE entra.

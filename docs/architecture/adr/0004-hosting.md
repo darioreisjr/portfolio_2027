@@ -44,7 +44,7 @@ Netlify é a alternativa equivalente e tem uma vantagem: arquivo existente vence
 | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | `/`, `/comunidade/`, `/como-foi-feito/`, `/_next/`, `/404.html` | `apps/web-next` (`out/`)                                                                           |
 | `/recrutador/`, `/tecnico/`, `/clientes/` (só HTML)             | `apps/shell`                                                                                       |
-| `/en/...`, `/es/...`, `/pt-pt/...`                              | Os dois acima, por idioma, com nomes de rota traduzidos (tabela em `docs/architecture/mfe-map.md`) |
+| `/en/...`, `/es/...` (e `/pt-pt/...` até 2026-10-09)            | Os dois acima, por idioma, com nomes de rota traduzidos (tabela em `docs/architecture/mfe-map.md`) |
 | `/_shell/`                                                      | Scripts e estilos do shell                                                                         |
 | `/_mfe/vue/`, `/_mfe/angular/`, `/_mfe/react/`                  | Bundle de cada MFE                                                                                 |
 | `/_ds/`                                                         | Design system e tokens                                                                             |

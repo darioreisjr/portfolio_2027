@@ -64,20 +64,20 @@ describe('ds-language-switcher', () => {
     for (const link of details.querySelectorAll('a')) expect(link.checkVisibility()).toBe(false);
   });
 
-  it('aberto, os outros três idiomas sobem em coluna acima do idioma em uso', () => {
+  it('aberto, os outros dois idiomas sobem em coluna acima do idioma em uso', () => {
     const details = mount();
     details.open = true;
     const summary = box(details.querySelector('summary'));
     const links = [...details.querySelectorAll('a')].map(box);
 
-    expect(links).toHaveLength(3);
+    expect(links).toHaveLength(2);
     for (const link of links) {
       expect(link.width).toBe(44);
       expect(link.height).toBe(44);
       expect(link.right).toBe(summary.right);
       expect(link.bottom).toBeLessThanOrEqual(summary.top);
     }
-    expect(new Set(links.map((link) => link.top)).size).toBe(3);
+    expect(new Set(links.map((link) => link.top)).size).toBe(2);
     // Abrir não muda o tamanho do grupo: a coluna flutua por cima.
     expect(box(details.closest('.ds-dock')).width).toBe(44);
   });

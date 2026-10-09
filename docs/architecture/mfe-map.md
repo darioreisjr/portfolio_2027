@@ -4,15 +4,15 @@ Status: **aprovado** pelo autor em 2026-10-06. Base: áreas do `docs/product/bri
 
 ## Quem renderiza o quê
 
-| Rota (pt-BR)            | Área           | App                | Framework       | Por quê                                                                                                   |
-| ----------------------- | -------------- | ------------------ | --------------- | --------------------------------------------------------------------------------------------------------- |
-| `/`                     | Home           | `apps/web-next`    | Next.js         | Primeira impressão de todos os públicos; precisa de HTML pronto para SEO e LCP                            |
-| `/comunidade`           | Comunidade     | `apps/web-next`    | Next.js         | Artigos e open source são o conteúdo com mais valor de busca; é conteúdo de leitura, sem interação pesada |
-| `/como-foi-feito`       | Como foi feito | `apps/web-next`    | Next.js         | Página de texto e diagramas, indexável                                                                    |
-| `/recrutador`           | Recrutador     | `apps/mfe-vue`     | Vue             | Linha do tempo de experiência e formação: lista reativa com transições, bom caso para Vue                 |
-| `/tecnico`              | Técnica        | `apps/mfe-angular` | Angular         | Skills com filtro e projetos filtráveis por tecnologia: é a seção de filtro complexo                      |
-| `/clientes`             | Cliente        | `apps/mfe-react`   | React           | Serviços, depoimentos e projetos por resultado: composição de cartões e listas                            |
-| (todas as rotas de MFE) | Casca          | `apps/shell`       | JavaScript puro | Documento HTML, cabeçalho, rodapé, carga do script da área                                                |
+| Rota (pt-BR) | Área | App | Framework | Por quê |
+| ----------------------- | -------------- | ------------------ | --------------- |
+| `/` | Home | `apps/web-next` | Next.js | Primeira impressão de todos os públicos; precisa de HTML pronto para SEO e LCP |
+| `/comunidade` | Comunidade | `apps/web-next` | Next.js | Artigos e open source são o conteúdo com mais valor de busca; é conteúdo de leitura, sem interação pesada |
+| `/como-foi-feito` | Como foi feito | `apps/web-next` | Next.js | Página de texto e diagramas, indexável |
+| `/recrutador` | Recrutador | `apps/mfe-vue` | Vue | Linha do tempo de experiência e formação: lista reativa com transições, bom caso para Vue |
+| `/tecnico` | Técnica | `apps/mfe-angular` | Angular | Skills com filtro e projetos filtráveis por tecnologia: é a seção de filtro complexo |
+| `/clientes` | Cliente | `apps/mfe-react` | React | Serviços, depoimentos e projetos por resultado: composição de cartões e listas |
+| (todas as rotas de MFE) | Casca | `apps/shell` | JavaScript puro | Documento HTML, cabeçalho, rodapé, carga do script da área |
 
 Isso mantém a proposta inicial (Next.js para entrada e SEO, React para projetos, Vue para linha do tempo, Angular para filtro, JavaScript puro para o shell) e encaixa cada framework em um público: Vue para recrutadores, Angular para tech leads, React para clientes, Next.js para a comunidade.
 
@@ -22,14 +22,16 @@ A tecnologia de cada área também está no campo `framework` da tabela de rotas
 
 Decidido pelo autor em 2026-10-06: **rotas traduzidas**. pt-BR, o padrão, fica sem prefixo, o que preserva a rota pedida `/como-foi-feito`. Os demais idiomas ganham prefixo e nomes próprios.
 
-| Área           | pt-BR             | en                     | es                 | pt-PT                   |
-| -------------- | ----------------- | ---------------------- | ------------------ | ----------------------- |
-| Home           | `/`               | `/en`                  | `/es`              | `/pt-pt`                |
-| Recrutador     | `/recrutador`     | `/en/recruiter`        | `/es/reclutador`   | `/pt-pt/recrutador`     |
-| Técnica        | `/tecnico`        | `/en/tech`             | `/es/tecnico`      | `/pt-pt/tecnico`        |
-| Cliente        | `/clientes`       | `/en/clients`          | `/es/clientes`     | `/pt-pt/clientes`       |
-| Comunidade     | `/comunidade`     | `/en/community`        | `/es/comunidad`    | `/pt-pt/comunidade`     |
-| Como foi feito | `/como-foi-feito` | `/en/how-it-was-built` | `/es/como-se-hizo` | `/pt-pt/como-foi-feito` |
+| Área           | pt-BR             | en                     | es                 |
+| -------------- | ----------------- | ---------------------- | ------------------ |
+| Home           | `/`               | `/en`                  | `/es`              |
+| Recrutador     | `/recrutador`     | `/en/recruiter`        | `/es/reclutador`   |
+| Técnica        | `/tecnico`        | `/en/tech`             | `/es/tecnico`      |
+| Cliente        | `/clientes`       | `/en/clients`          | `/es/clientes`     |
+| Comunidade     | `/comunidade`     | `/en/community`        | `/es/comunidad`    |
+| Como foi feito | `/como-foi-feito` | `/en/how-it-was-built` | `/es/como-se-hizo` |
+
+O português de Portugal existiu até 2026-10-09 e foi removido por decisão do autor; os endereços `/pt-pt/...` respondem 404.
 
 Os nomes em inglês e espanhol são proposta e podem ser trocados sem efeito na arquitetura.
 

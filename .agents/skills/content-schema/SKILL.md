@@ -12,9 +12,9 @@ Fonte da verdade do modelo: `docs/content/schema.md`. Leia antes de mexer.
 1. Ache o arquivo certo em `packages/content`.
 2. `id` em kebab-case, único e estável. Nunca reaproveite um `id` removido.
 3. Referências sempre por `id` existente.
-4. Texto traduzível tem as quatro chaves: `pt-BR`, `en`, `es`, `pt-PT`.
+4. Texto traduzível tem as três chaves: `pt-BR`, `en`, `es`.
    - `status: "draft"`: só `pt-BR` é obrigatório.
-   - `status: "published"`: as quatro são obrigatórias e não vazias.
+   - `status: "published"`: as três são obrigatórias e não vazias.
 5. Traduções são revisadas pelo autor antes de publicar. Se você traduziu, deixe o item em `draft` e avise.
 6. Rode a validação do pacote e corrija até passar.
 
@@ -42,6 +42,6 @@ Passos:
 
 ## Textos de interface
 
-`ui/<locale>.json` tem as mesmas chaves nos quatro idiomas. Chave nova entra nos quatro arquivos de uma vez.
+`ui/<locale>.json` tem as mesmas chaves nos três idiomas. Chave nova entra nos três arquivos de uma vez.
 
 Os três MFEs importam `ui` inteiro. Texto que só uma tela usa ganha arquivo próprio, como `home/<locale>.json` para a tela de escolha de perfil.

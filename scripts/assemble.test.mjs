@@ -55,11 +55,11 @@ test('publica a pré-carga de segmento do Next.js com o nome que o cliente pede'
   assert.equal(flattenNextSegment('_next/static/chunks/a.js'), '_next/static/chunks/a.js');
 });
 
-test('buildVercelConfig gera rewrites para as 3 áreas do shell nos 4 idiomas', () => {
+test('buildVercelConfig gera rewrites para as 3 áreas do shell nos 3 idiomas', () => {
   const config = buildVercelConfig();
   assert.equal(config.cleanUrls, true);
   assert.equal(config.trailingSlash, true);
-  assert.equal(config.rewrites.length, 12);
+  assert.equal(config.rewrites.length, 9);
 
   // MFE técnico em pt-BR e en
   assert.ok(
@@ -85,7 +85,7 @@ test('buildVercelConfig gera rewrites para as 3 áreas do shell nos 4 idiomas', 
     ),
   );
 
-  // MFE clientes em pt-BR e pt-PT
+  // MFE clientes em pt-BR e en
   assert.ok(
     config.rewrites.some(
       (r) => r.source === '/clientes/:path*' && r.destination === '/clientes/index.html',
@@ -93,8 +93,7 @@ test('buildVercelConfig gera rewrites para as 3 áreas do shell nos 4 idiomas', 
   );
   assert.ok(
     config.rewrites.some(
-      (r) =>
-        r.source === '/pt-pt/clientes/:path*' && r.destination === '/pt-pt/clientes/index.html',
+      (r) => r.source === '/en/clients/:path*' && r.destination === '/en/clients/index.html',
     ),
   );
 });

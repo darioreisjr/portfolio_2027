@@ -108,7 +108,7 @@ ds-theme-toggle:not(:defined) {
 }
 
 /* Seletor de idioma: um <details>. Fechado, mostra só a bandeira do idioma em
-   uso; aberto, os outros três sobem em coluna. Sem JavaScript (ADR 0006). */
+   uso; aberto, os outros sobem em coluna. Sem JavaScript (ADR 0006). */
 .ds-language-switcher {
   position: relative;
 }

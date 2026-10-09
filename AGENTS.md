@@ -16,7 +16,7 @@ Quatro públicos, uma área por público, cada área em uma tecnologia:
 | Cliente                          | `/clientes`                           | `apps/mfe-react`   | React                     |
 | Casca das três áreas acima       |                                       | `apps/shell`       | JavaScript puro           |
 
-Idiomas: pt-BR (padrão, sem prefixo), en, es, pt-PT (com prefixo e rotas traduzidas).
+Idiomas: pt-BR (padrão, sem prefixo), en e es (com prefixo e rotas traduzidas).
 
 ## Leia antes de qualquer tarefa
 
@@ -107,7 +107,7 @@ Claude Code é a ferramenta principal. Codex e Gemini são usados para revisão 
 - `pnpm lint`, `pnpm typecheck` e `pnpm test` passam.
 - Regras de fronteira respeitadas.
 - Orçamentos de `docs/quality/budgets.md` respeitados; aumento de teto registrado lá com motivo.
-- Interface nova: operável por teclado, foco visível, contraste AA nos dois temas, textos nos quatro idiomas.
+- Interface nova: operável por teclado, foco visível, contraste AA nos dois temas, textos nos três idiomas.
 - Conteúdo novo: passa na validação de `packages/content`.
 - Decisão de arquitetura nova: ADR escrito (skill `write-adr`).
 - Docs atualizados quando o comportamento descrito mudou.

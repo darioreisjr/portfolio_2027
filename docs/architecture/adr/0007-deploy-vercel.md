@@ -44,6 +44,10 @@ Motivos:
 - A pendência de hospedagem em `docs/open-questions.md` passa a se referir ao cadastro na Vercel.
 - Foi criada a skill `.agents/skills/deploy-vercel/SKILL.md` documentando o processo e os comandos para os agentes e o desenvolvedor.
 
+## Emenda de 2026-10-09
+
+O português de Portugal foi removido. As reescritas passam a cobrir as rotas em pt-BR, en e es; os endereços `/pt-pt/...` respondem 404, sem redirecionamento, por decisão do autor.
+
 ## Fontes
 
 - [Vercel CLI Overview](https://vercel.com/docs/cli)

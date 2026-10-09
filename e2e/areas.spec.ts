@@ -135,7 +135,7 @@ test('a mensagem e o botão acompanham o idioma, no MFE e nas páginas Next.js',
   const cases = [
     ['/en/clients/', 'Stage under construction', 'Back to profile selection', '/en/'],
     ['/es/tecnico/', 'Fase en construcción', 'Volver a la elección de perfil', '/es/'],
-    ['/pt-pt/comunidade/', 'Fase em construção', 'Voltar à escolha de perfil', '/pt-pt/'],
+    ['/es/comunidad/', 'Fase en construcción', 'Volver a la elección de perfil', '/es/'],
     ['/en/how-it-was-built/', 'Stage under construction', 'Back to profile selection', '/en/'],
   ] as const;
   for (const [path, title, back, home] of cases) {

@@ -16,7 +16,7 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 // Folha de estilo das páginas internas; a home não a carrega (ADR 0009).
 const AREAS_CSS = 'areas.css';
 // Uma bandeira por idioma (ADR 0006).
-const FLAGS = ['pt-BR', 'en', 'es', 'pt-PT'];
+const FLAGS = ['pt-BR', 'en', 'es'];
 // Os dois pesos da fonte do site, só no alfabeto latino.
 const FONTS = [400, 700].map((weight) => `fonts/m-plus-rounded-1c-latin-${weight}-normal.woff2`);
 

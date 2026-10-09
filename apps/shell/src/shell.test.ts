@@ -44,7 +44,7 @@ describe('documento de uma área', () => {
     }
   });
 
-  it('mostra a bandeira do idioma em uso, que abre os outros três para a mesma área', () => {
+  it('mostra a bandeira do idioma em uso, que abre os outros dois para a mesma área', () => {
     const html = renderPage(recruiter, 'es', ui.es);
     const start = html.indexOf('<details class="ds-language-switcher">');
     const switcher = html.slice(start, html.indexOf('</details>', start));
@@ -63,7 +63,7 @@ describe('documento de uma área', () => {
       );
       expect(switcher).toContain(`src="/_ds/flags/${locale}.svg" alt=""`);
     }
-    expect(switcher.match(/<a /g)).toHaveLength(3);
+    expect(switcher.match(/<a /g)).toHaveLength(2);
     // Depois do conteúdo, para o Tab chegar nele por último.
     expect(html.indexOf('class="ds-dock"')).toBeGreaterThan(html.indexOf('</main>'));
   });

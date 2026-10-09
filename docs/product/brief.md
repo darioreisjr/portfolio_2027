@@ -37,14 +37,13 @@ Sobre, Projetos, Experiência, Skills, Formação e certificados, Serviços free
 
 ## Idiomas
 
-| Código  | Idioma                | Papel                                 |
-| ------- | --------------------- | ------------------------------------- |
-| `pt-BR` | Português do Brasil   | Padrão e idioma de origem do conteúdo |
-| `en`    | Inglês                | Tradução                              |
-| `es`    | Espanhol              | Tradução                              |
-| `pt-PT` | Português de Portugal | Tradução                              |
+| Código  | Idioma              | Papel                                 |
+| ------- | ------------------- | ------------------------------------- |
+| `pt-BR` | Português do Brasil | Padrão e idioma de origem do conteúdo |
+| `en`    | Inglês              | Tradução                              |
+| `es`    | Espanhol            | Tradução                              |
 
-O autor escreve em pt-BR. As outras três versões são traduzidas com apoio de IA e revisadas pelo autor antes de publicar. Nenhuma tradução vai ao ar sem revisão.
+O autor escreve em pt-BR. As outras duas versões são traduzidas com apoio de IA e revisadas pelo autor antes de publicar. Nenhuma tradução vai ao ar sem revisão. O português de Portugal foi removido por decisão do autor em 2026-10-09.
 
 ## Contato
 

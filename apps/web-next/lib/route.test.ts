@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { resolvePage, staticPageParams } from './route';
 
 describe('páginas do Next.js', () => {
-  it('gera três áreas em quatro idiomas', () => {
-    expect(staticPageParams()).toHaveLength(12);
+  it('gera três áreas em três idiomas', () => {
+    expect(staticPageParams()).toHaveLength(9);
   });
 
   it('gera a home pt-BR na raiz e preserva /como-foi-feito', () => {

@@ -117,3 +117,9 @@ test('caminho desconhecido responde 404', async ({ page }) => {
   const response = await page.goto('/nao-existe/');
   expect(response?.status()).toBe(404);
 });
+
+test('os endereços do português de Portugal, removido, respondem 404', async ({ request }) => {
+  for (const path of ['/pt-pt/', '/pt-pt/recrutador/', '/pt-pt/comunidade/']) {
+    expect((await request.get(path)).status(), path).toBe(404);
+  }
+});

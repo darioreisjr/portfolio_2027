@@ -18,14 +18,14 @@ Todo o conteúdo vive em `packages/content` como JSON. Os apps só leem conteúd
 ### Texto traduzível
 
 ```ts
-type Locale = 'pt-BR' | 'en' | 'es' | 'pt-PT';
+type Locale = 'pt-BR' | 'en' | 'es';
 type Localized = Record<Locale, string>;
 ```
 
-Exemplo: `{ "pt-BR": "...", "en": "...", "es": "...", "pt-PT": "..." }`.
+Exemplo: `{ "pt-BR": "...", "en": "...", "es": "..." }`.
 
 - Item `draft`: só `pt-BR` é obrigatório. Rascunhos ficam fora do build de produção; em desenvolvimento entram com `CONTENT_INCLUDE_DRAFTS=1`.
-- Item `published`: os quatro idiomas são obrigatórios e não vazios. A validação bloqueia o build se faltar algum.
+- Item `published`: os três idiomas são obrigatórios e não vazios. A validação bloqueia o build se faltar algum.
 - Nomes próprios (empresa, instituição, tecnologia) são `string` simples, sem tradução.
 
 ### Público
@@ -183,7 +183,7 @@ Sem `status`: é texto de interface, não conteúdo sobre o autor.
 
 Inclui `themeToggle`, o nome acessível do seletor de tema, `languageSwitcher`, o do grupo de bandeiras que troca o idioma, `pauseMotion`, o do botão que pausa a animação (home e páginas internas), e `construction`, com `title`, `text` e `back`: o título, a frase e o rótulo do botão de volta da tela "em construção". Os nomes dos idiomas não ficam aqui: cada um aparece no próprio idioma e vem de `packages/contracts`.
 
-Textos de interface (rótulos de navegação, botões, títulos de seção), separados do conteúdo sobre o autor. Chaves idênticas nos quatro arquivos; a validação falha se alguma faltar.
+Textos de interface (rótulos de navegação, botões, títulos de seção), separados do conteúdo sobre o autor. Chaves idênticas nos três arquivos; a validação falha se alguma faltar.
 
 ## Quem consome o quê
 

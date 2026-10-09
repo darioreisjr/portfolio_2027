@@ -21,12 +21,6 @@ const homes = [
     title: 'Elige tu camino',
     hrefs: ['/es/reclutador/', '/es/tecnico/', '/es/clientes/', '/es/comunidad/'],
   },
-  {
-    path: '/pt-pt/',
-    lang: 'pt-PT',
-    title: 'Escolha o seu caminho',
-    hrefs: ['/pt-pt/recrutador/', '/pt-pt/tecnico/', '/pt-pt/clientes/', '/pt-pt/comunidade/'],
-  },
 ];
 
 const personas = (page: Page): Locator => page.locator('a.persona');

@@ -27,7 +27,7 @@ const escapeHtml = (value: string): string =>
  */
 export function renderPage(entry: RouteEntry, locale: Locale, ui: Ui): string {
   const area = ui.areas[entry.area];
-  // Troca de idioma (ADR 0006): a bandeira do idioma em uso abre os outros três,
+  // Troca de idioma (ADR 0006): a bandeira do idioma em uso abre os outros,
   // que são links comuns para a mesma área. Sem script. A marcação de referência
   // está na story `ds-language-switcher` do design system.
   const alternates = languageAlternates(entry.area, locale);

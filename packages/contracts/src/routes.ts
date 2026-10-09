@@ -1,4 +1,4 @@
-export const locales = ['pt-BR', 'en', 'es', 'pt-PT'] as const;
+export const locales = ['pt-BR', 'en', 'es'] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'pt-BR';
 
@@ -33,7 +33,7 @@ export const routes: readonly RouteEntry[] = [
     area: 'home',
     owner: 'web-next',
     framework: 'Next.js',
-    paths: { 'pt-BR': '/', en: '/en/', es: '/es/', 'pt-PT': '/pt-pt/' },
+    paths: { 'pt-BR': '/', en: '/en/', es: '/es/' },
   },
   {
     area: 'recruiter',
@@ -44,7 +44,6 @@ export const routes: readonly RouteEntry[] = [
       'pt-BR': '/recrutador/',
       en: '/en/recruiter/',
       es: '/es/reclutador/',
-      'pt-PT': '/pt-pt/recrutador/',
     },
   },
   {
@@ -56,7 +55,6 @@ export const routes: readonly RouteEntry[] = [
       'pt-BR': '/tecnico/',
       en: '/en/tech/',
       es: '/es/tecnico/',
-      'pt-PT': '/pt-pt/tecnico/',
     },
   },
   {
@@ -68,7 +66,6 @@ export const routes: readonly RouteEntry[] = [
       'pt-BR': '/clientes/',
       en: '/en/clients/',
       es: '/es/clientes/',
-      'pt-PT': '/pt-pt/clientes/',
     },
   },
   {
@@ -79,7 +76,6 @@ export const routes: readonly RouteEntry[] = [
       'pt-BR': '/comunidade/',
       en: '/en/community/',
       es: '/es/comunidad/',
-      'pt-PT': '/pt-pt/comunidade/',
     },
   },
   {
@@ -90,7 +86,6 @@ export const routes: readonly RouteEntry[] = [
       'pt-BR': '/como-foi-feito/',
       en: '/en/how-it-was-built/',
       es: '/es/como-se-hizo/',
-      'pt-PT': '/pt-pt/como-foi-feito/',
     },
   },
 ];

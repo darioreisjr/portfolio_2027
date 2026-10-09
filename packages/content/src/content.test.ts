@@ -35,7 +35,7 @@ const profileWith = (overrides: Json) =>
   });
 
 describe('conteúdo do repositório', () => {
-  it('é válido e tem textos de interface e da home nos quatro idiomas', () => {
+  it('é válido e tem textos de interface e da home nos três idiomas', () => {
     const { ui, home } = loadContent(dataDir, { includeDrafts: true });
     for (const locale of locales) {
       expect(ui[locale].construction.title).not.toBe('');
@@ -82,7 +82,7 @@ describe('validação', () => {
     expect(() => loadContent(noDescription, { includeDrafts: true })).toThrow(/home\/en\.json/);
   });
 
-  it('recusa item publicado sem os quatro idiomas', () => {
+  it('recusa item publicado sem todos os idiomas', () => {
     const broken = profileWith({ status: 'published', role: { 'pt-BR': 'Cargo' } });
     expect(() => loadContent(broken, { includeDrafts: true })).toThrow(/sem tradução/);
   });
