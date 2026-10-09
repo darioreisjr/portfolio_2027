@@ -11,6 +11,17 @@ export default defineConfig({
   use: {
     baseURL: `http://localhost:${PORT}`,
     trace: 'retain-on-failure',
+    // Todo teste começa como quem já respondeu ao pop-up de imersão da home, com
+    // as animações ligadas. A primeira visita é testada em e2e/home-intro.spec.ts.
+    storageState: {
+      cookies: [],
+      origins: [
+        {
+          origin: `http://localhost:${PORT}`,
+          localStorage: [{ name: 'portfolio:home-animacoes', value: 'on' }],
+        },
+      ],
+    },
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {

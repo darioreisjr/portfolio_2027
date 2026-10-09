@@ -64,6 +64,19 @@ export const homeSchema = z
      * `aria-pressed`. O campo guarda o nome antigo, de quando o botão era só da música.
      */
     music: text,
+    /** Pop-up da primeira visita: idioma e imersão (música e animações). */
+    intro: z
+      .object({
+        title: text,
+        /** Rótulo da caixa de marcar. */
+        immersion: text,
+        /** O que a caixa liga. */
+        hint: text,
+        /** O mesmo, para quem pediu menos movimento ao sistema: só a música. */
+        hintReduced: text,
+        start: text,
+      })
+      .strict(),
     personas: z
       .object({
         recruiter: personaTextSchema,

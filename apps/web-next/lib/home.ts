@@ -1,11 +1,14 @@
 import { home } from '@portfolio/content/home';
 import { profile } from '@portfolio/content/profile';
+import { ui } from '@portfolio/content/ui';
 import {
+  languageAlternates,
   pathFor,
   personaAreas,
   personaFigures,
   routes,
   type AreaId,
+  type LanguageAlternate,
   type Locale,
   type PersonaArea,
   type PersonaFigure,
@@ -31,6 +34,17 @@ export interface HomeModel {
   back: string;
   /** Nome acessível do botão de som (música de fundo e efeitos). */
   music: string;
+  /** Pop-up da primeira visita: idioma e imersão. */
+  intro: {
+    title: string;
+    immersion: string;
+    hint: string;
+    hintReduced: string;
+    start: string;
+    /** Nome do grupo de bandeiras e os idiomas, com o desta página marcado. */
+    languagesLabel: string;
+    languages: LanguageAlternate[];
+  };
   personas: Persona[];
 }
 
@@ -52,6 +66,11 @@ export function buildHome(locale: Locale): HomeModel {
     enter: text.enter,
     back: text.back,
     music: text.music,
+    intro: {
+      ...text.intro,
+      languagesLabel: ui[locale].languageSwitcher,
+      languages: languageAlternates('home', locale),
+    },
     personas: personaAreas.map((area) => {
       const route = routeOf(area);
       return {

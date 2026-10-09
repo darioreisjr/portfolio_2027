@@ -13,6 +13,7 @@ import {
 } from 'react';
 
 import { createPortal } from 'react-dom';
+import { setupIntro } from '../../lib/intro';
 import { MUSIC_SLOT_ID } from '../../lib/music';
 import { CANCEL, ENTER, HOVER, OPTION, PICK, sfx } from '../../lib/sfx';
 import { MusicToggle } from './music-toggle';
@@ -97,6 +98,11 @@ export function PersonaList({
   );
 
   const listRef = useRef<HTMLUListElement>(null);
+  // O botão de som põe aqui a função que o liga e desliga; o pop-up de imersão a chama.
+  const soundRef = useRef<((on: boolean) => void) | null>(null);
+
+  // Pop-up da primeira visita e lembrança da pausa (lib/intro.ts).
+  useEffect(() => setupIntro((on) => soundRef.current?.(on)), []);
 
   useEffect(() => {
     const list = listRef.current;
@@ -223,7 +229,7 @@ export function PersonaList({
       >
         {children}
       </ul>
-      {musicSlot && createPortal(<MusicToggle {...music} />, musicSlot)}
+      {musicSlot && createPortal(<MusicToggle {...music} controlRef={soundRef} />, musicSlot)}
     </>
   );
 }

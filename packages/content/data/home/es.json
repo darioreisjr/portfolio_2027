@@ -3,6 +3,13 @@
   "enter": "Entrar",
   "back": "Volver",
   "music": "Sonido",
+  "intro": {
+    "title": "Antes de empezar",
+    "immersion": "Activar inmersión total",
+    "hint": "Música y animaciones activadas",
+    "hintReduced": "Música activada",
+    "start": "Empezar"
+  },
   "personas": {
     "recruiter": {
       "phrase": "Estoy contratando",

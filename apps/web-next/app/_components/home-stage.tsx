@@ -1,7 +1,8 @@
 import '../home.css';
 import type { Locale } from '@portfolio/contracts';
 import Link from 'next/link';
-import { buildHome, type Persona } from '../../lib/home';
+import { buildHome, type HomeModel, type Persona } from '../../lib/home';
+import { INTRO_ID } from '../../lib/intro';
 import { MUSIC_SRC } from '../../lib/music';
 import { PersonaList } from './persona-list';
 import { SakuraScene } from './sakura-scene';
@@ -74,8 +75,58 @@ function PersonaItem({ persona, enter, back, first }: PersonaItemProps) {
   );
 }
 
+/**
+ * Pop-up da primeira visita: idioma e imersão (música e animações). Nasce
+ * fechado; quem o abre é `lib/intro.ts`, só para quem ainda não respondeu. Sem
+ * JavaScript ele não aparece. As bandeiras são links comuns (ADR 0006): trocar
+ * de idioma recarrega a página, e o pop-up volta já traduzido.
+ */
+function Intro({ intro }: { intro: HomeModel['intro'] }) {
+  return (
+    <dialog className="home-intro" id={INTRO_ID} aria-labelledby="home-intro-title">
+      <h2 id="home-intro-title">{intro.title}</h2>
+      <ul className="home-intro-languages" aria-label={intro.languagesLabel}>
+        {intro.languages.map(({ locale, name, href, flag, current }) => (
+          <li key={locale}>
+            {current ? (
+              <span className="home-intro-flag" aria-current="true">
+                {/* eslint-disable-next-line @next/next/no-img-element -- export estático, sem otimizador */}
+                <img src={flag} alt={name} width="28" height="28" />
+              </span>
+            ) : (
+              <a
+                className="home-intro-flag"
+                href={href}
+                lang={locale}
+                hrefLang={locale}
+                aria-label={name}
+                title={name}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element -- export estático, sem otimizador */}
+                <img src={flag} alt="" width="28" height="28" loading="lazy" decoding="async" />
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
+      <label className="home-intro-immersion">
+        <input type="checkbox" aria-describedby="home-intro-hint" />
+        <span>{intro.immersion}</span>
+        {/* Duas dicas, uma à vista: com movimento reduzido só a música liga. */}
+        <small id="home-intro-hint">
+          <span className="home-intro-hint">{intro.hint}</span>
+          <span className="home-intro-hint-reduced">{intro.hintReduced}</span>
+        </small>
+      </label>
+      <button type="button" className="persona-enter home-intro-start" autoFocus>
+        {intro.start}
+      </button>
+    </dialog>
+  );
+}
+
 export function HomeStage({ locale }: { locale: Locale }) {
-  const { identity, title, enter, back, music, personas } = buildHome(locale);
+  const { identity, title, enter, back, music, intro, personas } = buildHome(locale);
 
   return (
     <main className="home">
@@ -106,6 +157,7 @@ export function HomeStage({ locale }: { locale: Locale }) {
           ))}
         </div>
       </nav>
+      <Intro intro={intro} />
     </main>
   );
 }

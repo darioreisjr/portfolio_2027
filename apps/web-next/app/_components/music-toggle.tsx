@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type RefObject } from 'react';
 import { MUSIC_STORAGE_KEY, MUSIC_TIME_KEY } from '../../lib/music';
 import { ON, closeSound, setSound, sfx, unlock } from '../../lib/sfx';
 
@@ -17,7 +17,16 @@ import { ON, closeSound, setSound, sfx, unlock } from '../../lib/sfx';
  * `persona-list.tsx`: sem JavaScript o botão não existe, e o lugar dele no grupo
  * do canto fica guardado, vazio.
  */
-export function MusicToggle({ label, src }: { label: string; src: string }) {
+export function MusicToggle({
+  label,
+  src,
+  controlRef,
+}: {
+  label: string;
+  src: string;
+  /** Por onde o pop-up de imersão liga ou desliga o som (`lib/intro.ts`). */
+  controlRef: RefObject<((on: boolean) => void) | null>;
+}) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -108,23 +117,32 @@ export function MusicToggle({ label, src }: { label: string; src: string }) {
       // Sem armazenamento, espera o gesto.
     }
 
-    const onToggle = () => {
-      if (active) {
-        remember(false);
-        mark(false);
-        setActive(false);
-        audio.pause();
-      } else {
+    const set = (on: boolean) => {
+      if (on === active) return;
+      if (on) {
         remember(true);
         turnOn();
         // Uma nota ao ligar: confirma que o som está funcionando.
         sfx(ON);
+      } else {
+        remember(false);
+        mark(false);
+        setActive(false);
+        audio.pause();
       }
+    };
+    const onToggle = () => set(!active);
+    controlRef.current = (on) => {
+      // Recusar a imersão também desfaz uma escolha lembrada de outra visita.
+      if (!on) remember(false);
+      set(on);
     };
     // Qualquer clique ou tecla fora do botão. Roda na captura, antes dos cliques
     // da lista: o efeito do próprio gesto já encontra o áudio acordado.
     const onGesture = (event: Event) => {
       if (button.contains(event.target as Node)) return;
+      // Com o pop-up de imersão aberto, quem decide o som é a resposta a ele.
+      if (document.querySelector('dialog[open]')) return;
       if (armed && !active) turnOn();
       else if (active) {
         unlock();
@@ -153,6 +171,7 @@ export function MusicToggle({ label, src }: { label: string; src: string }) {
     return () => {
       // Sair da home por navegação do Next.js mantém o documento: o som para aqui.
       disposed = true;
+      controlRef.current = null;
       // Só grava, nunca apaga: em desenvolvimento o React desmonta e remonta o
       // componente, e apagar aqui tiraria a marca que a segunda montagem lê.
       // Quem apaga a marca é o desligar (`onToggle`) e o `pagehide`.
@@ -167,7 +186,7 @@ export function MusicToggle({ label, src }: { label: string; src: string }) {
       document.removeEventListener('visibilitychange', onVisibility);
       removeEventListener('pagehide', onPageHide);
     };
-  }, [src]);
+  }, [src, controlRef]);
 
   return (
     <>

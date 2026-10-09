@@ -3,6 +3,13 @@
   "enter": "Enter",
   "back": "Back",
   "music": "Sound",
+  "intro": {
+    "title": "Before you start",
+    "immersion": "Turn on full immersion",
+    "hint": "Music and animations on",
+    "hintReduced": "Music on",
+    "start": "Start"
+  },
   "personas": {
     "recruiter": {
       "phrase": "I'm hiring",

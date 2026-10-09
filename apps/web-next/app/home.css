@@ -1329,6 +1329,126 @@ body:has(.home-motion input:checked) li[data-selected] > .persona::before {
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Pop-up de imersão da primeira visita (docs/plans/home-imersao.md): uma caixa
+   de menu de jogo, com as bandeiras, a caixa de marcar e o "Começar". É um
+   <dialog> nativo, aberto por lib/intro.ts. O véu é cor sólida translúcida:
+   nada aqui é maior que a imagem do personagem, que continua sendo o LCP.
+   --------------------------------------------------------------------------- */
+.home-intro {
+  --persona-color: var(--color-area-tech);
+  --persona-on-color: var(--color-on-area);
+
+  box-sizing: border-box;
+  inline-size: min(100% - var(--space-inline-md) * 2, 22rem);
+  padding: var(--space-block-lg) var(--space-inline-md);
+  border: var(--border-width-control) solid var(--persona-color);
+  border-block-start-width: calc(var(--border-width-marker) * 2);
+  border-radius: 0;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  text-align: center;
+  text-shadow: none;
+}
+
+/* Só aberto vira grade: fechado, o `display: none` do navegador tem de valer. */
+.home-intro[open] {
+  display: grid;
+  gap: var(--space-block-md);
+  justify-items: center;
+}
+
+.home-intro::backdrop {
+  background-color: color-mix(in srgb, var(--color-surface) 72%, transparent);
+}
+
+.home-intro h2 {
+  margin: 0;
+  color: var(--persona-color);
+  font-size: var(--text-size-lg);
+}
+
+.home-intro-languages {
+  display: flex;
+  gap: var(--space-inline-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Mesma medida das bandeiras do canto: alvo de toque inteiro e bandeira redonda. */
+.home-intro-flag {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: var(--ds-language-switcher-size);
+  block-size: var(--ds-language-switcher-size);
+  border: var(--ds-language-switcher-ring-width) solid transparent;
+  border-radius: var(--radius-full);
+}
+
+.home-intro-flag img {
+  display: block;
+  inline-size: var(--ds-language-switcher-flag-size);
+  block-size: var(--ds-language-switcher-flag-size);
+  border-radius: var(--radius-full);
+}
+
+.home-intro-flag[aria-current] {
+  border-color: var(--ds-language-switcher-current);
+}
+
+.home-intro-flag:focus-visible,
+.home-intro-immersion input:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.home-intro-immersion {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 var(--space-inline-sm);
+  align-items: center;
+  min-block-size: var(--size-control);
+  text-align: start;
+  cursor: pointer;
+}
+
+.home-intro-immersion input {
+  inline-size: var(--size-icon);
+  block-size: var(--size-icon);
+  margin: 0;
+  accent-color: var(--persona-color);
+  cursor: pointer;
+}
+
+.home-intro-immersion small {
+  grid-column: 2;
+  color: var(--color-text-muted);
+  font-size: var(--text-size-sm);
+}
+
+.home-intro-hint-reduced {
+  display: none;
+}
+
+.home-intro-start {
+  inline-size: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-intro[open] {
+    animation: home-intro-in var(--motion-duration-lg) var(--motion-ease-out);
+  }
+}
+
+@keyframes home-intro-in {
+  from {
+    opacity: 0;
+    translate: 0 var(--space-block-md);
+  }
+}
+
 /* Movimento reduzido: nada se mexe, as pétalas ficam paradas no ar, o sol e a
    lua trocam na hora e não há o que pausar. */
 @media (prefers-reduced-motion: reduce) {
@@ -1357,5 +1477,14 @@ body:has(.home-motion input:checked) li[data-selected] > .persona::before {
 
   .home-motion {
     display: none;
+  }
+
+  /* O sistema já parou as animações: a imersão só liga a música. */
+  .home-intro-hint {
+    display: none;
+  }
+
+  .home-intro-hint-reduced {
+    display: inline;
   }
 }
