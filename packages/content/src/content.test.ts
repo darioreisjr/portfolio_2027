@@ -92,3 +92,87 @@ describe('validação', () => {
     expect(() => loadContent(minimal, { includeDrafts: true })).not.toThrow();
   });
 });
+
+describe('área do recrutador', () => {
+  /** Altera uma lista dos dados reais. */
+  const listWith = (file: string, change: (items: Json[]) => void) =>
+    dataWith(file, (json) => change(json as unknown as Json[]));
+
+  it('não tem conteúdo em produção enquanto o perfil real for rascunho', () => {
+    // Os dados de exemplo nunca podem ir ao ar: a área mostra a tela "em construção".
+    const content = loadContent(dataDir, { includeDrafts: false });
+    expect(content.recruiter).toBeNull();
+    for (const locale of locales) expect(content.recruiterUi[locale].example.title).not.toBe('');
+  });
+
+  it('com rascunhos, entrega o conteúdo de exemplo traduzido e marcado como exemplo', () => {
+    const { recruiter } = loadContent(dataDir, { includeDrafts: true });
+    if (!recruiter) throw new Error('sem conteúdo');
+    for (const locale of locales) {
+      const content = recruiter[locale];
+      expect(content.example).toBe(true);
+      expect(content.experiences.length).toBeGreaterThan(0);
+      expect(content.projects.every((project) => project.challenge && project.result)).toBe(true);
+      // Sem arquivo de currículo não há caminho: o botão não aparece.
+      expect(content.cv).toBeUndefined();
+    }
+    expect(recruiter.en.role).not.toBe(recruiter['pt-BR'].role);
+    // O emprego atual vem primeiro, e as skills chegam pelo nome.
+    expect(recruiter['pt-BR'].experiences[0]?.end).toBeNull();
+    expect(recruiter['pt-BR'].experiences[0]?.skills).toContain('TypeScript');
+    // As tecnologias em destaque abrem a lista.
+    expect(recruiter['pt-BR'].skills[0]?.name).toBe('TypeScript');
+  });
+
+  it('todo dado de exemplo é rascunho e visivelmente fictício', () => {
+    const raw = (file: string) => JSON.parse(readFileSync(join(dataDir, file), 'utf8')) as Json[];
+    for (const file of ['contacts', 'skills', 'experiences', 'education', 'projects']) {
+      for (const item of raw(`${file}.json`)) {
+        expect(item.status, `${file} ${String(item.id)}`).toBe('draft');
+        expect(String(item.id), file).toMatch(/^exemplo-/);
+      }
+    }
+    for (const contact of raw('contacts.json'))
+      expect(String(contact.url)).toContain('example.com');
+  });
+
+  it('recusa referência a skill que não existe e id repetido', () => {
+    const missing = listWith('experiences.json', (items) => {
+      (items[0] as { skills: string[] }).skills.push('nao-existe');
+    });
+    expect(() => loadContent(missing, { includeDrafts: true })).toThrow(/skill inexistente/);
+
+    const repeated = listWith('skills.json', (items) => {
+      items.push({ ...(items[0] as Json) });
+    });
+    expect(() => loadContent(repeated, { includeDrafts: true })).toThrow(/id repetido/);
+  });
+
+  it('recusa item publicado sem tradução ou que dependa de skill em rascunho', () => {
+    const untranslated = listWith('education.json', (items) => {
+      Object.assign(items[0] as Json, { status: 'published', title: { 'pt-BR': 'Curso' } });
+    });
+    expect(() => loadContent(untranslated, { includeDrafts: true })).toThrow(/sem tradução/);
+
+    const dangling = listWith('experiences.json', (items) => {
+      (items[0] as Json).status = 'published';
+    });
+    expect(() => loadContent(dangling, { includeDrafts: true })).toThrow(/skill em rascunho/);
+  });
+
+  it('em produção, lista só os itens publicados de um perfil publicado', () => {
+    const dir = listWith('skills.json', (items) => {
+      (items[0] as Json).status = 'published';
+    });
+    const profilePath = join(dir, 'profile.json');
+    const profile = JSON.parse(readFileSync(profilePath, 'utf8')) as Json;
+    writeFileSync(
+      profilePath,
+      JSON.stringify({ ...profile, status: 'published', highlightSkills: ['exemplo-typescript'] }),
+    );
+    const { recruiter } = loadContent(dir, { includeDrafts: false });
+    expect(recruiter?.['pt-BR'].example).toBe(false);
+    expect(recruiter?.['pt-BR'].skills.map((skill) => skill.name)).toEqual(['TypeScript']);
+    expect(recruiter?.['pt-BR'].experiences).toEqual([]);
+  });
+});

@@ -1,0 +1,80 @@
+[
+  {
+    "id": "exemplo-empresa-b",
+    "status": "draft",
+    "company": "Empresa Exemplo B",
+    "companyUrl": "https://example.com",
+    "role": {
+      "pt-BR": "Cargo de exemplo (atual)",
+      "en": "Example role (current)",
+      "es": "Cargo de ejemplo (actual)"
+    },
+    "start": "2024-03",
+    "end": null,
+    "location": {
+      "pt-BR": "Cidade Exemplo",
+      "en": "Example City",
+      "es": "Ciudad Ejemplo"
+    },
+    "mode": "remote",
+    "summary": {
+      "pt-BR": "Resumo de exemplo: o produto, o tamanho do time e a sua parte nele.",
+      "en": "Example summary: the product, the team size and your part in it.",
+      "es": "Resumen de ejemplo: el producto, el tamaño del equipo y tu parte en él."
+    },
+    "highlights": [
+      {
+        "pt-BR": "Destaque de exemplo com um resultado medido.",
+        "en": "Example highlight with a measured result.",
+        "es": "Logro de ejemplo con un resultado medido."
+      },
+      {
+        "pt-BR": "Destaque de exemplo sobre uma entrega importante.",
+        "en": "Example highlight about a key delivery.",
+        "es": "Logro de ejemplo sobre una entrega importante."
+      },
+      {
+        "pt-BR": "Destaque de exemplo sobre trabalho em equipe.",
+        "en": "Example highlight about teamwork.",
+        "es": "Logro de ejemplo sobre trabajo en equipo."
+      }
+    ],
+    "skills": ["exemplo-typescript", "exemplo-vue", "exemplo-testes"]
+  },
+  {
+    "id": "exemplo-empresa-a",
+    "status": "draft",
+    "company": "Empresa Exemplo A",
+    "role": {
+      "pt-BR": "Cargo de exemplo anterior",
+      "en": "Previous example role",
+      "es": "Cargo de ejemplo anterior"
+    },
+    "start": "2021-06",
+    "end": "2024-02",
+    "location": {
+      "pt-BR": "Cidade Exemplo",
+      "en": "Example City",
+      "es": "Ciudad Ejemplo"
+    },
+    "mode": "hybrid",
+    "summary": {
+      "pt-BR": "Resumo de exemplo de uma experiência anterior.",
+      "en": "Example summary of a previous job.",
+      "es": "Resumen de ejemplo de una experiencia anterior."
+    },
+    "highlights": [
+      {
+        "pt-BR": "Destaque de exemplo.",
+        "en": "Example highlight.",
+        "es": "Logro de ejemplo."
+      },
+      {
+        "pt-BR": "Outro destaque de exemplo.",
+        "en": "Another example highlight.",
+        "es": "Otro logro de ejemplo."
+      }
+    ],
+    "skills": ["exemplo-react", "exemplo-node", "exemplo-sql"]
+  }
+]

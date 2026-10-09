@@ -1,0 +1,78 @@
+[
+  {
+    "id": "exemplo-projeto-um",
+    "status": "draft",
+    "slug": "exemplo-projeto-um",
+    "title": {
+      "pt-BR": "Projeto Exemplo Um",
+      "en": "Example Project One",
+      "es": "Proyecto Ejemplo Uno"
+    },
+    "summary": {
+      "pt-BR": "Resumo de exemplo do projeto em uma frase.",
+      "en": "One-sentence example summary of the project.",
+      "es": "Resumen de ejemplo del proyecto en una frase."
+    },
+    "start": "2025-01",
+    "role": {
+      "pt-BR": "Papel de exemplo: o que ficou sob sua responsabilidade.",
+      "en": "Example role: what you were responsible for.",
+      "es": "Rol de ejemplo: de qué fuiste responsable."
+    },
+    "skills": ["exemplo-vue", "exemplo-typescript", "exemplo-ci"],
+    "links": {
+      "repo": "https://example.com/repo",
+      "demo": "https://example.com/demo"
+    },
+    "openSource": false,
+    "recruiter": {
+      "challenge": {
+        "pt-BR": "Desafio de exemplo: o problema que precisava ser resolvido.",
+        "en": "Example challenge: the problem that had to be solved.",
+        "es": "Desafío de ejemplo: el problema que había que resolver."
+      },
+      "result": {
+        "pt-BR": "Resultado de exemplo: o que mudou depois da entrega.",
+        "en": "Example result: what changed after delivery.",
+        "es": "Resultado de ejemplo: qué cambió tras la entrega."
+      }
+    },
+    "featured": true
+  },
+  {
+    "id": "exemplo-projeto-dois",
+    "status": "draft",
+    "slug": "exemplo-projeto-dois",
+    "title": {
+      "pt-BR": "Projeto Exemplo Dois",
+      "en": "Example Project Two",
+      "es": "Proyecto Ejemplo Dos"
+    },
+    "summary": {
+      "pt-BR": "Outro resumo de exemplo em uma frase.",
+      "en": "Another one-sentence example summary.",
+      "es": "Otro resumen de ejemplo en una frase."
+    },
+    "start": "2023-05",
+    "end": "2023-11",
+    "role": {
+      "pt-BR": "Papel de exemplo neste projeto.",
+      "en": "Example role in this project.",
+      "es": "Rol de ejemplo en este proyecto."
+    },
+    "skills": ["exemplo-node", "exemplo-api", "exemplo-sql"],
+    "openSource": false,
+    "recruiter": {
+      "challenge": {
+        "pt-BR": "Outro desafio de exemplo.",
+        "en": "Another example challenge.",
+        "es": "Otro desafío de ejemplo."
+      },
+      "result": {
+        "pt-BR": "Outro resultado de exemplo.",
+        "en": "Another example result.",
+        "es": "Otro resultado de ejemplo."
+      }
+    }
+  }
+]

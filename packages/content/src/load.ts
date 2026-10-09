@@ -1,13 +1,22 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { locales, type Locale } from '@portfolio/contracts';
-import type { z } from 'zod';
+import { z } from 'zod';
+import { buildRecruiter, type RecruiterContent } from './recruiter.js';
 import {
+  contactSchema,
+  educationSchema,
+  experienceSchema,
   homeSchema,
   profileSchema,
+  projectSchema,
+  recruiterUiSchema,
+  skillSchema,
   uiSchema,
   type Home,
   type Profile,
+  type RecruiterUi,
+  type Status,
   type Ui,
 } from './schemas.js';
 
@@ -16,6 +25,13 @@ export interface Content {
   home: Record<Locale, Home>;
   /** `null` quando não há perfil publicado e os rascunhos estão fora. */
   profile: Profile | null;
+  /** Textos de interface da área do recrutador. */
+  recruiterUi: Record<Locale, RecruiterUi>;
+  /**
+   * Conteúdo da área do recrutador por idioma; `null` quando não há perfil. É
+   * assim que a área sabe que deve mostrar a tela "em construção".
+   */
+  recruiter: Record<Locale, RecruiterContent> | null;
 }
 
 export interface LoadOptions {
@@ -39,6 +55,48 @@ function parseFile<Schema extends z.ZodType>(
   return result.data;
 }
 
+interface Listed {
+  id: string;
+  status: Status;
+}
+
+/** Lê uma lista e recusa ids repetidos. */
+function parseList<Schema extends z.ZodType<Listed>>(
+  dataDir: string,
+  file: string,
+  schema: Schema,
+): z.infer<Schema>[] {
+  const items = parseFile(dataDir, file, z.array(schema));
+  const seen = new Set<string>();
+  for (const { id } of items) {
+    if (seen.has(id)) throw new Error(`Conteúdo inválido em ${file}:\n  id repetido: ${id}`);
+    seen.add(id);
+  }
+  return items;
+}
+
+/**
+ * Confere as referências a skills antes de filtrar os rascunhos: o alvo tem de
+ * existir, e item publicado não pode depender de skill em rascunho, que some do
+ * build de produção.
+ */
+function checkSkillRefs(
+  file: string,
+  owners: { id?: string; status: Status; skills: string[] }[],
+  skills: Map<string, Status>,
+): void {
+  for (const owner of owners) {
+    for (const skill of owner.skills) {
+      const status = skills.get(skill);
+      const where = `Conteúdo inválido em ${file}:\n  ${owner.id ?? '(raiz)'}:`;
+      if (!status) throw new Error(`${where} skill inexistente: ${skill}`);
+      if (owner.status === 'published' && status === 'draft') {
+        throw new Error(`${where} item publicado usa skill em rascunho: ${skill}`);
+      }
+    }
+  }
+}
+
 export function loadContent(dataDir: string, { includeDrafts }: LoadOptions): Content {
   const ui = Object.fromEntries(
     locales.map((locale) => [locale, parseFile(dataDir, `ui/${locale}.json`, uiSchema)]),
@@ -48,11 +106,50 @@ export function loadContent(dataDir: string, { includeDrafts }: LoadOptions): Co
     locales.map((locale) => [locale, parseFile(dataDir, `home/${locale}.json`, homeSchema)]),
   ) as Record<Locale, Home>;
 
-  const profile = parseFile(dataDir, 'profile.json', profileSchema);
+  const recruiterUi = Object.fromEntries(
+    locales.map((locale) => [
+      locale,
+      parseFile(dataDir, `recruiter/${locale}.json`, recruiterUiSchema),
+    ]),
+  ) as Record<Locale, RecruiterUi>;
+
+  const rawProfile = parseFile(dataDir, 'profile.json', profileSchema);
+  const contacts = parseList(dataDir, 'contacts.json', contactSchema);
+  const skills = parseList(dataDir, 'skills.json', skillSchema);
+  const experiences = parseList(dataDir, 'experiences.json', experienceSchema);
+  const education = parseList(dataDir, 'education.json', educationSchema);
+  const projects = parseList(dataDir, 'projects.json', projectSchema);
+
+  const skillStatus = new Map(skills.map((skill) => [skill.id, skill.status]));
+  checkSkillRefs(
+    'profile.json',
+    [{ status: rawProfile.status, skills: rawProfile.highlightSkills }],
+    skillStatus,
+  );
+  checkSkillRefs('experiences.json', experiences, skillStatus);
+  checkSkillRefs('projects.json', projects, skillStatus);
+
+  const visible = <Item extends Listed>(items: Item[]) =>
+    items.filter((item) => item.status === 'published' || includeDrafts);
+  const profile = rawProfile.status === 'published' || includeDrafts ? rawProfile : null;
+  const sources = profile && {
+    profile,
+    contacts: visible(contacts),
+    skills: visible(skills),
+    experiences: visible(experiences),
+    education: visible(education),
+    projects: visible(projects),
+  };
 
   return {
     ui,
     home,
-    profile: profile.status === 'published' || includeDrafts ? profile : null,
+    profile,
+    recruiterUi,
+    recruiter:
+      sources &&
+      (Object.fromEntries(
+        locales.map((locale) => [locale, buildRecruiter(sources, locale)]),
+      ) as Record<Locale, RecruiterContent>),
   };
 }

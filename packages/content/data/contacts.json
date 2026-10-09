@@ -1,0 +1,31 @@
+[
+  {
+    "id": "exemplo-email",
+    "status": "draft",
+    "kind": "email",
+    "url": "mailto:pessoa@example.com",
+    "display": "pessoa@example.com",
+    "primaryFor": ["recruiter"]
+  },
+  {
+    "id": "exemplo-linkedin",
+    "status": "draft",
+    "kind": "linkedin",
+    "url": "https://example.com/linkedin",
+    "display": "example.com/linkedin"
+  },
+  {
+    "id": "exemplo-github",
+    "status": "draft",
+    "kind": "github",
+    "url": "https://example.com/github",
+    "display": "example.com/github"
+  },
+  {
+    "id": "exemplo-whatsapp",
+    "status": "draft",
+    "kind": "whatsapp",
+    "url": "https://example.com/whatsapp",
+    "display": "+00 00 00000-0000"
+  }
+]

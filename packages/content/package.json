@@ -17,6 +17,10 @@
       "types": "./dist/data/profile.d.ts",
       "default": "./dist/data/profile.js"
     },
+    "./recruiter": {
+      "types": "./dist/data/recruiter.d.ts",
+      "default": "./dist/data/recruiter.js"
+    },
     "./schemas": {
       "types": "./dist/schemas.d.ts",
       "default": "./dist/schemas.js"

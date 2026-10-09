@@ -6,5 +6,28 @@
     "en": "Full-stack developer",
     "es": "Desarrollador full-stack"
   },
-  "highlightSkills": []
+  "tagline": {
+    "pt-BR": "Frase de exemplo: o que você faz e para quem, em uma linha.",
+    "en": "Example line: what you do and for whom, in one sentence.",
+    "es": "Frase de ejemplo: qué haces y para quién, en una línea."
+  },
+  "summary": {
+    "pt-BR": "Texto de exemplo. Aqui entra o resumo profissional de verdade: há quanto tempo atua, em que tipo de produto, com quais tecnologias e o que procura na próxima vaga.",
+    "en": "Example text. The real professional summary goes here: years of experience, kinds of product, main technologies and what you want from the next role.",
+    "es": "Texto de ejemplo. Aquí va el resumen profesional real: años de experiencia, tipo de producto, tecnologías y qué buscas en el próximo puesto."
+  },
+  "location": {
+    "pt-BR": "Cidade Exemplo, Brasil",
+    "en": "Example City, Brazil",
+    "es": "Ciudad Ejemplo, Brasil"
+  },
+  "availability": {
+    "pt-BR": "Disponibilidade de exemplo",
+    "en": "Example availability",
+    "es": "Disponibilidad de ejemplo"
+  },
+  "workMode": "remote",
+  "englishLevel": "intermediate",
+  "seniority": "mid",
+  "highlightSkills": ["exemplo-typescript", "exemplo-vue", "exemplo-node"]
 }

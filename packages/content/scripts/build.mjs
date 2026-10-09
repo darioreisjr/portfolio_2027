@@ -8,7 +8,7 @@ const dataDir = fileURLToPath(new URL('../data', import.meta.url));
 const outDir = fileURLToPath(new URL('../dist/data', import.meta.url));
 const includeDrafts = process.env.CONTENT_INCLUDE_DRAFTS === '1';
 
-const { ui, home, profile } = loadContent(dataDir, { includeDrafts });
+const { ui, home, profile, recruiter, recruiterUi } = loadContent(dataDir, { includeDrafts });
 
 const modules = {
   ui: {
@@ -34,14 +34,27 @@ const modules = {
       'export declare const profile: Readonly<Profile> | null;',
     ],
   },
+  // Dois exports no mesmo módulo: o conteúdo da área e os textos de interface dela.
+  recruiter: {
+    value: recruiter,
+    extra: { recruiterUi },
+    types: [
+      "import type { Locale } from '@portfolio/contracts';",
+      "import type { RecruiterContent } from '../recruiter.js';",
+      "import type { RecruiterUi } from '../schemas.js';",
+      'export type { RecruiterContent, RecruiterUi };',
+      'export declare const recruiter: Readonly<Record<Locale, RecruiterContent>> | null;',
+      'export declare const recruiterUi: Readonly<Record<Locale, RecruiterUi>>;',
+    ],
+  },
 };
 
 mkdirSync(outDir, { recursive: true });
-for (const [name, { value, types }] of Object.entries(modules)) {
-  writeFileSync(
-    `${outDir}/${name}.js`,
-    `export const ${name} = ${JSON.stringify(value, null, 2)};\n`,
-  );
+for (const [name, { value, types, extra = {} }] of Object.entries(modules)) {
+  const source = Object.entries({ [name]: value, ...extra })
+    .map(([key, entry]) => `export const ${key} = ${JSON.stringify(entry, null, 2)};\n`)
+    .join('');
+  writeFileSync(`${outDir}/${name}.js`, source);
   writeFileSync(`${outDir}/${name}.d.ts`, `${types.join('\n')}\n`);
 }
 

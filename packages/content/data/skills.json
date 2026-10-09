@@ -1,0 +1,65 @@
+[
+  {
+    "id": "exemplo-typescript",
+    "status": "draft",
+    "name": "TypeScript",
+    "category": "frontend",
+    "level": "advanced"
+  },
+  {
+    "id": "exemplo-vue",
+    "status": "draft",
+    "name": "Vue",
+    "category": "frontend",
+    "level": "advanced"
+  },
+  {
+    "id": "exemplo-react",
+    "status": "draft",
+    "name": "React",
+    "category": "frontend",
+    "level": "working"
+  },
+  {
+    "id": "exemplo-node",
+    "status": "draft",
+    "name": "Node.js",
+    "category": "backend",
+    "level": "working"
+  },
+  {
+    "id": "exemplo-api",
+    "status": "draft",
+    "name": "API REST",
+    "category": "backend",
+    "level": "working"
+  },
+  {
+    "id": "exemplo-sql",
+    "status": "draft",
+    "name": "SQL",
+    "category": "database",
+    "level": "working"
+  },
+  {
+    "id": "exemplo-docker",
+    "status": "draft",
+    "name": "Docker",
+    "category": "devops",
+    "level": "learning"
+  },
+  {
+    "id": "exemplo-ci",
+    "status": "draft",
+    "name": "CI/CD",
+    "category": "devops",
+    "level": "working"
+  },
+  {
+    "id": "exemplo-testes",
+    "status": "draft",
+    "name": "Testes automatizados",
+    "category": "testing",
+    "level": "working"
+  }
+]

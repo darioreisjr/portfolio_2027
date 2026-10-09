@@ -38,18 +38,21 @@ type Audience = 'recruiter' | 'tech' | 'client' | 'community';
 
 ### `profile.json` (objeto único)
 
-| Campo             | Tipo                                                          | Obrigatório |
-| ----------------- | ------------------------------------------------------------- | ----------- |
-| `status`          | `"draft"` ou `"published"`                                    | sim         |
-| `name`            | string                                                        | sim         |
-| `role`            | Localized                                                     | sim         |
-| `tagline`         | Localized (uma frase)                                         | não         |
-| `summary`         | Localized                                                     | não         |
-| `location`        | Localized                                                     | não         |
-| `availability`    | Localized                                                     | não         |
-| `photo`           | Imagem                                                        | não         |
-| `highlightSkills` | id de skill[]                                                 | sim         |
-| `cv`              | `Partial<Record<Locale, string>>` (caminho do PDF por idioma) | não         |
+| Campo             | Tipo                                                            | Obrigatório |
+| ----------------- | --------------------------------------------------------------- | ----------- |
+| `status`          | `"draft"` ou `"published"`                                      | sim         |
+| `name`            | string                                                          | sim         |
+| `role`            | Localized                                                       | sim         |
+| `tagline`         | Localized (uma frase)                                           | não         |
+| `summary`         | Localized                                                       | não         |
+| `location`        | Localized                                                       | não         |
+| `availability`    | Localized                                                       | não         |
+| `workMode`        | `"remote" \| "hybrid" \| "onsite"` (ficha rápida do recrutador) | não         |
+| `englishLevel`    | `"basic" \| "intermediate" \| "advanced" \| "fluent"`           | não         |
+| `seniority`       | `"junior" \| "mid" \| "senior" \| "specialist"`                 | não         |
+| `photo`           | Imagem                                                          | não         |
+| `highlightSkills` | id de skill[]                                                   | sim         |
+| `cv`              | `Partial<Record<Locale, string>>` (caminho do PDF por idioma)   | não         |
 
 ### `contacts.json` (lista)
 
@@ -98,12 +101,12 @@ Cada item também tem `status`.
 | `kind`          | `"degree" \| "course" \| "certification"` | sim         |
 | `title`         | Localized                                 | sim         |
 | `institution`   | string                                    | sim         |
-| `start`, `end`  | `YYYY-MM`, `end` pode ser `null`          | `end` sim   |
+| `start`, `end`  | `YYYY-MM`; `end: null` é "em andamento"   | `end` sim   |
 | `credentialUrl` | string                                    | não         |
 
 ### `projects.json` (lista)
 
-Um projeto tem duas narrativas: `technical` (área técnica) e `outcome` (área do cliente). Cada uma é opcional; o projeto aparece em uma área só se tiver a narrativa correspondente.
+Um projeto tem três narrativas: `technical` (área técnica), `outcome` (área do cliente) e `recruiter` (área do recrutador: o desafio e o que saiu dele, ao lado de `role`). Cada uma é opcional; o projeto aparece em uma área só se tiver a narrativa correspondente.
 
 | Campo                      | Tipo                                            | Obrigatório           |
 | -------------------------- | ----------------------------------------------- | --------------------- |
@@ -123,6 +126,8 @@ Um projeto tem duas narrativas: `technical` (área técnica) e `outcome` (área 
 | `technical.tradeoffs`      | Localized[]                                     | não                   |
 | `outcome.context`          | Localized                                       | se houver `outcome`   |
 | `outcome.result`           | Localized                                       | se houver `outcome`   |
+| `recruiter.challenge`      | Localized                                       | se houver `recruiter` |
+| `recruiter.result`         | Localized                                       | se houver `recruiter` |
 | `featured`                 | boolean                                         | não                   |
 
 ### `services.json` (lista)
@@ -178,6 +183,10 @@ Textos da tela de escolha de perfil. Sem `status`, como `ui`. Ficam fora de `ui`
 | `personas.<perfil>.phrase`                                                         | string, para `recruiter`, `tech`, `client` e `community`                                                                                     | sim         |
 | `personas.<perfil>.description`                                                    | string: o que a área traz e para quem, no tom daquele público                                                                                | sim         |
 
+### `recruiter/<locale>.json` (um por idioma)
+
+Textos de interface da área do recrutador: títulos das seções, rótulos das enumerações da ficha rápida (`workModes`, `englishLevels`, `seniorities`), das categorias e níveis da stack, dos tipos de formação e de contato, e a faixa "Dados de exemplo" (`example`). Sem `status`, como `ui` e `home`. Ficam fora de `ui` porque só o MFE do recrutador os usa.
+
 ### `ui/<locale>.json` (um por idioma)
 
 Sem `status`: é texto de interface, não conteúdo sobre o autor.
@@ -186,15 +195,28 @@ Inclui `themeToggle`, o nome acessível do seletor de tema, `languageSwitcher`, 
 
 Textos de interface (rótulos de navegação, botões, títulos de seção), separados do conteúdo sobre o autor. Chaves idênticas nos três arquivos; a validação falha se alguma faltar.
 
+## O módulo da área do recrutador
+
+Os apps não montam a página a partir dos arquivos soltos. O pacote entrega `@portfolio/content/recruiter`, com dois exports:
+
+- `recruiter`: `Record<Locale, RecruiterContent> | null`. Um objeto por idioma, já com os rascunhos filtrados, as skills resolvidas pelo nome, os textos no idioma e a ordem pronta (o que está em curso primeiro). É `null` quando não há perfil visível, e é assim que a área sabe que deve mostrar a tela "em construção".
+- `recruiterUi`: os textos de `recruiter/<locale>.json`.
+
+`RecruiterContent.example` é `true` enquanto o perfil for rascunho: a página mostra a faixa "Dados de exemplo".
+
+Os dados de exemplo do repositório têm `status: "draft"`, id começando por `exemplo-`, nomes como "Empresa Exemplo" e endereços em `example.com`. Um teste do pacote cobra isso e cobra que o build de produção entregue `recruiter: null` enquanto o perfil real for rascunho.
+
+Regras conferidas na carga, antes de filtrar os rascunhos: ids únicos por arquivo; toda skill referenciada existe; item publicado não referencia skill em rascunho; item publicado tem os três idiomas em todo texto traduzível, em qualquer profundidade.
+
 ## Quem consome o quê
 
-| Área       | Arquivos                                                                       |
-| ---------- | ------------------------------------------------------------------------------ |
-| Home       | `profile`, `home`, `ui` (`contacts` quando houver uso)                         |
-| Recrutador | `profile`, `experiences`, `education`, `skills`, `contacts`, `ui`              |
-| Técnica    | `projects` (narrativa `technical`), `skills`, `contacts`, `ui`                 |
-| Cliente    | `services`, `testimonials`, `projects` (narrativa `outcome`), `contacts`, `ui` |
-| Comunidade | `articles`, `projects` (com `openSource: true`), `ui`                          |
+| Área       | Arquivos                                                                                                                         |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Home       | `profile`, `home`, `ui` (`contacts` quando houver uso)                                                                           |
+| Recrutador | `recruiter` (montado de `profile`, `experiences`, `education`, `skills`, `projects` com narrativa `recruiter`, `contacts`), `ui` |
+| Técnica    | `projects` (narrativa `technical`), `skills`, `contacts`, `ui`                                                                   |
+| Cliente    | `services`, `testimonials`, `projects` (narrativa `outcome`), `contacts`, `ui`                                                   |
+| Comunidade | `articles`, `projects` (com `openSource: true`), `ui`                                                                            |
 
 ## Como mudar o schema sem quebrar consumidores
 

@@ -1,0 +1,88 @@
+{
+  "example": {
+    "title": "Dados de exemplo",
+    "text": "Tudo nesta página é fictício e serve só para mostrar o layout."
+  },
+  "sheet": {
+    "title": "Ficha",
+    "location": "Localização",
+    "workMode": "Modelo de trabalho",
+    "availability": "Disponibilidade",
+    "english": "Inglês",
+    "seniority": "Senioridade"
+  },
+  "workModes": {
+    "remote": "Remoto",
+    "hybrid": "Híbrido",
+    "onsite": "Presencial"
+  },
+  "englishLevels": {
+    "basic": "Básico",
+    "intermediate": "Intermediário",
+    "advanced": "Avançado",
+    "fluent": "Fluente"
+  },
+  "seniorities": {
+    "junior": "Júnior",
+    "mid": "Pleno",
+    "senior": "Sênior",
+    "specialist": "Especialista"
+  },
+  "summary": {
+    "title": "Resumo"
+  },
+  "stack": {
+    "title": "Stack",
+    "all": "Todas",
+    "filter": "Filtrar por categoria",
+    "categories": {
+      "frontend": "Front-end",
+      "backend": "Back-end",
+      "database": "Banco de dados",
+      "devops": "DevOps",
+      "testing": "Testes",
+      "design": "Design",
+      "other": "Outras"
+    },
+    "levels": {
+      "learning": "Aprendendo",
+      "working": "Uso no dia a dia",
+      "advanced": "Avançado"
+    }
+  },
+  "experience": {
+    "title": "Experiência",
+    "present": "Atual",
+    "highlights": "Destaques"
+  },
+  "projects": {
+    "title": "Projetos em destaque",
+    "role": "Papel",
+    "challenge": "Desafio",
+    "result": "Resultado",
+    "repo": "Código",
+    "demo": "Ver no ar"
+  },
+  "education": {
+    "title": "Formação e certificados",
+    "ongoing": "Em andamento",
+    "credential": "Ver credencial",
+    "kinds": {
+      "degree": "Graduação",
+      "course": "Curso",
+      "certification": "Certificação"
+    }
+  },
+  "cv": {
+    "download": "Baixar currículo (PDF)"
+  },
+  "contact": {
+    "title": "Contato",
+    "kinds": {
+      "email": "E-mail",
+      "linkedin": "LinkedIn",
+      "github": "GitHub",
+      "whatsapp": "WhatsApp"
+    }
+  }
+}

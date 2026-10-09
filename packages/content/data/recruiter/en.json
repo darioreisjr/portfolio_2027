@@ -1,0 +1,88 @@
+{
+  "example": {
+    "title": "Example data",
+    "text": "Everything on this page is fictional and only shows the layout."
+  },
+  "sheet": {
+    "title": "Profile sheet",
+    "location": "Location",
+    "workMode": "Work model",
+    "availability": "Availability",
+    "english": "English",
+    "seniority": "Seniority"
+  },
+  "workModes": {
+    "remote": "Remote",
+    "hybrid": "Hybrid",
+    "onsite": "On-site"
+  },
+  "englishLevels": {
+    "basic": "Basic",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "fluent": "Fluent"
+  },
+  "seniorities": {
+    "junior": "Junior",
+    "mid": "Mid-level",
+    "senior": "Senior",
+    "specialist": "Specialist"
+  },
+  "summary": {
+    "title": "Summary"
+  },
+  "stack": {
+    "title": "Stack",
+    "all": "All",
+    "filter": "Filter by category",
+    "categories": {
+      "frontend": "Front end",
+      "backend": "Back end",
+      "database": "Database",
+      "devops": "DevOps",
+      "testing": "Testing",
+      "design": "Design",
+      "other": "Other"
+    },
+    "levels": {
+      "learning": "Learning",
+      "working": "Day-to-day use",
+      "advanced": "Advanced"
+    }
+  },
+  "experience": {
+    "title": "Experience",
+    "present": "Present",
+    "highlights": "Highlights"
+  },
+  "projects": {
+    "title": "Featured projects",
+    "role": "Role",
+    "challenge": "Challenge",
+    "result": "Result",
+    "repo": "Code",
+    "demo": "Live demo"
+  },
+  "education": {
+    "title": "Education and certificates",
+    "ongoing": "In progress",
+    "credential": "View credential",
+    "kinds": {
+      "degree": "Degree",
+      "course": "Course",
+      "certification": "Certification"
+    }
+  },
+  "cv": {
+    "download": "Download résumé (PDF)"
+  },
+  "contact": {
+    "title": "Contact",
+    "kinds": {
+      "email": "Email",
+      "linkedin": "LinkedIn",
+      "github": "GitHub",
+      "whatsapp": "WhatsApp"
+    }
+  }
+}

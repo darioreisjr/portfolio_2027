@@ -1,0 +1,41 @@
+[
+  {
+    "id": "exemplo-graduacao",
+    "status": "draft",
+    "kind": "degree",
+    "title": {
+      "pt-BR": "Curso superior de exemplo",
+      "en": "Example degree",
+      "es": "Carrera de ejemplo"
+    },
+    "institution": "Instituição Exemplo",
+    "start": "2017-02",
+    "end": "2020-12"
+  },
+  {
+    "id": "exemplo-certificado",
+    "status": "draft",
+    "kind": "certification",
+    "title": {
+      "pt-BR": "Certificação de exemplo",
+      "en": "Example certification",
+      "es": "Certificación de ejemplo"
+    },
+    "institution": "Entidade Exemplo",
+    "end": "2023-08",
+    "credentialUrl": "https://example.com/credencial"
+  },
+  {
+    "id": "exemplo-curso",
+    "status": "draft",
+    "kind": "course",
+    "title": {
+      "pt-BR": "Curso de exemplo em andamento",
+      "en": "Example course in progress",
+      "es": "Curso de ejemplo en curso"
+    },
+    "institution": "Escola Exemplo",
+    "start": "2026-01",
+    "end": null
+  }
+]
