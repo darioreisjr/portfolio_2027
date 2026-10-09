@@ -66,7 +66,7 @@ test.describe('escolha do visitante', () => {
     await toggle(page).click();
     await expect(html(page)).toHaveAttribute('data-theme', 'light');
     await page.goto('/tecnico/');
-    await expect(page.locator('mfe-tecnico [part="message"]')).toHaveCSS(
+    await expect(page.locator('mfe-tecnico .panel').first()).toHaveCSS(
       'background-color',
       SURFACE.light,
     );

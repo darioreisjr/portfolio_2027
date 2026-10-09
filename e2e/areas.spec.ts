@@ -2,20 +2,12 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { settled } from './support/motion';
 
-// As quatro páginas internas que ainda mostram a tela "em construção" (ADR 0009). Nas duas do
+// As três páginas internas que ainda mostram a tela "em construção" (ADR 0009). Na do
 // shell a mensagem é do MFE, em shadow DOM; nas duas do Next.js, do próprio
 // documento. Os localizadores do Playwright atravessam o shadow DOM.
-// O recrutador já tem página de conteúdo e é testado em recruiter.spec.ts.
+// O recrutador e a área técnica já têm página de conteúdo e são testados em
+// recruiter.spec.ts e tech.spec.ts.
 const areas = [
-  {
-    area: 'tech',
-    path: '/tecnico/',
-    title: 'Técnico',
-    mfe: 'mfe-tecnico',
-    figure: 'tech',
-    color: { light: 'rgb(188, 0, 45)', dark: 'rgb(255, 128, 135)' },
-    scene: 'area-glow',
-  },
   {
     area: 'client',
     path: '/clientes/',
@@ -126,7 +118,6 @@ for (const colorScheme of ['light', 'dark'] as const) {
 test('a mensagem e o botão acompanham o idioma, no MFE e nas páginas Next.js', async ({ page }) => {
   const cases = [
     ['/en/clients/', 'Stage under construction', 'Back to profile selection', '/en/'],
-    ['/es/tecnico/', 'Fase en construcción', 'Volver a la elección de perfil', '/es/'],
     ['/es/comunidad/', 'Fase en construcción', 'Volver a la elección de perfil', '/es/'],
     ['/en/how-it-was-built/', 'Stage under construction', 'Back to profile selection', '/en/'],
   ] as const;
@@ -190,7 +181,7 @@ test('com movimento reduzido nada se mexe e não há botão de pausa', async ({ 
 test('a pausa fica no grupo do canto, antes da bandeira, e funciona pelo teclado', async ({
   page,
 }) => {
-  await page.goto('/tecnico/');
+  await page.goto('/clientes/');
   const [pauseBox, flagBox] = [
     await pause(page).boundingBox(),
     await page.locator('.ds-language-switcher summary').boundingBox(),

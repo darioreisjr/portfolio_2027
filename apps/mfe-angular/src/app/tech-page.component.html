@@ -1,0 +1,206 @@
+<div class="page">
+  <!-- Abertura: quadro de mangá, com meio-tom e linhas de velocidade. -->
+  <header class="panel intro">
+    <p class="stamp">00 // {{ text().intro.kicker }}</p>
+    <h2 class="glitch" [attr.data-text]="text().intro.title">{{ text().intro.title }}</h2>
+    <p class="lead">{{ text().intro.text }}</p>
+  </header>
+
+  <!-- Terminal: atalho para as seções. Tudo que ele mostra está na página, e
+       cada comando também é um botão. -->
+  <section class="panel terminal" aria-labelledby="terminal-title">
+    <h2 id="terminal-title" class="stamp">01 // {{ text().terminal.title }}</h2>
+    <div class="log" role="log" tabindex="0" [attr.aria-label]="text().terminal.output">
+      @if (!log().length) {
+        <p class="reply">{{ text().terminal.welcome }}</p>
+      }
+      @for (line of log(); track $index) {
+        <p [class]="line.kind">
+          <span>{{ line.text }}</span>
+          @if (line.target; as target) {
+            <button type="button" class="goto" (click)="goTo(target)">
+              {{ text().terminal.goto }}
+            </button>
+          }
+        </p>
+      }
+    </div>
+    <form (submit)="submit($event, field)">
+      <label for="command">{{ text().terminal.label }}</label>
+      <input
+        #field
+        id="command"
+        type="text"
+        autocomplete="off"
+        autocapitalize="none"
+        spellcheck="false"
+        enterkeyhint="go"
+        [placeholder]="text().terminal.placeholder"
+        [value]="draft()"
+        (input)="draft.set($any($event.target).value)"
+        (keydown)="recall($event)"
+      />
+      <button type="submit" class="key">{{ text().terminal.run }}</button>
+    </form>
+    <div class="shortcuts" role="group" [attr.aria-label]="text().terminal.shortcuts">
+      @for (command of commands(); track command.id) {
+        <button type="button" class="key" [title]="command.description" (click)="run(command.id)">
+          {{ command.name }}
+        </button>
+      }
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="projects-title" data-reveal>
+    <h2 id="projects-title" tabindex="-1">
+      <span class="stamp">02</span> {{ text().projects.title }}
+    </h2>
+    @if (content().example) {
+      <p class="example">
+        <strong>{{ text().example.title }}</strong> {{ text().example.text }}
+      </p>
+    }
+    <div class="cases" data-cascade>
+      @for (project of content().projects; track project.id) {
+        <article class="case">
+          <h3>{{ project.title }}</h3>
+          <p>{{ project.summary }}</p>
+          <dl>
+            <div>
+              <dt>{{ text().projects.problem }}</dt>
+              <dd>{{ project.problem }}</dd>
+            </div>
+            <div>
+              <dt>{{ text().projects.architecture }}</dt>
+              <dd>{{ project.architecture }}</dd>
+            </div>
+            @if (project.tradeoffs.length) {
+              <div>
+                <dt>{{ text().projects.tradeoffs }}</dt>
+                <dd>
+                  <ul>
+                    @for (tradeoff of project.tradeoffs; track tradeoff) {
+                      <li>{{ tradeoff }}</li>
+                    }
+                  </ul>
+                </dd>
+              </div>
+            }
+          </dl>
+          <ul class="tags">
+            @for (name of project.skills; track name) {
+              <li>{{ name }}</li>
+            }
+          </ul>
+          @if (project.repo || project.demo) {
+            <p class="links">
+              @if (project.repo) {
+                <a [href]="project.repo" rel="noopener">{{ text().projects.repo }}</a>
+              }
+              @if (project.demo) {
+                <a [href]="project.demo" rel="noopener">{{ text().projects.demo }}</a>
+              }
+            </p>
+          }
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="stack-title" data-reveal>
+    <h2 id="stack-title" tabindex="-1"><span class="stamp">03</span> {{ text().stack.title }}</h2>
+    <div class="shortcuts" role="group" [attr.aria-label]="text().stack.filter">
+      <button
+        type="button"
+        class="key"
+        [attr.aria-pressed]="category() === 'all'"
+        (click)="pickCategory('all')"
+      >
+        {{ text().stack.all }}
+      </button>
+      @for (option of categories(); track option) {
+        <button
+          type="button"
+          class="key"
+          [attr.aria-pressed]="category() === option"
+          (click)="pickCategory(option)"
+        >
+          {{ text().stack.categories[option] }}
+        </button>
+      }
+    </div>
+    <ul class="skills" data-cascade>
+      @for (skill of skills(); track skill.id) {
+        <li class="skill">
+          <span class="skill-name">{{ skill.name }}</span>
+          <span class="skill-level">{{ text().stack.levels[skill.level] }}</span>
+          <!-- Medidor decorativo: o nível já está escrito. -->
+          <span class="meter" aria-hidden="true">
+            @for (level of levels; track level; let index = $index) {
+              <i [class.on]="index <= levels.indexOf(skill.level)"></i>
+            }
+          </span>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <!-- Raio-x: dados reais do repositório (ADR 0012), sem faixa de exemplo. -->
+  <section class="panel" aria-labelledby="xray-title" data-reveal>
+    <h2 id="xray-title" tabindex="-1"><span class="stamp">04</span> {{ text().xray.title }}</h2>
+    <p class="lead">{{ text().xray.text }}</p>
+    <p class="measured">{{ text().xray.measured }} {{ measuredAt() }}</p>
+
+    <div class="scroll" role="region" tabindex="0" [attr.aria-label]="text().xray.areasTitle">
+      <table>
+        <caption>
+          {{
+            text().xray.areasTitle
+          }}
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">{{ text().xray.area }}</th>
+            <th scope="col">{{ text().xray.framework }}</th>
+            <th scope="col" class="num">{{ text().xray.javascript }}</th>
+            <th scope="col" class="num">{{ text().xray.budget }}</th>
+            <th scope="col" class="num">{{ text().xray.lcp }}</th>
+            <th scope="col" class="num">{{ text().xray.performance }}</th>
+            <th scope="col" class="num">{{ text().xray.accessibility }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (area of site().areas; track area.area) {
+            <tr>
+              <th scope="row">{{ areaName(area.area) }}</th>
+              <td>{{ area.framework }}</td>
+              <td class="num">
+                {{ kb(area.jsKb) }}
+                <!-- A barra repete, em desenho, o número ao lado. -->
+                <span class="bar" [title]="usage(area.jsKb, area.maxKb)" aria-hidden="true">
+                  <i [style.inline-size.%]="percent(area.jsKb, area.maxKb)"></i>
+                </span>
+              </td>
+              <td class="num">{{ kb(area.maxKb) }}</td>
+              <td class="num">{{ seconds(area.lcpMs) }}</td>
+              <td class="num">{{ area.performance ?? '–' }}</td>
+              <td class="num">{{ area.accessibility ?? '–' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="decisions-title" tabindex="-1">{{ text().xray.decisionsTitle }}</h3>
+    <ol class="decisions" data-cascade>
+      @for (decision of site().decisions; track decision.number) {
+        <li>
+          <span class="adr">{{ adr(decision.number) }}</span>
+          <!-- Os documentos só existem em português. -->
+          <span lang="pt-BR">{{ decision.title }}</span>
+          <span class="status" lang="pt-BR">{{ decision.status }}</span>
+        </li>
+      }
+    </ol>
+  </section>
+</div>

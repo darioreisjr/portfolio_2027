@@ -4,10 +4,7 @@ import { expect, test, type Page } from '@playwright/test';
 const SURFACE_LIGHT = 'rgb(255, 255, 255)';
 
 // As áreas de MFE que ainda mostram a tela "em construção".
-const mfeAreas = [
-  { path: '/tecnico/', area: 'tech', tag: 'mfe-tecnico', framework: 'Angular' },
-  { path: '/clientes/', area: 'client', tag: 'mfe-clientes', framework: 'React' },
-];
+const mfeAreas = [{ path: '/clientes/', area: 'client', tag: 'mfe-clientes', framework: 'React' }];
 
 // A home tem testes próprios em home.spec.ts.
 const nextPages = ['/comunidade/', '/como-foi-feito/'];
@@ -65,6 +62,21 @@ test('/recrutador/ renderiza a página do MFE Vue dentro do shell', async ({ pag
   expect(errors).toEqual([]);
 });
 
+test('/tecnico/ renderiza a página do MFE Angular dentro do shell', async ({ page }) => {
+  const errors = failOnBrowserErrors(page);
+  await page.goto('/tecnico/');
+
+  await expect(page.locator('main')).toHaveAttribute('data-ready', 'tech');
+  await expect(page.locator('main')).toHaveAttribute('data-content', '');
+  const mfe = page.locator('mfe-tecnico');
+  await expect(mfe).toHaveAttribute('locale', 'pt-BR');
+  await expect(mfe.getByRole('heading', { name: /Estudos de caso/ })).toBeAttached();
+  // O estilo é do próprio MFE, com os tokens herdados do documento.
+  await expect(mfe.locator('.panel').first()).toHaveCSS('background-color', SURFACE_LIGHT);
+
+  expect(errors).toEqual([]);
+});
+
 for (const path of nextPages) {
   test(`${path} é uma página Next.js com conteúdo e design system`, async ({ page }) => {
     const errors = failOnBrowserErrors(page);
@@ -103,7 +115,7 @@ test('navega da home a uma área, volta e entra em outra', async ({ page }) => {
   await page.getByRole('button', { name: 'Quero ver o código' }).click();
   await page.getByRole('link', { name: 'Entrar' }).click();
   await expect(page).toHaveURL(/\/tecnico\/$/);
-  await expect(page.locator('mfe-tecnico')).toContainText('Fase em construção');
+  await expect(page.locator('mfe-tecnico')).toContainText('Estudos de caso');
   await expect(page.locator('header a, main nav')).toHaveCount(0);
 
   expect(errors).toEqual([]);

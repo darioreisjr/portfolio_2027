@@ -18,6 +18,7 @@
     "@angular/platform-browser": "catalog:",
     "@portfolio/content": "workspace:*",
     "@portfolio/contracts": "workspace:*",
+    "motion": "catalog:",
     "rxjs": "catalog:",
     "tslib": "catalog:"
   },

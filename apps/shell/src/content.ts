@@ -1,5 +1,9 @@
 import { recruiter } from '@portfolio/content/recruiter';
+import { tech } from '@portfolio/content/tech';
 import type { AreaId } from '@portfolio/contracts';
+
+/** O conteúdo de cada área que já tem página; `null` enquanto não há o que mostrar. */
+const content: Partial<Record<AreaId, unknown>> = { recruiter, tech };
 
 /**
  * A área já tem conteúdo para mostrar, ou ainda é a tela "em construção"? Sabido
@@ -7,4 +11,4 @@ import type { AreaId } from '@portfolio/contracts';
  * layout depois que o MFE monta. Usado só pelo gerador e pelo servidor de
  * desenvolvimento; não entra no script do shell.
  */
-export const areaHasContent = (area: AreaId): boolean => area === 'recruiter' && recruiter !== null;
+export const areaHasContent = (area: AreaId): boolean => content[area] != null;
