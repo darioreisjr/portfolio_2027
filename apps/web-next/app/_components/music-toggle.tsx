@@ -153,7 +153,10 @@ export function MusicToggle({ label, src }: { label: string; src: string }) {
     return () => {
       // Sair da home por navegação do Next.js mantém o documento: o som para aqui.
       disposed = true;
-      mark(active);
+      // Só grava, nunca apaga: em desenvolvimento o React desmonta e remonta o
+      // componente, e apagar aqui tiraria a marca que a segunda montagem lê.
+      // Quem apaga a marca é o desligar (`onToggle`) e o `pagehide`.
+      if (active) mark(true);
       audio.pause();
       audio.removeAttribute('src');
       setActive(false);
