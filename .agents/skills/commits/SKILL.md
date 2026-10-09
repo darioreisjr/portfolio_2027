@@ -59,6 +59,12 @@ O app ou pacote que o commit toca, com o nome da pasta: `shell`, `mfe-vue`, `mfe
 
 Commit é local. O push só acontece quando o autor pedir. Reescrever commits já enviados (`push --force`) exige pedido explícito do autor.
 
+O push deste projeto é sempre feito com a conta do GitHub `darioreisjr`, dona do repositório. A máquina do autor tem mais de uma conta no `gh`. Antes de cada push:
+
+1. `gh auth status`: confira qual conta está ativa.
+2. Se não for `darioreisjr`: `gh auth switch --user darioreisjr` e confira de novo.
+3. Só então `git push`. Não faça push com outra conta, nem troque o remoto para contornar.
+
 ## Exemplos
 
 ```
