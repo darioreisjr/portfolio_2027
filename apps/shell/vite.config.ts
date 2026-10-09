@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { ui } from '@portfolio/content/ui';
 import { findRoute, HOME_ASSETS_PATH, routesOwnedBy } from '@portfolio/contracts';
 import { defineConfig, type Plugin } from 'vite';
+import { areaHasContent } from './src/content.ts';
 import { renderPage } from './src/page.ts';
 
 const repoRoot = fileURLToPath(new URL('../..', import.meta.url));
@@ -55,7 +56,11 @@ function composedDev(): Plugin {
         const match = findRoute(pathname);
         if (match?.entry.owner === 'shell') {
           response.setHeader('Content-Type', 'text/html; charset=utf-8');
-          response.end(renderPage(match.entry, match.locale, ui[match.locale]));
+          response.end(
+            renderPage(match.entry, match.locale, ui[match.locale], {
+              content: areaHasContent(match.entry.area),
+            }),
+          );
           return;
         }
 

@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ui } from '@portfolio/content/ui';
 import { locales, routesOwnedBy } from '@portfolio/contracts';
+import { areaHasContent } from '../src/content.ts';
 import { renderPage } from '../src/page.ts';
 
 const outDir = fileURLToPath(new URL('../dist', import.meta.url));
@@ -14,7 +15,10 @@ for (const entry of routesOwnedBy('shell')) {
   for (const locale of locales) {
     const dir = join(outDir, entry.paths[locale]);
     mkdirSync(dir, { recursive: true });
-    writeFileSync(join(dir, 'index.html'), renderPage(entry, locale, ui[locale]));
+    writeFileSync(
+      join(dir, 'index.html'),
+      renderPage(entry, locale, ui[locale], { content: areaHasContent(entry.area) }),
+    );
     count += 1;
   }
 }

@@ -1,3 +1,4 @@
+export * from './arrival.js';
 export * from './events.js';
 export * from './languages.js';
 export * from './personas.js';

@@ -781,6 +781,12 @@ body:has(.area-motion input:checked) .area-outlet > *::part(bar-fill) {
   animation-play-state: paused;
 }
 
+/* A pausa também chega a quem tem shadow DOM (ADR 0010): propriedade
+   customizada atravessa a fronteira, e o MFE a usa em `animation-play-state`. */
+body:has(.area-motion input:checked) .area-stage {
+  --area-motion-state: paused;
+}
+
 /* Com movimento reduzido não há o que pausar. */
 @media (prefers-reduced-motion: reduce) {
   .area-motion {

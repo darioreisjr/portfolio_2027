@@ -10,7 +10,8 @@
     },
     "./react": {
       "types": "./react.d.ts"
-    }
+    },
+    "./areas.css": "./assets/areas.css"
   },
   "scripts": {
     "dev": "vite build -c vite.lib.config.ts --watch",

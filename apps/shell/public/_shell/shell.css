@@ -20,3 +20,116 @@ main.area-stage {
   z-index: 1;
   display: flex;
 }
+
+/* ---------------------------------------------------------------------------
+   Palco de uma área com conteúdo (ADR 0010). O documento continua dono do
+   cenário, do título, do personagem e do botão de volta; o que muda é o
+   arranjo: em vez da caixa centrada da tela "em construção", uma página
+   rolável, com o conteúdo do MFE na coluna larga. `data-content` vem no HTML.
+   --------------------------------------------------------------------------- */
+main.area-stage[data-content] {
+  grid-template-areas: 'title' 'figure' 'outlet' 'back';
+  align-content: start;
+  justify-items: stretch;
+  /* Peso normal para o texto corrido; títulos e rótulos pedem o forte. */
+  font-weight: inherit;
+}
+
+/* O cenário acompanha a tela, mais discreto, e não estica com a página. */
+main.area-stage[data-content] .area-scene {
+  position: fixed;
+  opacity: 0.45;
+}
+
+main.area-stage[data-content] :is(.area-title, .area-figure, .area-back) {
+  justify-self: center;
+}
+
+main.area-stage[data-content] .area-outlet {
+  inline-size: 100%;
+  min-block-size: 60svh;
+}
+
+@media (min-width: 60rem) {
+  main.area-stage[data-content] {
+    grid-template-areas:
+      'title outlet'
+      'figure outlet';
+    grid-template-rows: auto 1fr;
+    grid-template-columns: minmax(12rem, 18rem) minmax(0, 48rem);
+    justify-content: center;
+    column-gap: var(--space-inline-lg);
+  }
+
+  /* O personagem acompanha a rolagem, ao lado do conteúdo. */
+  main.area-stage[data-content] .area-figure {
+    position: sticky;
+    inset-block-start: var(--space-block-lg);
+    align-self: start;
+    block-size: clamp(14rem, 55svh, 26rem);
+  }
+
+  /* O botão de volta fica à mão no canto oposto ao do grupo de controles. */
+  main.area-stage[data-content] .area-back {
+    position: fixed;
+    inset-block-end: var(--ds-dock-offset-block);
+    inset-inline-start: var(--ds-dock-offset-inline);
+    z-index: 1;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Chegada pela transição "corte de katana" (ADR 0010). Quem vem da home pelo
+   "Entrar" traz uma marca; o script do <head> liga `data-arrival` antes da
+   primeira pintura, e a cortina na cor da área se abre pela diagonal. Sem a
+   marca, a cortina não existe.
+   --------------------------------------------------------------------------- */
+.area-arrival {
+  display: none;
+}
+
+html[data-arrival] .area-arrival {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.area-arrival::before,
+.area-arrival::after {
+  position: absolute;
+  inset: 0;
+  background: var(--color-area-recruiter);
+  content: '';
+  animation: area-arrival var(--motion-duration-lg) var(--motion-ease-in-out)
+    var(--motion-duration-md) forwards;
+}
+
+/* As duas metades do corte: uma sai para cima e à esquerda, a outra para baixo
+   e à direita. */
+.area-arrival::before {
+  --away: -100%;
+
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.area-arrival::after {
+  --away: 100%;
+
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+@keyframes area-arrival {
+  to {
+    translate: var(--away) var(--away);
+  }
+}
+
+/* Quem pediu menos movimento não passa pela transição; se a marca existir
+   mesmo assim, a cortina não aparece. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-arrival] .area-arrival {
+    display: none;
+  }
+}

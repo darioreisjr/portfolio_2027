@@ -1,5 +1,6 @@
 import type { Ui } from '@portfolio/content/schemas';
 import {
+  ARRIVAL_INIT_SCRIPT,
   languageAlternates,
   pathFor,
   personaFigure,
@@ -25,7 +26,17 @@ const escapeHtml = (value: string): string =>
  * Documento de uma área de MFE em um idioma. Usado pelo gerador do build e pelo
  * servidor de desenvolvimento, para os dois entregarem o mesmo HTML.
  */
-export function renderPage(entry: RouteEntry, locale: Locale, ui: Ui): string {
+export interface PageOptions {
+  /** A área tem conteúdo: o palco é uma página rolável, não a caixa centrada (ADR 0010). */
+  content?: boolean;
+}
+
+export function renderPage(
+  entry: RouteEntry,
+  locale: Locale,
+  ui: Ui,
+  { content = false }: PageOptions = {},
+): string {
   const area = ui.areas[entry.area];
   // Troca de idioma (ADR 0006): a bandeira do idioma em uso abre os outros,
   // que são links comuns para a mesma área. Sem script. A marcação de referência
@@ -57,7 +68,7 @@ export function renderPage(entry: RouteEntry, locale: Locale, ui: Ui): string {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>${THEME_INIT_SCRIPT}</script>
+    <script>${THEME_INIT_SCRIPT};${ARRIVAL_INIT_SCRIPT}</script>
     <title>${escapeHtml(area.title)} | ${escapeHtml(ui.siteName)}</title>
     <meta name="description" content="${escapeHtml(area.description)}" />
     <link rel="stylesheet" href="/_ds/tokens.css" />
@@ -67,10 +78,11 @@ export function renderPage(entry: RouteEntry, locale: Locale, ui: Ui): string {
     <script type="module" src="/_shell/shell.js"></script>
   </head>
   <body>
+    <div class="area-arrival" aria-hidden="true"></div>
     <header class="shell-header">
       <ds-theme-toggle label="${escapeHtml(ui.themeToggle)}"></ds-theme-toggle>
     </header>
-    <main class="area-stage" data-area="${entry.area}">
+    <main class="area-stage" data-area="${entry.area}"${content ? ' data-content' : ''}>
       ${AREA_SCENE}
       <h1 class="area-title">${escapeHtml(area.title)}</h1>
       ${figureImage}

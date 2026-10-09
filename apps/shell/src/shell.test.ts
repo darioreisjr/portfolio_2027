@@ -86,6 +86,14 @@ describe('documento de uma área', () => {
     expect(html).not.toContain('ds-badge');
   });
 
+  it('marca o palco de uma área com conteúdo, sem mudar o resto do documento', () => {
+    const construction = renderPage(recruiter, 'pt-BR', ui['pt-BR']);
+    const content = renderPage(recruiter, 'pt-BR', ui['pt-BR'], { content: true });
+    expect(content).toContain('<main class="area-stage" data-area="recruiter" data-content>');
+    // O palco continua do documento: título, personagem, volta e pausa (ADR 0010).
+    expect(content.replace(' data-content', '')).toBe(construction);
+  });
+
   it('põe a pausa do cenário no grupo do canto, antes das bandeiras', () => {
     const html = renderPage(recruiter, 'es', ui.es);
     const pause = html.indexOf(`<input type="checkbox" aria-label="${ui.es.pauseMotion}" />`);
