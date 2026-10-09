@@ -2,19 +2,11 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { settled } from './support/motion';
 
-// As cinco páginas internas e a tela "em construção" (ADR 0009). Nas três do
+// As quatro páginas internas que ainda mostram a tela "em construção" (ADR 0009). Nas duas do
 // shell a mensagem é do MFE, em shadow DOM; nas duas do Next.js, do próprio
 // documento. Os localizadores do Playwright atravessam o shadow DOM.
+// O recrutador já tem página de conteúdo e é testado em recruiter.spec.ts.
 const areas = [
-  {
-    area: 'recruiter',
-    path: '/recrutador/',
-    title: 'Recrutador',
-    mfe: 'mfe-recrutador',
-    figure: 'recruiter',
-    color: { light: 'rgb(24, 121, 78)', dark: 'rgb(79, 192, 141)' },
-    scene: 'area-sway',
-  },
   {
     area: 'tech',
     path: '/tecnico/',
@@ -146,7 +138,7 @@ test('a mensagem e o botão acompanham o idioma, no MFE e nas páginas Next.js',
 });
 
 test('o botão de volta leva à tela de escolha de perfil', async ({ page }) => {
-  await page.goto('/es/reclutador/');
+  await page.goto('/es/clientes/');
   await page.getByRole('link', { name: 'Volver a la elección de perfil' }).click();
   await expect(page).toHaveURL(/\/es\/$/);
   await expect(page.locator('h1')).toHaveText('Elige tu camino');

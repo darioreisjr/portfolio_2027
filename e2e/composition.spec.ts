@@ -3,8 +3,8 @@ import { expect, test, type Page } from '@playwright/test';
 
 const SURFACE_LIGHT = 'rgb(255, 255, 255)';
 
+// As áreas de MFE que ainda mostram a tela "em construção".
 const mfeAreas = [
-  { path: '/recrutador/', area: 'recruiter', tag: 'mfe-recrutador', framework: 'Vue' },
   { path: '/tecnico/', area: 'tech', tag: 'mfe-tecnico', framework: 'Angular' },
   { path: '/clientes/', area: 'client', tag: 'mfe-clientes', framework: 'React' },
 ];
@@ -49,6 +49,22 @@ for (const { path, area, tag, framework } of mfeAreas) {
   });
 }
 
+test('/recrutador/ renderiza a página do MFE Vue dentro do shell', async ({ page }) => {
+  const errors = failOnBrowserErrors(page);
+  await page.goto('/recrutador/');
+
+  await expect(page.locator('main')).toHaveAttribute('data-ready', 'recruiter');
+  // O palco de área com conteúdo já vem marcado no HTML (ADR 0010).
+  await expect(page.locator('main')).toHaveAttribute('data-content', '');
+  const mfe = page.locator('mfe-recrutador');
+  await expect(mfe).toHaveAttribute('locale', 'pt-BR');
+  await expect(mfe.getByRole('heading', { name: 'Experiência' })).toBeAttached();
+  // O estilo é do próprio MFE, com os tokens herdados do documento.
+  await expect(mfe.locator('.block').first()).toHaveCSS('background-color', SURFACE_LIGHT);
+
+  expect(errors).toEqual([]);
+});
+
 for (const path of nextPages) {
   test(`${path} é uma página Next.js com conteúdo e design system`, async ({ page }) => {
     const errors = failOnBrowserErrors(page);
@@ -77,7 +93,7 @@ test('navega da home a uma área, volta e entra em outra', async ({ page }) => {
   await page.getByRole('button', { name: 'Estou contratando' }).click();
   await page.getByRole('link', { name: 'Entrar' }).click();
   await expect(page).toHaveURL(/\/recrutador\/$/);
-  await expect(page.locator('mfe-recrutador')).toContainText('Fase em construção');
+  await expect(page.locator('mfe-recrutador')).toContainText('Experiência');
 
   // As páginas internas não têm menu: troca-se de área voltando à escolha de perfil.
   await page.getByRole('link', { name: 'Voltar à escolha de perfil' }).click();
@@ -109,7 +125,7 @@ test('cada rota carrega só o MFE dela', async ({ page }) => {
 test('rota em inglês usa o idioma na página e no MFE', async ({ page }) => {
   await page.goto('/en/recruiter/');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(page.locator('mfe-recrutador')).toContainText('Stage under construction');
+  await expect(page.locator('mfe-recrutador')).toContainText('Experience');
   await expect(page.locator('h1')).toHaveText('Recruiter');
 });
 

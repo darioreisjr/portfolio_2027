@@ -37,6 +37,13 @@ export interface Content {
 export interface LoadOptions {
   /** Rascunhos entram só em desenvolvimento; o build de produção os exclui. */
   includeDrafts: boolean;
+  /**
+   * Publica a área do recrutador com os dados de exemplo enquanto o perfil for
+   * rascunho, com a faixa "Dados de exemplo" na página. Exceção à regra de que
+   * rascunho não vai ao ar, autorizada pelo autor em 2026-10-09
+   * (docs/plans/recrutador-conteudo.md). Não muda `profile` nem outra área.
+   */
+  publishRecruiterExample?: boolean;
 }
 
 function parseFile<Schema extends z.ZodType>(
@@ -97,7 +104,10 @@ function checkSkillRefs(
   }
 }
 
-export function loadContent(dataDir: string, { includeDrafts }: LoadOptions): Content {
+export function loadContent(
+  dataDir: string,
+  { includeDrafts, publishRecruiterExample = false }: LoadOptions,
+): Content {
   const ui = Object.fromEntries(
     locales.map((locale) => [locale, parseFile(dataDir, `ui/${locale}.json`, uiSchema)]),
   ) as Record<Locale, Ui>;
@@ -129,11 +139,15 @@ export function loadContent(dataDir: string, { includeDrafts }: LoadOptions): Co
   checkSkillRefs('experiences.json', experiences, skillStatus);
   checkSkillRefs('projects.json', projects, skillStatus);
 
-  const visible = <Item extends Listed>(items: Item[]) =>
-    items.filter((item) => item.status === 'published' || includeDrafts);
   const profile = rawProfile.status === 'published' || includeDrafts ? rawProfile : null;
-  const sources = profile && {
-    profile,
+  // Modo de exemplo: sem perfil publicado, a área do recrutador mostra os
+  // rascunhos, que são os dados de exemplo. Com perfil publicado ele não existe.
+  const example = publishRecruiterExample && rawProfile.status === 'draft';
+  const visible = <Item extends Listed>(items: Item[]) =>
+    items.filter((item) => item.status === 'published' || includeDrafts || example);
+  const recruiterProfile = example ? rawProfile : profile;
+  const sources = recruiterProfile && {
+    profile: recruiterProfile,
     contacts: visible(contacts),
     skills: visible(skills),
     experiences: visible(experiences),

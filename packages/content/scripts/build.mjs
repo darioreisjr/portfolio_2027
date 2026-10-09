@@ -8,7 +8,15 @@ const dataDir = fileURLToPath(new URL('../data', import.meta.url));
 const outDir = fileURLToPath(new URL('../dist/data', import.meta.url));
 const includeDrafts = process.env.CONTENT_INCLUDE_DRAFTS === '1';
 
-const { ui, home, profile, recruiter, recruiterUi } = loadContent(dataDir, { includeDrafts });
+// A área do recrutador vai ao ar com os dados de exemplo e a faixa que os
+// identifica, até o conteúdo real chegar. Autorizado pelo autor em 2026-10-09;
+// para voltar à tela "em construção" em produção, troque para `false`.
+const PUBLISH_RECRUITER_EXAMPLE = true;
+
+const { ui, home, profile, recruiter, recruiterUi } = loadContent(dataDir, {
+  includeDrafts,
+  publishRecruiterExample: PUBLISH_RECRUITER_EXAMPLE,
+});
 
 const modules = {
   ui: {

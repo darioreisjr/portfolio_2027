@@ -79,7 +79,7 @@ test('abrir e escolher uma bandeira troca o idioma da página e da área', async
   await page.getByRole('link', { name: 'Español' }).click();
   await expect(page).toHaveURL(/\/es\/reclutador\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
-  await expect(page.locator('mfe-recrutador')).toContainText('Fase en construcción');
+  await expect(page.locator('mfe-recrutador')).toContainText('Experiencia');
 });
 
 test('clicar de novo na bandeira fecha a lista', async ({ page }) => {

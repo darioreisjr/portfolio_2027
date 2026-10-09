@@ -1,10 +1,8 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
-// Página do recrutador COM conteúdo. Só existe em build com rascunhos
-// (`pnpm test:e2e:drafts`); o e2e normal roda sobre o build de produção, onde a
-// área ainda mostra a tela "em construção". Quando houver conteúdo publicado,
-// este spec passa para e2e/.
+// Página do recrutador, com conteúdo (ADR 0010). Enquanto o perfil for rascunho
+// ela vai ao ar com os dados de exemplo e a faixa que os identifica.
 const page1 = (page: Page) => page.locator('mfe-recrutador');
 
 test.use({ viewport: { width: 1280, height: 800 } });

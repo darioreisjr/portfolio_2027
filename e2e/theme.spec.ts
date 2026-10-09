@@ -49,7 +49,7 @@ test.describe('escolha do visitante', () => {
     // Área do shell: o MFE muda de tema sem código próprio.
     await page.goto('/recrutador/');
     await expect(html(page)).toHaveAttribute('data-theme', 'dark');
-    await expect(page.locator('mfe-recrutador [part="message"]')).toHaveCSS(
+    await expect(page.locator('mfe-recrutador .block').first()).toHaveCSS(
       'background-color',
       SURFACE.dark,
     );

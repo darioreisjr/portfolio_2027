@@ -98,11 +98,31 @@ describe('área do recrutador', () => {
   const listWith = (file: string, change: (items: Json[]) => void) =>
     dataWith(file, (json) => change(json as unknown as Json[]));
 
-  it('não tem conteúdo em produção enquanto o perfil real for rascunho', () => {
-    // Os dados de exemplo nunca podem ir ao ar: a área mostra a tela "em construção".
+  it('sem a exceção, não tem conteúdo em produção enquanto o perfil for rascunho', () => {
     const content = loadContent(dataDir, { includeDrafts: false });
     expect(content.recruiter).toBeNull();
     for (const locale of locales) expect(content.recruiterUi[locale].example.title).not.toBe('');
+  });
+
+  it('com a exceção, vai ao ar só como exemplo, sem levar o perfil para o resto do site', () => {
+    const content = loadContent(dataDir, { includeDrafts: false, publishRecruiterExample: true });
+    // A faixa "Dados de exemplo" depende desta marca.
+    for (const locale of locales) {
+      expect(content.recruiter?.[locale].example).toBe(true);
+      expect(content.recruiter?.[locale].experiences.length).toBeGreaterThan(0);
+    }
+    // A home só mostra nome e cargo com perfil publicado: continua sem eles.
+    expect(content.profile).toBeNull();
+  });
+
+  it('a exceção acaba quando o perfil é publicado: rascunho volta a ficar de fora', () => {
+    const dir = dataWith('profile.json', (json) => {
+      Object.assign(json, { status: 'published', highlightSkills: [] });
+    });
+    const { recruiter } = loadContent(dir, { includeDrafts: false, publishRecruiterExample: true });
+    expect(recruiter?.['pt-BR'].example).toBe(false);
+    expect(recruiter?.['pt-BR'].experiences).toEqual([]);
+    expect(recruiter?.['pt-BR'].skills).toEqual([]);
   });
 
   it('com rascunhos, entrega o conteúdo de exemplo traduzido e marcado como exemplo', () => {
