@@ -24,6 +24,7 @@
     "assemble": "node scripts/assemble.mjs",
     "preview": "node scripts/serve-dist.mjs",
     "test:e2e": "playwright test",
+    "test:e2e:drafts": "node scripts/e2e-drafts.mjs",
     "budgets": "node scripts/check-budgets.mjs",
     "lhci": "lhci autorun",
     "ai:sync": "node scripts/ai-sync.mjs",

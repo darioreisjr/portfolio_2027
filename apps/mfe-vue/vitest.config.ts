@@ -4,6 +4,8 @@ import { vuePlugin } from './vite.config.ts';
 
 export default defineConfig({
   plugins: [vuePlugin()],
+  // Os testes trocam o conteúdo por um de teste; a página tem de estar no bundle.
+  define: { __HAS_CONTENT__: 'true' },
   test: {
     include: ['src/**/*.test.ts'],
     browser: {

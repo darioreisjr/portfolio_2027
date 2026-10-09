@@ -1,6 +1,14 @@
 import { onMfeReady, type MfeReadyDetail } from '@portfolio/contracts';
-import { afterEach, describe, expect, it } from 'vitest';
-import './main.ts';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
+// Sem conteúdo publicado, como no build de produção de hoje: a área mostra a
+// tela "em construção". A página com conteúdo é testada em page.test.ts.
+vi.mock('@portfolio/content/recruiter', async (original) => ({
+  ...(await original<typeof import('@portfolio/content/recruiter')>()),
+  recruiter: null,
+}));
+
+await import('./main.ts');
 
 afterEach(() => document.body.replaceChildren());
 

@@ -81,6 +81,14 @@ export default tseslint.config(
     languageOptions: {
       parser: vueParser,
       parserOptions: { parser: tseslint.parser },
+      // Fixada no build pelo `define` do Vite (apps/mfe-vue/src/env.d.ts).
+      globals: { __HAS_CONTENT__: 'readonly' },
+    },
+    rules: {
+      // Quem formata é o Prettier; estas duas regras de layout brigam com ele.
+      'vue/max-attributes-per-line': 'off',
+      'vue/singleline-html-element-content-newline': 'off',
+      'vue/html-self-closing': ['warn', { html: { void: 'always' } }],
     },
   },
 
