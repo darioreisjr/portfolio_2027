@@ -58,6 +58,10 @@ Para a transição entre os dois documentos:
 - Animação por script (Motion) não é parada por `animation-play-state`: por isso as animações contínuas ficam em CSS, e o script só faz entradas, que têm fim.
 - `:has()`, `clip-path` animado e `conic-gradient` só foram conferidos no Chromium (pendência B12).
 
+## Emenda de 2026-10-09
+
+No mesmo dia o autor decidiu publicar a página com os dados de exemplo e a faixa "Dados de exemplo", até o conteúdo real chegar. O item 3 continua descrevendo o que acontece sem conteúdo, mas esse não é mais o estado de produção: `/recrutador` já vai ao ar com `data-content`. A cobertura passou para o e2e e o Lighthouse do CI (`e2e/recruiter.spec.ts`); a checagem local com rascunhos, citada nas consequências, deixou de existir. Medido: LCP de 1,81 s e CLS de 0,033.
+
 ## Fontes
 
 - [MDN: herança de propriedades customizadas e shadow DOM](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM)

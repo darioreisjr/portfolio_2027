@@ -47,7 +47,6 @@ packages/
   contracts/      Eventos tipados e tabela de rotas
   config/         Configurações compartilhadas (TypeScript, lint)
 e2e/              Testes Playwright que atravessam os apps
-e2e-drafts/       Os mesmos, para páginas que só existem com conteúdo em rascunho
 docs/             Produto, arquitetura, qualidade, setup dos agentes
 scripts/          Montagem do dist, orçamentos, sincronização dos agentes
 ```
@@ -68,12 +67,11 @@ Node e pnpm são fixados no `package.json`; o pnpm baixa o Node certo sozinho. R
 | `pnpm assemble`                  | Junta os builds em `dist/`, o diretório publicado                                                       |
 | `pnpm preview`                   | Serve o `dist/` em `http://localhost:4173`                                                              |
 | `pnpm test:e2e`                  | Playwright e axe sobre o `dist/`                                                                        |
-| `pnpm test:e2e:drafts`           | Monta o `dist/` com rascunhos e testa as páginas que só existem com conteúdo de exemplo (`e2e-drafts/`) |
 | `pnpm budgets`                   | Cobra os tetos de JavaScript de `docs/quality/budgets.json`                                             |
 | `pnpm lhci`                      | Lighthouse CI sobre o `dist/`                                                                           |
 | `pnpm ai:sync`, `pnpm ai:check`  | Gera ou confere as configurações das três ferramentas                                                   |
 
-Um pacote só: `pnpm --filter <nome> <script>`. Antes de `test:e2e`, `budgets` e `lhci`: `pnpm build && pnpm assemble`. O `test:e2e:drafts` deixa o `dist/` com rascunhos; refaça o build de produção depois dele.
+Um pacote só: `pnpm --filter <nome> <script>`. Antes de `test:e2e`, `budgets` e `lhci`: `pnpm build && pnpm assemble`.
 
 ## Regras de fronteira
 
@@ -117,7 +115,7 @@ Claude Code é a ferramenta principal. Codex e Gemini são usados para revisão 
 
 ## Nunca
 
-- Inventar conteúdo sobre o autor (experiências, projetos, depoimentos, números). Dado de exemplo leva `status: "draft"` e é claramente fictício.
+- Inventar conteúdo sobre o autor (experiências, projetos, depoimentos, números). Dado de exemplo leva `status: "draft"` e é claramente fictício. Exceção autorizada pelo autor em 2026-10-09: a área do recrutador vai ao ar com os dados de exemplo e a faixa "Dados de exemplo", até o conteúdo real chegar (`docs/plans/recrutador-conteudo.md`).
 - Instalar dependência sem justificativa de uma linha no plano.
 - Escrever segredo em arquivo versionado. Segredos só por variável de ambiente; nomes em `.env.example`.
 - Editar à mão arquivos gerados: `.claude/skills/`, `.claude/agents/`, `.codex/`, `.gemini/`, `.mcp.json` e os `CLAUDE.md` e `GEMINI.md` dentro de `apps/` e `packages/`.

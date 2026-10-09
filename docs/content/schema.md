@@ -6,14 +6,14 @@ Todo o conteúdo vive em `packages/content` como JSON. Os apps só leem conteúd
 
 ## Convenções
 
-| Regra       | Detalhe                                                                               |
-| ----------- | ------------------------------------------------------------------------------------- |
-| `id`        | kebab-case, único no arquivo, estável (nunca reaproveitar)                            |
-| Referências | Sempre por `id`; a validação falha se o alvo não existir                              |
-| Datas       | `YYYY-MM` para períodos, `YYYY-MM-DD` para publicações; `end: null` significa "atual" |
-| `status`    | `"draft"` ou `"published"`; só `published` vai para o build de produção               |
-| URLs        | Absolutas, com `https://`                                                             |
-| Imagens     | `{ "src": "caminho", "alt": Localized }`; `alt` é obrigatório                         |
+| Regra       | Detalhe                                                                                                                                              |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`        | kebab-case, único no arquivo, estável (nunca reaproveitar)                                                                                           |
+| Referências | Sempre por `id`; a validação falha se o alvo não existir                                                                                             |
+| Datas       | `YYYY-MM` para períodos, `YYYY-MM-DD` para publicações; `end: null` significa "atual"                                                                |
+| `status`    | `"draft"` ou `"published"`; só `published` vai para o build de produção (exceção: os exemplos da área do recrutador, enquanto o perfil for rascunho) |
+| URLs        | Absolutas, com `https://`                                                                                                                            |
+| Imagens     | `{ "src": "caminho", "alt": Localized }`; `alt` é obrigatório                                                                                        |
 
 ### Texto traduzível
 
@@ -204,7 +204,9 @@ Os apps não montam a página a partir dos arquivos soltos. O pacote entrega `@p
 
 `RecruiterContent.example` é `true` enquanto o perfil for rascunho: a página mostra a faixa "Dados de exemplo".
 
-Os dados de exemplo do repositório têm `status: "draft"`, id começando por `exemplo-`, nomes como "Empresa Exemplo" e endereços em `example.com`. Um teste do pacote cobra isso e cobra que o build de produção entregue `recruiter: null` enquanto o perfil real for rascunho.
+Os dados de exemplo do repositório têm `status: "draft"`, id começando por `exemplo-`, nomes como "Empresa Exemplo" e endereços em `example.com`. Um teste do pacote cobra isso.
+
+Exceção autorizada pelo autor em 2026-10-09 (`docs/plans/recrutador-conteudo.md`): enquanto o perfil for rascunho, o build de produção entrega a área do recrutador com os dados de exemplo, por `publishRecruiterExample` em `packages/content/scripts/build.mjs`. `example` fica `true` e a página mostra a faixa. `profile` continua `null` em produção. Quando o perfil for publicado, a exceção deixa de valer e só itens publicados entram.
 
 Regras conferidas na carga, antes de filtrar os rascunhos: ids únicos por arquivo; toda skill referenciada existe; item publicado não referencia skill em rascunho; item publicado tem os três idiomas em todo texto traduzível, em qualquer profundidade.
 

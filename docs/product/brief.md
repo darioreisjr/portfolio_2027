@@ -22,7 +22,7 @@ Não há uma ação principal única: cada área tem a sua.
 ## Estrutura
 
 - **Entrada (home):** tela de escolha de perfil, decidida em 2026-10-07. Quatro personagens de corpo inteiro, um por público, sob a chamada "Escolha seu caminho" e uma linha discreta com nome e cargo do autor. Ao apontar ou focar um personagem ele ganha destaque e mostra uma frase em primeira pessoa. Ao escolher, os outros saem e aparece um painel em estilo menu de RPG, com a descrição do perfil no tom daquele público e as opções "Entrar" e "Voltar", na cor da tecnologia da área. Na primeira visita, um pop-up oferece o idioma e a "imersão total" (música e animações), desmarcada por padrão. Um botão no canto liga o som, desligado por padrão: música de fundo lofi (`docs/plans/home-musica.md`) e efeitos de seleção em estilo menu de jogo (`docs/plans/home-efeitos.md`). A tela tem movimento suave, só em CSS: quem está apontado se destaca dos outros, que escurecem (`docs/plans/home-animacoes.md`). No celular é um carrossel, um personagem por vez. Detalhes em `docs/plans/home-perfis.md`, `docs/plans/home-selecao.md` e `docs/plans/home-painel-rpg.md`. O fundo é um cenário animado de sakura, de dia no tema claro e à noite no escuro (`docs/plans/home-sakura.md`).
-- **Área do recrutador:** ficha rápida (localização, modelo de trabalho, disponibilidade, inglês, senioridade), resumo e stack, experiência (linha do tempo), projetos em destaque (papel, desafio, resultado), formação e certificados, currículo em PDF e contato sempre à vista. Decidido em 2026-10-09; a página está construída com dados de exemplo, e em produção a área segue "em construção" até o conteúdo real entrar.
+- **Área do recrutador:** ficha rápida (localização, modelo de trabalho, disponibilidade, inglês, senioridade), resumo e stack, experiência (linha do tempo), projetos em destaque (papel, desafio, resultado), formação e certificados, currículo em PDF e contato sempre à vista. Decidido em 2026-10-09; a página está no ar com dados de exemplo e a faixa "Dados de exemplo", até o conteúdo real entrar (`docs/content/pendencias-do-autor.md`).
 - **Área técnica:** projetos na visão técnica (problema, arquitetura, trade-offs, código), skills filtráveis, GitHub.
 - **Área do cliente:** serviços, depoimentos, projetos na visão de resultado, canal de orçamento.
 - **Área da comunidade:** artigos, open source, vitrine do design system.
@@ -56,7 +56,7 @@ Formulário de contato: **adiado**. Não entra nesta versão; a decisão sobre t
 Nenhum material está pronto (currículo, lista de projetos, depoimentos, artigos). Consequências:
 
 - O schema é modelado a partir das seções, e não de dados reais; pode precisar de ajuste quando o conteúdo chegar.
-- O esqueleto usa dados de exemplo claramente marcados como fictícios, com `status: "draft"`. Nenhum dado sobre o autor é inventado.
+- O esqueleto usa dados de exemplo claramente marcados como fictícios, com `status: "draft"`. Nenhum dado sobre o autor é inventado. A área do recrutador é a única que vai ao ar com eles, com aviso na página.
 - Depoimentos só entram com autorização de quem escreveu.
 
 ## Fora de escopo
