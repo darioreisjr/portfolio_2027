@@ -53,6 +53,8 @@ export const primitives = {
   // Arredondada de origem japonesa; só o alfabeto latino é publicado. A face
   // "Fallback" é uma fonte do sistema ajustada à largura dela (scripts/build.mjs).
   'font-sans': "'M PLUS Rounded 1c', 'M PLUS Rounded 1c Fallback', system-ui, sans-serif",
+  'font-mono':
+    "ui-monospace, 'Cascadia Code', 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
   'font-size-100': '0.875rem',
   'font-size-200': '1rem',
   'font-size-300': '1.25rem',
@@ -151,6 +153,8 @@ export const semanticStatic = {
   'motion-duration-sway': 'var(--duration-4000)',
   'motion-duration-drift': 'var(--duration-12000)',
   'font-body': 'var(--font-sans)',
+  // Código e dados técnicos: a monoespaçada do sistema, sem arquivo de fonte.
+  'font-code': 'var(--font-mono)',
   'text-size-sm': 'var(--font-size-100)',
   'text-size-md': 'var(--font-size-200)',
   'text-size-lg': 'var(--font-size-300)',
