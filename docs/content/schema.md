@@ -187,11 +187,26 @@ Textos da tela de escolha de perfil. Sem `status`, como `ui`. Ficam fora de `ui`
 
 Textos de interface da área do recrutador: títulos das seções, rótulos das enumerações da ficha rápida (`workModes`, `englishLevels`, `seniorities`), das categorias e níveis da stack, dos tipos de formação e de contato, e a faixa "Dados de exemplo" (`example`). Sem `status`, como `ui` e `home`. Ficam fora de `ui` porque só o MFE do recrutador os usa.
 
+### `tech/<locale>.json` (um por idioma)
+
+Textos de interface da área técnica: abertura, títulos e rótulos das seções, cabeçalhos do raio-x, a faixa de exemplo e o terminal. Os comandos do terminal têm id fixo (`projects`, `stack`, `xray`, `adr`, `help`, `clear`); `name` é o que se digita, traduzido, e `description` aparece em `ajuda`. Nas respostas, `{count}` e `{command}` são trocados pelo valor.
+
+### `site.json` (objeto único)
+
+Raio-x do próprio site (ADR 0012). Dado real do repositório, sem `status`: não é de exemplo nem sobre o autor. Gravado por `scripts/site-xray.mjs`; não se edita à mão.
+
+| Campo        | Tipo                                                                                                                              |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| `measuredAt` | `YYYY-MM-DD`, a data da última medição                                                                                            |
+| `areas`      | por rota: `area`, `framework`, `owner`, `path`, `maxKb`, `jsKb` e, se o Lighthouse rodou, `performance`, `accessibility`, `lcpMs` |
+| `parts`      | por parte (shell, design system, cada MFE): `name`, `maxKb`, `jsKb`                                                               |
+| `decisions`  | por ADR: `number`, `title` (em português), `status`                                                                               |
+
 ### `ui/<locale>.json` (um por idioma)
 
 Sem `status`: é texto de interface, não conteúdo sobre o autor.
 
-Inclui `themeToggle`, o nome acessível do seletor de tema, `languageSwitcher`, o do grupo de bandeiras que troca o idioma, `pauseMotion`, o do botão que pausa a animação (home e páginas internas), e `construction`, com `title`, `text` e `back`: o título, a frase e o rótulo do botão de volta da tela "em construção". Os nomes dos idiomas não ficam aqui: cada um aparece no próprio idioma e vem de `packages/contracts`.
+Inclui `themeToggle`, o nome acessível do seletor de tema, `languageSwitcher`, o do grupo de bandeiras que troca o idioma, `pauseMotion`, o do botão que pausa a animação (home e páginas internas), `leaving`, o aviso da cortina ao voltar de uma área para a home, e `construction`, com `title`, `text` e `back`: o título, a frase e o rótulo do botão de volta da tela "em construção". Os nomes dos idiomas não ficam aqui: cada um aparece no próprio idioma e vem de `packages/contracts`.
 
 Textos de interface (rótulos de navegação, botões, títulos de seção), separados do conteúdo sobre o autor. Chaves idênticas nos três arquivos; a validação falha se alguma faltar.
 
@@ -210,13 +225,19 @@ Exceção autorizada pelo autor em 2026-10-09 (`docs/plans/recrutador-conteudo.m
 
 Regras conferidas na carga, antes de filtrar os rascunhos: ids únicos por arquivo; toda skill referenciada existe; item publicado não referencia skill em rascunho; item publicado tem os três idiomas em todo texto traduzível, em qualquer profundidade.
 
+## O módulo da área técnica
+
+`@portfolio/content/tech` tem três exports: `tech` (`Record<Locale, TechContent> | null`, com os estudos de caso, isto é, os projetos com a narrativa `technical`, e as tecnologias), `techUi` e `site`.
+
+`TechContent.example` é `true` quando os projetos e as tecnologias são rascunho: a página põe a faixa "Dados de exemplo" no bloco deles. O raio-x nunca leva faixa. A mesma exceção do recrutador vale aqui (`publishExample.tech`): enquanto não houver estudo de caso publicado, a área vai ao ar com os exemplos; com um publicado, só o que é publicado entra.
+
 ## Quem consome o quê
 
 | Área       | Arquivos                                                                                                                         |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | Home       | `profile`, `home`, `ui` (`contacts` quando houver uso)                                                                           |
 | Recrutador | `recruiter` (montado de `profile`, `experiences`, `education`, `skills`, `projects` com narrativa `recruiter`, `contacts`), `ui` |
-| Técnica    | `projects` (narrativa `technical`), `skills`, `contacts`, `ui`                                                                   |
+| Técnica    | `tech` (montado de `projects` com narrativa `technical` e `skills`), `site`, `ui`                                                |
 | Cliente    | `services`, `testimonials`, `projects` (narrativa `outcome`), `contacts`, `ui`                                                   |
 | Comunidade | `articles`, `projects` (com `openSource: true`), `ui`                                                                            |
 

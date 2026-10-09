@@ -37,7 +37,7 @@ Contexto: `apps/mfe-angular/AGENTS.md` e `docs/architecture/adr/0002-composition
 ## Limites
 
 - É o maior runtime dos três MFEs. Confira o teto da rota em `docs/quality/budgets.md` a cada dependência nova.
-- Não adicione bibliotecas de interface do ecossistema Angular; a interface vem do design system.
+- Não adicione bibliotecas de componentes do ecossistema Angular. Elemento reutilizável vem do design system; o que é próprio da página a área desenha com estilo próprio, no shadow root (ADR 0010). A biblioteca de animação `motion`, na versão mini, é a autorizada.
 
 ## Verificação
 

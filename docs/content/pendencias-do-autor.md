@@ -24,13 +24,24 @@ Hoje a página usa dados de exemplo, todos fictícios (`docs/plans/recrutador-co
 | Currículo em PDF        | O arquivo, em pt-BR e, se houver, em en e es                                                                                          | `profile.json`, `cv`; falta definir onde o arquivo é publicado |
 | Foto (opcional)         | Quadrada, 400×400 ou maior, com um texto alternativo                                                                                  | `profile.json`, `photo`                                        |
 
+## Para a área técnica
+
+Hoje os estudos de caso e as tecnologias são de exemplo (`docs/plans/tecnico-conteudo.md`). O raio-x do site já é real.
+
+| O quê               | Detalhe pedido                                                                                                | Onde entra                   |
+| ------------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| Estudos de caso     | Dois ou três projetos: o problema, a arquitetura escolhida e os trade-offs (o que se ganhou e o que se pagou) | `projects.json`, `technical` |
+| Código dos projetos | Link do repositório e, se houver, da demonstração                                                             | `projects.json`, `links`     |
+| Tecnologias         | As mesmas da área do recrutador: nome, categoria e nível                                                      | `skills.json`                |
+| GitHub              | Se a área deve mostrar atividade ou repositórios, e quais                                                     | a definir                    |
+
 ## Revisões
 
-| O quê                                                       | Onde                                                                 |
-| ----------------------------------------------------------- | -------------------------------------------------------------------- |
-| Textos em inglês e espanhol escritos por IA                 | `ui`, `home`, `recruiter` (pendência B6 de `docs/open-questions.md`) |
-| Cargo no perfil, nos três idiomas                           | `profile.json`, `role`                                               |
-| Aparência da página do recrutador e da transição de entrada | `http://localhost:5173/recrutador/`                                  |
+| O quê                                                                         | Onde                                                                 |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Textos em inglês e espanhol escritos por IA                                   | `ui`, `home`, `recruiter` (pendência B6 de `docs/open-questions.md`) |
+| Cargo no perfil, nos três idiomas                                             | `profile.json`, `role`                                               |
+| Aparência das páginas do recrutador e técnica e das transições de ida e volta | `http://localhost:5173/recrutador/` e `/tecnico/`                    |
 
 ## Conferências que dependem de aparelho ou pessoa
 
@@ -42,4 +53,4 @@ Hoje a página usa dados de exemplo, todos fictícios (`docs/plans/recrutador-co
 
 ## Para as próximas áreas
 
-Ainda sem conteúdo nem página: Técnico (projetos na visão técnica, GitHub), Clientes (serviços, depoimentos com autorização de quem escreveu, canal de orçamento) e Comunidade (artigos, código aberto).
+Ainda sem conteúdo nem página: Clientes (serviços, depoimentos com autorização de quem escreveu, canal de orçamento) e Comunidade (artigos, código aberto). Elas também não têm transição de entrada.

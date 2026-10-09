@@ -9,7 +9,7 @@ Tabela de rotas (área, idioma, caminho) e eventos tipados entre apps. É a úni
 - `src/routes.ts` espelha a tabela de `docs/architecture/mfe-map.md`. Mude os dois juntos.
 - `src/languages.ts` tem os nomes dos idiomas (cada um no próprio idioma), o caminho das bandeiras e `languageAlternates(area, idioma)`, de onde o shell e o Next.js tiram os links da troca de idioma (ADR 0006).
 - `src/personas.ts` tem os perfis com personagem (`personaAreas`) e a tabela `personaFigures`, com arquivo, largura e altura de cada arte. A home e o palco das páginas internas leem daqui (ADR 0009); os arquivos continuam em `apps/web-next/public/_home/personas/`.
-- `src/arrival.ts` tem a marca da transição de entrada em uma área (`portfolio:entrada`, em `sessionStorage`), o atributo `data-arrival` e o script inline que o shell põe no `<head>` (ADR 0010). O script não pode conter `<`.
+- `src/arrival.ts` tem as transições entre a home e as áreas (ADR 0011): a lista `AREA_TRANSITIONS`, a marca `portfolio:entrada` (`entryMark(área, hora)`), o atraso `TRANSITION_DELAY_MS`, o atributo `data-arrival` e `arrivalInitScript(áreas aceitas)`, o script inline que o shell e a home põem no `<head>`. O script não pode conter `<`.
 - Evento novo exporta: nome como constante, tipo do `detail`, função de emitir e função de escutar que devolve o cancelamento.
 - Imports relativos levam a extensão `.js` (o pacote é compilado para Node).
 - Mudança que quebra consumidor exige atualizar todos os apps na mesma mudança. Skill: `cross-mfe-contract`.
