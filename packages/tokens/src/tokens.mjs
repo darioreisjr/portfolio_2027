@@ -92,6 +92,8 @@ export const semantic = {
     'color-area-client': 'var(--color-cyan-700)',
     'color-area-community': 'var(--color-neutral-950)',
     'color-on-area': 'var(--color-neutral-0)',
+    // Tinta escura dos padrões (o xadrez da área do recrutador), ao lado da cor da área.
+    'color-pattern-ink': 'var(--color-neutral-900)',
   },
   dark: {
     'color-surface': 'var(--color-neutral-950)',
@@ -119,6 +121,7 @@ export const semantic = {
     'color-area-client': 'var(--color-cyan-300)',
     'color-area-community': 'var(--color-neutral-0)',
     'color-on-area': 'var(--color-neutral-950)',
+    'color-pattern-ink': 'var(--color-neutral-950)',
   },
 };
 
