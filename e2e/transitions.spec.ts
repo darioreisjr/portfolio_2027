@@ -159,6 +159,8 @@ for (const { area, phrase, path, url, title, color } of areas) {
     }) => {
       await page.goto('/');
       await choose(page, phrase);
+      // O navegador só abre a aba nova se a página estiver em primeiro plano.
+      await page.bringToFront();
       const [area1] = await Promise.all([
         context.waitForEvent('page'),
         page.getByRole('link', { name: 'Entrar' }).click({ modifiers: ['ControlOrMeta'] }),
@@ -168,6 +170,7 @@ for (const { area, phrase, path, url, title, color } of areas) {
       await expect(page.locator('#home-enter')).toBeHidden();
       expect(await area1.locator('html').getAttribute('data-arrival')).toBeNull();
 
+      await area1.bringToFront();
       const [home] = await Promise.all([
         context.waitForEvent('page'),
         area1
