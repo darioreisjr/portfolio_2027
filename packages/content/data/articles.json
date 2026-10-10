@@ -1,0 +1,59 @@
+[
+  {
+    "id": "exemplo-artigo-um",
+    "status": "draft",
+    "title": {
+      "pt-BR": "Artigo de exemplo: o que aprendi dividindo um site em áreas",
+      "en": "Example article: what I learned splitting a site into areas",
+      "es": "Artículo de ejemplo: lo que aprendí dividiendo un sitio en áreas"
+    },
+    "summary": {
+      "pt-BR": "Resumo de exemplo: o problema, o que foi tentado e o que ficou.",
+      "en": "Example summary: the problem, what was tried and what stayed.",
+      "es": "Resumen de ejemplo: el problema, lo que se probó y lo que quedó."
+    },
+    "publishedAt": "2026-09-12",
+    "tags": ["arquitetura", "front-end"],
+    "url": "https://example.com/artigos/um",
+    "locale": "pt-BR",
+    "readingMinutes": 9
+  },
+  {
+    "id": "exemplo-artigo-dois",
+    "status": "draft",
+    "title": {
+      "pt-BR": "Artigo de exemplo: medir antes de otimizar",
+      "en": "Example article: measure before you optimize",
+      "es": "Artículo de ejemplo: medir antes de optimizar"
+    },
+    "summary": {
+      "pt-BR": "Resumo de exemplo: como um número mudou uma decisão.",
+      "en": "Example summary: how one number changed a decision.",
+      "es": "Resumen de ejemplo: cómo un número cambió una decisión."
+    },
+    "publishedAt": "2026-07-03",
+    "tags": ["performance"],
+    "url": "https://example.com/artigos/dois",
+    "locale": "pt-BR",
+    "readingMinutes": 6
+  },
+  {
+    "id": "exemplo-artigo-tres",
+    "status": "draft",
+    "title": {
+      "pt-BR": "Artigo de exemplo: acessibilidade começa no HTML",
+      "en": "Example article: accessibility starts with HTML",
+      "es": "Artículo de ejemplo: la accesibilidad empieza en el HTML"
+    },
+    "summary": {
+      "pt-BR": "Resumo de exemplo: três escolhas simples que evitam retrabalho.",
+      "en": "Example summary: three simple choices that avoid rework.",
+      "es": "Resumen de ejemplo: tres decisiones simples que evitan retrabajo."
+    },
+    "publishedAt": "2026-04-21",
+    "tags": ["acessibilidade", "html"],
+    "url": "https://example.com/artigos/tres",
+    "locale": "en",
+    "readingMinutes": 4
+  }
+]

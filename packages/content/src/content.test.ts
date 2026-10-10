@@ -160,6 +160,7 @@ describe('área do recrutador', () => {
       'projects',
       'services',
       'testimonials',
+      'articles',
     ]) {
       for (const item of raw(`${file}.json`)) {
         expect(item.status, `${file} ${String(item.id)}`).toBe('draft');
@@ -285,5 +286,59 @@ describe('área do cliente', () => {
       (items[0] as Json).relatedProjects = ['nao-existe'];
     });
     expect(() => loadContent(broken, { includeDrafts: true })).toThrow(/projeto inexistente/);
+  });
+});
+
+describe('comunidade', () => {
+  const listWith = (file: string, change: (items: Json[]) => void) =>
+    dataWith(file, (json) => change(json as unknown as Json[]));
+
+  it('sem a exceção, não vai ao ar enquanto artigos e projetos forem rascunho', () => {
+    expect(loadContent(dataDir, { includeDrafts: false }).community).toBeNull();
+  });
+
+  it('com a exceção, vai ao ar como exemplo: artigos, código aberto e canais', () => {
+    const { community, site } = loadContent(dataDir, {
+      includeDrafts: false,
+      publishExample: { community: true },
+    });
+    if (!community) throw new Error('sem conteúdo');
+    for (const locale of locales) {
+      const content = community[locale];
+      expect(content.example).toEqual({ articles: true, projects: true, channels: true });
+      // Mais recente primeiro.
+      const dates = content.articles.map((article) => article.publishedAt);
+      expect(dates).toEqual([...dates].sort().reverse());
+      expect(content.articles.every((article) => article.readingMinutes > 0)).toBe(true);
+      expect(content.projects.map((project) => project.status)).toEqual(['active', 'maintained']);
+      expect(content.channels.map((channel) => channel.kind)).toEqual(['linkedin', 'github']);
+    }
+    // O único endereço real é o do repositório deste site, no raio-x.
+    expect(site.repository).toBe('https://github.com/darioreisjr/portfolio_2027');
+  });
+
+  it('recusa projeto de código aberto sem a situação', () => {
+    const broken = listWith('projects.json', (items) => {
+      delete (items[0] as Json).openSourceStatus;
+    });
+    expect(() => loadContent(broken, { includeDrafts: true })).toThrow(/sem situação/);
+  });
+
+  it('com artigo publicado, os de exemplo saem do bloco', () => {
+    const dir = listWith('articles.json', (items) => {
+      Object.assign(items[0] as Json, {
+        status: 'published',
+        title: allLocales('Artigo'),
+        summary: allLocales('Resumo'),
+      });
+    });
+    const { community } = loadContent(dir, {
+      includeDrafts: false,
+      publishExample: { community: true },
+    });
+    expect(community?.['pt-BR'].example.articles).toBe(false);
+    expect(community?.['pt-BR'].articles).toHaveLength(1);
+    // Os outros blocos continuam de exemplo, cada um com a própria faixa.
+    expect(community?.['pt-BR'].example.projects).toBe(true);
   });
 });

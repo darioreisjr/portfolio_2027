@@ -19,6 +19,8 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = join(repoRoot, 'dist');
 const target = join(repoRoot, 'packages/content/data/site.json');
 const budgets = JSON.parse(readFileSync(join(repoRoot, 'docs/quality/budgets.json'), 'utf8'));
+// O endereço do repositório vem do package.json da raiz.
+const repository = JSON.parse(readFileSync(join(repoRoot, 'package.json'), 'utf8')).repository.url;
 
 /** Uma casa decimal, como em docs/quality/budgets.md. */
 const round = (value) => Math.round(value * 10) / 10;
@@ -86,6 +88,7 @@ function decisions() {
 /** O que não depende de medição: áreas, tetos e decisões. */
 function structure() {
   return {
+    repository,
     areas: routes.map((entry) => ({
       area: entry.area,
       framework: entry.framework,
@@ -99,6 +102,7 @@ function structure() {
 }
 
 const strip = (site) => ({
+  repository: site.repository,
   areas: site.areas.map(({ area, framework, owner, path, maxKb }) => ({
     area,
     framework,
@@ -129,6 +133,7 @@ if (process.argv.includes('--check')) {
   const scores = lighthouse();
   const site = {
     measuredAt: new Date().toISOString().slice(0, 10),
+    repository: base.repository,
     areas: base.areas.map((area) => ({
       ...area,
       jsKb: round(routeKb(routes.find((entry) => entry.area === area.area))),

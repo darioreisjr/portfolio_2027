@@ -1,0 +1,65 @@
+{
+  "example": {
+    "title": "Example data",
+    "text": "This block is fictional and only shows the format."
+  },
+  "hero": {
+    "title": "Learning together goes further",
+    "text": "What I write, the code I leave open and the building blocks of this site, for people who want to read, tinker and exchange ideas."
+  },
+  "power": {
+    "label": "Reading time",
+    "total": "{count} min of reading in total",
+    "minutes": "{count} min"
+  },
+  "articles": {
+    "title": "Articles",
+    "read": "Read article",
+    "written": "Written in"
+  },
+  "projects": {
+    "title": "Open source",
+    "repo": "View repository",
+    "statuses": {
+      "active": "Active",
+      "maintained": "Maintained",
+      "archived": "Archived"
+    },
+    "thisSite": {
+      "title": "This site",
+      "description": "The portfolio you are looking at: five technologies, its own design system and its decisions on record."
+    }
+  },
+  "showcase": {
+    "title": "Design system showcase",
+    "text": "The pieces below are the same ones that build this site, actually working.",
+    "components": "Components",
+    "badge": "Badge",
+    "badgeSample": "example",
+    "themeToggle": "Theme button",
+    "themeHint": "Switch the theme with the button in the top corner: every sample follows.",
+    "colors": "Colors",
+    "areaColors": "One color per area",
+    "baseColors": "Surface and text",
+    "type": "Typography",
+    "typeSample": "Aa Bb Cc 123"
+  },
+  "join": {
+    "title": "How to follow and take part",
+    "follow": "Where to follow",
+    "welcome": "What is welcome",
+    "items": [
+      "Fixing a text or a translation",
+      "Reporting a problem you found",
+      "Suggesting an improvement",
+      "Reaching out to exchange ideas"
+    ],
+    "channels": {
+      "email": "Email",
+      "linkedin": "LinkedIn",
+      "github": "GitHub",
+      "whatsapp": "WhatsApp"
+    },
+    "built": "How this site was built"
+  }
+}

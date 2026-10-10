@@ -11,13 +11,14 @@ const includeDrafts = process.env.CONTENT_INCLUDE_DRAFTS === '1';
 // As áreas abaixo vão ao ar com os dados de exemplo e a faixa que os identifica,
 // até o conteúdo real chegar. Autorizado pelo autor em 2026-10-09; para uma área
 // voltar à tela "em construção" em produção, troque para `false`.
-const PUBLISH_EXAMPLE = { recruiter: true, tech: true, client: true };
+const PUBLISH_EXAMPLE = { recruiter: true, tech: true, client: true, community: true };
 
 const content = loadContent(dataDir, {
   includeDrafts,
   publishExample: PUBLISH_EXAMPLE,
 });
 const { ui, home, profile, recruiter, recruiterUi, tech, techUi, site, client, clientUi } = content;
+const { community, communityUi } = content;
 
 const modules = {
   ui: {
@@ -81,6 +82,19 @@ const modules = {
       'export type { ClientContent, ClientUi };',
       'export declare const client: Readonly<Record<Locale, ClientContent>> | null;',
       'export declare const clientUi: Readonly<Record<Locale, ClientUi>>;',
+    ],
+  },
+  // Área da comunidade: artigos, código aberto e canais, e os textos de interface dela.
+  community: {
+    value: community,
+    extra: { communityUi },
+    types: [
+      "import type { Locale } from '@portfolio/contracts';",
+      "import type { CommunityContent } from '../community.js';",
+      "import type { CommunityUi } from '../schemas.js';",
+      'export type { CommunityContent, CommunityUi };',
+      'export declare const community: Readonly<Record<Locale, CommunityContent>> | null;',
+      'export declare const communityUi: Readonly<Record<Locale, CommunityUi>>;',
     ],
   },
 };

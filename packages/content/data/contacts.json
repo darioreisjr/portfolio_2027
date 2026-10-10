@@ -12,14 +12,16 @@
     "status": "draft",
     "kind": "linkedin",
     "url": "https://example.com/linkedin",
-    "display": "example.com/linkedin"
+    "display": "example.com/linkedin",
+    "primaryFor": ["community"]
   },
   {
     "id": "exemplo-github",
     "status": "draft",
     "kind": "github",
     "url": "https://example.com/github",
-    "display": "example.com/github"
+    "display": "example.com/github",
+    "primaryFor": ["community"]
   },
   {
     "id": "exemplo-whatsapp",

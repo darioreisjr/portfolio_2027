@@ -1,6 +1,10 @@
 {
   "name": "portfolio-2027",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darioreisjr/portfolio_2027"
+  },
   "type": "module",
   "packageManager": "pnpm@12.9.1",
   "engines": {

@@ -201,7 +201,10 @@ export const projectSchema = z
     role: localizedSchema.optional(),
     skills: z.array(id),
     links: z.object({ repo: httpsUrl, demo: httpsUrl }).partial().strict().optional(),
+    /** Lista o projeto na área da comunidade. */
     openSource: z.boolean(),
+    /** Situação do projeto de código aberto; obrigatória quando `openSource` é `true`. */
+    openSourceStatus: z.enum(['active', 'maintained', 'archived']).optional(),
     cover: imageSchema.optional(),
     gallery: z.array(imageSchema).optional(),
     /** Narrativa da área técnica. */
@@ -223,7 +226,16 @@ export const projectSchema = z
     featured: z.boolean().optional(),
   })
   .strict()
-  .superRefine(requirePublishedLocales);
+  .superRefine((project, context) => {
+    requirePublishedLocales(project, context);
+    if (project.openSource && !project.openSourceStatus) {
+      context.addIssue({
+        code: 'custom',
+        path: ['openSourceStatus'],
+        message: 'Projeto de código aberto sem situação',
+      });
+    }
+  });
 export type Project = z.infer<typeof projectSchema>;
 
 const labels = <Key extends string>(keys: readonly Key[]) =>
@@ -403,6 +415,8 @@ export const siteSchema = z
   .object({
     /** Data da última medição, `AAAA-MM-DD`. */
     measuredAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    /** Endereço do repositório deste site, lido do `package.json` da raiz. */
+    repository: httpsUrl,
     areas: z.array(
       z
         .object({
@@ -536,3 +550,70 @@ export const clientUiSchema = z
   })
   .strict();
 export type ClientUi = z.infer<typeof clientUiSchema>;
+
+export const articleSchema = z
+  .object({
+    id,
+    status: statusSchema,
+    title: localizedSchema,
+    summary: localizedSchema,
+    publishedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'data no formato AAAA-MM-DD'),
+    tags: z.array(text).optional(),
+    /** Onde o texto está publicado. */
+    url: httpsUrl,
+    /** Idioma em que o texto foi escrito. */
+    locale: z.enum(locales),
+    /** Tempo de leitura, em minutos. */
+    readingMinutes: z.number().int().positive(),
+  })
+  .strict()
+  .superRefine(requirePublishedLocales);
+export type Article = z.infer<typeof articleSchema>;
+
+/**
+ * Textos de interface da área da comunidade. Ficam fora de `ui` porque só a
+ * página dela os usa. Em `power`, `{count}` é trocado pelo número.
+ */
+export const communityUiSchema = z
+  .object({
+    example: labels(['title', 'text']),
+    hero: labels(['title', 'text']),
+    power: labels(['label', 'total', 'minutes']),
+    articles: labels(['title', 'read', 'written']),
+    projects: z
+      .object({
+        title: text,
+        repo: text,
+        statuses: labels(['active', 'maintained', 'archived']),
+        /** O repositório deste site, o único projeto real da lista. */
+        thisSite: labels(['title', 'description']),
+      })
+      .strict(),
+    showcase: labels([
+      'title',
+      'text',
+      'components',
+      'badge',
+      'badgeSample',
+      'themeToggle',
+      'themeHint',
+      'colors',
+      'areaColors',
+      'baseColors',
+      'type',
+      'typeSample',
+    ]),
+    join: z
+      .object({
+        title: text,
+        follow: text,
+        welcome: text,
+        /** O que é bem-vindo, um item por linha. */
+        items: z.array(text).min(1),
+        channels: labels(['email', 'linkedin', 'github', 'whatsapp']),
+        built: text,
+      })
+      .strict(),
+  })
+  .strict();
+export type CommunityUi = z.infer<typeof communityUiSchema>;

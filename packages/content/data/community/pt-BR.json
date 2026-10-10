@@ -1,0 +1,65 @@
+{
+  "example": {
+    "title": "Dados de exemplo",
+    "text": "Este bloco é fictício e mostra só o formato."
+  },
+  "hero": {
+    "title": "Aprender junto rende mais",
+    "text": "O que eu escrevo, o código que deixo aberto e as peças deste site, para quem quer ler, mexer e trocar ideia."
+  },
+  "power": {
+    "label": "Tempo de leitura",
+    "total": "{count} min de leitura no total",
+    "minutes": "{count} min"
+  },
+  "articles": {
+    "title": "Artigos",
+    "read": "Ler artigo",
+    "written": "Escrito em"
+  },
+  "projects": {
+    "title": "Código aberto",
+    "repo": "Ver repositório",
+    "statuses": {
+      "active": "Ativo",
+      "maintained": "Mantido",
+      "archived": "Arquivado"
+    },
+    "thisSite": {
+      "title": "Este site",
+      "description": "O portfólio que você está vendo: cinco tecnologias, um design system próprio e as decisões registradas."
+    }
+  },
+  "showcase": {
+    "title": "Vitrine do design system",
+    "text": "As peças abaixo são as mesmas que montam este site, funcionando de verdade.",
+    "components": "Componentes",
+    "badge": "Selo",
+    "badgeSample": "exemplo",
+    "themeToggle": "Botão de tema",
+    "themeHint": "Troque o tema no botão do canto de cima: todas as amostras acompanham.",
+    "colors": "Cores",
+    "areaColors": "Uma cor por área",
+    "baseColors": "Superfície e texto",
+    "type": "Tipografia",
+    "typeSample": "Aa Bb Cc 123"
+  },
+  "join": {
+    "title": "Como acompanhar e participar",
+    "follow": "Onde acompanhar",
+    "welcome": "O que é bem-vindo",
+    "items": [
+      "Corrigir um texto ou uma tradução",
+      "Relatar um problema que você encontrou",
+      "Sugerir uma melhoria",
+      "Chamar para trocar ideia"
+    ],
+    "channels": {
+      "email": "E-mail",
+      "linkedin": "LinkedIn",
+      "github": "GitHub",
+      "whatsapp": "WhatsApp"
+    },
+    "built": "Como este site foi feito"
+  }
+}

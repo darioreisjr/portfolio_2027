@@ -24,7 +24,8 @@
       "repo": "https://example.com/repo",
       "demo": "https://example.com/demo"
     },
-    "openSource": false,
+    "openSource": true,
+    "openSourceStatus": "active",
     "recruiter": {
       "challenge": {
         "pt-BR": "Desafio de exemplo: o problema que precisava ser resolvido.",
@@ -97,7 +98,8 @@
       "es": "Rol de ejemplo en este proyecto."
     },
     "skills": ["exemplo-node", "exemplo-api", "exemplo-sql"],
-    "openSource": false,
+    "openSource": true,
+    "openSourceStatus": "maintained",
     "recruiter": {
       "challenge": {
         "pt-BR": "Outro desafio de exemplo.",
@@ -145,6 +147,9 @@
         "en": "Example result: reports started getting ready on their own, and the team gained time.",
         "es": "Resultado de ejemplo: los informes empezaron a generarse solos, y el equipo ganó tiempo."
       }
+    },
+    "links": {
+      "repo": "https://example.com/repo-dois"
     }
   }
 ]

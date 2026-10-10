@@ -3,11 +3,14 @@ import { join } from 'node:path';
 import { locales, type Locale } from '@portfolio/contracts';
 import { z } from 'zod';
 import { buildClient, type ClientContent } from './client.js';
+import { buildCommunity, type CommunityContent } from './community.js';
 import { buildRecruiter, type RecruiterContent } from './recruiter.js';
 import { buildTech, type TechContent } from './tech.js';
 import {
+  articleSchema,
   clientTermsSchema,
   clientUiSchema,
+  communityUiSchema,
   contactSchema,
   educationSchema,
   experienceSchema,
@@ -22,6 +25,7 @@ import {
   testimonialSchema,
   uiSchema,
   type ClientUi,
+  type CommunityUi,
   type Home,
   type Profile,
   type RecruiterUi,
@@ -53,6 +57,10 @@ export interface Content {
   clientUi: Record<Locale, ClientUi>;
   /** Conteúdo da área do cliente por idioma; `null` sem serviços para mostrar. */
   client: Record<Locale, ClientContent> | null;
+  /** Textos de interface da área da comunidade. */
+  communityUi: Record<Locale, CommunityUi>;
+  /** Artigos, código aberto e canais por idioma; `null` sem artigo nem projeto. */
+  community: Record<Locale, CommunityContent> | null;
 }
 
 export interface LoadOptions {
@@ -65,7 +73,7 @@ export interface LoadOptions {
    * para o recrutador e a área técnica, e em 2026-10-10 para a do cliente. Não muda
    * `profile` nem outra área.
    */
-  publishExample?: { recruiter?: boolean; tech?: boolean; client?: boolean };
+  publishExample?: { recruiter?: boolean; tech?: boolean; client?: boolean; community?: boolean };
 }
 
 function parseFile<Schema extends z.ZodType>(
@@ -253,10 +261,53 @@ export function loadContent(
         }
       : null;
 
+  // Área da comunidade: artigos, código aberto e canais, cada bloco real quando
+  // tem item publicado e de exemplo quando só há rascunho.
+  const communityUi = Object.fromEntries(
+    locales.map((locale) => [
+      locale,
+      parseFile(dataDir, `community/${locale}.json`, communityUiSchema),
+    ]),
+  ) as Record<Locale, CommunityUi>;
+  const articles = parseList(dataDir, 'articles.json', articleSchema);
+  const communityDrafts = includeDrafts || Boolean(publishExample.community);
+  const choose = <Item extends Listed>(items: Item[]) => {
+    const real = published(items);
+    return real.length
+      ? { items: real, example: false }
+      : { items: communityDrafts ? items : [], example: communityDrafts };
+  };
+  const communityArticles = choose(articles);
+  const communityProjects = choose(projects.filter((project) => project.openSource));
+  const communityChannels = choose(
+    contacts.filter((contact) => contact.primaryFor?.includes('community')),
+  );
+  const communitySources =
+    communityArticles.items.length || communityProjects.items.length
+      ? {
+          articles: communityArticles.items,
+          projects: communityProjects.items,
+          // Projeto de exemplo cita skill de exemplo; publicado, só publicadas.
+          skills: communityProjects.example ? skills : published(skills),
+          contacts: communityChannels.items,
+          example: {
+            articles: communityArticles.example,
+            projects: communityProjects.example,
+            channels: communityChannels.example,
+          },
+        }
+      : null;
+
   return {
     ui,
     home,
     profile,
+    communityUi,
+    community: communitySources
+      ? (Object.fromEntries(
+          locales.map((locale) => [locale, buildCommunity(communitySources, locale)]),
+        ) as Record<Locale, CommunityContent>)
+      : null,
     clientUi,
     client: clientSources
       ? (Object.fromEntries(

@@ -29,6 +29,10 @@
       "types": "./dist/data/client.d.ts",
       "default": "./dist/data/client.js"
     },
+    "./community": {
+      "types": "./dist/data/community.d.ts",
+      "default": "./dist/data/community.js"
+    },
     "./schemas": {
       "types": "./dist/schemas.d.ts",
       "default": "./dist/schemas.js"
