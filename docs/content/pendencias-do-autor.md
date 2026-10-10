@@ -51,13 +51,25 @@ Hoje todos os blocos são de exemplo (`docs/plans/clientes-conteudo.md`).
 | Canais de orçamento     | O número de WhatsApp e o e-mail que recebem os pedidos                                                    | `contacts.json`                     |
 | Valores                 | Se um dia quiser mostrar faixas de preço; hoje a página não mostra nenhum                                 | a definir                           |
 
+## Para a comunidade
+
+Hoje os artigos, os projetos e os canais são de exemplo (`docs/plans/comunidade-conteudo.md`). A vitrine do design system e o repositório deste site já são reais.
+
+| O quê                     | Detalhe pedido                                                                                                | Onde entra                                        |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| Artigos                   | Para cada um: título, resumo de uma frase, data, assuntos, link, idioma em que foi escrito e tempo de leitura | `articles.json`                                   |
+| Projetos de código aberto | Quais projetos são abertos, a situação de cada um (ativo, mantido, arquivado) e o link do repositório         | `projects.json`, `openSource`, `openSourceStatus` |
+| Onde acompanhar           | Os endereços reais do GitHub e do LinkedIn                                                                    | `contacts.json`                                   |
+| O que é bem-vindo         | Se a lista atual (corrigir texto, relatar problema, sugerir, trocar ideia) é a sua, ou o que mudar            | `community/<locale>.json`, `join.items`           |
+| Palestras e newsletter    | Se existem e devem entrar; hoje a página não tem esses blocos                                                 | a definir                                         |
+
 ## Revisões
 
-| O quê                                                                                     | Onde                                                                 |
-| ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| Textos em inglês e espanhol escritos por IA                                               | `ui`, `home`, `recruiter` (pendência B6 de `docs/open-questions.md`) |
-| Cargo no perfil, nos três idiomas                                                         | `profile.json`, `role`                                               |
-| Aparência das páginas do recrutador, técnica e do cliente e das transições de ida e volta | `http://localhost:5173/recrutador/`, `/tecnico/` e `/clientes/`      |
+| O quê                                                                                                    | Onde                                                                            |
+| -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Textos em inglês e espanhol escritos por IA                                                              | `ui`, `home`, `recruiter` (pendência B6 de `docs/open-questions.md`)            |
+| Cargo no perfil, nos três idiomas                                                                        | `profile.json`, `role`                                                          |
+| Aparência das quatro páginas (recrutador, técnica, cliente e comunidade) e das transições de ida e volta | `http://localhost:5173/recrutador/`, `/tecnico/`, `/clientes/` e `/comunidade/` |
 
 ## Conferências que dependem de aparelho ou pessoa
 
@@ -69,4 +81,4 @@ Hoje todos os blocos são de exemplo (`docs/plans/clientes-conteudo.md`).
 
 ## Para as próximas áreas
 
-Ainda sem conteúdo nem página: Comunidade (artigos, código aberto) e Como foi feito. Elas também não têm transição de entrada.
+Ainda sem conteúdo nem página: Como foi feito, que explica a arquitetura do próprio site. Ela também não tem transição de entrada.

@@ -45,6 +45,10 @@ O que não se reabre: Web Components como contrato entre apps (ADR 0002), design
 - As páginas Next.js ficam perto do teto de LCP (medido: 2,38 a 2,55 s, teto de 2,5 s). Para caber, o palco usa um peso de fonte só, a mensagem entra sem opacidade e, na tela estreita, o personagem é menor que a frase. Ver `docs/plans/areas-em-construcao.md`.
 - Animação aplicada por `::part()`, `color-mix()`, `mask` e `:has()` só foram conferidos no Chromium (pendência B12).
 
+## Emenda de 2026-10-10
+
+A página da comunidade passou a ter palco e folha próprios (ADR 0013) e não carrega `/_ds/areas.css`. Ela traz uma terceira cópia do botão de pausa. O item 5 previa unificar a duplicação no terceiro uso; unificar custaria uma folha a mais em uma página que vive no limite de LCP, e a cópia foi aceita. Só "Como foi feito" continua usando o palco e a tela "em construção" deste ADR.
+
 ## Fontes
 
 - [MDN: `::part()`](https://developer.mozilla.org/en-US/docs/Web/CSS/::part)

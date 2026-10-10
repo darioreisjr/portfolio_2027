@@ -57,6 +57,8 @@ Para a aparência por área:
 
 A área do cliente entrou em `AREA_TRANSITIONS`, com a terceira cortina: uma onda. É o mesmo molde (dois pseudo-elementos com o fundo da área, movidos por `translate`), agora na vertical: o corpo d'água sobe de baixo, com a crista em arcos feita por máscara, e uma faixa de espuma mais clara vem atrás. A decisão não muda. Registrado em `docs/plans/clientes-conteudo.md`.
 
+No mesmo dia entrou a quarta área, a comunidade, com a "explosão de aura": um disco cresce do centro por `clip-path` e se desfaz por opacidade, com anéis atrás. É a primeira cortina que não desliza, então o item 6 passa a valer assim: dois pseudo-elementos com o fundo da área, e o movimento é de cada área, com keyframes próprios quando não for deslizar. As regras ficam nos documentos que participam: `home.css` e, para a comunidade, a folha da própria página, e não `shell.css`. Com isso o "Entrar" de todo personagem passou a ser `<a>` (ADR 0013).
+
 ## Fontes
 
 - [MDN: `sessionStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage)

@@ -108,27 +108,28 @@ Cada item também tem `status`.
 
 Um projeto tem três narrativas: `technical` (área técnica), `outcome` (área do cliente) e `recruiter` (área do recrutador: o desafio e o que saiu dele, ao lado de `role`). Cada uma é opcional; o projeto aparece em uma área só se tiver a narrativa correspondente.
 
-| Campo                      | Tipo                                            | Obrigatório           |
-| -------------------------- | ----------------------------------------------- | --------------------- |
-| `id`, `status`             |                                                 | sim                   |
-| `slug`                     | string (usado na URL)                           | sim                   |
-| `title`                    | Localized                                       | sim                   |
-| `summary`                  | Localized                                       | sim                   |
-| `start`, `end`             | `YYYY-MM`                                       | `start` sim           |
-| `role`                     | Localized                                       | não                   |
-| `skills`                   | id de skill[]                                   | sim                   |
-| `links.repo`, `links.demo` | string                                          | não                   |
-| `openSource`               | boolean (lista o projeto na área da comunidade) | sim                   |
-| `cover`                    | Imagem                                          | não                   |
-| `gallery`                  | Imagem[]                                        | não                   |
-| `technical.problem`        | Localized                                       | se houver `technical` |
-| `technical.architecture`   | Localized                                       | se houver `technical` |
-| `technical.tradeoffs`      | Localized[]                                     | não                   |
-| `outcome.context`          | Localized                                       | se houver `outcome`   |
-| `outcome.result`           | Localized                                       | se houver `outcome`   |
-| `recruiter.challenge`      | Localized                                       | se houver `recruiter` |
-| `recruiter.result`         | Localized                                       | se houver `recruiter` |
-| `featured`                 | boolean                                         | não                   |
+| Campo                      | Tipo                                            | Obrigatório                |
+| -------------------------- | ----------------------------------------------- | -------------------------- |
+| `id`, `status`             |                                                 | sim                        |
+| `slug`                     | string (usado na URL)                           | sim                        |
+| `title`                    | Localized                                       | sim                        |
+| `summary`                  | Localized                                       | sim                        |
+| `start`, `end`             | `YYYY-MM`                                       | `start` sim                |
+| `role`                     | Localized                                       | não                        |
+| `skills`                   | id de skill[]                                   | sim                        |
+| `links.repo`, `links.demo` | string                                          | não                        |
+| `openSource`               | boolean (lista o projeto na área da comunidade) | sim                        |
+| `openSourceStatus`         | `"active" \| "maintained" \| "archived"`        | se `openSource` for `true` |
+| `cover`                    | Imagem                                          | não                        |
+| `gallery`                  | Imagem[]                                        | não                        |
+| `technical.problem`        | Localized                                       | se houver `technical`      |
+| `technical.architecture`   | Localized                                       | se houver `technical`      |
+| `technical.tradeoffs`      | Localized[]                                     | não                        |
+| `outcome.context`          | Localized                                       | se houver `outcome`        |
+| `outcome.result`           | Localized                                       | se houver `outcome`        |
+| `recruiter.challenge`      | Localized                                       | se houver `recruiter`      |
+| `recruiter.result`         | Localized                                       | se houver `recruiter`      |
+| `featured`                 | boolean                                         | não                        |
 
 ### `services.json` (lista)
 
@@ -157,17 +158,22 @@ Um projeto tem três narrativas: `technical` (área técnica), `outcome` (área 
 
 ### `articles.json` (lista)
 
-| Campo          | Tipo                                 | Obrigatório |
-| -------------- | ------------------------------------ | ----------- |
-| `id`, `status` |                                      | sim         |
-| `title`        | Localized                            | sim         |
-| `summary`      | Localized                            | sim         |
-| `publishedAt`  | `YYYY-MM-DD`                         | sim         |
-| `tags`         | string[]                             | não         |
-| `url`          | string (onde o texto está publicado) | sim         |
-| `locale`       | Locale (idioma do texto original)    | sim         |
+| Campo            | Tipo                                         | Obrigatório |
+| ---------------- | -------------------------------------------- | ----------- |
+| `id`, `status`   |                                              | sim         |
+| `title`          | Localized                                    | sim         |
+| `summary`        | Localized                                    | sim         |
+| `publishedAt`    | `YYYY-MM-DD`                                 | sim         |
+| `tags`           | string[]                                     | não         |
+| `url`            | string (onde o texto está publicado)         | sim         |
+| `locale`         | Locale (idioma do texto original)            | sim         |
+| `readingMinutes` | número inteiro: tempo de leitura, em minutos | sim         |
 
 O corpo do artigo dentro do site não está modelado; ver `docs/open-questions.md`.
+
+### `community/<locale>.json` (um por idioma)
+
+Textos de interface da página da comunidade: abertura, títulos e rótulos dos blocos, o medidor de tempo de leitura (`power`, com `{count}`), as situações dos projetos, a descrição do repositório deste site, os textos da vitrine do design system e a lista do que é bem-vindo (`join.items`). Sem `status`.
 
 ### `home/<locale>.json` (um por idioma)
 
@@ -214,6 +220,7 @@ Raio-x do próprio site (ADR 0012). Dado real do repositório, sem `status`: nã
 | Campo        | Tipo                                                                                                                              |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------- |
 | `measuredAt` | `YYYY-MM-DD`, a data da última medição                                                                                            |
+| `repository` | endereço do repositório deste site, lido do `package.json` da raiz                                                                |
 | `areas`      | por rota: `area`, `framework`, `owner`, `path`, `maxKb`, `jsKb` e, se o Lighthouse rodou, `performance`, `accessibility`, `lcpMs` |
 | `parts`      | por parte (shell, design system, cada MFE): `name`, `maxKb`, `jsKb`                                                               |
 | `decisions`  | por ADR: `number`, `title` (em português), `status`                                                                               |
@@ -241,6 +248,14 @@ Exceção autorizada pelo autor em 2026-10-09 (`docs/plans/recrutador-conteudo.m
 
 Regras conferidas na carga, antes de filtrar os rascunhos: ids únicos por arquivo; toda skill referenciada existe; item publicado não referencia skill em rascunho; item publicado tem os três idiomas em todo texto traduzível, em qualquer profundidade.
 
+## O módulo da comunidade
+
+`@portfolio/content/community` tem dois exports: `community` (`Record<Locale, CommunityContent> | null`) e `communityUi`.
+
+`CommunityContent` traz `articles` (mais recente primeiro), `projects` (os projetos com `openSource: true`, com a situação) e `channels` (os contatos com `primaryFor: ["community"]`), e `example`, que diz por bloco se os dados são rascunho. É `null` sem artigo nem projeto para mostrar. A mesma exceção de exemplo vale aqui (`publishExample.community`).
+
+O endereço real do repositório deste site não vem daqui: está em `site.json` (`repository`).
+
 ## O módulo da área do cliente
 
 `@portfolio/content/client` tem dois exports: `client` (`Record<Locale, ClientContent> | null`) e `clientUi`.
@@ -263,7 +278,7 @@ Regras: cada bloco usa os itens publicados se houver algum; sem nenhum, os rascu
 | Recrutador | `recruiter` (montado de `profile`, `experiences`, `education`, `skills`, `projects` com narrativa `recruiter`, `contacts`), `ui` |
 | Técnica    | `tech` (montado de `projects` com narrativa `technical` e `skills`), `site`, `ui`                                                |
 | Cliente    | `client` (montado de `services`, `testimonials`, `client.json`, `projects` com narrativa `outcome` e `contacts`), `ui`           |
-| Comunidade | `articles`, `projects` (com `openSource: true`), `ui`                                                                            |
+| Comunidade | `community` (montado de `articles`, `projects` com `openSource: true` e `contacts`), `site` (`repository`), `ui`                 |
 
 ## Como mudar o schema sem quebrar consumidores
 

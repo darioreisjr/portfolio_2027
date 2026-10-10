@@ -1,5 +1,6 @@
 {
   "measuredAt": "2026-10-10",
+  "repository": "https://github.com/darioreisjr/portfolio_2027",
   "areas": [
     {
       "area": "home",
@@ -7,10 +8,10 @@
       "owner": "web-next",
       "path": "/",
       "maxKb": 150,
-      "jsKb": 148.4,
+      "jsKb": 144.7,
       "performance": 97,
       "accessibility": 100,
-      "lcpMs": 2574
+      "lcpMs": 2577
     },
     {
       "area": "recruiter",
@@ -18,10 +19,10 @@
       "owner": "shell",
       "path": "/recrutador/",
       "maxKb": 90,
-      "jsKb": 52.1,
+      "jsKb": 52.2,
       "performance": 99,
       "accessibility": 100,
-      "lcpMs": 1809
+      "lcpMs": 1811
     },
     {
       "area": "tech",
@@ -29,10 +30,10 @@
       "owner": "shell",
       "path": "/tecnico/",
       "maxKb": 140,
-      "jsKb": 68.8,
+      "jsKb": 68.9,
       "performance": 99,
       "accessibility": 100,
-      "lcpMs": 1957
+      "lcpMs": 1959
     },
     {
       "area": "client",
@@ -41,9 +42,9 @@
       "path": "/clientes/",
       "maxKb": 135,
       "jsKb": 100.7,
-      "performance": 98,
+      "performance": 99,
       "accessibility": 100,
-      "lcpMs": 2109
+      "lcpMs": 2110
     },
     {
       "area": "community",
@@ -51,10 +52,10 @@
       "owner": "web-next",
       "path": "/comunidade/",
       "maxKb": 150,
-      "jsKb": 148.4,
+      "jsKb": 144.7,
       "performance": 97,
       "accessibility": 100,
-      "lcpMs": 2538
+      "lcpMs": 2468
     },
     {
       "area": "how-it-was-built",
@@ -62,10 +63,10 @@
       "owner": "web-next",
       "path": "/como-foi-feito/",
       "maxKb": 150,
-      "jsKb": 148.4,
+      "jsKb": 144.7,
       "performance": 98,
       "accessibility": 100,
-      "lcpMs": 2393
+      "lcpMs": 2383
     }
   ],
   "parts": [
@@ -154,6 +155,11 @@
     {
       "number": 12,
       "title": "Raio-x do site em arquivo versionado",
+      "status": "aceito"
+    },
+    {
+      "number": 13,
+      "title": "Página de conteúdo em rota do Next.js",
       "status": "aceito"
     }
   ]

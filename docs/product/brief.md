@@ -25,7 +25,7 @@ Não há uma ação principal única: cada área tem a sua.
 - **Área do recrutador:** ficha rápida (localização, modelo de trabalho, disponibilidade, inglês, senioridade), resumo e stack, experiência (linha do tempo), projetos em destaque (papel, desafio, resultado), formação e certificados, currículo em PDF e contato sempre à vista. Decidido em 2026-10-09; a página está no ar com dados de exemplo e a faixa "Dados de exemplo", até o conteúdo real entrar (`docs/content/pendencias-do-autor.md`).
 - **Área técnica:** estudos de caso (problema, arquitetura, trade-offs, código), skills filtráveis, raio-x do próprio site (áreas, orçamento de JavaScript, Lighthouse e ADRs, com dados reais) e um terminal de atalhos. Decidido em 2026-10-09; está no ar com estudos de caso e skills de exemplo. GitHub fica para quando houver conteúdo real.
 - **Área do cliente:** serviços com o que está incluído, como funciona (etapas), projetos na visão de resultado, depoimentos, investimento e prazos sem valores, perguntas frequentes e o pedido de orçamento por WhatsApp e e-mail. Decidido em 2026-10-10; está no ar com dados de exemplo.
-- **Área da comunidade:** artigos, open source, vitrine do design system.
+- **Área da comunidade:** artigos, com data, assuntos e tempo de leitura; código aberto, com a situação de cada projeto e o repositório deste site; vitrine do design system, com os componentes e os tokens de verdade; e como acompanhar e participar. Decidido em 2026-10-10; está no ar, com artigos, projetos e canais de exemplo.
 - **Como foi feito** (`/como-foi-feito`): explica a arquitetura do próprio site. Aparece nas áreas técnica e da comunidade. Enquanto as áreas estão "em construção" e sem menu, nenhuma página liga para ela: só abre pelo endereço.
 - **Sobre e Contato:** presentes em todo o site.
 
@@ -56,7 +56,7 @@ Formulário de contato: **adiado**. Não entra nesta versão; a decisão sobre t
 Nenhum material está pronto (currículo, lista de projetos, depoimentos, artigos). Consequências:
 
 - O schema é modelado a partir das seções, e não de dados reais; pode precisar de ajuste quando o conteúdo chegar.
-- O esqueleto usa dados de exemplo claramente marcados como fictícios, com `status: "draft"`. Nenhum dado sobre o autor é inventado. As áreas do recrutador, técnica e do cliente vão ao ar com eles, com aviso na página.
+- O esqueleto usa dados de exemplo claramente marcados como fictícios, com `status: "draft"`. Nenhum dado sobre o autor é inventado. As áreas do recrutador, técnica, do cliente e da comunidade vão ao ar com eles, com aviso na página.
 - Depoimentos só entram com autorização de quem escreveu. Os de exemplo, fictícios e marcados, não são depoimentos: levam `consent: false` e somem quando houver serviço publicado.
 
 ## Fora de escopo

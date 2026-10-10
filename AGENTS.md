@@ -25,7 +25,7 @@ Idiomas: pt-BR (padrão, sem prefixo), en e es (com prefixo e rotas traduzidas).
 | `docs/product/brief.md`        | Públicos, áreas, escopo                      |
 | `docs/content/schema.md`       | Modelo dos dados JSON                        |
 | `docs/architecture/mfe-map.md` | Área por app, tabela de rotas por idioma     |
-| `docs/architecture/adr/`       | Decisões aceitas (0001 a 0012)               |
+| `docs/architecture/adr/`       | Decisões aceitas (0001 a 0013)               |
 | `docs/quality/budgets.md`      | Limites de performance, acessibilidade e SEO |
 | `docs/open-questions.md`       | O que ainda não foi decidido                 |
 
@@ -115,7 +115,7 @@ Claude Code é a ferramenta principal. Codex e Gemini são usados para revisão 
 
 ## Nunca
 
-- Inventar conteúdo sobre o autor (experiências, projetos, depoimentos, números). Dado de exemplo leva `status: "draft"` e é claramente fictício. Exceção autorizada pelo autor em 2026-10-09 e 2026-10-10: as áreas do recrutador, técnica e do cliente vão ao ar com os dados de exemplo e a faixa "Dados de exemplo", até o conteúdo real chegar (`docs/plans/recrutador-conteudo.md`, `docs/plans/tecnico-conteudo.md`, `docs/plans/clientes-conteudo.md`).
+- Inventar conteúdo sobre o autor (experiências, projetos, depoimentos, números). Dado de exemplo leva `status: "draft"` e é claramente fictício. Exceção autorizada pelo autor em 2026-10-09 e 2026-10-10: as áreas do recrutador, técnica, do cliente e da comunidade vão ao ar com os dados de exemplo e a faixa "Dados de exemplo", até o conteúdo real chegar (`docs/plans/recrutador-conteudo.md`, `docs/plans/tecnico-conteudo.md`, `docs/plans/clientes-conteudo.md`, `docs/plans/comunidade-conteudo.md`).
 - Instalar dependência sem justificativa de uma linha no plano.
 - Escrever segredo em arquivo versionado. Segredos só por variável de ambiente; nomes em `.env.example`.
 - Editar à mão arquivos gerados: `.claude/skills/`, `.claude/agents/`, `.codex/`, `.gemini/`, `.mcp.json` e os `CLAUDE.md` e `GEMINI.md` dentro de `apps/` e `packages/`.
