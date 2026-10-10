@@ -3,9 +3,6 @@ import { expect, test, type Page } from '@playwright/test';
 
 const SURFACE_LIGHT = 'rgb(255, 255, 255)';
 
-// As áreas de MFE que ainda mostram a tela "em construção".
-const mfeAreas = [{ path: '/clientes/', area: 'client', tag: 'mfe-clientes', framework: 'React' }];
-
 // A home tem testes próprios em home.spec.ts.
 const nextPages = ['/comunidade/', '/como-foi-feito/'];
 
@@ -26,25 +23,21 @@ async function expectAccessible(page: Page): Promise<void> {
 
 test.use({ colorScheme: 'light' });
 
-for (const { path, area, tag, framework } of mfeAreas) {
-  test(`${path} renderiza a mensagem do MFE ${framework} dentro do shell`, async ({ page }) => {
-    const errors = failOnBrowserErrors(page);
-    await page.goto(path);
+test('/clientes/ renderiza a página do MFE React dentro do shell', async ({ page }) => {
+  const errors = failOnBrowserErrors(page);
+  await page.goto('/clientes/');
 
-    // O MFE avisou o shell pelo evento de packages/contracts.
-    await expect(page.locator('main')).toHaveAttribute('data-ready', area);
+  // O MFE avisou o shell pelo evento de packages/contracts.
+  await expect(page.locator('main')).toHaveAttribute('data-ready', 'client');
+  await expect(page.locator('main')).toHaveAttribute('data-content', '');
+  const mfe = page.locator('mfe-clientes');
+  await expect(mfe).toHaveAttribute('locale', 'pt-BR');
+  await expect(mfe.getByRole('heading', { name: 'Como funciona' })).toBeAttached();
+  // O estilo é do próprio MFE, com os tokens herdados do documento.
+  await expect(mfe.locator('.card').first()).toHaveCSS('background-color', SURFACE_LIGHT);
 
-    const mfe = page.locator(tag);
-    await expect(mfe).toHaveAttribute('locale', 'pt-BR');
-    // O texto vem de packages/content; a aparência, da folha das páginas
-    // internas, que alcança o shadow DOM do MFE pelos `part` (ADR 0009).
-    await expect(mfe).toContainText('Fase em construção');
-    await expect(mfe.locator('[part="message"]')).toHaveCSS('background-color', SURFACE_LIGHT);
-
-    await expectAccessible(page);
-    expect(errors).toEqual([]);
-  });
-}
+  expect(errors).toEqual([]);
+});
 
 test('/recrutador/ renderiza a página do MFE Vue dentro do shell', async ({ page }) => {
   const errors = failOnBrowserErrors(page);

@@ -5,18 +5,10 @@ import { settled } from './support/motion';
 // As três páginas internas que ainda mostram a tela "em construção" (ADR 0009). Na do
 // shell a mensagem é do MFE, em shadow DOM; nas duas do Next.js, do próprio
 // documento. Os localizadores do Playwright atravessam o shadow DOM.
-// O recrutador e a área técnica já têm página de conteúdo e são testados em
-// recruiter.spec.ts e tech.spec.ts.
+// As três áreas de MFE já têm página de conteúdo e são testadas em
+// recruiter.spec.ts, tech.spec.ts e client.spec.ts. A mensagem "em construção"
+// de um MFE, estilizada por `::part()`, é coberta pelo teste unitário do React.
 const areas = [
-  {
-    area: 'client',
-    path: '/clientes/',
-    title: 'Clientes',
-    mfe: 'mfe-clientes',
-    figure: 'client',
-    color: { light: 'rgb(10, 111, 148)', dark: 'rgb(97, 218, 251)' },
-    scene: 'area-tide',
-  },
   {
     area: 'community',
     path: '/comunidade/',
@@ -117,7 +109,6 @@ for (const colorScheme of ['light', 'dark'] as const) {
 
 test('a mensagem e o botão acompanham o idioma, no MFE e nas páginas Next.js', async ({ page }) => {
   const cases = [
-    ['/en/clients/', 'Stage under construction', 'Back to profile selection', '/en/'],
     ['/es/comunidad/', 'Fase en construcción', 'Volver a la elección de perfil', '/es/'],
     ['/en/how-it-was-built/', 'Stage under construction', 'Back to profile selection', '/en/'],
   ] as const;
@@ -129,7 +120,7 @@ test('a mensagem e o botão acompanham o idioma, no MFE e nas páginas Next.js',
 });
 
 test('o botão de volta leva à tela de escolha de perfil', async ({ page }) => {
-  await page.goto('/es/clientes/');
+  await page.goto('/es/comunidad/');
   await page.getByRole('link', { name: 'Volver a la elección de perfil' }).click();
   await expect(page).toHaveURL(/\/es\/$/);
   await expect(page.locator('h1')).toHaveText('Elige tu camino');
@@ -181,7 +172,7 @@ test('com movimento reduzido nada se mexe e não há botão de pausa', async ({ 
 test('a pausa fica no grupo do canto, antes da bandeira, e funciona pelo teclado', async ({
   page,
 }) => {
-  await page.goto('/clientes/');
+  await page.goto('/comunidade/');
   const [pauseBox, flagBox] = [
     await pause(page).boundingBox(),
     await page.locator('.ds-language-switcher summary').boundingBox(),
