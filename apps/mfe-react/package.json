@@ -13,6 +13,7 @@
   "dependencies": {
     "@portfolio/content": "workspace:*",
     "@portfolio/contracts": "workspace:*",
+    "motion": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

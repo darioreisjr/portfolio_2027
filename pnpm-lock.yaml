@@ -425,6 +425,9 @@ importers:
       '@portfolio/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
+      motion:
+        specifier: 'catalog:'
+        version: 14.0.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       react:
         specifier: 'catalog:'
         version: 19.3.0

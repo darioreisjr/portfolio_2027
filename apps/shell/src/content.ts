@@ -1,9 +1,10 @@
+import { client } from '@portfolio/content/client';
 import { recruiter } from '@portfolio/content/recruiter';
 import { tech } from '@portfolio/content/tech';
 import type { AreaId } from '@portfolio/contracts';
 
 /** O conteúdo de cada área que já tem página; `null` enquanto não há o que mostrar. */
-const content: Partial<Record<AreaId, unknown>> = { recruiter, tech };
+const content: Partial<Record<AreaId, unknown>> = { recruiter, tech, client };
 
 /**
  * A área já tem conteúdo para mostrar, ou ainda é a tela "em construção"? Sabido

@@ -1,0 +1,474 @@
+/* Identidade da área do cliente: "janela do Sistema" em azul (docs/plans/
+   clientes-conteudo.md). Painéis de borda luminosa com cabeçalho de
+   notificação entre colchetes, cantos marcados, grade de pontos e um portal na
+   abertura. Só tokens: chegam ao shadow root por herança, e `--area-color` vem
+   do palco. Nada aqui vem das áreas do recrutador nem da técnica. */
+
+.page {
+  --blue: var(--area-color, var(--color-area-client));
+  --glow: color-mix(in srgb, var(--blue) 40%, transparent);
+  --panel: color-mix(in srgb, var(--color-surface) 94%, var(--blue));
+  --line: var(--border-width-control);
+  /* Tamanho das marcas de canto das janelas. */
+  --mark: var(--space-inline-lg);
+
+  display: grid;
+  gap: var(--space-block-lg);
+  color: var(--color-text);
+  font-size: var(--text-size-md);
+  line-height: var(--text-line-height);
+}
+
+h2,
+h3,
+p,
+ul,
+ol,
+dl,
+dd,
+figure,
+blockquote {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+h2 {
+  font-size: var(--text-size-lg);
+  font-weight: var(--text-weight-strong);
+}
+
+h3 {
+  font-size: var(--text-size-md);
+  font-weight: var(--text-weight-strong);
+}
+
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Janela: painel com borda fina, brilho em volta e marcas nos quatro cantos. */
+.window {
+  display: grid;
+  gap: var(--space-block-md);
+  position: relative;
+  padding: var(--space-block-lg) var(--space-inline-md);
+  border: var(--line) solid var(--blue);
+  background: var(--panel);
+  box-shadow:
+    0 0 var(--space-block-md) var(--glow),
+    inset 0 0 var(--space-block-lg) color-mix(in srgb, var(--blue) 8%, transparent);
+  isolation: isolate;
+  overflow: clip;
+}
+
+/* Marcas de canto: oito riscos curtos, dois por canto. */
+.window::before {
+  position: absolute;
+  inset: var(--space-block-xs);
+  z-index: -1;
+  background:
+    linear-gradient(var(--blue), var(--blue)) top left / var(--mark) var(--line),
+    linear-gradient(var(--blue), var(--blue)) top left / var(--line) var(--mark),
+    linear-gradient(var(--blue), var(--blue)) top right / var(--mark) var(--line),
+    linear-gradient(var(--blue), var(--blue)) top right / var(--line) var(--mark),
+    linear-gradient(var(--blue), var(--blue)) bottom left / var(--mark) var(--line),
+    linear-gradient(var(--blue), var(--blue)) bottom left / var(--line) var(--mark),
+    linear-gradient(var(--blue), var(--blue)) bottom right / var(--mark) var(--line),
+    linear-gradient(var(--blue), var(--blue)) bottom right / var(--line) var(--mark);
+  background-repeat: no-repeat;
+  content: '';
+  pointer-events: none;
+}
+
+/* Varredura de luz que desce quando a janela abre (o script põe `open`). */
+.window.open::after {
+  position: absolute;
+  inset: 0 0 auto;
+  block-size: var(--space-block-lg);
+  background: linear-gradient(transparent, var(--glow));
+  content: '';
+  animation: sweep var(--motion-duration-xl) var(--motion-ease-out) forwards;
+  pointer-events: none;
+}
+
+@keyframes sweep {
+  from {
+    translate: 0 -100%;
+  }
+
+  to {
+    translate: 0 100svh;
+    opacity: 0;
+  }
+}
+
+/* Cabeçalho de notificação, entre colchetes. */
+.notice {
+  color: var(--blue);
+  font-family: var(--font-code);
+  font-size: var(--text-size-sm);
+  font-weight: var(--text-weight-strong);
+  text-transform: uppercase;
+}
+
+.notice::before {
+  content: '[ ' / '';
+}
+
+.notice::after {
+  content: ' ]' / '';
+}
+
+.lead {
+  max-inline-size: 60ch;
+}
+
+.label {
+  color: var(--blue);
+  font-family: var(--font-code);
+  font-size: var(--text-size-sm);
+  font-weight: var(--text-weight-strong);
+  text-transform: uppercase;
+}
+
+/* Faixa dos blocos com dados de exemplo. */
+.example {
+  padding: var(--space-block-sm) var(--space-inline-md);
+  border: var(--line) dashed var(--blue);
+  font-size: var(--text-size-sm);
+}
+
+/* Abertura: grade de pontos e o portal girando ao fundo. */
+.hero {
+  background:
+    radial-gradient(circle, color-mix(in srgb, var(--blue) 30%, transparent) 1px, transparent 1.5px)
+      0 0 / var(--space-block-md) var(--space-block-md),
+    var(--panel);
+}
+
+.hero h2 {
+  max-inline-size: 22ch;
+  font-size: var(--text-size-title);
+}
+
+.portal {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: calc(var(--space-inline-lg) * -1);
+  z-index: -1;
+  inline-size: 14rem;
+  aspect-ratio: 1;
+  border-radius: var(--radius-full);
+  background: repeating-conic-gradient(var(--blue) 0 4deg, transparent 0 14deg);
+  opacity: 0.25;
+  translate: 0 -50%;
+  mask: radial-gradient(circle, transparent 38%, var(--color-pattern-ink) 40% 68%, transparent 70%);
+  animation: spin calc(var(--motion-duration-drift) * 3) linear infinite;
+  animation-play-state: var(--area-motion-state, running);
+}
+
+@keyframes spin {
+  to {
+    rotate: 1turn;
+  }
+}
+
+/* Botões de orçamento: sólidos na cor da área, com um pulso de brilho. */
+.quotes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-inline-sm);
+}
+
+.quote {
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-block-size: var(--size-control);
+  padding: var(--space-block-xs) var(--space-inline-md);
+  border: var(--line) solid var(--blue);
+  background: var(--blue);
+  color: var(--color-on-area);
+  font-weight: var(--text-weight-strong);
+  text-align: center;
+  text-decoration: none;
+  animation: pulse var(--motion-duration-sway) var(--motion-ease-in-out) infinite alternate;
+  animation-play-state: var(--area-motion-state, running);
+  transition: translate var(--motion-duration-md) var(--motion-ease-out);
+}
+
+/* O primeiro canal é o principal; os outros ficam em contorno. */
+.quote + .quote {
+  background: var(--panel);
+  color: var(--color-text);
+  animation: none;
+}
+
+.quote:hover {
+  translate: 0 calc(var(--space-block-xs) * -0.5);
+}
+
+@keyframes pulse {
+  from {
+    box-shadow: 0 0 0 var(--glow);
+  }
+
+  to {
+    box-shadow: 0 0 var(--space-block-md) var(--glow);
+  }
+}
+
+/* Cartões (serviços e formas de contratar): inclinam seguindo o ponteiro. */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--space-inline-md);
+}
+
+.card {
+  display: grid;
+  gap: var(--space-block-sm);
+  align-content: start;
+  position: relative;
+  padding: var(--space-block-md) var(--space-inline-md);
+  border: var(--line) solid color-mix(in srgb, var(--blue) 45%, var(--color-border));
+  background: var(--color-surface);
+  transform: perspective(40rem) rotateX(calc(var(--tilt-y, 0) * -8deg))
+    rotateY(calc(var(--tilt-x, 0) * 8deg));
+  transition:
+    transform var(--motion-duration-md) var(--motion-ease-out),
+    border-color var(--motion-duration-md) var(--motion-ease-out),
+    box-shadow var(--motion-duration-md) var(--motion-ease-out);
+}
+
+.card:hover,
+.card:focus-within {
+  border-color: var(--blue);
+  box-shadow: 0 0 var(--space-block-md) var(--glow);
+}
+
+.checks {
+  display: grid;
+  gap: var(--space-block-xs);
+}
+
+.checks li {
+  padding-inline-start: var(--space-inline-md);
+  background: linear-gradient(var(--blue), var(--blue)) left 0.6em / var(--space-inline-sm)
+    var(--line) no-repeat;
+}
+
+/* Etapas: um fio que se enche conforme a página rola, e o "nível" de cada uma. */
+.steps {
+  display: grid;
+  gap: var(--space-block-md);
+  position: relative;
+  padding-inline-start: var(--space-inline-lg);
+}
+
+.steps::before,
+.steps::after {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: var(--border-width-marker);
+  content: '';
+}
+
+.steps::before {
+  background: color-mix(in srgb, var(--blue) 25%, transparent);
+}
+
+/* Sem suporte a animação por rolagem, o fio já nasce cheio. */
+.steps::after {
+  background: var(--blue);
+  transform-origin: top;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .steps::after {
+      animation: fill linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 70%;
+    }
+  }
+}
+
+@keyframes fill {
+  from {
+    scale: 1 0;
+  }
+}
+
+.steps li {
+  display: grid;
+  gap: var(--space-block-xs);
+}
+
+.level {
+  color: var(--blue);
+  font-family: var(--font-code);
+  font-size: var(--text-size-sm);
+  font-weight: var(--text-weight-strong);
+  text-transform: uppercase;
+}
+
+/* Projetos: o cenário e o que mudou, lado a lado. */
+.case {
+  display: grid;
+  gap: var(--space-block-sm);
+  padding-block-start: var(--space-block-md);
+  border-block-start: var(--line) solid color-mix(in srgb, var(--blue) 35%, transparent);
+}
+
+.case dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space-inline-md);
+}
+
+.case dl > div {
+  padding: var(--space-block-sm) var(--space-inline-md);
+  border-inline-start: var(--border-width-marker) solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.case .after {
+  border-inline-start-color: var(--blue);
+}
+
+.case dt {
+  color: var(--blue);
+  font-family: var(--font-code);
+  font-size: var(--text-size-sm);
+  font-weight: var(--text-weight-strong);
+  text-transform: uppercase;
+}
+
+/* Depoimentos, como mensagens recebidas. */
+.voices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-inline-md);
+}
+
+.voices figure {
+  display: grid;
+  gap: var(--space-block-sm);
+  align-content: start;
+  padding: var(--space-block-md) var(--space-inline-md);
+  border-inline-start: var(--border-width-marker) solid var(--blue);
+  background: var(--color-surface);
+}
+
+.voices blockquote::before {
+  display: block;
+  color: var(--blue);
+  font-size: var(--text-size-title);
+  line-height: 1;
+  content: '\201C' / '';
+}
+
+.voices figcaption {
+  color: var(--color-text-muted);
+  font-size: var(--text-size-sm);
+}
+
+.timeline {
+  padding-block-start: var(--space-block-sm);
+  border-block-start: var(--line) dashed color-mix(in srgb, var(--blue) 45%, transparent);
+}
+
+/* Perguntas: abrem com a altura animada onde o navegador sabe fazer isso. */
+.questions {
+  display: grid;
+  gap: var(--space-block-sm);
+}
+
+details {
+  border: var(--line) solid color-mix(in srgb, var(--blue) 45%, var(--color-border));
+  background: var(--color-surface);
+}
+
+summary {
+  display: flex;
+  gap: var(--space-inline-sm);
+  align-items: center;
+  min-block-size: var(--size-control);
+  padding: 0 var(--space-inline-md);
+  font-weight: var(--text-weight-strong);
+  cursor: pointer;
+}
+
+summary::marker {
+  color: var(--blue);
+}
+
+details p {
+  padding: 0 var(--space-inline-md) var(--space-block-md);
+}
+
+@supports (interpolate-size: allow-keywords) {
+  @media (prefers-reduced-motion: no-preference) {
+    details {
+      interpolate-size: allow-keywords;
+    }
+
+    details::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition:
+        block-size var(--motion-duration-lg) var(--motion-ease-out),
+        content-visibility var(--motion-duration-lg) allow-discrete;
+    }
+
+    details[open]::details-content {
+      block-size: auto;
+    }
+  }
+}
+
+/* Chamada final: ondas ao fundo, no pé da janela. São camada de fundo do
+   próprio painel: os pseudo-elementos já são as marcas e a varredura. */
+.cta {
+  padding-block-end: calc(var(--space-block-lg) * 2);
+  background:
+    radial-gradient(
+        circle at 50% 100%,
+        color-mix(in srgb, var(--blue) 35%, transparent) 70%,
+        transparent 72%
+      )
+      0 100% / var(--space-inline-lg) calc(var(--space-block-lg) * 2) repeat-x,
+    var(--panel);
+  animation: drift var(--motion-duration-drift) linear infinite;
+  animation-play-state: var(--area-motion-state, running);
+}
+
+@keyframes drift {
+  to {
+    background-position:
+      calc(var(--space-inline-lg) * 4) 100%,
+      0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portal,
+  .quote,
+  .cta,
+  .window.open::after {
+    animation: none;
+  }
+
+  .card,
+  .quote {
+    transition: none;
+  }
+}
