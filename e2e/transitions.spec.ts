@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test';
 // Transições entre a home e as áreas que as têm (ADR 0011). Quem sai fecha a
 // cortina da área e grava uma marca; o documento seguinte lê a marca antes de
 // pintar e abre com a mesma cortina. Cada área tem a sua: corte de katana no
-// recrutador, falha de sinal na área técnica.
+// recrutador, falha de sinal na área técnica e onda na do cliente.
 const KEY = 'portfolio:entrada';
 /** A home em pt-BR, e só ela. */
 const HOME = /^http:\/\/[^/]+\/$/;
@@ -24,6 +24,14 @@ const areas = [
     url: '/tecnico/',
     title: 'Técnico',
     color: 'rgb(188, 0, 45)',
+  },
+  {
+    area: 'client',
+    phrase: 'Tenho um projeto',
+    path: /\/clientes\/$/,
+    url: '/clientes/',
+    title: 'Clientes',
+    color: 'rgb(10, 111, 148)',
   },
 ] as const;
 
@@ -69,7 +77,7 @@ const opened = (page: Page, selector: string) =>
     .poll(() =>
       page.locator(selector).evaluate((element) => getComputedStyle(element, '::before').translate),
     )
-    .toMatch(/^-100% (-100|0)%$/);
+    .toMatch(/^(-100% (-100|0)%|0% 100%)$/);
 
 for (const { area, phrase, path, url, title, color } of areas) {
   test.describe(`área ${area}`, () => {
@@ -213,9 +221,9 @@ test('pelo teclado o Enter passa pelas mesmas transições', async ({ page }) =>
 
 test('as áreas sem transição continuam abrindo e voltando na hora', async ({ page }) => {
   await page.goto('/');
-  await choose(page, 'Tenho um projeto');
+  await choose(page, 'Vim aprender e trocar ideias');
   await page.getByRole('link', { name: 'Entrar' }).click();
-  await expect(page).toHaveURL(/\/clientes\/$/);
+  await expect(page).toHaveURL(/\/comunidade\/$/);
   expect(await arrived(page)).toBeNull();
   await expect(page.locator('.area-arrival, .area-departure')).toHaveCount(0);
 

@@ -1541,6 +1541,37 @@ html[data-arrival] .home-arrival {
   );
 }
 
+:is(.home-enter[data-area='client'], html[data-arrival='client'] .home-arrival) {
+  --curtain: var(--color-area-client);
+  /* Arrebenta depressa e assenta. */
+  --curtain-pace: var(--motion-ease-out);
+  /* Altura da crista da onda. */
+  --crest: var(--space-block-lg);
+}
+
+/* Cliente, onda: o corpo d'água sobe de baixo, com a crista em arcos, e uma
+   faixa de espuma mais clara vem logo atrás, meio arco adiante. */
+:is(.home-enter[data-area='client'], html[data-arrival='client'] .home-arrival)::before,
+:is(.home-enter[data-area='client'], html[data-arrival='client'] .home-arrival)::after {
+  --away-x: 0%;
+  --away-y: 100%;
+
+  inset-block-start: calc(var(--crest) * -1);
+  mask:
+    radial-gradient(circle at 50% 100%, var(--color-pattern-ink) 70%, transparent 72%)
+      var(--shift, 0) 0 / calc(var(--crest) * 2) var(--crest) repeat-x,
+    linear-gradient(var(--color-pattern-ink), var(--color-pattern-ink)) 0 var(--crest) / 100%
+      calc(100% - var(--crest)) no-repeat;
+}
+
+:is(.home-enter[data-area='client'], html[data-arrival='client'] .home-arrival)::after {
+  --shift: var(--crest);
+
+  inset-block-start: calc(var(--crest) * -2);
+  z-index: -2;
+  background: color-mix(in srgb, var(--curtain) 60%, var(--color-on-area));
+}
+
 /* Fechando: as partes chegam de fora. Abrindo: saem, depois de um instante. */
 :is(.home-enter:not([hidden]))::before,
 :is(.home-enter:not([hidden]))::after {
