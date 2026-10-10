@@ -1,0 +1,92 @@
+[
+  {
+    "id": "exemplo-site",
+    "status": "draft",
+    "title": {
+      "pt-BR": "Serviço de exemplo: site para o seu negócio",
+      "en": "Example service: a website for your business",
+      "es": "Servicio de ejemplo: sitio para tu negocio"
+    },
+    "description": {
+      "pt-BR": "Descrição de exemplo: um site que explica o que você faz e leva o visitante a entrar em contato.",
+      "en": "Example description: a website that explains what you do and leads visitors to get in touch.",
+      "es": "Descripción de ejemplo: un sitio que explica lo que haces y lleva al visitante a ponerse en contacto."
+    },
+    "deliverables": [
+      {
+        "pt-BR": "Item de exemplo: páginas prontas para celular",
+        "en": "Example item: pages ready for mobile",
+        "es": "Ítem de ejemplo: páginas listas para móvil"
+      },
+      {
+        "pt-BR": "Item de exemplo: textos e imagens no lugar",
+        "en": "Example item: text and images in place",
+        "es": "Ítem de ejemplo: textos e imágenes en su lugar"
+      },
+      {
+        "pt-BR": "Item de exemplo: publicação no seu endereço",
+        "en": "Example item: published on your address",
+        "es": "Ítem de ejemplo: publicación en tu dirección"
+      }
+    ],
+    "relatedProjects": ["exemplo-projeto-um"]
+  },
+  {
+    "id": "exemplo-sistema",
+    "status": "draft",
+    "title": {
+      "pt-BR": "Serviço de exemplo: sistema sob medida",
+      "en": "Example service: a custom system",
+      "es": "Servicio de ejemplo: sistema a medida"
+    },
+    "description": {
+      "pt-BR": "Descrição de exemplo: uma ferramenta feita para a rotina da sua equipe, no lugar de planilhas e mensagens soltas.",
+      "en": "Example description: a tool built for your team routine, replacing spreadsheets and scattered messages.",
+      "es": "Descripción de ejemplo: una herramienta hecha para la rutina de tu equipo, en lugar de hojas de cálculo y mensajes sueltos."
+    },
+    "deliverables": [
+      {
+        "pt-BR": "Item de exemplo: telas para cada tarefa",
+        "en": "Example item: a screen for each task",
+        "es": "Ítem de ejemplo: pantallas para cada tarea"
+      },
+      {
+        "pt-BR": "Item de exemplo: acesso por usuário",
+        "en": "Example item: per-user access",
+        "es": "Ítem de ejemplo: acceso por usuario"
+      },
+      {
+        "pt-BR": "Item de exemplo: treinamento da equipe",
+        "en": "Example item: team training",
+        "es": "Ítem de ejemplo: formación del equipo"
+      }
+    ],
+    "relatedProjects": ["exemplo-projeto-dois"]
+  },
+  {
+    "id": "exemplo-melhoria",
+    "status": "draft",
+    "title": {
+      "pt-BR": "Serviço de exemplo: melhoria do que já existe",
+      "en": "Example service: improving what already exists",
+      "es": "Servicio de ejemplo: mejora de lo que ya existe"
+    },
+    "description": {
+      "pt-BR": "Descrição de exemplo: deixar mais rápido, corrigir o que incomoda e acrescentar o que falta em um site ou sistema que você já tem.",
+      "en": "Example description: make it faster, fix what bothers you and add what is missing to a site or system you already have.",
+      "es": "Descripción de ejemplo: hacerlo más rápido, corregir lo que molesta y añadir lo que falta en un sitio o sistema que ya tienes."
+    },
+    "deliverables": [
+      {
+        "pt-BR": "Item de exemplo: diagnóstico por escrito",
+        "en": "Example item: a written diagnosis",
+        "es": "Ítem de ejemplo: diagnóstico por escrito"
+      },
+      {
+        "pt-BR": "Item de exemplo: lista de prioridades",
+        "en": "Example item: a list of priorities",
+        "es": "Ítem de ejemplo: lista de prioridades"
+      }
+    ]
+  }
+]

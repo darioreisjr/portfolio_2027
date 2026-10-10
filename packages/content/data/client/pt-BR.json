@@ -1,0 +1,54 @@
+{
+  "example": {
+    "title": "Dados de exemplo",
+    "text": "Este bloco é fictício e mostra só o formato."
+  },
+  "tags": {
+    "hero": "Sistema",
+    "services": "Missões disponíveis",
+    "process": "Progresso da missão",
+    "cases": "Missões concluídas",
+    "testimonials": "Mensagens recebidas",
+    "engagement": "Condições",
+    "faq": "Ajuda",
+    "cta": "Nova missão"
+  },
+  "hero": {
+    "title": "Tem um projeto? Eu tiro do papel.",
+    "text": "Você traz o problema. Eu cuido do site ou do sistema, do começo ao fim, e explico cada passo sem termos técnicos."
+  },
+  "quote": {
+    "label": "Pedir orçamento",
+    "whatsapp": "Pedir orçamento pelo WhatsApp",
+    "email": "Pedir orçamento por e-mail",
+    "linkedin": "Falar pelo LinkedIn",
+    "github": "Ver o GitHub"
+  },
+  "services": {
+    "title": "O que eu faço por você",
+    "included": "O que está incluído"
+  },
+  "process": {
+    "title": "Como funciona",
+    "step": "Etapa"
+  },
+  "cases": {
+    "title": "Projetos e resultados",
+    "context": "O cenário",
+    "result": "O que mudou"
+  },
+  "testimonials": {
+    "title": "O que dizem"
+  },
+  "engagement": {
+    "title": "Investimento e prazos",
+    "timeline": "Prazo típico"
+  },
+  "faq": {
+    "title": "Perguntas frequentes"
+  },
+  "cta": {
+    "title": "Vamos começar?",
+    "text": "Conte o que você precisa. A primeira conversa não tem compromisso."
+  }
+}

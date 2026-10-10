@@ -25,6 +25,10 @@
       "types": "./dist/data/tech.d.ts",
       "default": "./dist/data/tech.js"
     },
+    "./client": {
+      "types": "./dist/data/client.d.ts",
+      "default": "./dist/data/client.js"
+    },
     "./schemas": {
       "types": "./dist/schemas.d.ts",
       "default": "./dist/schemas.js"

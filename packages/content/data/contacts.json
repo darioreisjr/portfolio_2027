@@ -5,7 +5,7 @@
     "kind": "email",
     "url": "mailto:pessoa@example.com",
     "display": "pessoa@example.com",
-    "primaryFor": ["recruiter"]
+    "primaryFor": ["recruiter", "client"]
   },
   {
     "id": "exemplo-linkedin",
@@ -26,6 +26,7 @@
     "status": "draft",
     "kind": "whatsapp",
     "url": "https://example.com/whatsapp",
-    "display": "+00 00 00000-0000"
+    "display": "+00 00 00000-0000",
+    "primaryFor": ["client"]
   }
 ]

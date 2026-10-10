@@ -1,0 +1,39 @@
+[
+  {
+    "id": "exemplo-depoimento-um",
+    "status": "draft",
+    "author": "Cliente Exemplo",
+    "authorRole": {
+      "pt-BR": "Cargo de exemplo",
+      "en": "Example role",
+      "es": "Cargo de ejemplo"
+    },
+    "company": "Empresa Exemplo",
+    "relation": "client",
+    "quote": {
+      "pt-BR": "Depoimento de exemplo: aqui entra a fala de um cliente de verdade, com o resultado que ele percebeu.",
+      "en": "Example testimonial: a real client quote goes here, with the result they noticed.",
+      "es": "Testimonio de ejemplo: aquí va la opinión de un cliente real, con el resultado que percibió."
+    },
+    "consent": false,
+    "relatedProject": "exemplo-projeto-um"
+  },
+  {
+    "id": "exemplo-depoimento-dois",
+    "status": "draft",
+    "author": "Cliente Exemplo",
+    "authorRole": {
+      "pt-BR": "Outro cargo de exemplo",
+      "en": "Another example role",
+      "es": "Otro cargo de ejemplo"
+    },
+    "company": "Outra Empresa Exemplo",
+    "relation": "client",
+    "quote": {
+      "pt-BR": "Outro depoimento de exemplo, só para mostrar o formato do bloco.",
+      "en": "Another example testimonial, only to show the block layout.",
+      "es": "Otro testimonio de ejemplo, solo para mostrar el formato del bloque."
+    },
+    "consent": false
+  }
+]

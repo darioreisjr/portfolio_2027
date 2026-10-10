@@ -1,0 +1,200 @@
+{
+  "status": "draft",
+  "process": [
+    {
+      "id": "exemplo-conversa",
+      "title": {
+        "pt-BR": "Conversa inicial",
+        "en": "First conversation",
+        "es": "Conversación inicial"
+      },
+      "description": {
+        "pt-BR": "Etapa de exemplo: entender o problema, o prazo e o que seria um bom resultado.",
+        "en": "Example step: understand the problem, the deadline and what a good result looks like.",
+        "es": "Etapa de ejemplo: entender el problema, el plazo y cómo sería un buen resultado."
+      }
+    },
+    {
+      "id": "exemplo-proposta",
+      "title": {
+        "pt-BR": "Proposta por escrito",
+        "en": "Written proposal",
+        "es": "Propuesta por escrito"
+      },
+      "description": {
+        "pt-BR": "Etapa de exemplo: o que será entregue, em quanto tempo e como será o pagamento.",
+        "en": "Example step: what will be delivered, in how long and how payment works.",
+        "es": "Etapa de ejemplo: qué se entregará, en cuánto tiempo y cómo será el pago."
+      }
+    },
+    {
+      "id": "exemplo-construcao",
+      "title": {
+        "pt-BR": "Construção com entregas parciais",
+        "en": "Building with partial deliveries",
+        "es": "Construcción con entregas parciales"
+      },
+      "description": {
+        "pt-BR": "Etapa de exemplo: você acompanha o andamento e opina a cada entrega.",
+        "en": "Example step: you follow the progress and give feedback at each delivery.",
+        "es": "Etapa de ejemplo: sigues el avance y opinas en cada entrega."
+      }
+    },
+    {
+      "id": "exemplo-entrega",
+      "title": {
+        "pt-BR": "Entrega e publicação",
+        "en": "Delivery and launch",
+        "es": "Entrega y publicación"
+      },
+      "description": {
+        "pt-BR": "Etapa de exemplo: tudo no ar, com as orientações de uso.",
+        "en": "Example step: everything live, with guidance on how to use it.",
+        "es": "Etapa de ejemplo: todo en línea, con las indicaciones de uso."
+      }
+    },
+    {
+      "id": "exemplo-suporte",
+      "title": {
+        "pt-BR": "Suporte depois da entrega",
+        "en": "Support after delivery",
+        "es": "Soporte después de la entrega"
+      },
+      "description": {
+        "pt-BR": "Etapa de exemplo: um período para ajustes e dúvidas.",
+        "en": "Example step: a period for adjustments and questions.",
+        "es": "Etapa de ejemplo: un período para ajustes y dudas."
+      }
+    }
+  ],
+  "engagement": {
+    "pricing": {
+      "pt-BR": "Texto de exemplo: o orçamento depende do tamanho do projeto e do prazo. Você recebe a proposta por escrito antes de qualquer compromisso.",
+      "en": "Example text: the quote depends on the size of the project and the deadline. You get the proposal in writing before any commitment.",
+      "es": "Texto de ejemplo: el presupuesto depende del tamaño del proyecto y del plazo. Recibes la propuesta por escrito antes de cualquier compromiso."
+    },
+    "models": [
+      {
+        "id": "fixed",
+        "title": {
+          "pt-BR": "Projeto fechado",
+          "en": "Fixed project",
+          "es": "Proyecto cerrado"
+        },
+        "description": {
+          "pt-BR": "Exemplo: escopo e valor combinados no início.",
+          "en": "Example: scope and price agreed at the start.",
+          "es": "Ejemplo: alcance y valor acordados al inicio."
+        },
+        "timeline": {
+          "pt-BR": "Prazo de exemplo",
+          "en": "Example timeline",
+          "es": "Plazo de ejemplo"
+        }
+      },
+      {
+        "id": "staged",
+        "title": {
+          "pt-BR": "Por etapa",
+          "en": "By stage",
+          "es": "Por etapa"
+        },
+        "description": {
+          "pt-BR": "Exemplo: o projeto é dividido em partes, contratadas uma por vez.",
+          "en": "Example: the project is split into parts, hired one at a time.",
+          "es": "Ejemplo: el proyecto se divide en partes, contratadas una a la vez."
+        },
+        "timeline": {
+          "pt-BR": "Prazo de exemplo por etapa",
+          "en": "Example timeline per stage",
+          "es": "Plazo de ejemplo por etapa"
+        }
+      },
+      {
+        "id": "retainer",
+        "title": {
+          "pt-BR": "Suporte mensal",
+          "en": "Monthly support",
+          "es": "Soporte mensual"
+        },
+        "description": {
+          "pt-BR": "Exemplo: horas reservadas por mês para manutenção e melhorias.",
+          "en": "Example: hours reserved each month for maintenance and improvements.",
+          "es": "Ejemplo: horas reservadas cada mes para mantenimiento y mejoras."
+        },
+        "timeline": {
+          "pt-BR": "Contínuo",
+          "en": "Ongoing",
+          "es": "Continuo"
+        }
+      }
+    ]
+  },
+  "faq": [
+    {
+      "id": "exemplo-prazo",
+      "question": {
+        "pt-BR": "Quanto tempo leva?",
+        "en": "How long does it take?",
+        "es": "¿Cuánto tiempo lleva?"
+      },
+      "answer": {
+        "pt-BR": "Resposta de exemplo: depende do tamanho do projeto; o prazo vem na proposta.",
+        "en": "Example answer: it depends on the size of the project; the deadline comes in the proposal.",
+        "es": "Respuesta de ejemplo: depende del tamaño del proyecto; el plazo viene en la propuesta."
+      }
+    },
+    {
+      "id": "exemplo-revisoes",
+      "question": {
+        "pt-BR": "Posso pedir ajustes?",
+        "en": "Can I ask for changes?",
+        "es": "¿Puedo pedir ajustes?"
+      },
+      "answer": {
+        "pt-BR": "Resposta de exemplo: sim, a cada entrega parcial há uma rodada de ajustes.",
+        "en": "Example answer: yes, each partial delivery comes with a round of adjustments.",
+        "es": "Respuesta de ejemplo: sí, en cada entrega parcial hay una ronda de ajustes."
+      }
+    },
+    {
+      "id": "exemplo-codigo",
+      "question": {
+        "pt-BR": "O que eu recebo no fim é meu?",
+        "en": "Is what I get at the end mine?",
+        "es": "¿Lo que recibo al final es mío?"
+      },
+      "answer": {
+        "pt-BR": "Resposta de exemplo: sim, o que foi feito para o projeto fica com você.",
+        "en": "Example answer: yes, what was built for the project stays with you.",
+        "es": "Respuesta de ejemplo: sí, lo que se hizo para el proyecto se queda contigo."
+      }
+    },
+    {
+      "id": "exemplo-manutencao",
+      "question": {
+        "pt-BR": "E depois que o projeto estiver no ar?",
+        "en": "And after the project goes live?",
+        "es": "¿Y después de que el proyecto esté en línea?"
+      },
+      "answer": {
+        "pt-BR": "Resposta de exemplo: há um período de suporte, e você pode contratar manutenção mensal.",
+        "en": "Example answer: there is a support period, and you can hire monthly maintenance.",
+        "es": "Respuesta de ejemplo: hay un período de soporte, y puedes contratar mantenimiento mensual."
+      }
+    },
+    {
+      "id": "exemplo-pagamento",
+      "question": {
+        "pt-BR": "Como funciona o pagamento?",
+        "en": "How does payment work?",
+        "es": "¿Cómo funciona el pago?"
+      },
+      "answer": {
+        "pt-BR": "Resposta de exemplo: as condições vêm na proposta, antes de começar.",
+        "en": "Example answer: the terms come in the proposal, before starting.",
+        "es": "Respuesta de ejemplo: las condiciones vienen en la propuesta, antes de empezar."
+      }
+    }
+  ]
+}

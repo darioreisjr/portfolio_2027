@@ -61,6 +61,18 @@
           "es": "Trade-off de ejemplo: una caché de un año exige disciplina con los nombres de archivo; a cambio, las visitas repetidas no descargan nada nuevo."
         }
       ]
+    },
+    "outcome": {
+      "context": {
+        "pt-BR": "Cenário de exemplo: um negócio que perdia visitantes porque o site demorava a abrir no celular.",
+        "en": "Example scenario: a business losing visitors because its site was slow to open on phones.",
+        "es": "Escenario de ejemplo: un negocio que perdía visitantes porque el sitio tardaba en abrir en el móvil."
+      },
+      "result": {
+        "pt-BR": "Resultado de exemplo: o site passou a abrir rápido, e os pedidos de contato deixaram de se perder.",
+        "en": "Example result: the site started opening fast, and contact requests stopped getting lost.",
+        "es": "Resultado de ejemplo: el sitio empezó a abrir rápido, y las solicitudes de contacto dejaron de perderse."
+      }
     }
   },
   {
@@ -121,6 +133,18 @@
           "es": "Trade-off de ejemplo: una pieza más que operar y monitorizar, la cola."
         }
       ]
+    },
+    "outcome": {
+      "context": {
+        "pt-BR": "Cenário de exemplo: uma equipe que montava relatórios à mão toda semana.",
+        "en": "Example scenario: a team that built reports by hand every week.",
+        "es": "Escenario de ejemplo: un equipo que elaboraba informes a mano cada semana."
+      },
+      "result": {
+        "pt-BR": "Resultado de exemplo: os relatórios passaram a ficar prontos sozinhos, e a equipe ganhou tempo.",
+        "en": "Example result: reports started getting ready on their own, and the team gained time.",
+        "es": "Resultado de ejemplo: los informes empezaron a generarse solos, y el equipo ganó tiempo."
+      }
     }
   }
 ]

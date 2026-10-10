@@ -424,3 +424,115 @@ export const siteSchema = z
   })
   .strict();
 export type Site = z.infer<typeof siteSchema>;
+
+export const serviceSchema = z
+  .object({
+    id,
+    status: statusSchema,
+    title: localizedSchema,
+    description: localizedSchema,
+    /** O que está incluído. */
+    deliverables: z.array(localizedSchema).optional(),
+    relatedProjects: z.array(id).optional(),
+  })
+  .strict()
+  .superRefine(requirePublishedLocales);
+export type Service = z.infer<typeof serviceSchema>;
+
+export const testimonialSchema = z
+  .object({
+    id,
+    status: statusSchema,
+    author: text,
+    authorRole: localizedSchema,
+    company: text.optional(),
+    relation: z.enum(['client', 'colleague', 'manager']),
+    quote: localizedSchema,
+    /** Idioma em que o depoimento foi escrito. */
+    originalLocale: z.enum(locales).optional(),
+    /**
+     * Quem escreveu autorizou a publicação. Obrigatório `true` em depoimento
+     * publicado; os de exemplo, fictícios, levam `false`.
+     */
+    consent: z.boolean(),
+    sourceUrl: httpsUrl.optional(),
+    relatedProject: id.optional(),
+  })
+  .strict()
+  .superRefine((testimonial, context) => {
+    requirePublishedLocales(testimonial, context);
+    if (testimonial.status === 'published' && !testimonial.consent) {
+      context.addIssue({
+        code: 'custom',
+        path: ['consent'],
+        message: 'Depoimento publicado sem autorização de quem escreveu',
+      });
+    }
+  });
+export type Testimonial = z.infer<typeof testimonialSchema>;
+
+const titled = z.object({ id, title: localizedSchema, description: localizedSchema }).strict();
+
+/**
+ * Como o autor trabalha com clientes: as etapas, a forma de orçar, as formas de
+ * contratar e as perguntas frequentes. É dado, com `status`, porque são
+ * compromissos do autor; não leva valores.
+ */
+export const clientTermsSchema = z
+  .object({
+    status: statusSchema,
+    process: z.array(titled).min(1),
+    engagement: z
+      .object({
+        /** Como o orçamento é feito, em um parágrafo. */
+        pricing: localizedSchema,
+        models: z
+          .array(
+            z
+              .object({
+                id: z.enum(['fixed', 'staged', 'retainer']),
+                title: localizedSchema,
+                description: localizedSchema,
+                /** Prazo típico, em texto. */
+                timeline: localizedSchema,
+              })
+              .strict(),
+          )
+          .min(1),
+      })
+      .strict(),
+    faq: z.array(z.object({ id, question: localizedSchema, answer: localizedSchema }).strict()),
+  })
+  .strict()
+  .superRefine(requirePublishedLocales);
+export type ClientTerms = z.infer<typeof clientTermsSchema>;
+
+/**
+ * Textos de interface da área do cliente. Ficam fora de `ui` porque só o MFE
+ * dela os usa. `tags` são os cabeçalhos das janelas, no tom de notificação.
+ */
+export const clientUiSchema = z
+  .object({
+    example: labels(['title', 'text']),
+    tags: labels([
+      'hero',
+      'services',
+      'process',
+      'cases',
+      'testimonials',
+      'engagement',
+      'faq',
+      'cta',
+    ]),
+    hero: labels(['title', 'text']),
+    quote: labels(['label', 'whatsapp', 'email', 'linkedin', 'github']),
+    services: labels(['title', 'included']),
+    process: labels(['title', 'step']),
+    cases: labels(['title', 'context', 'result']),
+    testimonials: labels(['title']),
+    engagement: labels(['title', 'timeline']),
+    faq: labels(['title']),
+    cta: labels(['title', 'text']),
+  })
+  .strict();
+export type ClientUi = z.infer<typeof clientUiSchema>;

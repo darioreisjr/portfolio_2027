@@ -152,7 +152,15 @@ describe('área do recrutador', () => {
 
   it('todo dado de exemplo é rascunho e visivelmente fictício', () => {
     const raw = (file: string) => JSON.parse(readFileSync(join(dataDir, file), 'utf8')) as Json[];
-    for (const file of ['contacts', 'skills', 'experiences', 'education', 'projects']) {
+    for (const file of [
+      'contacts',
+      'skills',
+      'experiences',
+      'education',
+      'projects',
+      'services',
+      'testimonials',
+    ]) {
       for (const item of raw(`${file}.json`)) {
         expect(item.status, `${file} ${String(item.id)}`).toBe('draft');
         expect(String(item.id), file).toMatch(/^exemplo-/);
@@ -200,5 +208,82 @@ describe('área do recrutador', () => {
     expect(recruiter?.['pt-BR'].example).toBe(false);
     expect(recruiter?.['pt-BR'].skills.map((skill) => skill.name)).toEqual(['TypeScript']);
     expect(recruiter?.['pt-BR'].experiences).toEqual([]);
+  });
+});
+
+describe('área do cliente', () => {
+  const listWith = (file: string, change: (items: Json[]) => void) =>
+    dataWith(file, (json) => change(json as unknown as Json[]));
+
+  it('sem a exceção, não vai ao ar enquanto os serviços forem rascunho', () => {
+    expect(loadContent(dataDir, { includeDrafts: false }).client).toBeNull();
+  });
+
+  it('com a exceção, vai ao ar como exemplo, bloco por bloco, e sem valores', () => {
+    const { client } = loadContent(dataDir, {
+      includeDrafts: false,
+      publishExample: { client: true },
+    });
+    if (!client) throw new Error('sem conteúdo');
+    for (const locale of locales) {
+      const content = client[locale];
+      expect(content.example).toEqual({
+        services: true,
+        cases: true,
+        testimonials: true,
+        terms: true,
+      });
+      expect(content.services.length).toBeGreaterThan(0);
+      expect(content.process.length).toBeGreaterThan(0);
+      expect(content.cases.every((project) => project.context && project.result)).toBe(true);
+      expect(content.engagement.models.map((model) => model.id)).toEqual([
+        'fixed',
+        'staged',
+        'retainer',
+      ]);
+      // O canal mais direto para quem contrata vem primeiro.
+      expect(content.contacts.map((contact) => contact.kind)).toEqual(['whatsapp', 'email']);
+      expect(JSON.stringify(content)).not.toMatch(/R\$|US\$|€/);
+    }
+    // Depoimento de exemplo não se passa por elogio de verdade.
+    expect(client['pt-BR'].testimonials.every((item) => item.author === 'Cliente Exemplo')).toBe(
+      true,
+    );
+  });
+
+  it('recusa depoimento publicado sem autorização de quem escreveu', () => {
+    const unauthorized = listWith('testimonials.json', (items) => {
+      Object.assign(items[0] as Json, {
+        status: 'published',
+        authorRole: allLocales('Cargo'),
+        quote: allLocales('Fala'),
+        consent: false,
+      });
+    });
+    expect(() => loadContent(unauthorized, { includeDrafts: true })).toThrow(/sem autorização/);
+  });
+
+  it('com serviço publicado, os depoimentos de exemplo somem', () => {
+    const dir = listWith('services.json', (items) => {
+      Object.assign(items[0] as Json, {
+        status: 'published',
+        title: allLocales('Serviço'),
+        description: allLocales('Descrição'),
+        deliverables: [],
+        relatedProjects: [],
+      });
+    });
+    const { client } = loadContent(dir, { includeDrafts: false, publishExample: { client: true } });
+    expect(client?.['pt-BR'].example.services).toBe(false);
+    expect(client?.['pt-BR'].services).toHaveLength(1);
+    // Fictício ao lado de oferta de verdade seria o pior caso.
+    expect(client?.['pt-BR'].testimonials).toEqual([]);
+  });
+
+  it('recusa referência a projeto que não existe', () => {
+    const broken = listWith('services.json', (items) => {
+      (items[0] as Json).relatedProjects = ['nao-existe'];
+    });
+    expect(() => loadContent(broken, { includeDrafts: true })).toThrow(/projeto inexistente/);
   });
 });

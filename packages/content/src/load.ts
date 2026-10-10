@@ -2,9 +2,12 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { locales, type Locale } from '@portfolio/contracts';
 import { z } from 'zod';
+import { buildClient, type ClientContent } from './client.js';
 import { buildRecruiter, type RecruiterContent } from './recruiter.js';
 import { buildTech, type TechContent } from './tech.js';
 import {
+  clientTermsSchema,
+  clientUiSchema,
   contactSchema,
   educationSchema,
   experienceSchema,
@@ -12,10 +15,13 @@ import {
   profileSchema,
   projectSchema,
   recruiterUiSchema,
+  serviceSchema,
   siteSchema,
   skillSchema,
   techUiSchema,
+  testimonialSchema,
   uiSchema,
+  type ClientUi,
   type Home,
   type Profile,
   type RecruiterUi,
@@ -43,6 +49,10 @@ export interface Content {
   tech: Record<Locale, TechContent> | null;
   /** Raio-x do próprio site: dado real do repositório (ADR 0012). */
   site: Site;
+  /** Textos de interface da área do cliente. */
+  clientUi: Record<Locale, ClientUi>;
+  /** Conteúdo da área do cliente por idioma; `null` sem serviços para mostrar. */
+  client: Record<Locale, ClientContent> | null;
 }
 
 export interface LoadOptions {
@@ -52,9 +62,10 @@ export interface LoadOptions {
    * Publica uma área com os dados de exemplo (os rascunhos) enquanto ela não
    * tiver conteúdo publicado, com a faixa "Dados de exemplo" na página. Exceção
    * à regra de que rascunho não vai ao ar, autorizada pelo autor em 2026-10-09
-   * para o recrutador e para a área técnica. Não muda `profile` nem outra área.
+   * para o recrutador e a área técnica, e em 2026-10-10 para a do cliente. Não muda
+   * `profile` nem outra área.
    */
-  publishExample?: { recruiter?: boolean; tech?: boolean };
+  publishExample?: { recruiter?: boolean; tech?: boolean; client?: boolean };
 }
 
 function parseFile<Schema extends z.ZodType>(
@@ -187,10 +198,71 @@ export function loadContent(
         }
       : null;
 
+  // Área do cliente. Cada bloco é real quando tem item publicado e de exemplo
+  // quando só há rascunho; a área existe se houver serviço para mostrar.
+  const clientUi = Object.fromEntries(
+    locales.map((locale) => [locale, parseFile(dataDir, `client/${locale}.json`, clientUiSchema)]),
+  ) as Record<Locale, ClientUi>;
+  const services = parseList(dataDir, 'services.json', serviceSchema);
+  const testimonials = parseList(dataDir, 'testimonials.json', testimonialSchema);
+  const terms = parseFile(dataDir, 'client.json', clientTermsSchema);
+  const projectIds = new Set(projects.map((project) => project.id));
+  for (const [file, refs] of [
+    ['services.json', services.flatMap((service) => service.relatedProjects ?? [])],
+    ['testimonials.json', testimonials.flatMap((item) => item.relatedProject ?? [])],
+  ] as const) {
+    for (const ref of refs) {
+      if (!projectIds.has(ref)) {
+        throw new Error(`Conteúdo inválido em ${file}:\n  projeto inexistente: ${ref}`);
+      }
+    }
+  }
+
+  const drafts = includeDrafts || Boolean(publishExample.client);
+  /** Os publicados; sem nenhum, os rascunhos, se a área puder mostrar exemplo. */
+  const pick = <Item extends Listed>(items: Item[]) => {
+    const real = published(items);
+    return real.length
+      ? { items: real, example: false }
+      : { items: drafts ? items : [], example: drafts };
+  };
+  const hasOutcome = (project: { outcome?: unknown }) => project.outcome !== undefined;
+  const clientServices = pick(services);
+  const clientCases = pick(projects.filter(hasOutcome));
+  const realTestimonials = published(testimonials);
+  // Depoimento fictício ao lado de serviço real seria o pior caso: os de
+  // exemplo só aparecem enquanto os serviços também forem de exemplo.
+  const clientTestimonials = realTestimonials.length
+    ? { items: realTestimonials, example: false }
+    : { items: clientServices.example ? testimonials : [], example: clientServices.example };
+  const termsVisible = terms.status === 'published' || drafts;
+  const clientSources =
+    clientServices.items.length && termsVisible
+      ? {
+          services: clientServices.items,
+          projects: clientCases.items,
+          testimonials: clientTestimonials.items,
+          terms,
+          contacts: clientServices.example ? contacts : published(contacts),
+          example: {
+            services: clientServices.example,
+            cases: clientCases.example,
+            testimonials: clientTestimonials.example,
+            terms: terms.status === 'draft',
+          },
+        }
+      : null;
+
   return {
     ui,
     home,
     profile,
+    clientUi,
+    client: clientSources
+      ? (Object.fromEntries(
+          locales.map((locale) => [locale, buildClient(clientSources, locale)]),
+        ) as Record<Locale, ClientContent>)
+      : null,
     techUi,
     site,
     tech:

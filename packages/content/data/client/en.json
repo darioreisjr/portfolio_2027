@@ -1,0 +1,54 @@
+{
+  "example": {
+    "title": "Example data",
+    "text": "This block is fictional and only shows the format."
+  },
+  "tags": {
+    "hero": "System",
+    "services": "Available quests",
+    "process": "Quest progress",
+    "cases": "Completed quests",
+    "testimonials": "Messages received",
+    "engagement": "Terms",
+    "faq": "Help",
+    "cta": "New quest"
+  },
+  "hero": {
+    "title": "Got a project? I make it happen.",
+    "text": "You bring the problem. I take care of the website or system from start to finish, and explain each step in plain language."
+  },
+  "quote": {
+    "label": "Request a quote",
+    "whatsapp": "Request a quote on WhatsApp",
+    "email": "Request a quote by email",
+    "linkedin": "Talk on LinkedIn",
+    "github": "See GitHub"
+  },
+  "services": {
+    "title": "What I do for you",
+    "included": "What is included"
+  },
+  "process": {
+    "title": "How it works",
+    "step": "Step"
+  },
+  "cases": {
+    "title": "Projects and results",
+    "context": "The scenario",
+    "result": "What changed"
+  },
+  "testimonials": {
+    "title": "What people say"
+  },
+  "engagement": {
+    "title": "Investment and timelines",
+    "timeline": "Typical timeline"
+  },
+  "faq": {
+    "title": "Frequently asked questions"
+  },
+  "cta": {
+    "title": "Shall we start?",
+    "text": "Tell me what you need. The first conversation is free of commitment."
+  }
+}

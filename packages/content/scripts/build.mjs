@@ -11,12 +11,13 @@ const includeDrafts = process.env.CONTENT_INCLUDE_DRAFTS === '1';
 // As áreas abaixo vão ao ar com os dados de exemplo e a faixa que os identifica,
 // até o conteúdo real chegar. Autorizado pelo autor em 2026-10-09; para uma área
 // voltar à tela "em construção" em produção, troque para `false`.
-const PUBLISH_EXAMPLE = { recruiter: true, tech: true };
+const PUBLISH_EXAMPLE = { recruiter: true, tech: true, client: true };
 
-const { ui, home, profile, recruiter, recruiterUi, tech, techUi, site } = loadContent(dataDir, {
+const content = loadContent(dataDir, {
   includeDrafts,
   publishExample: PUBLISH_EXAMPLE,
 });
+const { ui, home, profile, recruiter, recruiterUi, tech, techUi, site, client, clientUi } = content;
 
 const modules = {
   ui: {
@@ -67,6 +68,19 @@ const modules = {
       'export declare const tech: Readonly<Record<Locale, TechContent>> | null;',
       'export declare const techUi: Readonly<Record<Locale, TechUi>>;',
       'export declare const site: Readonly<Site>;',
+    ],
+  },
+  // Área do cliente: o conteúdo por idioma e os textos de interface dela.
+  client: {
+    value: client,
+    extra: { clientUi },
+    types: [
+      "import type { Locale } from '@portfolio/contracts';",
+      "import type { ClientContent } from '../client.js';",
+      "import type { ClientUi } from '../schemas.js';",
+      'export type { ClientContent, ClientUi };',
+      'export declare const client: Readonly<Record<Locale, ClientContent>> | null;',
+      'export declare const clientUi: Readonly<Record<Locale, ClientUi>>;',
     ],
   },
 };
