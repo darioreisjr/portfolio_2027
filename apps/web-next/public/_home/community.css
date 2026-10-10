@@ -1,0 +1,613 @@
+/* Página da área da comunidade (ADR 0013, docs/plans/comunidade-conteudo.md).
+   Folha própria, servida de /_home/ e ligada só por essa página: a home não a
+   carrega, e a página não carrega a folha das páginas internas (areas.css).
+
+   Identidade "energia", em preto e branco: aura atrás do título, linhas de
+   velocidade, medidor de poder, esferas numerando as seções e projetos em
+   cápsulas. Só tokens. Nada aqui vem das áreas do recrutador, técnica ou do
+   cliente. Todo movimento é CSS e fica em `prefers-reduced-motion:
+   no-preference`; o que é contínuo para com a caixa de pausa. */
+
+.community {
+  --energy: var(--color-area-community);
+  --on-energy: var(--color-on-area);
+  /* O selo do design system na cor da área. */
+  --ds-badge-bg: var(--energy);
+  --ds-badge-text: var(--on-energy);
+
+  display: grid;
+  gap: var(--space-block-lg);
+  box-sizing: border-box;
+  max-inline-size: 60rem;
+  margin-inline: auto;
+  padding: var(--space-block-lg) var(--space-inline-md) var(--ds-dock-reserve);
+  color: var(--color-text);
+  font-size: var(--text-size-md);
+  line-height: var(--text-line-height);
+}
+
+.community :is(h1, h2, h3, p, ul, ol, dl, dd) {
+  margin: 0;
+  padding: 0;
+}
+
+.community :is(ul, ol) {
+  list-style: none;
+}
+
+.community :is(h1, h2, h3, strong, dt) {
+  font-weight: var(--text-weight-strong);
+}
+
+.community h2 {
+  display: flex;
+  gap: var(--space-inline-sm);
+  align-items: center;
+  font-size: var(--text-size-lg);
+}
+
+.community h3 {
+  font-size: var(--text-size-md);
+}
+
+.community a {
+  color: var(--color-text);
+  font-weight: var(--text-weight-strong);
+  text-decoration-thickness: var(--border-width-control);
+}
+
+.community :is(a, [tabindex]):focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.community code {
+  font-family: var(--font-code);
+  font-size: var(--text-size-sm);
+}
+
+/* Abertura: o título em bloco invertido, com a aura atrás e as linhas de
+   velocidade saindo de baixo. O título e a frase são o que a página pinta
+   primeiro: nada aqui nasce invisível. */
+.c-hero {
+  display: grid;
+  gap: var(--space-block-sm);
+  justify-items: start;
+  position: relative;
+  padding-block: var(--space-block-lg);
+  isolation: isolate;
+  overflow: clip;
+}
+
+.c-speed,
+.c-aura {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.c-speed {
+  inset: 0;
+  background: repeating-conic-gradient(
+    from 0deg at 50% 130%,
+    var(--energy) 0 0.4deg,
+    transparent 0 5deg
+  );
+  opacity: 0.08;
+  mask: radial-gradient(circle at 50% 130%, transparent 35%, var(--color-pattern-ink) 80%);
+}
+
+.c-aura {
+  inset-block-start: 0;
+  inset-inline-start: calc(var(--space-inline-lg) * -1);
+  inline-size: 18rem;
+  aspect-ratio: 1;
+  border-radius: var(--radius-full);
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--energy) 22%, transparent),
+    transparent
+  );
+}
+
+.c-hero h1 {
+  padding: var(--space-block-xs) var(--space-inline-md);
+  background: var(--energy);
+  color: var(--on-energy);
+  font-size: var(--text-size-lg);
+  /* Inclinado, como quem vem em velocidade. */
+  transform: skewX(-8deg);
+}
+
+.c-title {
+  max-inline-size: 18ch;
+  font-size: var(--text-size-title);
+  font-weight: var(--text-weight-strong);
+  line-height: 1.15;
+}
+
+.c-lead {
+  max-inline-size: 52ch;
+}
+
+.c-hero picture {
+  display: contents;
+}
+
+/* Pequeno e à direita: menor que o título, que é o maior elemento da tela. */
+.c-figure {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-end: 0;
+  z-index: -1;
+  inline-size: auto;
+  block-size: 7rem;
+}
+
+/* Seções. */
+.community > section {
+  display: grid;
+  gap: var(--space-block-md);
+  padding-block-start: var(--space-block-lg);
+  border-block-start: var(--border-width-marker) solid var(--energy);
+}
+
+/* Esfera: marcador numerado de seção. */
+.c-ball {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--size-icon);
+  block-size: var(--size-icon);
+  border: var(--border-width-control) solid var(--energy);
+  border-radius: var(--radius-full);
+  background: radial-gradient(
+    circle at 30% 30%,
+    var(--color-surface) 0 18%,
+    color-mix(in srgb, var(--energy) 12%, var(--color-surface)) 60%
+  );
+  font-size: var(--text-size-sm);
+}
+
+/* Faixa dos blocos com dados de exemplo. */
+.community .c-example {
+  padding: var(--space-block-sm) var(--space-inline-md);
+  border: var(--border-width-control) dashed var(--energy);
+  font-size: var(--text-size-sm);
+}
+
+.c-meta,
+.c-total {
+  color: var(--color-text-muted);
+  font-size: var(--text-size-sm);
+}
+
+/* Artigos, com o medidor de poder: o tempo de leitura em barra e em número. */
+.c-articles {
+  display: grid;
+  gap: var(--space-block-lg);
+}
+
+.c-articles > li {
+  display: grid;
+  gap: var(--space-block-xs);
+}
+
+.c-power {
+  display: grid;
+  grid-template-columns: auto minmax(4rem, 14rem) auto;
+  gap: var(--space-inline-sm);
+  align-items: center;
+  font-size: var(--text-size-sm);
+}
+
+.c-power-track {
+  block-size: var(--space-block-sm);
+  border: var(--border-width-control) solid var(--energy);
+}
+
+.c-power-track i {
+  display: block;
+  block-size: 100%;
+  background: var(--energy);
+  transform-origin: left;
+}
+
+.c-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-block-xs) var(--space-inline-sm);
+}
+
+/* Cápsulas: o projeto em duas metades, a de cima invertida. */
+.c-capsules {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-inline-md);
+}
+
+.c-capsule {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border: var(--border-width-control) solid var(--energy);
+  border-radius: var(--radius-md);
+  overflow: clip;
+}
+
+.c-capsule-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-inline-sm);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-block-sm) var(--space-inline-md);
+  background: var(--energy);
+  color: var(--on-energy);
+  /* Sobre a metade invertida, o selo inverte de novo. */
+  --ds-badge-bg: var(--on-energy);
+  --ds-badge-text: var(--energy);
+}
+
+.c-capsule-body {
+  display: grid;
+  gap: var(--space-block-xs);
+  align-content: start;
+  padding: var(--space-block-sm) var(--space-inline-md) var(--space-block-md);
+  background: var(--color-surface);
+}
+
+.c-capsule-body a,
+.c-channels a,
+.c-welcome + p a {
+  display: inline-grid;
+  min-block-size: var(--size-control);
+  align-content: center;
+  justify-self: start;
+}
+
+/* Vitrine do design system. */
+.c-parts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-inline-md);
+}
+
+.c-parts > div {
+  display: grid;
+  gap: var(--space-block-xs);
+  align-content: start;
+  justify-items: start;
+  padding: var(--space-block-sm) var(--space-inline-md);
+  border: var(--border-width-control) solid var(--color-border);
+}
+
+.c-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: var(--space-block-sm) var(--space-inline-md);
+}
+
+.c-swatches li {
+  display: flex;
+  gap: var(--space-inline-sm);
+  align-items: center;
+}
+
+.c-swatches span {
+  flex: none;
+  inline-size: var(--size-icon);
+  block-size: var(--size-icon);
+  border: var(--border-width-control) solid var(--color-text-muted);
+  border-radius: var(--radius-full);
+}
+
+.c-type {
+  display: grid;
+  gap: var(--space-block-sm);
+}
+
+.c-type li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-inline-md);
+  align-items: baseline;
+  font-weight: var(--text-weight-strong);
+}
+
+/* Como acompanhar e participar. */
+.c-channels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-inline-md);
+}
+
+.c-welcome {
+  display: grid;
+  gap: var(--space-block-xs);
+}
+
+.c-welcome li {
+  padding-inline-start: var(--space-inline-md);
+  background: radial-gradient(circle, var(--energy) 50%, transparent 55%) left 0.55em /
+    var(--space-inline-sm) var(--space-inline-sm) no-repeat;
+}
+
+/* Botão de volta: bloco invertido, inclinado como o título. */
+.c-back {
+  display: inline-grid;
+  place-items: center;
+  justify-self: center;
+  box-sizing: border-box;
+  min-block-size: var(--size-control);
+  padding: var(--space-block-sm) var(--space-inline-lg);
+  background: var(--energy);
+  text-decoration: none;
+}
+
+.community a.c-back {
+  color: var(--on-energy);
+}
+
+/* Botão de pausa do grupo do canto (WCAG 2.2.2): caixa de seleção nativa com
+   cara de botão. É a terceira cópia desta aparência, depois da home e das
+   páginas internas (ADR 0013): unificar custaria uma folha a mais. */
+.area-motion {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: var(--size-control);
+  block-size: var(--size-control);
+}
+
+.area-motion input {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.area-motion-disc {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: var(--size-icon);
+  block-size: var(--size-icon);
+  border: var(--border-width-control) solid var(--color-text-muted);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.area-motion-disc svg {
+  inline-size: var(--space-inline-md);
+  block-size: var(--space-inline-md);
+  scale: 0.75;
+  fill: currentColor;
+}
+
+.area-motion-play,
+.area-motion input:checked ~ .area-motion-disc .area-motion-pause {
+  display: none;
+}
+
+.area-motion input:checked ~ .area-motion-disc .area-motion-play {
+  display: block;
+}
+
+.area-motion input:focus-visible ~ .area-motion-disc {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---------------------------------------------------------------------------
+   Transição "explosão de aura" (ADR 0011): um disco de energia cresce do
+   centro até cobrir a tela, com anéis de onda de choque. A cortina que fecha
+   aparece no clique do botão de volta (script inline do layout); a que abre,
+   para quem chega pela home com a marca. A home repete estas regras em
+   home.css.
+   --------------------------------------------------------------------------- */
+.community-arrival,
+.community-departure[hidden] {
+  display: none;
+}
+
+html[data-arrival='community'] .community-arrival,
+.community-departure:not([hidden]) {
+  display: grid;
+  place-content: center;
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  color: var(--color-on-area);
+  font-size: var(--text-size-title);
+  font-weight: var(--text-weight-strong);
+}
+
+html[data-arrival='community'] .community-arrival {
+  pointer-events: none;
+}
+
+:is(html[data-arrival='community'] .community-arrival, .community-departure:not([hidden]))::before,
+:is(html[data-arrival='community'] .community-arrival, .community-departure:not([hidden]))::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: '';
+}
+
+/* O disco. */
+:is(html[data-arrival='community'] .community-arrival, .community-departure:not([hidden]))::before {
+  background: var(--color-area-community);
+}
+
+/* Os anéis da onda de choque. */
+:is(html[data-arrival='community'] .community-arrival, .community-departure:not([hidden]))::after {
+  z-index: -2;
+  background: var(--color-area-community);
+  opacity: 0.5;
+  mask: repeating-radial-gradient(
+    circle,
+    transparent 0 var(--space-block-md),
+    var(--color-pattern-ink) 0 calc(var(--space-block-md) + var(--border-width-marker))
+  );
+}
+
+.community-departure:not([hidden])::before {
+  animation: aura-close var(--motion-duration-md) var(--motion-ease-out) backwards;
+}
+
+.community-departure:not([hidden])::after {
+  animation: aura-rings var(--motion-duration-md) var(--motion-ease-out) backwards;
+}
+
+.community-departure span {
+  animation: aura-text var(--motion-duration-md) var(--motion-ease-out) var(--motion-duration-md)
+    backwards;
+}
+
+html[data-arrival='community'] .community-arrival::before {
+  animation: aura-open var(--motion-duration-lg) var(--motion-ease-out) var(--motion-duration-md)
+    forwards;
+}
+
+html[data-arrival='community'] .community-arrival::after {
+  animation: aura-fade var(--motion-duration-lg) var(--motion-ease-out) var(--motion-duration-md)
+    forwards;
+}
+
+@keyframes aura-close {
+  from {
+    clip-path: circle(0% at 50% 50%);
+  }
+
+  to {
+    clip-path: circle(75% at 50% 50%);
+  }
+}
+
+@keyframes aura-rings {
+  from {
+    scale: 0;
+  }
+}
+
+@keyframes aura-open {
+  to {
+    scale: 1.4;
+    opacity: 0;
+  }
+}
+
+@keyframes aura-fade {
+  to {
+    scale: 2;
+    opacity: 0;
+  }
+}
+
+@keyframes aura-text {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Movimento, só para quem não pediu menos movimento ao sistema.
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  /* Aura pulsando e linhas de velocidade tremendo: contínuas. */
+  .c-aura {
+    animation: c-aura var(--motion-duration-sway) var(--motion-ease-in-out) infinite alternate;
+  }
+
+  .c-speed {
+    animation: c-speed var(--motion-duration-lg) steps(2) infinite alternate;
+  }
+
+  /* Seções e medidores entram conforme a página rola. O estado de base é o
+     final: sem suporte a animação por rolagem, tudo aparece completo. */
+  @supports (animation-timeline: view()) {
+    .community > section {
+      animation: c-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+
+    .c-power-track i {
+      animation: c-charge linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 35%;
+    }
+
+    .c-capsule {
+      animation: c-pop linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 80%;
+    }
+  }
+
+  .c-capsule,
+  .c-back {
+    transition:
+      translate var(--motion-duration-md) var(--motion-ease-out),
+      box-shadow var(--motion-duration-md) var(--motion-ease-out);
+  }
+
+  .c-capsule:hover,
+  .c-capsule:focus-within,
+  .c-back:hover {
+    translate: 0 calc(var(--space-block-xs) * -1);
+    box-shadow: 0 0 var(--space-block-md) color-mix(in srgb, var(--energy) 35%, transparent);
+  }
+}
+
+@keyframes c-aura {
+  to {
+    scale: 1.15;
+    opacity: 0.6;
+  }
+}
+
+@keyframes c-speed {
+  to {
+    opacity: 0.14;
+  }
+}
+
+@keyframes c-rise {
+  from {
+    opacity: 0;
+    translate: 0 var(--space-block-lg);
+  }
+}
+
+@keyframes c-charge {
+  from {
+    scale: 0 1;
+  }
+}
+
+@keyframes c-pop {
+  from {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+
+/* Pausa: para o que se move sem parar. */
+body:has(.area-motion input:checked) .community :is(.c-aura, .c-speed) {
+  animation-play-state: paused;
+}
+
+/* Com movimento reduzido não há o que pausar, e a cortina não aparece. */
+@media (prefers-reduced-motion: reduce) {
+  .area-motion,
+  html[data-arrival='community'] .community-arrival {
+    display: none;
+  }
+}

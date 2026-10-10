@@ -224,7 +224,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
   });
 }
 
-test('aberto, o pop-up não muda o que a home baixa: nove scripts e uma fonte', async ({ page }) => {
+test('aberto, o pop-up não muda o que a home baixa: oito scripts e uma fonte', async ({ page }) => {
   const fonts = new Set<string>();
   page.on('request', (request) => {
     if (request.resourceType() === 'font') fonts.add(new URL(request.url()).pathname);
@@ -235,7 +235,7 @@ test('aberto, o pop-up não muda o que a home baixa: nove scripts e uma fonte', 
   const scripts = await page
     .locator('script[src]')
     .evaluateAll((list) => list.map((script) => (script as HTMLScriptElement).src));
-  expect(new Set(scripts).size).toBe(9);
+  expect(new Set(scripts).size).toBe(8);
   expect([...fonts]).toEqual(['/_ds/fonts/m-plus-rounded-1c-latin-700-normal.woff2']);
 });
 

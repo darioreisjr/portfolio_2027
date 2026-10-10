@@ -1,6 +1,5 @@
 import '../home.css';
 import type { Locale } from '@portfolio/contracts';
-import Link from 'next/link';
 import { buildHome, type HomeModel, type Persona } from '../../lib/home';
 import { ENTER_OVERLAY_ID } from '../../lib/enter';
 import { INTRO_ID } from '../../lib/intro';
@@ -46,9 +45,6 @@ function PersonaItem({ persona, enter, back, first }: PersonaItemProps) {
     </>
   );
 
-  // Áreas do shell são outro documento: <a>, nunca <Link> (ADR 0002).
-  const Anchor = persona.sameApp ? Link : 'a';
-
   return (
     <li data-area={persona.area}>
       {/* Sem JavaScript é um link para a área. Com JavaScript, persona-list.tsx
@@ -61,13 +57,15 @@ function PersonaItem({ persona, enter, back, first }: PersonaItemProps) {
         <p className="persona-description" id={ids.description}>
           {persona.description}
         </p>
-        <Anchor
+        {/* <a>, nunca <Link>: toda área é outro documento, e as que têm
+            transição precisam da carga completa (ADR 0011). */}
+        <a
           className="persona-enter"
           href={persona.href}
           aria-describedby={`${ids.phrase} ${ids.description}`}
         >
           {enter}
-        </Anchor>
+        </a>
         <button type="button" className="persona-back">
           {back}
         </button>

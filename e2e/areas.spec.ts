@@ -2,22 +2,14 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { settled } from './support/motion';
 
-// As três páginas internas que ainda mostram a tela "em construção" (ADR 0009). Na do
+// A página interna que ainda mostra a tela "em construção" (ADR 0009). Na do
 // shell a mensagem é do MFE, em shadow DOM; nas duas do Next.js, do próprio
 // documento. Os localizadores do Playwright atravessam o shadow DOM.
-// As três áreas de MFE já têm página de conteúdo e são testadas em
-// recruiter.spec.ts, tech.spec.ts e client.spec.ts. A mensagem "em construção"
-// de um MFE, estilizada por `::part()`, é coberta pelo teste unitário do React.
+// As quatro áreas com personagem já têm página de conteúdo e são testadas em
+// recruiter.spec.ts, tech.spec.ts, client.spec.ts e community.spec.ts. Só
+// "Como foi feito" continua na tela "em construção". A mensagem de um MFE,
+// estilizada por `::part()`, é coberta pelo teste unitário do React.
 const areas = [
-  {
-    area: 'community',
-    path: '/comunidade/',
-    title: 'Comunidade',
-    mfe: undefined,
-    figure: 'community',
-    color: { light: 'rgb(12, 14, 19)', dark: 'rgb(255, 255, 255)' },
-    scene: 'area-glow',
-  },
   {
     area: 'how-it-was-built',
     path: '/como-foi-feito/',
@@ -109,7 +101,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
 
 test('a mensagem e o botão acompanham o idioma, no MFE e nas páginas Next.js', async ({ page }) => {
   const cases = [
-    ['/es/comunidad/', 'Fase en construcción', 'Volver a la elección de perfil', '/es/'],
+    ['/es/como-se-hizo/', 'Fase en construcción', 'Volver a la elección de perfil', '/es/'],
     ['/en/how-it-was-built/', 'Stage under construction', 'Back to profile selection', '/en/'],
   ] as const;
   for (const [path, title, back, home] of cases) {
@@ -120,7 +112,7 @@ test('a mensagem e o botão acompanham o idioma, no MFE e nas páginas Next.js',
 });
 
 test('o botão de volta leva à tela de escolha de perfil', async ({ page }) => {
-  await page.goto('/es/comunidad/');
+  await page.goto('/es/como-se-hizo/');
   await page.getByRole('link', { name: 'Volver a la elección de perfil' }).click();
   await expect(page).toHaveURL(/\/es\/$/);
   await expect(page.locator('h1')).toHaveText('Elige tu camino');
@@ -172,7 +164,7 @@ test('com movimento reduzido nada se mexe e não há botão de pausa', async ({ 
 test('a pausa fica no grupo do canto, antes da bandeira, e funciona pelo teclado', async ({
   page,
 }) => {
-  await page.goto('/comunidade/');
+  await page.goto('/como-foi-feito/');
   const [pauseBox, flagBox] = [
     await pause(page).boundingBox(),
     await page.locator('.ds-language-switcher summary').boundingBox(),
@@ -195,7 +187,7 @@ test('a home não carrega a folha das páginas internas', async ({ page }) => {
   await page.waitForLoadState('networkidle');
   expect(requested.filter((path) => path.includes('areas.css'))).toEqual([]);
   // E as páginas internas carregam, das duas origens de documento.
-  for (const path of ['/recrutador/', '/comunidade/']) {
+  for (const path of ['/recrutador/', '/como-foi-feito/']) {
     requested.length = 0;
     await page.goto(path);
     await page.waitForLoadState('networkidle');

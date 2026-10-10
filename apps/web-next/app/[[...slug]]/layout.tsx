@@ -10,6 +10,8 @@ import {
 } from '@portfolio/contracts';
 import type {} from '@portfolio/design-system/react';
 import type { ReactNode } from 'react';
+import { buildCommunityPage } from '../../lib/community';
+import { COMMUNITY_LEAVE_SCRIPT } from '../../lib/community-leave';
 import { MUSIC_SLOT_ID } from '../../lib/music';
 import { resolvePage, type PageParams } from '../../lib/route';
 
@@ -27,22 +29,24 @@ export default async function RootLayout({
   const currentLanguage = alternates.find((alternate) => alternate.current);
   const otherLanguages = alternates.filter((alternate) => !alternate.current);
 
+  const scripts = [THEME_INIT_SCRIPT];
+  if (area === 'home') scripts.push(arrivalInitScript(AREA_TRANSITIONS));
+  // Só quando a comunidade tem página: a tela "em construção" não tem transição.
+  if (area === 'community' && buildCommunityPage(locale)) {
+    scripts.push(arrivalInitScript(['community']), COMMUNITY_LEAVE_SCRIPT);
+  }
+  const inlineScript = scripts.join(';');
+
   return (
     // O script abaixo põe `data-theme` no <html> antes da hidratação; sem o
     // aviso suprimido o React reclamaria da diferença.
     <html lang={locale} suppressHydrationWarning>
       <head>
         {/* Aplica o tema salvo antes da primeira pintura, para a página não piscar.
-            Na home, o mesmo script lê a marca de quem volta de uma área, para a
-            cortina da volta já estar na tela (ADR 0011). */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              area === 'home'
-                ? `${THEME_INIT_SCRIPT};${arrivalInitScript(AREA_TRANSITIONS)}`
-                : THEME_INIT_SCRIPT,
-          }}
-        />
+            Nas páginas com transição (ADR 0011), o mesmo script lê a marca de
+            quem chega, para a cortina já estar na tela; a comunidade leva também
+            o do botão de volta (ADR 0013). */}
+        <script dangerouslySetInnerHTML={{ __html: inlineScript }} />
       </head>
       <body>
         <header className="site-tools">

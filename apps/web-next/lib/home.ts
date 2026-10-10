@@ -6,8 +6,6 @@ import {
   pathFor,
   personaAreas,
   personaFigures,
-  routes,
-  type AreaId,
   type LanguageAlternate,
   type Locale,
   type PersonaArea,
@@ -17,8 +15,6 @@ import {
 export interface Persona {
   area: PersonaArea;
   href: string;
-  /** Falso quando a área é de outro app: aí o link é `<a>`, nunca `<Link>`. */
-  sameApp: boolean;
   phrase: string;
   /** O que a área traz e para quem, no tom daquele público. */
   description: string;
@@ -50,12 +46,6 @@ export interface HomeModel {
   personas: Persona[];
 }
 
-const routeOf = (area: AreaId) => {
-  const route = routes.find((candidate) => candidate.area === area);
-  if (!route) throw new Error(`Área sem rota: ${area}`);
-  return route;
-};
-
 /** Tudo que a tela de escolha de perfil mostra em um idioma. */
 export function buildHome(locale: Locale): HomeModel {
   const text = home[locale];
@@ -75,11 +65,9 @@ export function buildHome(locale: Locale): HomeModel {
       languages: languageAlternates('home', locale),
     },
     personas: personaAreas.map((area) => {
-      const route = routeOf(area);
       return {
         area,
         href: pathFor(area, locale),
-        sameApp: route.owner === 'web-next',
         phrase: text.personas[area].phrase,
         description: text.personas[area].description,
         figure: personaFigures[area],

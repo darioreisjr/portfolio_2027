@@ -3,7 +3,8 @@ import { expect, test, type Page } from '@playwright/test';
 // Transições entre a home e as áreas que as têm (ADR 0011). Quem sai fecha a
 // cortina da área e grava uma marca; o documento seguinte lê a marca antes de
 // pintar e abre com a mesma cortina. Cada área tem a sua: corte de katana no
-// recrutador, falha de sinal na área técnica e onda na do cliente.
+// recrutador, falha de sinal na área técnica, onda na do cliente e explosão de
+// aura na comunidade.
 const KEY = 'portfolio:entrada';
 /** A home em pt-BR, e só ela. */
 const HOME = /^http:\/\/[^/]+\/$/;
@@ -33,7 +34,24 @@ const areas = [
     title: 'Clientes',
     color: 'rgb(10, 111, 148)',
   },
+  {
+    area: 'community',
+    phrase: 'Vim aprender e trocar ideias',
+    path: /\/comunidade\/$/,
+    url: '/comunidade/',
+    title: 'Comunidade',
+    color: 'rgb(12, 14, 19)',
+  },
 ] as const;
+
+/**
+ * As cortinas da página da área. As três áreas de microfrontend usam as do
+ * shell; a comunidade, que é página do Next.js, tem as próprias.
+ */
+const curtainsOf = (area: string) =>
+  area === 'community'
+    ? { arrival: '.community-arrival', departure: '.community-departure' }
+    : { arrival: '.area-arrival', departure: '.area-departure' };
 
 test.use({ viewport: { width: 1280, height: 800 }, colorScheme: 'light' });
 
@@ -71,15 +89,23 @@ const curtainColor = (page: Page, selector: string) =>
   page
     .locator(selector)
     .evaluate((element) => getComputedStyle(element, '::before').backgroundColor);
-/** A cortina que abre terminou: as partes saíram da tela. */
+/**
+ * A cortina que abre terminou. Cada área tem o próprio movimento: as partes
+ * saem da tela (corte, faixas e onda) ou o disco se desfaz (aura).
+ */
 const opened = (page: Page, selector: string) =>
   expect
     .poll(() =>
-      page.locator(selector).evaluate((element) => getComputedStyle(element, '::before').translate),
+      page.locator(selector).evaluate((element) => {
+        const style = getComputedStyle(element, '::before');
+        return `${style.translate} | ${style.opacity}`;
+      }),
     )
-    .toMatch(/^(-100% (-100|0)%|0% 100%)$/);
+    .toMatch(/^(-100% (-100|0)%|0% 100%) \| 1$|^.* \| 0$/);
 
 for (const { area, phrase, path, url, title, color } of areas) {
+  const { arrival, departure } = curtainsOf(area);
+
   test.describe(`área ${area}`, () => {
     test('"Entrar" fecha a cortina da área, avisa e a página abre com a mesma cortina', async ({
       page,
@@ -98,17 +124,17 @@ for (const { area, phrase, path, url, title, color } of areas) {
       // A área leu a marca antes de pintar e a consumiu.
       await expect(page.locator('html')).toHaveAttribute('data-arrival', area);
       expect(await mark(page)).toBeNull();
-      await expect.poll(() => curtainColor(page, '.area-arrival')).toBe(color);
-      await expect(page.locator('.area-arrival')).toHaveCSS('pointer-events', 'none');
-      await opened(page, '.area-arrival');
+      await expect.poll(() => curtainColor(page, arrival)).toBe(color);
+      await expect(page.locator(arrival)).toHaveCSS('pointer-events', 'none');
+      await opened(page, arrival);
       await expect(page.getByRole('heading', { level: 1 })).toHaveText(title);
     });
 
     test('"Voltar" fecha a cortina, avisa e a home abre com a mesma cortina', async ({ page }) => {
       await page.goto(url);
-      const curtain = page.locator('.area-departure');
+      const curtain = page.locator(departure);
       await expect(curtain).toBeHidden();
-      await watchCurtain(page, '.area-departure');
+      await watchCurtain(page, departure);
       await page.getByRole('link', { name: 'Voltar à escolha de perfil' }).click();
 
       await expect(page).toHaveURL(HOME);
@@ -179,7 +205,7 @@ for (const { area, phrase, path, url, title, color } of areas) {
       ]);
       await home.waitForURL(HOME);
       expect(new URL(home.url()).pathname).toBe('/');
-      await expect(area1.locator('.area-departure')).toBeHidden();
+      await expect(area1.locator(departure)).toBeHidden();
       expect(await home.locator('html').getAttribute('data-arrival')).toBeNull();
     });
 
@@ -193,7 +219,7 @@ for (const { area, phrase, path, url, title, color } of areas) {
 
       await page.goBack();
       await expect(page).toHaveURL(path);
-      await expect(page.locator('.area-departure')).toBeHidden();
+      await expect(page.locator(departure)).toBeHidden();
       await page.goBack();
       await expect(page.locator('h1')).toHaveText('Escolha seu caminho');
       await expect(page.locator('#home-enter')).toBeHidden();
@@ -222,14 +248,10 @@ test('pelo teclado o Enter passa pelas mesmas transições', async ({ page }) =>
   await expect(page.locator('html')).toHaveAttribute('data-arrival', 'recruiter');
 });
 
-test('as áreas sem transição continuam abrindo e voltando na hora', async ({ page }) => {
-  await page.goto('/');
-  await choose(page, 'Vim aprender e trocar ideias');
-  await page.getByRole('link', { name: 'Entrar' }).click();
-  await expect(page).toHaveURL(/\/comunidade\/$/);
-  expect(await arrived(page)).toBeNull();
-  await expect(page.locator('.area-arrival, .area-departure')).toHaveCount(0);
-
+test('a página sem transição continua voltando na hora', async ({ page }) => {
+  // "Como foi feito" ainda mostra a tela "em construção", sem cortina.
+  await page.goto('/como-foi-feito/');
+  await expect(page.locator('.area-arrival, .area-departure, .community-departure')).toHaveCount(0);
   await page.getByRole('link', { name: 'Voltar à escolha de perfil' }).click();
   await expect(page).toHaveURL(HOME);
   expect(await arrived(page)).toBeNull();
@@ -297,6 +319,6 @@ test('a cortina da volta não muda o que a home baixa nem trava com a pausa lemb
   const scripts = await page
     .locator('script[src]')
     .evaluateAll((list) => list.map((script) => (script as HTMLScriptElement).src));
-  expect(new Set(scripts).size).toBe(9);
+  expect(new Set(scripts).size).toBe(8);
   await context.close();
 });

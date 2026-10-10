@@ -13,7 +13,7 @@ export const ENTRY_STORAGE_KEY = 'portfolio:entrada';
 export const ARRIVAL_ATTRIBUTE = 'data-arrival';
 
 /** Áreas que têm transição de entrada e de volta. Cada uma tem a própria cortina, em CSS. */
-export const AREA_TRANSITIONS: readonly AreaId[] = ['recruiter', 'tech', 'client'];
+export const AREA_TRANSITIONS: readonly AreaId[] = ['recruiter', 'tech', 'client', 'community'];
 
 /**
  * Quanto o documento espera, com a cortina fechando, antes de navegar. Acompanha

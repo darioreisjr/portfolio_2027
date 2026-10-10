@@ -30,9 +30,14 @@ describe('tela de escolha de perfil', () => {
     expect(new Set(descriptions).size).toBe(4);
   });
 
-  it('marca como mesmo app só a área servida pelo Next.js', () => {
-    const sameApp = buildHome('pt-BR').personas.filter((persona) => persona.sameApp);
-    expect(sameApp.map((persona) => persona.area)).toEqual(['community']);
+  it('cada personagem leva ao caminho da área no idioma', () => {
+    // Toda área é outro documento: o link é sempre um caminho, nunca rota do Next.
+    expect(buildHome('es').personas.map((persona) => persona.href)).toEqual([
+      '/es/reclutador/',
+      '/es/tecnico/',
+      '/es/clientes/',
+      '/es/comunidad/',
+    ]);
   });
 
   it('usa a frase e os rótulos do idioma', () => {

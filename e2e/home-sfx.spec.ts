@@ -203,20 +203,28 @@ test('duplo clique escolhe e confirma uma vez só', async ({ page }) => {
 
 test('"Entrar" toca as três notas de confirmação', async ({ page }) => {
   await openWithSound(page);
-  // A comunidade é navegação do Next.js: o documento continua e dá para ler as notas.
   await personas(page).nth(3).click();
   await takeNotes(page);
   await settle(page);
+  // Toda área é outro documento, e as notas se perdem com a troca de página.
+  // O teste segura só o temporizador da transição, para ler as notas no
+  // documento da home; o resto da página segue igual.
+  await page.evaluate(() => {
+    const original = window.setTimeout;
+    window.setTimeout = ((handler: TimerHandler, delay?: number, ...rest: unknown[]) =>
+      delay === 450 ? 0 : original(handler, delay, ...rest)) as typeof window.setTimeout;
+  });
   await enter(page).click();
-  await expect(page).toHaveURL(/\/comunidade\/$/);
+  await expect(page.locator('#home-enter')).toBeVisible();
   // O hover no "Entrar" e depois a confirmação.
   expect(await takeNotes(page)).toEqual([...OPTION, ...ENTER]);
 
-  // Fora da home, silêncio: nenhuma nota nova, com mouse ou teclado.
+  // Fora da home, silêncio: a página da área não tem áudio nenhum.
+  await page.goto('/comunidade/');
   await page.mouse.move(300, 300);
   await page.keyboard.press('Tab');
   await page.locator('h1').click();
-  expect(await takeNotes(page)).toEqual([]);
+  expect(await page.evaluate(() => document.querySelectorAll('audio').length)).toBe(0);
 });
 
 test('pelo teclado, chegar em um personagem ou em uma opção toca a nota', async ({ page }) => {
@@ -315,7 +323,7 @@ test.describe('no celular', () => {
   });
 });
 
-test('a home continua carregando nove arquivos de script', async ({ page }) => {
+test('a home continua carregando oito arquivos de script', async ({ page }) => {
   // Cada arquivo de script a mais na carga custou cerca de 0,07 s de LCP, e a
   // home está no limite (docs/plans/home-musica.md). O código novo tem de entrar
   // nos arquivos que já existem.
@@ -323,5 +331,6 @@ test('a home continua carregando nove arquivos de script', async ({ page }) => {
   const scripts = await page
     .locator('script[src]')
     .evaluateAll((list) => list.map((script) => (script as HTMLScriptElement).src));
-  expect(new Set(scripts).size).toBe(9);
+  // Eram nove até 2026-10-10: o roteador de links do Next.js saiu da home.
+  expect(new Set(scripts).size).toBe(8);
 });

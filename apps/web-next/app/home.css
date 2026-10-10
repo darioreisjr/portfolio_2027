@@ -1609,6 +1609,74 @@ html[data-arrival] .home-arrival {
   }
 }
 
+/* Comunidade, explosão de aura: um disco cresce do centro até cobrir a tela,
+   com anéis de onda de choque, e se desfaz na chegada. O movimento é próprio:
+   cresce e some, em vez de deslizar. Fica depois das regras gerais, para valer
+   sobre a animação de deslizar. */
+:is(.home-enter[data-area='community'], html[data-arrival='community'] .home-arrival) {
+  --curtain: var(--color-area-community);
+  --away-x: 0%;
+  --away-y: 0%;
+}
+
+:is(.home-enter[data-area='community'], html[data-arrival='community'] .home-arrival)::after {
+  z-index: -2;
+  opacity: 0.5;
+  mask: repeating-radial-gradient(
+    circle,
+    transparent 0 var(--space-block-md),
+    var(--color-pattern-ink) 0 calc(var(--space-block-md) + var(--border-width-marker))
+  );
+}
+
+.home-enter[data-area='community']::before {
+  animation: aura-close var(--motion-duration-md) var(--motion-ease-out) backwards;
+}
+
+.home-enter[data-area='community']::after {
+  animation: aura-rings var(--motion-duration-md) var(--motion-ease-out) backwards;
+}
+
+html[data-arrival='community'] .home-arrival::before {
+  animation: aura-open var(--motion-duration-lg) var(--motion-ease-out) var(--motion-duration-md)
+    forwards;
+}
+
+html[data-arrival='community'] .home-arrival::after {
+  animation: aura-fade var(--motion-duration-lg) var(--motion-ease-out) var(--motion-duration-md)
+    forwards;
+}
+
+@keyframes aura-close {
+  from {
+    clip-path: circle(0% at 50% 50%);
+  }
+
+  to {
+    clip-path: circle(75% at 50% 50%);
+  }
+}
+
+@keyframes aura-rings {
+  from {
+    scale: 0;
+  }
+}
+
+@keyframes aura-open {
+  to {
+    scale: 1.4;
+    opacity: 0;
+  }
+}
+
+@keyframes aura-fade {
+  to {
+    scale: 2;
+    opacity: 0;
+  }
+}
+
 /* Movimento reduzido: nada se mexe, as pétalas ficam paradas no ar, o sol e a
    lua trocam na hora e não há o que pausar. */
 @media (prefers-reduced-motion: reduce) {

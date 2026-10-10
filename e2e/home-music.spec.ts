@@ -243,13 +243,13 @@ test('pausa com a aba escondida e volta de onde parou', async ({ page }) => {
   await expect.poll(() => playing(page)).toBe(true);
 });
 
-test('a música para ao sair da home, também pela navegação do Next.js', async ({ page }) => {
+test('a música para ao sair da home para uma área', async ({ page }) => {
   await watchAudio(page);
   await openHome(page);
   await music(page).click();
   await expect.poll(() => playing(page)).toBe(true);
 
-  // O "Entrar" da comunidade é navegação do Next.js: o documento continua o mesmo.
+  // Toda área é outro documento: a página nova não tem o botão nem o áudio.
   await page.getByRole('button', { name: 'Vim aprender e trocar ideias' }).click();
   await page.getByRole('link', { name: 'Entrar' }).click();
   await expect(page).toHaveURL(/\/comunidade\/$/);

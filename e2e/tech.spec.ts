@@ -114,7 +114,8 @@ test('terminal: os botões fazem o mesmo que digitar, e ajuda lista os comandos'
     await expect(log(page)).toContainText(name);
   }
   await shortcuts.getByRole('button', { name: 'adr' }).click();
-  await expect(log(page)).toContainText('12 decisões de arquitetura');
+  // O número vem do raio-x real: cresce a cada decisão registrada.
+  await expect(log(page)).toContainText(/\d+ decisões de arquitetura/);
   await log(page).getByRole('button', { name: 'Ir para a seção' }).click();
   await expect(area(page).locator('#decisions-title')).toBeFocused();
 

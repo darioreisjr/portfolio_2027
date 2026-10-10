@@ -1,8 +1,10 @@
 import { ui } from '@portfolio/content/ui';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { buildCommunityPage } from '../../lib/community';
 import { resolvePage, staticPageParams, type PageParams } from '../../lib/route';
 import { AreaConstruction } from '../_components/area-construction';
+import { CommunityPage } from '../_components/community-page';
 import { HomeStage } from '../_components/home-stage';
 
 interface PageProps {
@@ -29,8 +31,12 @@ export default async function Page({ params }: PageProps) {
   if (!match) notFound();
 
   const { entry, locale } = match;
-  return entry.area === 'home' ? (
-    <HomeStage locale={locale} />
+  if (entry.area === 'home') return <HomeStage locale={locale} />;
+
+  // A comunidade tem página própria quando há o que mostrar (ADR 0013).
+  const community = entry.area === 'community' ? buildCommunityPage(locale) : null;
+  return community ? (
+    <CommunityPage model={community} />
   ) : (
     <AreaConstruction area={entry.area} locale={locale} />
   );

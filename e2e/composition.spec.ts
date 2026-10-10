@@ -4,7 +4,8 @@ import { expect, test, type Page } from '@playwright/test';
 const SURFACE_LIGHT = 'rgb(255, 255, 255)';
 
 // A home tem testes próprios em home.spec.ts.
-const nextPages = ['/comunidade/', '/como-foi-feito/'];
+// A comunidade tem página de conteúdo e spec próprio (community.spec.ts).
+const nextPages = ['/como-foi-feito/'];
 
 /** Falha o teste se a página lançar erro ou escrever erro no console. */
 function failOnBrowserErrors(page: Page): string[] {
