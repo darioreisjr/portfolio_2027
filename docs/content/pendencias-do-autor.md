@@ -1,6 +1,6 @@
 # O que falta do autor
 
-Lista do que só o autor pode fornecer ou decidir. Atualizada em 2026-10-09. Quando um item chegar, ele entra em `packages/content/data/` (modelo em `docs/content/schema.md`) e sai desta lista.
+Lista do que só o autor pode fornecer ou decidir. Atualizada em 2026-10-10. Quando um item chegar, ele entra em `packages/content/data/` (modelo em `docs/content/schema.md`) e sai desta lista.
 
 ## Para a área do recrutador
 
@@ -35,13 +35,29 @@ Hoje os estudos de caso e as tecnologias são de exemplo (`docs/plans/tecnico-co
 | Tecnologias         | As mesmas da área do recrutador: nome, categoria e nível                                                      | `skills.json`                |
 | GitHub              | Se a área deve mostrar atividade ou repositórios, e quais                                                     | a definir                    |
 
+## Para a área do cliente
+
+Hoje todos os blocos são de exemplo (`docs/plans/clientes-conteudo.md`).
+
+| O quê                   | Detalhe pedido                                                                                            | Onde entra                          |
+| ----------------------- | --------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| Serviços                | Três ou quatro ofertas concretas, em linguagem de quem contrata, com o que está incluído em cada uma      | `services.json`                     |
+| Como funciona           | As etapas do seu trabalho, da primeira conversa ao suporte, com uma frase cada                            | `client.json`, `process`            |
+| Como você orça          | Um parágrafo: do que depende o orçamento e quando o cliente recebe a proposta                             | `client.json`, `engagement.pricing` |
+| Formas de contratar     | Quais você oferece (projeto fechado, por etapa, suporte mensal), com descrição e prazo típico de cada uma | `client.json`, `engagement.models`  |
+| Perguntas frequentes    | Suas respostas reais sobre prazo, ajustes, propriedade do que é entregue, manutenção e pagamento          | `client.json`, `faq`                |
+| Projetos pelo resultado | Para cada projeto: o cenário do cliente e o que mudou depois, sem termos técnicos                         | `projects.json`, `outcome`          |
+| Depoimentos             | Texto, nome, cargo e empresa de quem escreveu, e a autorização dessa pessoa para publicar                 | `testimonials.json`                 |
+| Canais de orçamento     | O número de WhatsApp e o e-mail que recebem os pedidos                                                    | `contacts.json`                     |
+| Valores                 | Se um dia quiser mostrar faixas de preço; hoje a página não mostra nenhum                                 | a definir                           |
+
 ## Revisões
 
-| O quê                                                                         | Onde                                                                 |
-| ----------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| Textos em inglês e espanhol escritos por IA                                   | `ui`, `home`, `recruiter` (pendência B6 de `docs/open-questions.md`) |
-| Cargo no perfil, nos três idiomas                                             | `profile.json`, `role`                                               |
-| Aparência das páginas do recrutador e técnica e das transições de ida e volta | `http://localhost:5173/recrutador/` e `/tecnico/`                    |
+| O quê                                                                                     | Onde                                                                 |
+| ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Textos em inglês e espanhol escritos por IA                                               | `ui`, `home`, `recruiter` (pendência B6 de `docs/open-questions.md`) |
+| Cargo no perfil, nos três idiomas                                                         | `profile.json`, `role`                                               |
+| Aparência das páginas do recrutador, técnica e do cliente e das transições de ida e volta | `http://localhost:5173/recrutador/`, `/tecnico/` e `/clientes/`      |
 
 ## Conferências que dependem de aparelho ou pessoa
 
@@ -53,4 +69,4 @@ Hoje os estudos de caso e as tecnologias são de exemplo (`docs/plans/tecnico-co
 
 ## Para as próximas áreas
 
-Ainda sem conteúdo nem página: Clientes (serviços, depoimentos com autorização de quem escreveu, canal de orçamento) e Comunidade (artigos, código aberto). Elas também não têm transição de entrada.
+Ainda sem conteúdo nem página: Comunidade (artigos, código aberto) e Como foi feito. Elas também não têm transição de entrada.

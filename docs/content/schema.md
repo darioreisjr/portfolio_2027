@@ -142,18 +142,18 @@ Um projeto tem três narrativas: `technical` (área técnica), `outcome` (área 
 
 ### `testimonials.json` (lista)
 
-| Campo            | Tipo                                              | Obrigatório |
-| ---------------- | ------------------------------------------------- | ----------- |
-| `id`, `status`   |                                                   | sim         |
-| `author`         | string                                            | sim         |
-| `authorRole`     | Localized                                         | sim         |
-| `company`        | string                                            | não         |
-| `relation`       | `"client" \| "colleague" \| "manager"`            | sim         |
-| `quote`          | Localized                                         | sim         |
-| `originalLocale` | Locale (idioma em que foi escrito)                | sim         |
-| `consent`        | `true` (a validação rejeita qualquer outro valor) | sim         |
-| `sourceUrl`      | string (ex.: recomendação no LinkedIn)            | não         |
-| `relatedProject` | id de projeto                                     | não         |
+| Campo            | Tipo                                                                                | Obrigatório |
+| ---------------- | ----------------------------------------------------------------------------------- | ----------- |
+| `id`, `status`   |                                                                                     | sim         |
+| `author`         | string                                                                              | sim         |
+| `authorRole`     | Localized                                                                           | sim         |
+| `company`        | string                                                                              | não         |
+| `relation`       | `"client" \| "colleague" \| "manager"`                                              | sim         |
+| `quote`          | Localized                                                                           | sim         |
+| `originalLocale` | Locale (idioma em que foi escrito)                                                  | sim         |
+| `consent`        | boolean; `true` é obrigatório em depoimento publicado (os de exemplo levam `false`) | sim         |
+| `sourceUrl`      | string (ex.: recomendação no LinkedIn)                                              | não         |
+| `relatedProject` | id de projeto                                                                       | não         |
 
 ### `articles.json` (lista)
 
@@ -182,6 +182,22 @@ Textos da tela de escolha de perfil. Sem `status`, como `ui`. Ficam fora de `ui`
 | `intro.title`, `intro.immersion`, `intro.hint`, `intro.hintReduced`, `intro.start` | strings do pop-up de primeira visita: título, rótulo da caixa de imersão, o que ela liga, o mesmo para quem pediu menos movimento, e o botão | sim         |
 | `personas.<perfil>.phrase`                                                         | string, para `recruiter`, `tech`, `client` e `community`                                                                                     | sim         |
 | `personas.<perfil>.description`                                                    | string: o que a área traz e para quem, no tom daquele público                                                                                | sim         |
+
+### `client.json` (objeto único)
+
+Como o autor trabalha com clientes. Tem `status`, como o `profile.json`, porque são compromissos dele. Não leva valores.
+
+| Campo                | Tipo                                                                                              | Obrigatório |
+| -------------------- | ------------------------------------------------------------------------------------------------- | ----------- |
+| `status`             | `"draft"` ou `"published"`                                                                        | sim         |
+| `process`            | lista de etapas, na ordem: `id`, `title` e `description` (Localized)                              | sim         |
+| `engagement.pricing` | Localized: como o orçamento é feito, em um parágrafo                                              | sim         |
+| `engagement.models`  | lista: `id` (`"fixed" \| "staged" \| "retainer"`), `title`, `description`, `timeline` (Localized) | sim         |
+| `faq`                | lista: `id`, `question`, `answer` (Localized)                                                     | sim         |
+
+### `client/<locale>.json` (um por idioma)
+
+Textos de interface da área do cliente: a abertura, os cabeçalhos de notificação das janelas (`tags`), os títulos e rótulos das seções, os textos dos botões de orçamento por canal (`quote`), a chamada final e a faixa de exemplo. Sem `status`.
 
 ### `recruiter/<locale>.json` (um por idioma)
 
@@ -221,9 +237,17 @@ Os apps não montam a página a partir dos arquivos soltos. O pacote entrega `@p
 
 Os dados de exemplo do repositório têm `status: "draft"`, id começando por `exemplo-`, nomes como "Empresa Exemplo" e endereços em `example.com`. Um teste do pacote cobra isso.
 
-Exceção autorizada pelo autor em 2026-10-09 (`docs/plans/recrutador-conteudo.md`): enquanto o perfil for rascunho, o build de produção entrega a área do recrutador com os dados de exemplo, por `publishRecruiterExample` em `packages/content/scripts/build.mjs`. `example` fica `true` e a página mostra a faixa. `profile` continua `null` em produção. Quando o perfil for publicado, a exceção deixa de valer e só itens publicados entram.
+Exceção autorizada pelo autor em 2026-10-09 (`docs/plans/recrutador-conteudo.md`): enquanto o perfil for rascunho, o build de produção entrega a área do recrutador com os dados de exemplo, por `publishExample` em `packages/content/scripts/build.mjs`. `example` fica `true` e a página mostra a faixa. `profile` continua `null` em produção. Quando o perfil for publicado, a exceção deixa de valer e só itens publicados entram.
 
 Regras conferidas na carga, antes de filtrar os rascunhos: ids únicos por arquivo; toda skill referenciada existe; item publicado não referencia skill em rascunho; item publicado tem os três idiomas em todo texto traduzível, em qualquer profundidade.
+
+## O módulo da área do cliente
+
+`@portfolio/content/client` tem dois exports: `client` (`Record<Locale, ClientContent> | null`) e `clientUi`.
+
+`ClientContent` traz `services`, `process`, `cases` (os projetos com a narrativa `outcome`), `testimonials`, `engagement`, `faq` e `contacts` (os canais com `primaryFor: ["client"]`, o WhatsApp primeiro), e `example`, que diz por bloco se os dados são rascunho: `services`, `cases`, `testimonials` e `terms` (etapas, formas de contratar e perguntas, que vêm de `client.json`).
+
+Regras: cada bloco usa os itens publicados se houver algum; sem nenhum, os rascunhos, em desenvolvimento ou pela exceção de exemplo (`publishExample.client`). A área é `null` sem serviço para mostrar. Depoimento de exemplo só aparece enquanto os serviços também forem de exemplo.
 
 ## O módulo da área técnica
 
@@ -238,7 +262,7 @@ Regras conferidas na carga, antes de filtrar os rascunhos: ids únicos por arqui
 | Home       | `profile`, `home`, `ui` (`contacts` quando houver uso)                                                                           |
 | Recrutador | `recruiter` (montado de `profile`, `experiences`, `education`, `skills`, `projects` com narrativa `recruiter`, `contacts`), `ui` |
 | Técnica    | `tech` (montado de `projects` com narrativa `technical` e `skills`), `site`, `ui`                                                |
-| Cliente    | `services`, `testimonials`, `projects` (narrativa `outcome`), `contacts`, `ui`                                                   |
+| Cliente    | `client` (montado de `services`, `testimonials`, `client.json`, `projects` com narrativa `outcome` e `contacts`), `ui`           |
 | Comunidade | `articles`, `projects` (com `openSource: true`), `ui`                                                                            |
 
 ## Como mudar o schema sem quebrar consumidores

@@ -109,7 +109,7 @@ O maior elemento da página, no perfil de celular do Lighthouse, é a frase da f
 
 - **Unitários do microfrontend** (`apps/mfe-vue/src/page.test.ts`), com conteúdo de teste: blocos e ordem, faixa de exemplo, ficha traduzida, currículo e retrato só com arquivo, barra de contato, filtro, faces do projeto, período por idioma, pausa por propriedade customizada, alvo de toque.
 - **e2e da página** (`e2e/recruiter.spec.ts`): axe nos dois temas, palco do shell, entrada ao rolar, deslocamento de layout, pausa, movimento reduzido, teclado, fontes e celular.
-- **e2e da transição** (`e2e/home-enter.spec.ts`): com teclado, movimento reduzido, pausa, Ctrl+clique, outras áreas, marca velha, volta pelo navegador e sem JavaScript.
+- **e2e da transição** (`e2e/transitions.spec.ts`): com teclado, movimento reduzido, pausa, Ctrl+clique, outras áreas, marca velha, volta pelo navegador e sem JavaScript.
 - Os specs que conferiam a tela "em construção" deixaram de incluir o recrutador.
 
 ## Pendências

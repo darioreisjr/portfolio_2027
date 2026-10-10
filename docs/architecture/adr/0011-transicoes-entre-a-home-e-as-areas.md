@@ -53,6 +53,10 @@ Para a aparência por área:
 - Os testes olham a cortina que fecha por um observador na própria página: ela dura menos de meio segundo e some com a navegação.
 - `mask` com gradiente e animação em `steps()` só foram conferidos no Chromium (pendência B12).
 
+## Emenda de 2026-10-10
+
+A área do cliente entrou em `AREA_TRANSITIONS`, com a terceira cortina: uma onda. É o mesmo molde (dois pseudo-elementos com o fundo da área, movidos por `translate`), agora na vertical: o corpo d'água sobe de baixo, com a crista em arcos feita por máscara, e uma faixa de espuma mais clara vem atrás. A decisão não muda. Registrado em `docs/plans/clientes-conteudo.md`.
+
 ## Fontes
 
 - [MDN: `sessionStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage)

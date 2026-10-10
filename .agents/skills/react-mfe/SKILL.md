@@ -39,7 +39,7 @@ A página de desenvolvimento isolado usa a mesma tag.
 
 ## Limites
 
-- Teto de JavaScript da rota em `docs/quality/budgets.md`. `react-dom` é o maior custo fixo; não some bibliotecas de interface.
+- Teto de JavaScript da rota em `docs/quality/budgets.md`. `react-dom` é o maior custo fixo; não some bibliotecas de componentes. Elemento reutilizável vem do design system; o que é próprio da página a área desenha com estilo próprio, em um `<style>` no shadow root (ADR 0010). A biblioteca de animação `motion`, na versão mini, é a autorizada.
 - Este app é React puro. Recursos do Next.js ficam em `apps/web-next`.
 
 ## Verificação

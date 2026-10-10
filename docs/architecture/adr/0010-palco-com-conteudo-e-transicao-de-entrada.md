@@ -62,6 +62,8 @@ Para a transição entre os dois documentos:
 
 No mesmo dia o autor decidiu publicar a página com os dados de exemplo e a faixa "Dados de exemplo", até o conteúdo real chegar. O item 3 continua descrevendo o que acontece sem conteúdo, mas esse não é mais o estado de produção: `/recrutador` já vai ao ar com `data-content`. A cobertura passou para o e2e e o Lighthouse do CI (`e2e/recruiter.spec.ts`); a checagem local com rascunhos, citada nas consequências, deixou de existir. Medido: LCP de 1,81 s e CLS de 0,033.
 
+Em 2026-10-10 a área do cliente passou a seguir esta decisão, e a exceção que publica dados de exemplo passou a valer também para ela (`docs/plans/clientes-conteudo.md`). Para o React, o estilo próprio do item 1 é um `<style>` renderizado pela página dentro do shadow root.
+
 O item 5 (transição de entrada) foi substituído pelo ADR 0011, que dá a volta e uma cortina por área.
 
 ## Fontes

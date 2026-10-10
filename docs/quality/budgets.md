@@ -27,21 +27,21 @@ O site não tem coleta de dados de campo (analytics está em aberto), então o C
 
 Tamanho transferido (comprimido) de todo o JavaScript necessário para a rota ficar interativa. Os tetos abaixo foram estimados antes do bootstrap e mantidos depois da medição. Os números cobrados no CI ficam em `docs/quality/budgets.json`; mantenha os dois arquivos iguais. Scripts `nomodule` não contam, porque navegadores atuais não os baixam.
 
-| Parte                             | Teto   | Justificativa                                                                                        |
-| --------------------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
-| Shell                             | 10 kB  | Só roteia, carrega um script e troca o idioma; não há framework. A troca de tema é do design system  |
-| Design system (Lit e componentes) | 20 kB  | Uma cópia por documento, em cache entre rotas                                                        |
-| MFE Vue (`/recrutador`)           | 60 kB  | A doc do Vue cita cerca de 16 kB de base para custom elements; o resto é folga para a linha do tempo |
-| MFE React (`/clientes`)           | 80 kB  | `react-dom` é o maior custo fixo; a área é de cartões e listas, sem bibliotecas extras               |
-| MFE Angular (`/tecnico`)          | 110 kB | Maior runtime dos três, e a área tem filtros e formulários                                           |
-| Página Next.js                    | 130 kB | React mais o runtime do Next.js; páginas de leitura, poucos Client Components                        |
+| Parte                             | Teto   | Justificativa                                                                                                                  |
+| --------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| Shell                             | 10 kB  | Só roteia, carrega um script e troca o idioma; não há framework. A troca de tema é do design system                            |
+| Design system (Lit e componentes) | 20 kB  | Uma cópia por documento, em cache entre rotas                                                                                  |
+| MFE Vue (`/recrutador`)           | 60 kB  | A doc do Vue cita cerca de 16 kB de base para custom elements; o resto é folga para a linha do tempo                           |
+| MFE React (`/clientes`)           | 105 kB | `react-dom` é o maior custo fixo (77,7 kB); a página soma marcação, estilo, textos e a `motion` mini. Era 80 kB até 2026-10-10 |
+| MFE Angular (`/tecnico`)          | 110 kB | Maior runtime dos três, e a área tem filtros e formulários                                                                     |
+| Página Next.js                    | 130 kB | React mais o runtime do Next.js; páginas de leitura, poucos Client Components                                                  |
 
 Total por rota:
 
 | Rota                                  | Composição                    | Teto total |
 | ------------------------------------- | ----------------------------- | ---------- |
 | `/recrutador`                         | shell, design system, Vue     | 90 kB      |
-| `/clientes`                           | shell, design system, React   | 110 kB     |
+| `/clientes`                           | shell, design system, React   | 135 kB     |
 | `/tecnico`                            | shell, design system, Angular | 140 kB     |
 | `/`, `/comunidade`, `/como-foi-feito` | Next.js, design system        | 150 kB     |
 
@@ -102,6 +102,8 @@ Com o pop-up de imersão da home e a remoção do pt-PT (2026-10-09): `/` vai de
 Com a página do recrutador e a transição de entrada (2026-10-09, ADR 0010): `/` vai de 147,9 para 148,3 kB, ainda em nove arquivos, com LCP de 2,57 a 2,64 s. A página do recrutador foi publicada com os dados de exemplo: o MFE Vue vai de 29,8 para 43,1 kB (teto 60) e `/recrutador` de 38,8 para 51,8 kB (teto 90), com LCP de 1,81 s e CLS de 0,033. A biblioteca de animação (`motion`, versão mini) responde por 4,4 kB; a `motion-v` foi medida e descartada, de 52 a 79 kB só no MFE. Sem conteúdo, a página sai do bundle e o MFE mede 30,2 kB. Detalhes em `docs/plans/recrutador-conteudo.md`.
 
 Com a página técnica e as transições de ida e volta (2026-10-09, ADRs 0011 e 0012): `/` fica em 148,3 kB e nove arquivos, com LCP de 2,55 a 2,58 s; o script da chegada na home é inline e não entra na conta. O shell vai de 0,9 para 1,3 kB. O MFE Angular vai de 37,7 para 59,8 kB (teto 110) e `/tecnico` de 46,7 para 68,8 kB (teto 140), com LCP de 1,81 a 1,96 s e CLS de 0,033; a fonte monoespaçada é a do sistema, sem arquivo. `/recrutador` mede 52,1 kB. `/comunidade/`, sem mudança, mediu 2,535 s em uma de quatro rodadas e de 2,38 a 2,46 s nas outras: continua no limite de 2,5 s. Detalhes em `docs/plans/tecnico-conteudo.md`.
+
+Com a página do cliente e a transição de onda (2026-10-10): **o teto do MFE React sobe de 80 para 105 kB e o da rota `/clientes` de 110 para 135 kB**, por decisão do autor. Motivo: o React já ocupava 77,7 kB sem nenhuma feature; a página do cliente soma marcação, estilo, textos em três idiomas e a `motion` mini (4,4 kB), e carga sob demanda não reduz o que o script de orçamentos soma. Medido: MFE React 91,6 kB, `/clientes` 100,7 kB, com LCP de 1,96 a 2,11 s e CLS de 0,033. `/` fica em 148,4 kB e nove arquivos, com LCP de 2,57 s. `/comunidade/`, sem mudança, mediu de 2,46 a 2,55 s. Detalhes em `docs/plans/clientes-conteudo.md`.
 
 As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um terço do teto. O React e o Next.js já nascem perto do teto, com folga de cerca de 3 kB e, depois da tela de escolha de perfil, 5 kB; a primeira feature dessas áreas vai exigir carga sob demanda ou a decisão registrada de subir o teto.
 
