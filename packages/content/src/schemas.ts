@@ -200,7 +200,17 @@ export const projectSchema = z
     end: yearMonth.optional(),
     role: localizedSchema.optional(),
     skills: z.array(id),
-    links: z.object({ repo: httpsUrl, demo: httpsUrl }).partial().strict().optional(),
+    links: z
+      .object({
+        /** O repositório principal. */
+        repo: httpsUrl,
+        demo: httpsUrl,
+        /** Projeto com mais de um repositório: todos, cada um com o rótulo da parte. */
+        repos: z.array(z.object({ label: localizedSchema, url: httpsUrl }).strict()).min(2),
+      })
+      .partial()
+      .strict()
+      .optional(),
     /** Lista o projeto na área da comunidade. */
     openSource: z.boolean(),
     /** Situação do projeto de código aberto; obrigatória quando `openSource` é `true`. */
@@ -273,7 +283,8 @@ export const recruiterUiSchema = z
       })
       .strict(),
     experience: labels(['title', 'present', 'highlights']),
-    projects: labels(['title', 'role', 'challenge', 'result', 'repo', 'demo']),
+    /** `ongoing` fecha o período de um projeto sem data de fim. */
+    projects: labels(['title', 'role', 'challenge', 'result', 'repo', 'demo', 'ongoing']),
     education: z
       .object({
         title: text,
@@ -585,7 +596,7 @@ export const communityUiSchema = z
         title: text,
         repo: text,
         statuses: labels(['active', 'maintained', 'archived']),
-        /** O repositório deste site, o único projeto real da lista. */
+        /** O repositório deste site, que abre a lista. */
         thisSite: labels(['title', 'description']),
       })
       .strict(),

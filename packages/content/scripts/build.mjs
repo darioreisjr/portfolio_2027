@@ -10,14 +10,23 @@ const includeDrafts = process.env.CONTENT_INCLUDE_DRAFTS === '1';
 
 // As áreas abaixo vão ao ar com os dados de exemplo e a faixa que os identifica,
 // até o conteúdo real chegar. Autorizado pelo autor em 2026-10-09; para uma área
-// voltar à tela "em construção" em produção, troque para `false`.
-const PUBLISH_EXAMPLE = { recruiter: true, tech: true, client: true, community: true };
+// voltar à tela "em construção" em produção, troque para `false`. A do
+// recrutador saiu da exceção em 2026-10-12, quando os dados reais entraram: se o
+// perfil voltar a rascunho, ela não põe exemplo no ar sob o nome do autor.
+const PUBLISH_EXAMPLE = { recruiter: false, tech: true, client: true, community: true };
+
+// A home mostra nome e cargo quando recebe o perfil. Com o perfil publicado ela
+// passaria a mostrá-los em produção; o autor deixou isso para uma tarefa própria
+// (2026-10-12), porque a home está perto do teto de LCP. Em desenvolvimento,
+// com rascunhos, nada muda.
+const HOME_IDENTITY = false;
 
 const content = loadContent(dataDir, {
   includeDrafts,
   publishExample: PUBLISH_EXAMPLE,
 });
-const { ui, home, profile, recruiter, recruiterUi, tech, techUi, site, client, clientUi } = content;
+const { ui, home, recruiter, recruiterUi, tech, techUi, site, client, clientUi } = content;
+const profile = includeDrafts || HOME_IDENTITY ? content.profile : null;
 const { community, communityUi } = content;
 
 const modules = {

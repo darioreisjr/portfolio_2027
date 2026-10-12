@@ -1,5 +1,204 @@
 [
   {
+    "id": "probrain",
+    "status": "published",
+    "company": "ProBrain",
+    "companyUrl": "https://www.probrain.com.br/",
+    "role": {
+      "pt-BR": "Desenvolvedor Front-end",
+      "en": "Front-end Developer",
+      "es": "Desarrollador Front-end"
+    },
+    "start": "2025-02",
+    "end": null,
+    "mode": "remote",
+    "summary": {
+      "pt-BR": "Atua na evolução de diferentes aplicações web desenvolvidas com React e Next.js. Participa da implementação de funcionalidades, decisões de arquitetura front-end, evolução de componentes e Design Systems, integração com APIs e processos de qualidade e entrega.",
+      "en": "Works on the evolution of several web applications built with React and Next.js. Takes part in feature implementation, front-end architecture decisions, the evolution of components and design systems, API integration, and quality and delivery processes.",
+      "es": "Trabaja en la evolución de distintas aplicaciones web desarrolladas con React y Next.js. Participa en la implementación de funcionalidades, decisiones de arquitectura front-end, evolución de componentes y Design Systems, integración con APIs y procesos de calidad y entrega."
+    },
+    "highlights": [
+      {
+        "pt-BR": "Desenvolveu componentes reutilizáveis e acessíveis, aumentando a consistência entre interfaces e reduzindo duplicação de implementação.",
+        "en": "Built reusable, accessible components, increasing consistency across interfaces and reducing duplicated implementation.",
+        "es": "Desarrolló componentes reutilizables y accesibles, aumentando la consistencia entre interfaces y reduciendo la duplicación de implementación."
+      },
+      {
+        "pt-BR": "Participou de decisões de arquitetura, organização de módulos, bibliotecas e fluxo de dados, contribuindo para uma base de código mais sustentável.",
+        "en": "Took part in decisions on architecture, module organization, libraries and data flow, contributing to a more maintainable codebase.",
+        "es": "Participó en decisiones de arquitectura, organización de módulos, bibliotecas y flujo de datos, contribuyendo a una base de código más sostenible."
+      },
+      {
+        "pt-BR": "Trabalhou com Storybook e documentação técnica para facilitar desenvolvimento, reutilização e manutenção de componentes.",
+        "en": "Worked with Storybook and technical documentation to make components easier to develop, reuse and maintain.",
+        "es": "Trabajó con Storybook y documentación técnica para facilitar el desarrollo, la reutilización y el mantenimiento de componentes."
+      },
+      {
+        "pt-BR": "Participou de code review, CI/CD, deploy e investigação de erros com Sentry, melhorando a rastreabilidade técnica das aplicações.",
+        "en": "Took part in code review, CI/CD, deployment and error investigation with Sentry, improving the technical traceability of the applications.",
+        "es": "Participó en code review, CI/CD, despliegue e investigación de errores con Sentry, mejorando la trazabilidad técnica de las aplicaciones."
+      }
+    ],
+    "skills": [
+      "react",
+      "nextjs",
+      "typescript",
+      "javascript",
+      "material-ui",
+      "redux",
+      "rest-apis",
+      "git-github",
+      "storybook",
+      "sentry"
+    ]
+  },
+  {
+    "id": "comunidade-cafe-bugado",
+    "status": "published",
+    "company": "Comunidade Café Bugado",
+    "companyUrl": "https://cafebugado.com.br/",
+    "role": {
+      "pt-BR": "Fundador e Líder Técnico",
+      "en": "Founder and Tech Lead",
+      "es": "Fundador y Líder Técnico"
+    },
+    "start": "2023-05",
+    "end": null,
+    "location": {
+      "pt-BR": "São Paulo, Brasil",
+      "en": "São Paulo, Brazil",
+      "es": "São Paulo, Brasil"
+    },
+    "mode": "remote",
+    "summary": {
+      "pt-BR": "Atua na liderança técnica e no desenvolvimento dos produtos digitais da comunidade. Participa da arquitetura, desenvolvimento front-end e back-end, code review, testes, CI/CD, documentação, planejamento técnico e acompanhamento de pessoas desenvolvedoras.",
+      "en": "Leads the technical side and the development of the community's digital products. Takes part in architecture, front-end and back-end development, code review, testing, CI/CD, documentation, technical planning and mentoring developers.",
+      "es": "Lidera la parte técnica y el desarrollo de los productos digitales de la comunidad. Participa en la arquitectura, el desarrollo front-end y back-end, code review, pruebas, CI/CD, documentación, planificación técnica y acompañamiento de personas desarrolladoras."
+    },
+    "highlights": [
+      {
+        "pt-BR": "Definiu padrões de arquitetura, branches, commits, releases e qualidade utilizados nos projetos da comunidade.",
+        "en": "Defined the architecture, branching, commit, release and quality standards used across the community's projects.",
+        "es": "Definió los estándares de arquitectura, branches, commits, releases y calidad utilizados en los proyectos de la comunidad."
+      },
+      {
+        "pt-BR": "Desenvolveu e evoluiu aplicações com Next.js, Angular, NestJS, PostgreSQL, Supabase e Prisma, permitindo separar portal público, administração e APIs.",
+        "en": "Built and evolved applications with Next.js, Angular, NestJS, PostgreSQL, Supabase and Prisma, making it possible to separate the public portal, administration and APIs.",
+        "es": "Desarrolló y evolucionó aplicaciones con Next.js, Angular, NestJS, PostgreSQL, Supabase y Prisma, lo que permitió separar portal público, administración y APIs."
+      },
+      {
+        "pt-BR": "Configurou pipelines de CI/CD, validações e fluxos de release com GitHub Actions.",
+        "en": "Set up CI/CD pipelines, validations and release flows with GitHub Actions.",
+        "es": "Configuró pipelines de CI/CD, validaciones y flujos de release con GitHub Actions."
+      },
+      {
+        "pt-BR": "Realiza mentoria, onboarding, code review e planejamento técnico, ajudando o time a trabalhar com padrões compartilhados.",
+        "en": "Provides mentoring, onboarding, code review and technical planning, helping the team work with shared standards.",
+        "es": "Realiza mentoría, onboarding, code review y planificación técnica, ayudando al equipo a trabajar con estándares compartidos."
+      }
+    ],
+    "skills": [
+      "react",
+      "nextjs",
+      "angular",
+      "typescript",
+      "javascript",
+      "nodejs",
+      "nestjs",
+      "rest-apis",
+      "postgresql",
+      "supabase",
+      "prisma",
+      "git-github",
+      "github-actions",
+      "jest",
+      "storybook"
+    ]
+  },
+  {
+    "id": "healthwork",
+    "status": "published",
+    "company": "Healthwork Medicina e Segurança no Trabalho",
+    "companyUrl": "https://www.healthwork.com.br/",
+    "role": {
+      "pt-BR": "Analista de eSocial",
+      "en": "eSocial Analyst",
+      "es": "Analista de eSocial"
+    },
+    "start": "2023-11",
+    "end": "2025-02",
+    "location": {
+      "pt-BR": "São Paulo, Brasil",
+      "en": "São Paulo, Brazil",
+      "es": "São Paulo, Brasil"
+    },
+    "mode": "onsite",
+    "summary": {
+      "pt-BR": "Atuou na geração, análise e validação de arquivos XML para eventos do eSocial, incluindo admissões, demissões e alterações cadastrais. Também realizava manutenção de cadastros e investigação de inconsistências para preservar a integridade dos dados enviados.",
+      "en": "Generated, analyzed and validated XML files for events in eSocial, Brazil's labor and payroll reporting system, including hirings, terminations and changes to employee records. Also maintained records and investigated inconsistencies to preserve the integrity of the submitted data.",
+      "es": "Trabajó en la generación, el análisis y la validación de archivos XML para eventos de eSocial, el sistema brasileño de información laboral, incluyendo admisiones, desvinculaciones y cambios de registro. También realizaba el mantenimiento de registros y la investigación de inconsistencias para preservar la integridad de los datos enviados."
+    },
+    "highlights": [
+      {
+        "pt-BR": "Criou e validou arquivos XML de diferentes eventos do eSocial, garantindo aderência aos dados exigidos pelo sistema.",
+        "en": "Created and validated XML files for different eSocial events, ensuring they matched the data required by the system.",
+        "es": "Creó y validó archivos XML de distintos eventos de eSocial, garantizando el cumplimiento de los datos exigidos por el sistema."
+      },
+      {
+        "pt-BR": "Investigou inconsistências cadastrais e coordenou correções com áreas responsáveis, evitando propagação de dados incorretos.",
+        "en": "Investigated inconsistencies in records and coordinated fixes with the responsible teams, preventing incorrect data from spreading.",
+        "es": "Investigó inconsistencias de registro y coordinó correcciones con las áreas responsables, evitando la propagación de datos incorrectos."
+      },
+      {
+        "pt-BR": "Manteve e atualizou cadastros de colaboradores e recuperou matrículas do eSocial para apoiar processos operacionais.",
+        "en": "Maintained and updated employee records and retrieved eSocial registration numbers to support operational processes.",
+        "es": "Mantuvo y actualizó registros de colaboradores y recuperó matrículas de eSocial para apoyar procesos operativos."
+      }
+    ],
+    "skills": ["xml"]
+  },
+  {
+    "id": "freelancer",
+    "status": "published",
+    "company": "Freelancer",
+    "role": {
+      "pt-BR": "Desenvolvedor Web Freelancer",
+      "en": "Freelance Web Developer",
+      "es": "Desarrollador Web Freelance"
+    },
+    "start": "2023-08",
+    "end": "2025-02",
+    "location": {
+      "pt-BR": "São Paulo, Brasil",
+      "en": "São Paulo, Brazil",
+      "es": "São Paulo, Brasil"
+    },
+    "mode": "remote",
+    "summary": {
+      "pt-BR": "Desenvolveu sites, landing pages e interfaces web para diferentes necessidades de clientes, sem divulgação pública de seus nomes. Atuou desde a construção da interface até publicação e ajustes posteriores, utilizando desenvolvimento customizado e plataformas CMS.",
+      "en": "Built websites, landing pages and web interfaces for different client needs, without publicly disclosing their names. Worked from building the interface to publishing and later adjustments, using custom development and CMS platforms.",
+      "es": "Desarrolló sitios, landing pages e interfaces web para distintas necesidades de clientes, sin divulgación pública de sus nombres. Trabajó desde la construcción de la interfaz hasta la publicación y los ajustes posteriores, con desarrollo a medida y plataformas CMS."
+    },
+    "highlights": [
+      {
+        "pt-BR": "Desenvolveu interfaces responsivas com JavaScript, Next.js e Tailwind CSS, entregando projetos utilizáveis em diferentes tamanhos de tela.",
+        "en": "Built responsive interfaces with JavaScript, Next.js and Tailwind CSS, delivering projects usable on different screen sizes.",
+        "es": "Desarrolló interfaces responsivas con JavaScript, Next.js y Tailwind CSS, entregando proyectos utilizables en distintos tamaños de pantalla."
+      },
+      {
+        "pt-BR": "Criou e personalizou sites utilizando WordPress e Wix quando a necessidade do cliente favorecia uma solução baseada em CMS.",
+        "en": "Created and customized websites with WordPress and Wix when the client's needs favored a CMS-based solution.",
+        "es": "Creó y personalizó sitios con WordPress y Wix cuando la necesidad del cliente favorecía una solución basada en CMS."
+      },
+      {
+        "pt-BR": "Realizou publicação, manutenção e ajustes das aplicações após a entrega.",
+        "en": "Handled publishing, maintenance and adjustments of the applications after delivery.",
+        "es": "Realizó la publicación, el mantenimiento y los ajustes de las aplicaciones tras la entrega."
+      }
+    ],
+    "skills": ["javascript", "nextjs", "tailwind-css", "git-github"]
+  },
+  {
     "id": "exemplo-empresa-b",
     "status": "draft",
     "company": "Empresa Exemplo B",

@@ -1,5 +1,268 @@
 [
   {
+    "id": "portfolio-2026",
+    "status": "published",
+    "slug": "portfolio-2026",
+    "title": {
+      "pt-BR": "Portfólio 2026 + API",
+      "en": "Portfolio 2026 + API",
+      "es": "Portafolio 2026 + API"
+    },
+    "summary": {
+      "pt-BR": "Ecossistema de portfólio pessoal com interface pública e API própria para gerenciamento de projetos, tecnologias e conteúdo.",
+      "en": "Personal portfolio ecosystem with a public interface and its own API for managing projects, technologies and content.",
+      "es": "Ecosistema de portafolio personal con interfaz pública y API propia para gestionar proyectos, tecnologías y contenido."
+    },
+    "start": "2025-09",
+    "role": {
+      "pt-BR": "Projeto individual; responsável por arquitetura, front-end, back-end, banco, segurança, CI/CD e deploy.",
+      "en": "Solo project; responsible for architecture, front end, back end, database, security, CI/CD and deployment.",
+      "es": "Proyecto individual; responsable de arquitectura, front-end, back-end, base de datos, seguridad, CI/CD y despliegue."
+    },
+    "skills": [
+      "react",
+      "typescript",
+      "tailwind-css",
+      "nestjs",
+      "postgresql",
+      "supabase",
+      "prisma",
+      "rest-apis",
+      "github-actions"
+    ],
+    "links": {
+      "repo": "https://github.com/darioreisjr/portifolio_2026",
+      "demo": "https://darioreis.dev/",
+      "repos": [
+        {
+          "label": {
+            "pt-BR": "Front-end",
+            "en": "Front-end",
+            "es": "Front-end"
+          },
+          "url": "https://github.com/darioreisjr/portifolio_2026"
+        },
+        {
+          "label": {
+            "pt-BR": "API",
+            "en": "API",
+            "es": "API"
+          },
+          "url": "https://github.com/darioreisjr/api_portfolio_26"
+        }
+      ]
+    },
+    "openSource": true,
+    "openSourceStatus": "active",
+    "recruiter": {
+      "challenge": {
+        "pt-BR": "Criar um portfólio que fosse mais do que uma página estática, separando a experiência visual do gerenciamento dos dados. A solução precisava contemplar autenticação, armazenamento de imagens, conteúdo dinâmico, responsividade, PWA e publicação independente do front-end e da API.",
+        "en": "Build a portfolio that was more than a static page, separating the visual experience from data management. The solution had to cover authentication, image storage, dynamic content, responsiveness, PWA support and independent deployment of the front end and the API.",
+        "es": "Crear un portafolio que fuera más que una página estática, separando la experiencia visual de la gestión de los datos. La solución debía contemplar autenticación, almacenamiento de imágenes, contenido dinámico, diseño responsivo, PWA y publicación independiente del front-end y de la API."
+      },
+      "result": {
+        "pt-BR": "O front-end está publicado com React, TypeScript, Vite, Tailwind, internacionalização e PWA. A API em NestJS gerencia projetos, tecnologias e categorias utilizando PostgreSQL, Prisma, Supabase Auth, Supabase Storage, JWT, Swagger, paginação e filtros.",
+        "en": "The front end is live with React, TypeScript, Vite, Tailwind, internationalization and PWA support. The NestJS API manages projects, technologies and categories using PostgreSQL, Prisma, Supabase Auth, Supabase Storage, JWT, Swagger, pagination and filters.",
+        "es": "El front-end está publicado con React, TypeScript, Vite, Tailwind, internacionalización y PWA. La API en NestJS gestiona proyectos, tecnologías y categorías con PostgreSQL, Prisma, Supabase Auth, Supabase Storage, JWT, Swagger, paginación y filtros."
+      }
+    },
+    "featured": true
+  },
+  {
+    "id": "kokyu",
+    "status": "published",
+    "slug": "kokyu",
+    "title": {
+      "pt-BR": "Kokyu",
+      "en": "Kokyu",
+      "es": "Kokyu"
+    },
+    "summary": {
+      "pt-BR": "Plataforma para centralizar diferentes áreas da rotina pessoal em uma única aplicação.",
+      "en": "Platform that brings different areas of personal routine together in a single application.",
+      "es": "Plataforma para centralizar distintas áreas de la rutina personal en una única aplicación."
+    },
+    "start": "2026-08",
+    "role": {
+      "pt-BR": "Projeto individual; responsável por arquitetura, Design System, front-end, testes, API e infraestrutura dos ambientes.",
+      "en": "Solo project; responsible for architecture, design system, front end, testing, API and environment infrastructure.",
+      "es": "Proyecto individual; responsable de arquitectura, Design System, front-end, pruebas, API e infraestructura de los entornos."
+    },
+    "skills": [
+      "nextjs",
+      "react",
+      "typescript",
+      "material-ui",
+      "vitest",
+      "playwright",
+      "storybook",
+      "supabase"
+    ],
+    "links": {
+      "repo": "https://github.com/darioreisjr/kokyu",
+      "demo": "https://kokyu.darioreis.dev",
+      "repos": [
+        {
+          "label": {
+            "pt-BR": "Front-end",
+            "en": "Front-end",
+            "es": "Front-end"
+          },
+          "url": "https://github.com/darioreisjr/kokyu"
+        },
+        {
+          "label": {
+            "pt-BR": "Back-end",
+            "en": "Back-end",
+            "es": "Back-end"
+          },
+          "url": "https://github.com/darioreisjr/kokyu-sam"
+        }
+      ]
+    },
+    "openSource": true,
+    "openSourceStatus": "active",
+    "recruiter": {
+      "challenge": {
+        "pt-BR": "Construir uma base sustentável para uma aplicação que deve crescer para diversos domínios sem transformar o código em um conjunto de módulos fortemente acoplados. Isso exigiu definir arquitetura por features, Design System próprio, estratégia de testes, autenticação e ambientes desde a fundação.",
+        "en": "Build a sustainable foundation for an application that is meant to grow into several domains without turning the code into a set of tightly coupled modules. That required defining a feature-based architecture, its own design system, a testing strategy, authentication and environments from the start.",
+        "es": "Construir una base sostenible para una aplicación que debe crecer hacia distintos dominios sin convertir el código en un conjunto de módulos fuertemente acoplados. Eso exigió definir arquitectura por features, Design System propio, estrategia de pruebas, autenticación y entornos desde la base."
+      },
+      "result": {
+        "pt-BR": "A aplicação possui Next.js 16, React 19, TypeScript, Material UI, Design System próprio, Storybook, testes unitários e E2E, autenticação e backend separado. A base está operacional e preparada para receber progressivamente os módulos de rotina, hábitos, saúde, estudos, finanças e outras áreas.",
+        "en": "The application has Next.js 16, React 19, TypeScript, Material UI, its own design system, Storybook, unit and E2E tests, authentication and a separate back end. The foundation is up and running and ready to progressively receive the modules for routine, habits, health, studies, finances and other areas.",
+        "es": "La aplicación cuenta con Next.js 16, React 19, TypeScript, Material UI, Design System propio, Storybook, pruebas unitarias y E2E, autenticación y backend separado. La base está operativa y preparada para recibir progresivamente los módulos de rutina, hábitos, salud, estudios, finanzas y otras áreas."
+      }
+    },
+    "featured": true
+  },
+  {
+    "id": "whatsapp-ranking",
+    "status": "published",
+    "slug": "whatsapp-ranking",
+    "title": {
+      "pt-BR": "WhatsApp Ranking",
+      "en": "WhatsApp Ranking",
+      "es": "WhatsApp Ranking"
+    },
+    "summary": {
+      "pt-BR": "Aplicação que processa chats exportados do WhatsApp no navegador e apresenta rankings e estatísticas de participação sem exigir cadastro.",
+      "en": "Application that processes exported WhatsApp chats in the browser and shows rankings and participation statistics with no sign-up required.",
+      "es": "Aplicación que procesa chats exportados de WhatsApp en el navegador y presenta rankings y estadísticas de participación sin exigir registro."
+    },
+    "start": "2025-05",
+    "end": "2026-01",
+    "role": {
+      "pt-BR": "Projeto individual; responsável pela concepção, implementação, processamento dos arquivos, interface, PWA e deploy.",
+      "en": "Solo project; responsible for the concept, implementation, file processing, interface, PWA and deployment.",
+      "es": "Proyecto individual; responsable de la concepción, la implementación, el procesamiento de los archivos, la interfaz, la PWA y el despliegue."
+    },
+    "skills": ["nextjs", "react", "typescript", "tailwind-css"],
+    "links": {
+      "repo": "https://github.com/darioreisjr/whatsapp-ranking-nextjs",
+      "demo": "https://whatsappranking.darioreis.dev/"
+    },
+    "openSource": true,
+    "openSourceStatus": "maintained",
+    "recruiter": {
+      "challenge": {
+        "pt-BR": "Processar arquivos de conversas sem enviar o conteúdo privado para um servidor, mantendo uma experiência simples para pessoas sem conhecimento técnico. Também foi necessário interpretar o formato exportado pelo WhatsApp e transformar o conteúdo em métricas compreensíveis.",
+        "en": "Process chat files without sending private content to a server, while keeping the experience simple for people with no technical background. It was also necessary to parse the format exported by WhatsApp and turn the content into understandable metrics.",
+        "es": "Procesar archivos de conversaciones sin enviar el contenido privado a un servidor, manteniendo una experiencia sencilla para personas sin conocimientos técnicos. También fue necesario interpretar el formato exportado por WhatsApp y transformar el contenido en métricas comprensibles."
+      },
+      "result": {
+        "pt-BR": "A aplicação foi publicada como PWA, funciona sem cadastro e mantém o processamento dos chats no próprio dispositivo do usuário. O projeto combina privacidade, processamento de arquivos e experiência web responsiva.",
+        "en": "The application was published as a PWA, works with no sign-up and keeps chat processing on the user's own device. The project combines privacy, file processing and a responsive web experience.",
+        "es": "La aplicación se publicó como PWA, funciona sin registro y mantiene el procesamiento de los chats en el propio dispositivo del usuario. El proyecto combina privacidad, procesamiento de archivos y experiencia web responsiva."
+      }
+    },
+    "featured": true
+  },
+  {
+    "id": "eventos-cafe-bugado",
+    "status": "published",
+    "slug": "eventos-cafe-bugado",
+    "title": {
+      "pt-BR": "Plataforma de Eventos Café Bugado",
+      "en": "Café Bugado Events Platform",
+      "es": "Plataforma de Eventos Café Bugado"
+    },
+    "summary": {
+      "pt-BR": "Ecossistema para publicação, descoberta e administração de eventos de tecnologia da Comunidade Café Bugado.",
+      "en": "Ecosystem for publishing, discovering and managing tech events for the Café Bugado Community.",
+      "es": "Ecosistema para la publicación, el descubrimiento y la administración de eventos de tecnología de la Comunidad Café Bugado."
+    },
+    "start": "2026-01",
+    "role": {
+      "pt-BR": "Projeto em equipe; atuação em liderança técnica, arquitetura, front-end, back-end, code review, CI/CD, releases e documentação.",
+      "en": "Team project; worked on technical leadership, architecture, front end, back end, code review, CI/CD, releases and documentation.",
+      "es": "Proyecto en equipo; actuación en liderazgo técnico, arquitectura, front-end, back-end, code review, CI/CD, releases y documentación."
+    },
+    "skills": [
+      "nextjs",
+      "react",
+      "angular",
+      "typescript",
+      "material-ui",
+      "nodejs",
+      "nestjs",
+      "postgresql",
+      "supabase",
+      "prisma",
+      "github-actions",
+      "jest",
+      "vitest",
+      "playwright",
+      "storybook",
+      "sentry"
+    ],
+    "links": {
+      "repo": "https://github.com/cafebugado/eventos",
+      "demo": "https://eventos.cafebugado.com.br/",
+      "repos": [
+        {
+          "label": {
+            "pt-BR": "Portal",
+            "en": "Portal",
+            "es": "Portal"
+          },
+          "url": "https://github.com/cafebugado/eventos"
+        },
+        {
+          "label": {
+            "pt-BR": "API",
+            "en": "API",
+            "es": "API"
+          },
+          "url": "https://github.com/cafebugado/backendeventos-public-api"
+        },
+        {
+          "label": {
+            "pt-BR": "Painel administrativo",
+            "en": "Admin dashboard",
+            "es": "Panel de administración"
+          },
+          "url": "https://github.com/cafebugado/eventosPainelAdminAngular"
+        }
+      ]
+    },
+    "openSource": true,
+    "openSourceStatus": "active",
+    "recruiter": {
+      "challenge": {
+        "pt-BR": "Evoluir uma plataforma comunitária com diferentes aplicações e responsabilidades, separando experiência pública, administração e API. Também foi necessário estruturar padrões de branches, releases, testes, segurança e integração entre os projetos.",
+        "en": "Evolve a community platform with different applications and responsibilities, separating the public experience, administration and the API. It was also necessary to structure standards for branches, releases, testing, security and integration between the projects.",
+        "es": "Evolucionar una plataforma comunitaria con distintas aplicaciones y responsabilidades, separando experiencia pública, administración y API. También fue necesario estructurar estándares de branches, releases, pruebas, seguridad e integración entre los proyectos."
+      },
+      "result": {
+        "pt-BR": "O ecossistema possui portal público, API NestJS e painel administrativo, todos em evolução contínua. A plataforma é utilizada pela comunidade para centralizar a curadoria e publicação de eventos de tecnologia.",
+        "en": "The ecosystem has a public portal, a NestJS API and an admin dashboard, all under continuous development. The platform is used by the community to centralize the curation and publication of tech events.",
+        "es": "El ecosistema cuenta con portal público, API NestJS y panel de administración, todos en evolución continua. La comunidad utiliza la plataforma para centralizar la curaduría y la publicación de eventos de tecnología."
+      }
+    },
+    "featured": true
+  },
+  {
     "id": "exemplo-projeto-um",
     "status": "draft",
     "slug": "exemplo-projeto-um",

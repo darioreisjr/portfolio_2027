@@ -10,18 +10,63 @@ const dataDir = fileURLToPath(new URL('../data', import.meta.url));
 
 type Json = Record<string, unknown>;
 
-/** Copia os dados reais e aplica uma alteração em um arquivo JSON. */
-function dataWith(file: string, change: (json: Json) => void): string {
-  const copy = mkdtempSync(join(tmpdir(), 'content-'));
-  cpSync(dataDir, copy, { recursive: true });
-  const path = join(copy, file);
+/** Altera um arquivo JSON de uma cópia dos dados. */
+function edit(dir: string, file: string, change: (json: Json) => void): string {
+  const path = join(dir, file);
   const json = JSON.parse(readFileSync(path, 'utf8')) as Json;
   change(json);
   writeFileSync(path, JSON.stringify(json));
+  return dir;
+}
+
+function copyData(): string {
+  const copy = mkdtempSync(join(tmpdir(), 'content-'));
+  cpSync(dataDir, copy, { recursive: true });
   return copy;
 }
 
+/** Copia os dados do repositório e aplica uma alteração em um arquivo JSON. */
+const dataWith = (file: string, change: (json: Json) => void) => edit(copyData(), file, change);
+
 const allLocales = (value: string) => Object.fromEntries(locales.map((locale) => [locale, value]));
+
+const EXAMPLE = /^exemplo-/;
+const isExample = (item: { id: string }) => EXAMPLE.test(item.id);
+const lists = [
+  'contacts',
+  'skills',
+  'experiences',
+  'education',
+  'projects',
+  'services',
+  'testimonials',
+  'articles',
+] as const;
+
+/**
+ * Os dados do repositório só com o conjunto de exemplo e um perfil em rascunho:
+ * é como uma área fica enquanto o conteúdo real dela não chega.
+ */
+function exampleData(): string {
+  const copy = copyData();
+  for (const list of lists) {
+    const path = join(copy, `${list}.json`);
+    const items = JSON.parse(readFileSync(path, 'utf8')) as { id: string }[];
+    writeFileSync(path, JSON.stringify(items.filter(isExample)));
+  }
+  return edit(copy, 'profile.json', (json) => {
+    for (const key of Object.keys(json)) delete json[key];
+    Object.assign(json, {
+      status: 'draft',
+      name: 'Pessoa Exemplo',
+      role: { 'pt-BR': 'Cargo de exemplo', en: 'Example role', es: 'Cargo de ejemplo' },
+      highlightSkills: ['exemplo-typescript', 'exemplo-vue', 'exemplo-node'],
+    });
+  });
+}
+
+const raw = (file: string) =>
+  JSON.parse(readFileSync(join(dataDir, `${file}.json`), 'utf8')) as (Json & { id: string })[];
 
 /** Perfil mínimo de teste; não depende do status do perfil real. */
 const profileWith = (overrides: Json) =>
@@ -94,18 +139,75 @@ describe('validação', () => {
 });
 
 describe('área do recrutador', () => {
-  /** Altera uma lista dos dados reais. */
+  /** Altera uma lista dos dados do repositório. */
   const listWith = (file: string, change: (items: Json[]) => void) =>
     dataWith(file, (json) => change(json as unknown as Json[]));
+  const firstReal = (items: Json[]) => {
+    const item = items.find((candidate) => !isExample(candidate as { id: string }));
+    if (!item) throw new Error('sem dado real');
+    return item;
+  };
+  const firstExample = (items: Json[]) => {
+    const item = items.find((candidate) => isExample(candidate as { id: string }));
+    if (!item) throw new Error('sem dado de exemplo');
+    return item;
+  };
+
+  it('com os dados do repositório, mostra só os reais, nos três idiomas e sem faixa', () => {
+    const highlight = (JSON.parse(readFileSync(join(dataDir, 'profile.json'), 'utf8')) as Json)
+      .highlightSkills as string[];
+    for (const includeDrafts of [false, true]) {
+      const { recruiter, recruiterUi } = loadContent(dataDir, { includeDrafts });
+      if (!recruiter) throw new Error('sem conteúdo');
+      for (const locale of locales) {
+        const content = recruiter[locale];
+        expect(content.example).toBe(false);
+        expect(content.experiences.length).toBeGreaterThan(0);
+        expect(content.projects.every((project) => project.challenge && project.result)).toBe(true);
+        // Sem arquivo não há caminho: o botão do currículo e o retrato não aparecem.
+        expect(content.cv).toBeUndefined();
+        expect(content.photo).toBeUndefined();
+        // Nada do conjunto de exemplo, nem de passagem.
+        expect(JSON.stringify(content)).not.toMatch(/exemplo-|example\.com|Exemplo/);
+        expect(recruiterUi[locale].projects.ongoing).not.toBe('');
+      }
+      expect(recruiter.en.summary).not.toBe(recruiter['pt-BR'].summary);
+      // O que está em curso vem primeiro, e as tecnologias em destaque abrem a lista.
+      expect(recruiter['pt-BR'].experiences[0]?.end).toBeNull();
+      expect(recruiter['pt-BR'].projects[0]?.end).toBeNull();
+      expect(recruiter['pt-BR'].skills.slice(0, highlight.length).map((skill) => skill.id)).toEqual(
+        highlight,
+      );
+    }
+  });
+
+  it('projeto com mais de um repositório entrega todos, com o rótulo no idioma', () => {
+    const { recruiter } = loadContent(dataDir, { includeDrafts: false });
+    const several = recruiter?.en.projects.filter((project) => project.repos);
+    expect(several?.length).toBeGreaterThan(0);
+    for (const project of several ?? []) {
+      expect(project.repos?.length).toBeGreaterThanOrEqual(2);
+      expect(project.repos?.every(({ label, url }) => label && url.startsWith('https://'))).toBe(
+        true,
+      );
+      // O principal continua no campo de sempre, para quem só mostra um.
+      expect(project.repos?.map(({ url }) => url)).toContain(project.repo);
+    }
+    const single = listWith('projects.json', (items) => {
+      const links = firstReal(items).links as { repos?: unknown[] };
+      links.repos = links.repos?.slice(0, 1) ?? [{}];
+    });
+    expect(() => loadContent(single, { includeDrafts: true })).toThrow(/projects\.json/);
+  });
 
   it('sem a exceção, não tem conteúdo em produção enquanto o perfil for rascunho', () => {
-    const content = loadContent(dataDir, { includeDrafts: false });
+    const content = loadContent(exampleData(), { includeDrafts: false });
     expect(content.recruiter).toBeNull();
     for (const locale of locales) expect(content.recruiterUi[locale].example.title).not.toBe('');
   });
 
   it('com a exceção, vai ao ar só como exemplo, sem levar o perfil para o resto do site', () => {
-    const content = loadContent(dataDir, {
+    const content = loadContent(exampleData(), {
       includeDrafts: false,
       publishExample: { recruiter: true },
     });
@@ -118,8 +220,8 @@ describe('área do recrutador', () => {
     expect(content.profile).toBeNull();
   });
 
-  it('a exceção acaba quando o perfil é publicado: rascunho volta a ficar de fora', () => {
-    const dir = dataWith('profile.json', (json) => {
+  it('a exceção acaba quando o perfil é publicado: exemplo não entra', () => {
+    const dir = edit(exampleData(), 'profile.json', (json) => {
       Object.assign(json, { status: 'published', highlightSkills: [] });
     });
     const { recruiter } = loadContent(dir, {
@@ -132,15 +234,13 @@ describe('área do recrutador', () => {
   });
 
   it('com rascunhos, entrega o conteúdo de exemplo traduzido e marcado como exemplo', () => {
-    const { recruiter } = loadContent(dataDir, { includeDrafts: true });
+    const { recruiter } = loadContent(exampleData(), { includeDrafts: true });
     if (!recruiter) throw new Error('sem conteúdo');
     for (const locale of locales) {
       const content = recruiter[locale];
       expect(content.example).toBe(true);
       expect(content.experiences.length).toBeGreaterThan(0);
       expect(content.projects.every((project) => project.challenge && project.result)).toBe(true);
-      // Sem arquivo de currículo não há caminho: o botão não aparece.
-      expect(content.cv).toBeUndefined();
     }
     expect(recruiter.en.role).not.toBe(recruiter['pt-BR'].role);
     // O emprego atual vem primeiro, e as skills chegam pelo nome.
@@ -150,25 +250,31 @@ describe('área do recrutador', () => {
     expect(recruiter['pt-BR'].skills[0]?.name).toBe('TypeScript');
   });
 
-  it('todo dado de exemplo é rascunho e visivelmente fictício', () => {
-    const raw = (file: string) => JSON.parse(readFileSync(join(dataDir, file), 'utf8')) as Json[];
-    for (const file of [
-      'contacts',
-      'skills',
-      'experiences',
-      'education',
-      'projects',
-      'services',
-      'testimonials',
-      'articles',
-    ]) {
-      for (const item of raw(`${file}.json`)) {
-        expect(item.status, `${file} ${String(item.id)}`).toBe('draft');
-        expect(String(item.id), file).toMatch(/^exemplo-/);
+  it('todo dado de exemplo é rascunho e visivelmente fictício; o real não se parece com ele', () => {
+    for (const file of lists) {
+      for (const item of raw(file)) {
+        if (isExample(item)) {
+          expect(item.status, `${file} ${item.id}`).toBe('draft');
+          if (file === 'contacts') expect(String(item.url)).toContain('example.com');
+        } else {
+          expect(JSON.stringify(item), `${file} ${item.id}`).not.toMatch(/example\.com|Exemplo/);
+        }
       }
     }
-    for (const contact of raw('contacts.json'))
-      expect(String(contact.url)).toContain('example.com');
+  });
+
+  it('recusa dado de exemplo publicado e referência entre o real e o de exemplo', () => {
+    const published = listWith('education.json', (items) => {
+      Object.assign(firstExample(items), { status: 'published', title: allLocales('Curso') });
+    });
+    expect(() => loadContent(published, { includeDrafts: true })).toThrow(
+      /dado de exemplo publicado/,
+    );
+
+    const mixed = listWith('experiences.json', (items) => {
+      (firstExample(items) as { skills: string[] }).skills.push('react');
+    });
+    expect(() => loadContent(mixed, { includeDrafts: true })).toThrow(/mistura dado real/);
   });
 
   it('recusa referência a skill que não existe e id repetido', () => {
@@ -185,30 +291,65 @@ describe('área do recrutador', () => {
 
   it('recusa item publicado sem tradução ou que dependa de skill em rascunho', () => {
     const untranslated = listWith('education.json', (items) => {
-      Object.assign(items[0] as Json, { status: 'published', title: { 'pt-BR': 'Curso' } });
+      Object.assign(firstReal(items), { status: 'published', title: { 'pt-BR': 'Curso' } });
     });
     expect(() => loadContent(untranslated, { includeDrafts: true })).toThrow(/sem tradução/);
 
-    const dangling = listWith('experiences.json', (items) => {
-      (items[0] as Json).status = 'published';
+    const dangling = listWith('skills.json', (items) => {
+      firstReal(items).status = 'draft';
     });
     expect(() => loadContent(dangling, { includeDrafts: true })).toThrow(/skill em rascunho/);
   });
 
-  it('em produção, lista só os itens publicados de um perfil publicado', () => {
-    const dir = listWith('skills.json', (items) => {
-      (items[0] as Json).status = 'published';
+  it('rascunho real fica fora da produção e entra em desenvolvimento', () => {
+    const dir = listWith('education.json', (items) => {
+      firstReal(items).status = 'draft';
     });
-    const profilePath = join(dir, 'profile.json');
-    const profile = JSON.parse(readFileSync(profilePath, 'utf8')) as Json;
-    writeFileSync(
-      profilePath,
-      JSON.stringify({ ...profile, status: 'published', highlightSkills: ['exemplo-typescript'] }),
-    );
-    const { recruiter } = loadContent(dir, { includeDrafts: false });
-    expect(recruiter?.['pt-BR'].example).toBe(false);
-    expect(recruiter?.['pt-BR'].skills.map((skill) => skill.name)).toEqual(['TypeScript']);
-    expect(recruiter?.['pt-BR'].experiences).toEqual([]);
+    const count = (includeDrafts: boolean) =>
+      loadContent(dir, { includeDrafts }).recruiter?.['pt-BR'].education.length ?? 0;
+    expect(count(true)).toBe(count(false) + 1);
+  });
+});
+
+describe('real e exemplo não se misturam', () => {
+  const kinds = (ids: string[]) => new Set(ids.map((id) => EXAMPLE.test(id)));
+  const ids = (items: { id: string }[] = []) => items.map((item) => item.id);
+
+  it('em nenhuma área, em desenvolvimento ou em produção, um bloco tem os dois conjuntos', () => {
+    const publishExample = { recruiter: true, tech: true, client: true, community: true };
+    for (const dir of [dataDir, exampleData()]) {
+      for (const includeDrafts of [false, true]) {
+        const content = loadContent(dir, { includeDrafts, publishExample });
+        const recruiter = content.recruiter?.['pt-BR'];
+        const tech = content.tech?.['pt-BR'];
+        const client = content.client?.['pt-BR'];
+        const community = content.community?.['pt-BR'];
+        const blocks: Record<string, string[]> = {
+          // A área do recrutador é um bloco só: tudo nela segue o perfil.
+          recruiter: [
+            ...ids(recruiter?.skills),
+            ...ids(recruiter?.experiences),
+            ...ids(recruiter?.projects),
+            ...ids(recruiter?.education),
+            ...ids(recruiter?.contacts),
+          ],
+          tech: [...ids(tech?.projects), ...ids(tech?.skills)],
+          // Os canais seguem os serviços.
+          clientServices: [
+            ...ids(client?.services),
+            ...ids(client?.testimonials),
+            ...ids(client?.contacts),
+          ],
+          clientCases: ids(client?.cases),
+          communityArticles: ids(community?.articles),
+          communityProjects: ids(community?.projects),
+          communityChannels: ids(community?.channels),
+        };
+        for (const [block, list] of Object.entries(blocks)) {
+          expect(kinds(list).size, `${block}, rascunhos ${String(includeDrafts)}`).toBeLessThan(2);
+        }
+      }
+    }
   });
 });
 
@@ -244,6 +385,8 @@ describe('área do cliente', () => {
       ]);
       // O canal mais direto para quem contrata vem primeiro.
       expect(content.contacts.map((contact) => contact.kind)).toEqual(['whatsapp', 'email']);
+      // Contato real não acompanha oferta fictícia.
+      expect(content.contacts.every(isExample)).toBe(true);
       expect(JSON.stringify(content)).not.toMatch(/R\$|US\$|€/);
     }
     // Depoimento de exemplo não se passa por elogio de verdade.
@@ -267,6 +410,7 @@ describe('área do cliente', () => {
   it('com serviço publicado, os depoimentos de exemplo somem', () => {
     const dir = listWith('services.json', (items) => {
       Object.assign(items[0] as Json, {
+        id: 'servico-real',
         status: 'published',
         title: allLocales('Serviço'),
         description: allLocales('Descrição'),
@@ -294,11 +438,11 @@ describe('comunidade', () => {
     dataWith(file, (json) => change(json as unknown as Json[]));
 
   it('sem a exceção, não vai ao ar enquanto artigos e projetos forem rascunho', () => {
-    expect(loadContent(dataDir, { includeDrafts: false }).community).toBeNull();
+    expect(loadContent(exampleData(), { includeDrafts: false }).community).toBeNull();
   });
 
-  it('com a exceção, vai ao ar como exemplo: artigos, código aberto e canais', () => {
-    const { community, site } = loadContent(dataDir, {
+  it('com a exceção e só exemplos, vai ao ar como exemplo: artigos, código aberto e canais', () => {
+    const { community, site } = loadContent(exampleData(), {
       includeDrafts: false,
       publishExample: { community: true },
     });
@@ -313,8 +457,33 @@ describe('comunidade', () => {
       expect(content.projects.map((project) => project.status)).toEqual(['active', 'maintained']);
       expect(content.channels.map((channel) => channel.kind)).toEqual(['linkedin', 'github']);
     }
-    // O único endereço real é o do repositório deste site, no raio-x.
     expect(site.repository).toBe('https://github.com/darioreisjr/portfolio_2027');
+  });
+
+  it('com os dados do repositório, o código aberto é real e os outros blocos são de exemplo', () => {
+    const { community } = loadContent(dataDir, {
+      includeDrafts: false,
+      publishExample: { community: true },
+    });
+    if (!community) throw new Error('sem conteúdo');
+    for (const locale of locales) {
+      const content = community[locale];
+      expect(content.example).toEqual({ articles: true, projects: false, channels: true });
+      expect(content.projects.length).toBeGreaterThan(0);
+      expect(content.projects.some(isExample)).toBe(false);
+      for (const project of content.projects) {
+        expect(project.repo).toMatch(/^https:\/\/github\.com\//);
+        // As tecnologias chegam pelo nome, e são as reais.
+        expect(project.skills.length).toBeGreaterThan(0);
+      }
+      expect(content.articles.every(isExample)).toBe(true);
+      expect(content.channels.every(isExample)).toBe(true);
+    }
+    // Sem a exceção, só o bloco real vai ao ar.
+    const bare = loadContent(dataDir, { includeDrafts: false }).community?.['pt-BR'];
+    expect(bare?.articles).toEqual([]);
+    expect(bare?.channels).toEqual([]);
+    expect(bare?.projects.length).toBeGreaterThan(0);
   });
 
   it('recusa projeto de código aberto sem a situação', () => {
@@ -327,6 +496,7 @@ describe('comunidade', () => {
   it('com artigo publicado, os de exemplo saem do bloco', () => {
     const dir = listWith('articles.json', (items) => {
       Object.assign(items[0] as Json, {
+        id: 'artigo-real',
         status: 'published',
         title: allLocales('Artigo'),
         summary: allLocales('Resumo'),
@@ -339,6 +509,6 @@ describe('comunidade', () => {
     expect(community?.['pt-BR'].example.articles).toBe(false);
     expect(community?.['pt-BR'].articles).toHaveLength(1);
     // Os outros blocos continuam de exemplo, cada um com a própria faixa.
-    expect(community?.['pt-BR'].example.projects).toBe(true);
+    expect(community?.['pt-BR'].example.channels).toBe(true);
   });
 });

@@ -1,5 +1,96 @@
 [
   {
+    "id": "estacio-analise-e-desenvolvimento-de-sistemas",
+    "status": "published",
+    "kind": "degree",
+    "title": {
+      "pt-BR": "Análise e Desenvolvimento de Sistemas",
+      "en": "Systems Analysis and Development",
+      "es": "Análisis y Desarrollo de Sistemas"
+    },
+    "institution": "Estácio",
+    "start": "2021-04",
+    "end": "2023-10"
+  },
+  {
+    "id": "generation-java-web-full-stack",
+    "status": "published",
+    "kind": "course",
+    "title": {
+      "pt-BR": "Desenvolvedor Java Web Full Stack",
+      "en": "Full Stack Java Web Developer",
+      "es": "Desarrollador Java Web Full Stack"
+    },
+    "institution": "Generation Brasil",
+    "start": "2022-05",
+    "end": "2022-08"
+  },
+  {
+    "id": "google-foundations-of-cybersecurity",
+    "status": "published",
+    "kind": "course",
+    "title": {
+      "pt-BR": "Foundations of Cybersecurity",
+      "en": "Foundations of Cybersecurity",
+      "es": "Foundations of Cybersecurity"
+    },
+    "institution": "Google and Reichman AI Tech School",
+    "start": "2025-08",
+    "end": null
+  },
+  {
+    "id": "rocketseat-nlw-pocket-javascript",
+    "status": "published",
+    "kind": "certification",
+    "title": {
+      "pt-BR": "NLW Pocket: JavaScript - Full-stack Intermediário",
+      "en": "NLW Pocket: JavaScript - Intermediate Full-stack",
+      "es": "NLW Pocket: JavaScript - Full-stack Intermedio"
+    },
+    "institution": "Rocketseat",
+    "end": "2024-09",
+    "credentialUrl": "https://app.rocketseat.com.br/certificates/8b515946-da52-463f-a1de-841d58d35da0"
+  },
+  {
+    "id": "aws-essentials-of-prompt-engineering",
+    "status": "published",
+    "kind": "certification",
+    "title": {
+      "pt-BR": "Essentials of Prompt Engineering",
+      "en": "Essentials of Prompt Engineering",
+      "es": "Essentials of Prompt Engineering"
+    },
+    "institution": "Amazon Web Services (AWS)",
+    "end": "2025-10",
+    "credentialUrl": "https://skillbuilder.aws/89fad476-2e44-440a-b6ad-b7ff1caa70d6"
+  },
+  {
+    "id": "dio-open-source-github",
+    "status": "published",
+    "kind": "certification",
+    "title": {
+      "pt-BR": "Contribuindo em um Projeto Open Source no GitHub",
+      "en": "Contributing to an Open Source Project on GitHub",
+      "es": "Contribuyendo a un Proyecto Open Source en GitHub"
+    },
+    "institution": "DIO",
+    "end": "2024-06",
+    "credentialUrl": "https://www.dio.me/certificate/FNKQUAQU/share"
+  },
+  {
+    "id": "dio-aws-well-architected",
+    "status": "published",
+    "kind": "certification",
+    "title": {
+      "pt-BR": "AWS Well-Architected Framework",
+      "en": "AWS Well-Architected Framework",
+      "es": "AWS Well-Architected Framework"
+    },
+    "institution": "DIO",
+    "end": "2025-05",
+    "credentialUrl": "https://www.dio.me/certificate/XOYKVIXJ"
+  },
+  {
     "id": "exemplo-graduacao",
     "status": "draft",
     "kind": "degree",

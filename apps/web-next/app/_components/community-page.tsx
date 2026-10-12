@@ -115,7 +115,7 @@ export function CommunityPage({ model }: { model: CommunityModel }) {
             {text.projects.title}
           </h2>
           <ul className="c-capsules">
-            {/* O repositório deste site é real: fica fora da faixa de exemplo. */}
+            {/* O repositório deste site é sempre real: fica fora da faixa de exemplo. */}
             <li className="c-capsule">
               <div className="c-capsule-top">
                 <h3>{text.projects.thisSite.title}</h3>

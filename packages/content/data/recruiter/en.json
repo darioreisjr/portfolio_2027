@@ -61,7 +61,8 @@
     "challenge": "Challenge",
     "result": "Result",
     "repo": "Code",
-    "demo": "Live demo"
+    "demo": "Live demo",
+    "ongoing": "Ongoing"
   },
   "education": {
     "title": "Education and certificates",

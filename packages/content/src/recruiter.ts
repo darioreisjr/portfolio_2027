@@ -54,11 +54,16 @@ export interface RecruiterContent {
     id: string;
     title: string;
     summary: string;
+    start: string;
+    /** `null`: em andamento. */
+    end: string | null;
     role?: string;
     challenge: string;
     result: string;
     skills: string[];
     repo?: string;
+    /** Quando o projeto tem mais de um repositório: todos, com o rótulo de cada parte. */
+    repos?: { label: string; url: string }[];
     demo?: string;
   }[];
   education: {
@@ -142,11 +147,14 @@ export function buildRecruiter(sources: RecruiterSources, locale: Locale): Recru
             id: project.id,
             title: t(project.title),
             summary: t(project.summary),
+            start: project.start,
+            end: project.end ?? null,
             role: maybe(project.role),
             challenge: t(project.recruiter.challenge),
             result: t(project.recruiter.result),
             skills: names(project.skills),
             repo: project.links?.repo,
+            repos: project.links?.repos?.map(({ label, url }) => ({ label: t(label), url })),
             demo: project.links?.demo,
           })
         : [],

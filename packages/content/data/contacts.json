@@ -1,5 +1,37 @@
 [
   {
+    "id": "email",
+    "status": "published",
+    "kind": "email",
+    "url": "mailto:dev.darioreis@gmail.com",
+    "display": "dev.darioreis@gmail.com",
+    "primaryFor": ["recruiter"]
+  },
+  {
+    "id": "linkedin",
+    "status": "published",
+    "kind": "linkedin",
+    "url": "https://www.linkedin.com/in/darioreisjr/",
+    "display": "linkedin.com/in/darioreisjr",
+    "primaryFor": ["recruiter"]
+  },
+  {
+    "id": "github",
+    "status": "published",
+    "kind": "github",
+    "url": "https://github.com/darioreisjr",
+    "display": "github.com/darioreisjr",
+    "primaryFor": ["recruiter"]
+  },
+  {
+    "id": "whatsapp",
+    "status": "published",
+    "kind": "whatsapp",
+    "url": "https://wa.me/5511961889886",
+    "display": "+55 11 96188-9886",
+    "primaryFor": ["recruiter"]
+  },
+  {
     "id": "exemplo-email",
     "status": "draft",
     "kind": "email",

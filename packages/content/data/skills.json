@@ -1,5 +1,179 @@
 [
   {
+    "id": "react",
+    "status": "published",
+    "name": "React",
+    "category": "frontend",
+    "level": "advanced",
+    "since": 2022
+  },
+  {
+    "id": "nextjs",
+    "status": "published",
+    "name": "Next.js",
+    "category": "frontend",
+    "level": "working",
+    "since": 2023
+  },
+  {
+    "id": "typescript",
+    "status": "published",
+    "name": "TypeScript",
+    "category": "frontend",
+    "level": "advanced",
+    "since": 2023
+  },
+  {
+    "id": "javascript",
+    "status": "published",
+    "name": "JavaScript",
+    "category": "frontend",
+    "level": "advanced",
+    "since": 2021
+  },
+  {
+    "id": "material-ui",
+    "status": "published",
+    "name": "Material UI",
+    "category": "frontend",
+    "level": "working",
+    "since": 2022
+  },
+  {
+    "id": "redux",
+    "status": "published",
+    "name": "Redux",
+    "category": "frontend",
+    "level": "working",
+    "since": 2022
+  },
+  {
+    "id": "angular",
+    "status": "published",
+    "name": "Angular",
+    "category": "frontend",
+    "level": "working",
+    "since": 2022
+  },
+  {
+    "id": "tailwind-css",
+    "status": "published",
+    "name": "Tailwind CSS",
+    "category": "frontend",
+    "level": "working",
+    "since": 2023
+  },
+  {
+    "id": "storybook",
+    "status": "published",
+    "name": "Storybook",
+    "category": "frontend",
+    "level": "working",
+    "since": 2025
+  },
+  {
+    "id": "nodejs",
+    "status": "published",
+    "name": "Node.js",
+    "category": "backend",
+    "level": "working",
+    "since": 2023
+  },
+  {
+    "id": "nestjs",
+    "status": "published",
+    "name": "NestJS",
+    "category": "backend",
+    "level": "working",
+    "since": 2023
+  },
+  {
+    "id": "rest-apis",
+    "status": "published",
+    "name": "REST APIs",
+    "category": "backend",
+    "level": "working",
+    "since": 2022
+  },
+  {
+    "id": "postgresql",
+    "status": "published",
+    "name": "PostgreSQL",
+    "category": "database",
+    "level": "working",
+    "since": 2022
+  },
+  {
+    "id": "supabase",
+    "status": "published",
+    "name": "Supabase",
+    "category": "database",
+    "level": "working",
+    "since": 2024
+  },
+  {
+    "id": "prisma",
+    "status": "published",
+    "name": "Prisma",
+    "category": "database",
+    "level": "working",
+    "since": 2023
+  },
+  {
+    "id": "git-github",
+    "status": "published",
+    "name": "Git / GitHub",
+    "category": "devops",
+    "level": "advanced",
+    "since": 2021
+  },
+  {
+    "id": "github-actions",
+    "status": "published",
+    "name": "GitHub Actions",
+    "category": "devops",
+    "level": "working",
+    "since": 2025
+  },
+  {
+    "id": "sentry",
+    "status": "published",
+    "name": "Sentry",
+    "category": "devops",
+    "level": "working",
+    "since": 2025
+  },
+  {
+    "id": "jest",
+    "status": "published",
+    "name": "Jest",
+    "category": "testing",
+    "level": "working",
+    "since": 2022
+  },
+  {
+    "id": "vitest",
+    "status": "published",
+    "name": "Vitest",
+    "category": "testing",
+    "level": "working"
+  },
+  {
+    "id": "playwright",
+    "status": "published",
+    "name": "Playwright",
+    "category": "testing",
+    "level": "working"
+  },
+  {
+    "id": "xml",
+    "status": "published",
+    "name": "XML",
+    "category": "other",
+    "level": "working",
+    "since": 2023
+  },
+  {
     "id": "exemplo-typescript",
     "status": "draft",
     "name": "TypeScript",

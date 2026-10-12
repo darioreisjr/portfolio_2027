@@ -67,11 +67,11 @@ export interface LoadOptions {
   /** Rascunhos entram só em desenvolvimento; o build de produção os exclui. */
   includeDrafts: boolean;
   /**
-   * Publica uma área com os dados de exemplo (os rascunhos) enquanto ela não
-   * tiver conteúdo publicado, com a faixa "Dados de exemplo" na página. Exceção
-   * à regra de que rascunho não vai ao ar, autorizada pelo autor em 2026-10-09
-   * para o recrutador e a área técnica, e em 2026-10-10 para a do cliente. Não muda
-   * `profile` nem outra área.
+   * Publica uma área com os dados de exemplo (ids `exemplo-`) enquanto ela não
+   * tiver conteúdo real, com a faixa "Dados de exemplo" na página. Exceção à
+   * regra de que rascunho não vai ao ar, autorizada pelo autor em 2026-10-09
+   * para o recrutador e a área técnica, e em 2026-10-10 para a do cliente e a
+   * comunidade. Não muda `profile` nem outra área.
    */
   publishExample?: { recruiter?: boolean; tech?: boolean; client?: boolean; community?: boolean };
 }
@@ -95,6 +95,23 @@ function parseFile<Schema extends z.ZodType>(
 interface Listed {
   id: string;
   status: Status;
+}
+
+/**
+ * Dado de exemplo tem id com este prefixo e é sempre rascunho. Todo o resto é
+ * dado real. Cada bloco de cada área usa um conjunto ou o outro, nunca os dois.
+ */
+const EXAMPLE_PREFIX = 'exemplo-';
+const isExample = (item: { id: string }) => item.id.startsWith(EXAMPLE_PREFIX);
+const examples = <Item extends Listed>(items: Item[]) => items.filter(isExample);
+
+/** Recusa dado de exemplo publicado: ele iria ao ar sem a faixa que o identifica. */
+function checkExamples(file: string, items: Listed[]): void {
+  for (const item of items) {
+    if (isExample(item) && item.status === 'published') {
+      throw new Error(`Conteúdo inválido em ${file}:\n  dado de exemplo publicado: ${item.id}`);
+    }
+  }
 }
 
 /** Lê uma lista e recusa ids repetidos. */
@@ -127,6 +144,9 @@ function checkSkillRefs(
       const status = skills.get(skill);
       const where = `Conteúdo inválido em ${file}:\n  ${owner.id ?? '(raiz)'}:`;
       if (!status) throw new Error(`${where} skill inexistente: ${skill}`);
+      if (owner.id && isExample({ id: owner.id }) !== isExample({ id: skill })) {
+        throw new Error(`${where} mistura dado real com dado de exemplo: ${skill}`);
+      }
       if (owner.status === 'published' && status === 'draft') {
         throw new Error(`${where} item publicado usa skill em rascunho: ${skill}`);
       }
@@ -160,6 +180,16 @@ export function loadContent(
   const education = parseList(dataDir, 'education.json', educationSchema);
   const projects = parseList(dataDir, 'projects.json', projectSchema);
 
+  for (const [file, items] of [
+    ['contacts.json', contacts],
+    ['skills.json', skills],
+    ['experiences.json', experiences],
+    ['education.json', education],
+    ['projects.json', projects],
+  ] as const) {
+    checkExamples(file, items);
+  }
+
   const skillStatus = new Map(skills.map((skill) => [skill.id, skill.status]));
   checkSkillRefs(
     'profile.json',
@@ -170,12 +200,16 @@ export function loadContent(
   checkSkillRefs('projects.json', projects, skillStatus);
 
   const profile = rawProfile.status === 'published' || includeDrafts ? rawProfile : null;
-  // Modo de exemplo: sem perfil publicado, a área do recrutador mostra os
-  // rascunhos, que são os dados de exemplo. Com perfil publicado ele não existe.
-  const example = Boolean(publishExample.recruiter) && rawProfile.status === 'draft';
-  const visible = <Item extends Listed>(items: Item[]) =>
-    items.filter((item) => item.status === 'published' || includeDrafts || example);
-  const recruiterProfile = example ? rawProfile : profile;
+  /** Os dados reais: os publicados e, em desenvolvimento, também os rascunhos. */
+  const real = <Item extends Listed>(items: Item[]) =>
+    items.filter((item) => !isExample(item) && (item.status === 'published' || includeDrafts));
+  // Modo de exemplo: enquanto o perfil for rascunho, a área do recrutador mostra
+  // só os dados de exemplo, em desenvolvimento ou pela exceção. Com perfil
+  // publicado ela mostra só os dados reais, também em desenvolvimento.
+  const example =
+    rawProfile.status === 'draft' && (includeDrafts || Boolean(publishExample.recruiter));
+  const visible = example ? examples : real;
+  const recruiterProfile = rawProfile.status === 'published' || example ? rawProfile : null;
   const sources = recruiterProfile && {
     profile: recruiterProfile,
     contacts: visible(contacts),
@@ -190,18 +224,16 @@ export function loadContent(
   ) as Record<Locale, TechUi>;
   const site = parseFile(dataDir, 'site.json', siteSchema);
 
-  // Área técnica: com estudo de caso publicado, só o que é publicado. Sem
-  // nenhum, os rascunhos entram em desenvolvimento ou pela exceção de exemplo.
+  // Área técnica: com estudo de caso real, só os dados reais. Sem nenhum, os de
+  // exemplo entram em desenvolvimento ou pela exceção, com as skills de exemplo.
   const isCase = (project: { technical?: unknown }) => project.technical !== undefined;
-  const published = <Item extends Listed>(items: Item[]) =>
-    items.filter((item) => item.status === 'published');
-  const hasPublishedCase = published(projects).some(isCase);
-  const techExample = !hasPublishedCase && (includeDrafts || Boolean(publishExample.tech));
+  const hasRealCase = real(projects).some(isCase);
+  const techExample = !hasRealCase && (includeDrafts || Boolean(publishExample.tech));
   const techSources =
-    hasPublishedCase || techExample
+    hasRealCase || techExample
       ? {
-          projects: techExample ? projects : published(projects),
-          skills: techExample ? skills : published(skills),
+          projects: techExample ? examples(projects) : real(projects),
+          skills: techExample ? examples(skills) : real(skills),
           example: techExample,
         }
       : null;
@@ -214,35 +246,50 @@ export function loadContent(
   const services = parseList(dataDir, 'services.json', serviceSchema);
   const testimonials = parseList(dataDir, 'testimonials.json', testimonialSchema);
   const terms = parseFile(dataDir, 'client.json', clientTermsSchema);
+  checkExamples('services.json', services);
+  checkExamples('testimonials.json', testimonials);
   const projectIds = new Set(projects.map((project) => project.id));
-  for (const [file, refs] of [
-    ['services.json', services.flatMap((service) => service.relatedProjects ?? [])],
-    ['testimonials.json', testimonials.flatMap((item) => item.relatedProject ?? [])],
+  for (const [file, owners] of [
+    [
+      'services.json',
+      services.map((service) => ({ id: service.id, refs: service.relatedProjects ?? [] })),
+    ],
+    [
+      'testimonials.json',
+      testimonials.map((item) => ({ id: item.id, refs: [item.relatedProject ?? []].flat() })),
+    ],
   ] as const) {
-    for (const ref of refs) {
-      if (!projectIds.has(ref)) {
-        throw new Error(`Conteúdo inválido em ${file}:\n  projeto inexistente: ${ref}`);
+    for (const owner of owners) {
+      for (const ref of owner.refs) {
+        const where = `Conteúdo inválido em ${file}:\n  ${owner.id}:`;
+        if (!projectIds.has(ref)) throw new Error(`${where} projeto inexistente: ${ref}`);
+        if (isExample(owner) !== isExample({ id: ref })) {
+          throw new Error(`${where} mistura dado real com dado de exemplo: ${ref}`);
+        }
       }
     }
   }
 
   const drafts = includeDrafts || Boolean(publishExample.client);
-  /** Os publicados; sem nenhum, os rascunhos, se a área puder mostrar exemplo. */
+  /** Os dados reais; sem nenhum, os de exemplo, se a área puder mostrá-los. */
   const pick = <Item extends Listed>(items: Item[]) => {
-    const real = published(items);
-    return real.length
-      ? { items: real, example: false }
-      : { items: drafts ? items : [], example: drafts };
+    const own = real(items);
+    return own.length
+      ? { items: own, example: false }
+      : { items: drafts ? examples(items) : [], example: drafts };
   };
   const hasOutcome = (project: { outcome?: unknown }) => project.outcome !== undefined;
   const clientServices = pick(services);
   const clientCases = pick(projects.filter(hasOutcome));
-  const realTestimonials = published(testimonials);
+  const realTestimonials = real(testimonials);
   // Depoimento fictício ao lado de serviço real seria o pior caso: os de
   // exemplo só aparecem enquanto os serviços também forem de exemplo.
   const clientTestimonials = realTestimonials.length
     ? { items: realTestimonials, example: false }
-    : { items: clientServices.example ? testimonials : [], example: clientServices.example };
+    : {
+        items: clientServices.example ? examples(testimonials) : [],
+        example: clientServices.example,
+      };
   const termsVisible = terms.status === 'published' || drafts;
   const clientSources =
     clientServices.items.length && termsVisible
@@ -251,7 +298,8 @@ export function loadContent(
           projects: clientCases.items,
           testimonials: clientTestimonials.items,
           terms,
-          contacts: clientServices.example ? contacts : published(contacts),
+          // Os canais seguem os serviços: contato real não acompanha oferta fictícia.
+          contacts: clientServices.example ? examples(contacts) : real(contacts),
           example: {
             services: clientServices.example,
             cases: clientCases.example,
@@ -261,8 +309,8 @@ export function loadContent(
         }
       : null;
 
-  // Área da comunidade: artigos, código aberto e canais, cada bloco real quando
-  // tem item publicado e de exemplo quando só há rascunho.
+  // Área da comunidade: artigos, código aberto e canais, cada bloco com os dados
+  // reais quando há algum e com os de exemplo quando não há.
   const communityUi = Object.fromEntries(
     locales.map((locale) => [
       locale,
@@ -270,12 +318,13 @@ export function loadContent(
     ]),
   ) as Record<Locale, CommunityUi>;
   const articles = parseList(dataDir, 'articles.json', articleSchema);
+  checkExamples('articles.json', articles);
   const communityDrafts = includeDrafts || Boolean(publishExample.community);
   const choose = <Item extends Listed>(items: Item[]) => {
-    const real = published(items);
-    return real.length
-      ? { items: real, example: false }
-      : { items: communityDrafts ? items : [], example: communityDrafts };
+    const own = real(items);
+    return own.length
+      ? { items: own, example: false }
+      : { items: communityDrafts ? examples(items) : [], example: communityDrafts };
   };
   const communityArticles = choose(articles);
   const communityProjects = choose(projects.filter((project) => project.openSource));
@@ -287,8 +336,8 @@ export function loadContent(
       ? {
           articles: communityArticles.items,
           projects: communityProjects.items,
-          // Projeto de exemplo cita skill de exemplo; publicado, só publicadas.
-          skills: communityProjects.example ? skills : published(skills),
+          // Projeto de exemplo cita skill de exemplo; projeto real, skill real.
+          skills: communityProjects.example ? examples(skills) : real(skills),
           contacts: communityChannels.items,
           example: {
             articles: communityArticles.example,
