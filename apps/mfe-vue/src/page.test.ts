@@ -175,6 +175,18 @@ describe('página do recrutador', () => {
     expect(bar?.getAttribute('aria-label')).toBe('Contato');
     expect(getComputedStyle(bar as Element).position).toBe('sticky');
     expect(bar?.querySelector('a')?.getAttribute('href')).toBe('mailto:teste@example.com');
+    // O e-mail abre o programa de correio, na mesma aba.
+    expect(bar?.querySelector('a')?.hasAttribute('target')).toBe(false);
+  });
+
+  it('os links que saem do site abrem em outra aba', async () => {
+    const root = await mount();
+    const external = [...root.querySelectorAll<HTMLAnchorElement>('a[href^="https://"]')];
+    expect(external.length).toBeGreaterThan(0);
+    for (const link of external) {
+      expect(link.target, link.href).toBe('_blank');
+      expect(link.rel).toContain('noopener');
+    }
   });
 
   it('o filtro da stack mostra uma categoria por vez e diz qual está ativa', async () => {

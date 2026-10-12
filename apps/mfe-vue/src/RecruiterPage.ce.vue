@@ -147,7 +147,15 @@ onBeforeUnmount(() => {
     <nav class="contact-bar" :aria-label="text.contact.title">
       <ul>
         <li v-for="contact in content.contacts" :key="contact.id">
-          <a :href="contact.url" :title="contact.display">{{ text.contact.kinds[contact.kind] }}</a>
+          <!-- Tudo que sai do site abre em outra aba; o e-mail abre o programa de correio. -->
+          <a
+            :href="contact.url"
+            :title="contact.display"
+            :target="contact.kind === 'email' ? undefined : '_blank'"
+            rel="noopener"
+          >
+            {{ text.contact.kinds[contact.kind] }}
+          </a>
         </li>
         <li v-if="content.cv" class="cv">
           <a :href="content.cv" download>{{ text.cv.download }}</a>
@@ -229,7 +237,9 @@ onBeforeUnmount(() => {
           <p class="when">{{ period(job.start, job.end, text.experience.present) }}</p>
           <h3>{{ job.role }}</h3>
           <p class="where">
-            <a v-if="job.companyUrl" :href="job.companyUrl" rel="noopener">{{ job.company }}</a>
+            <a v-if="job.companyUrl" :href="job.companyUrl" target="_blank" rel="noopener">{{
+              job.company
+            }}</a>
             <template v-else>{{ job.company }}</template>
             <template v-if="job.mode"> · {{ text.workModes[job.mode] }}</template>
             <template v-if="job.location"> · {{ job.location }}</template>
@@ -274,14 +284,22 @@ onBeforeUnmount(() => {
           <p v-if="project.repo || project.repos || project.demo" class="links">
             <!-- Mais de um repositório: um link por parte, com o rótulo dela. -->
             <template v-if="project.repos">
-              <a v-for="repo in project.repos" :key="repo.url" :href="repo.url" rel="noopener">
+              <a
+                v-for="repo in project.repos"
+                :key="repo.url"
+                :href="repo.url"
+                target="_blank"
+                rel="noopener"
+              >
                 {{ text.projects.repo }}: {{ repo.label }}
               </a>
             </template>
-            <a v-else-if="project.repo" :href="project.repo" rel="noopener">
+            <a v-else-if="project.repo" :href="project.repo" target="_blank" rel="noopener">
               {{ text.projects.repo }}
             </a>
-            <a v-if="project.demo" :href="project.demo" rel="noopener">{{ text.projects.demo }}</a>
+            <a v-if="project.demo" :href="project.demo" target="_blank" rel="noopener">{{
+              text.projects.demo
+            }}</a>
           </p>
         </article>
       </div>
@@ -297,7 +315,7 @@ onBeforeUnmount(() => {
           <p class="where">
             {{ item.institution }} · {{ period(item.start, item.end, text.education.ongoing) }}
           </p>
-          <a v-if="item.credentialUrl" :href="item.credentialUrl" rel="noopener">
+          <a v-if="item.credentialUrl" :href="item.credentialUrl" target="_blank" rel="noopener">
             {{ text.education.credential }}
           </a>
         </li>
