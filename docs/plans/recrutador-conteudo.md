@@ -73,7 +73,7 @@ O que é de quem:
 
 A primeira decisão foi manter a área "em construção" em produção. Horas depois, com a página pronta, o autor pediu para publicá-la com os dados de exemplo. É uma exceção à regra de que rascunho não vai ao ar, e vale só para a área do recrutador:
 
-- `packages/content/scripts/build.mjs` liga `publishRecruiterExample`. Enquanto o perfil for rascunho, o módulo da área entrega os rascunhos, com `example: true`.
+- `packages/content/scripts/build.mjs` ligava `PUBLISH_EXAMPLE.recruiter`. Enquanto o perfil for rascunho, o módulo da área entrega os rascunhos, com `example: true`.
 - A página mostra a faixa "Dados de exemplo" no topo, nos três idiomas.
 - `profile` continua `null` em produção: a home não ganha a linha de nome e cargo.
 - Publicar o perfil encerra a exceção sozinho. Para voltar à tela "em construção" antes disso, basta trocar a constante para `false`.
@@ -118,3 +118,37 @@ O maior elemento da página, no perfil de celular do Lighthouse, é a frase da f
 - Revisão dos textos em en e es (B6).
 - Firefox, Safari e celular de verdade (B12); leitor de tela (B11).
 - As outras três áreas não têm a transição.
+
+## Dados reais (2026-10-12)
+
+O autor entregou os dados reais, em pt-BR, e aprovou o plano no mesmo dia. A área saiu da exceção de exemplo.
+
+| O quê             | Como ficou                                                                                  |
+| ----------------- | ------------------------------------------------------------------------------------------- |
+| Perfil            | Publicado: cargo, frase, resumo, localização, modelo, disponibilidade, inglês e senioridade |
+| Tecnologias       | 22, cada uma em uma categoria; cinco em destaque                                            |
+| Experiências      | 4                                                                                           |
+| Projetos          | 4, todos de código aberto; três em andamento                                                |
+| Formação          | 1 graduação, 2 cursos e 4 certificações                                                     |
+| Contatos          | E-mail, LinkedIn, GitHub e WhatsApp, só nesta área                                          |
+| Inglês e espanhol | Traduzidos por IA a partir do pt-BR; aguardam a revisão do autor (B6)                       |
+
+O que mudou além dos dados:
+
+- **Real e exemplo não se misturam.** `packages/content/src/load.ts` separa os dois conjuntos pelo id. Sem isso, a área técnica e a do cliente mostrariam tecnologias e contatos reais ao lado dos fictícios. Regra em `docs/content/schema.md`.
+- **Vários repositórios por projeto.** Campo opcional `links.repos`; o cartão lista "Código: Front-end", "Código: API".
+- **Período no cartão do projeto,** com "Em andamento" quando não há data de fim.
+- **A home não mudou.** O perfil publicado faria a home mostrar nome e cargo; o autor deixou para uma tarefa própria (`HOME_IDENTITY` em `packages/content/scripts/build.mjs`, pendência B10).
+- **Comunidade:** os quatro projetos aparecem no bloco de código aberto, que perdeu a faixa de exemplo.
+
+Ficou de fora, em `docs/content/pendencias-do-autor.md`: a experiência DIO Campus Expert, sem datas; o currículo em PDF e a foto, que entram por `packages/content/assets/`; o espanhol, que a ficha não tem como mostrar.
+
+Medido em 2026-10-12:
+
+| Item                 | Antes   | Depois  | Teto  |
+| -------------------- | ------- | ------- | ----- |
+| MFE Vue              | 43,1 kB | 50,4 kB | 60 kB |
+| JavaScript da rota   | 52,2 kB | 59,5 kB | 90 kB |
+| LCP de `/recrutador` | 1,81 s  | 1,96 s  | 2,5 s |
+
+O conteúdo dos três idiomas vai junto no JavaScript do MFE. Se a área crescer muito, o caminho é carregar um idioma por vez, não subir o teto.

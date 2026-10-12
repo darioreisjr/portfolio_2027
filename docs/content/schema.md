@@ -1,19 +1,19 @@
 # Modelo de conteúdo
 
-Status: rascunho para aprovação. Implementado até agora em `packages/content`: `ui/<locale>.json`, `home/<locale>.json` e `profile.json` (sem `photo` e `cv`). Modelado a partir das seções do `docs/product/brief.md`; ainda não há dados reais.
+Status: implementado em `packages/content`. Modelado a partir das seções do `docs/product/brief.md`. Dados reais do autor: a área do recrutador e os projetos de código aberto (desde 2026-10-12). O resto é dado de exemplo.
 
 Todo o conteúdo vive em `packages/content` como JSON. Os apps só leem conteúdo por esse pacote. A ferramenta de validação e a geração de tipos são definidas no bootstrap (Fase 3).
 
 ## Convenções
 
-| Regra       | Detalhe                                                                                                                                              |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`        | kebab-case, único no arquivo, estável (nunca reaproveitar)                                                                                           |
-| Referências | Sempre por `id`; a validação falha se o alvo não existir                                                                                             |
-| Datas       | `YYYY-MM` para períodos, `YYYY-MM-DD` para publicações; `end: null` significa "atual"                                                                |
-| `status`    | `"draft"` ou `"published"`; só `published` vai para o build de produção (exceção: os exemplos da área do recrutador, enquanto o perfil for rascunho) |
-| URLs        | Absolutas, com `https://`                                                                                                                            |
-| Imagens     | `{ "src": "caminho", "alt": Localized }`; `alt` é obrigatório                                                                                        |
+| Regra       | Detalhe                                                                                                                                                                             |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`        | kebab-case, único no arquivo, estável (nunca reaproveitar)                                                                                                                          |
+| Referências | Sempre por `id`; a validação falha se o alvo não existir                                                                                                                            |
+| Datas       | `YYYY-MM` para períodos, `YYYY-MM-DD` para publicações; `end: null` significa "atual"                                                                                               |
+| `status`    | `"draft"` ou `"published"`; só `published` vai para o build de produção (exceção: os dados de exemplo das áreas técnica, do cliente e da comunidade, enquanto não tiverem os reais) |
+| URLs        | Absolutas, com `https://`                                                                                                                                                           |
+| Imagens     | `{ "src": "caminho", "alt": Localized }`; `alt` é obrigatório                                                                                                                       |
 
 ### Texto traduzível
 
@@ -117,7 +117,8 @@ Um projeto tem três narrativas: `technical` (área técnica), `outcome` (área 
 | `start`, `end`             | `YYYY-MM`                                       | `start` sim                |
 | `role`                     | Localized                                       | não                        |
 | `skills`                   | id de skill[]                                   | sim                        |
-| `links.repo`, `links.demo` | string                                          | não                        |
+| `links.repo`, `links.demo` | string (`repo` é o repositório principal)       | não                        |
+| `links.repos`              | `{ label: Localized; url }[]`, dois ou mais     | não                        |
 | `openSource`               | boolean (lista o projeto na área da comunidade) | sim                        |
 | `openSourceStatus`         | `"active" \| "maintained" \| "archived"`        | se `openSource` for `true` |
 | `cover`                    | Imagem                                          | não                        |
@@ -151,7 +152,7 @@ Um projeto tem três narrativas: `technical` (área técnica), `outcome` (área 
 | `company`        | string                                                                              | não         |
 | `relation`       | `"client" \| "colleague" \| "manager"`                                              | sim         |
 | `quote`          | Localized                                                                           | sim         |
-| `originalLocale` | Locale (idioma em que foi escrito)                                                  | sim         |
+| `originalLocale` | Locale (idioma em que foi escrito)                                                  | não         |
 | `consent`        | boolean; `true` é obrigatório em depoimento publicado (os de exemplo levam `false`) | sim         |
 | `sourceUrl`      | string (ex.: recomendação no LinkedIn)                                              | não         |
 | `relatedProject` | id de projeto                                                                       | não         |
@@ -237,16 +238,36 @@ Textos de interface (rótulos de navegação, botões, títulos de seção), sep
 
 Os apps não montam a página a partir dos arquivos soltos. O pacote entrega `@portfolio/content/recruiter`, com dois exports:
 
-- `recruiter`: `Record<Locale, RecruiterContent> | null`. Um objeto por idioma, já com os rascunhos filtrados, as skills resolvidas pelo nome, os textos no idioma e a ordem pronta (o que está em curso primeiro). É `null` quando não há perfil visível, e é assim que a área sabe que deve mostrar a tela "em construção".
+- `recruiter`: `Record<Locale, RecruiterContent> | null`. Um objeto por idioma, só com o conjunto que vale (o real ou o de exemplo), as skills resolvidas pelo nome, os textos no idioma e a ordem pronta (o que está em curso primeiro). É `null` quando não há perfil visível, e é assim que a área sabe que deve mostrar a tela "em construção".
 - `recruiterUi`: os textos de `recruiter/<locale>.json`.
 
-`RecruiterContent.example` é `true` enquanto o perfil for rascunho: a página mostra a faixa "Dados de exemplo".
+`RecruiterContent.example` é `true` enquanto o perfil for rascunho: a página mostra a faixa "Dados de exemplo". Hoje o perfil é publicado e a área mostra os dados reais do autor.
 
-Os dados de exemplo do repositório têm `status: "draft"`, id começando por `exemplo-`, nomes como "Empresa Exemplo" e endereços em `example.com`. Um teste do pacote cobra isso.
+Cada projeto chega com `start`, `end` (`null` quando está em andamento) e, se tiver mais de um repositório, `repos`, com o rótulo de cada parte no idioma. `recruiter/<locale>.json` tem `projects.ongoing` para fechar o período sem data de fim.
 
-Exceção autorizada pelo autor em 2026-10-09 (`docs/plans/recrutador-conteudo.md`): enquanto o perfil for rascunho, o build de produção entrega a área do recrutador com os dados de exemplo, por `publishExample` em `packages/content/scripts/build.mjs`. `example` fica `true` e a página mostra a faixa. `profile` continua `null` em produção. Quando o perfil for publicado, a exceção deixa de valer e só itens publicados entram.
+## Dado real e dado de exemplo
 
-Regras conferidas na carga, antes de filtrar os rascunhos: ids únicos por arquivo; toda skill referenciada existe; item publicado não referencia skill em rascunho; item publicado tem os três idiomas em todo texto traduzível, em qualquer profundidade.
+São dois conjuntos, separados pelo id:
+
+- **Exemplo:** id começando por `exemplo-`, sempre `status: "draft"`, nomes como "Empresa Exemplo" e endereços em `example.com`. Um teste do pacote cobra isso.
+- **Real:** todo o resto. Entra em produção quando `published`; em desenvolvimento, também em rascunho.
+
+Cada bloco de cada área usa um conjunto ou o outro, nunca os dois, em desenvolvimento e em produção. As listas que acompanham um bloco seguem o conjunto dele:
+
+| Área       | Quem decide                     | Com os dados de hoje                            |
+| ---------- | ------------------------------- | ----------------------------------------------- |
+| Recrutador | `profile.status`                | Perfil publicado: só o conjunto real            |
+| Técnica    | Existe estudo de caso real?     | Não: projetos e skills de exemplo, com a faixa  |
+| Cliente    | Serviços, casos, cada um por si | Exemplo; os canais seguem os serviços           |
+| Comunidade | Cada bloco por si               | Código aberto real; artigos e canais de exemplo |
+
+A exceção de exemplo (`publishExample` em `packages/content/scripts/build.mjs`) põe no ar, com a faixa, os blocos que ainda não têm dado real. Vale para a área técnica, a do cliente e a comunidade. A do recrutador saiu dela em 2026-10-12.
+
+A home recebe o perfil pelo módulo `profile`. Em produção ele segue `null` por `HOME_IDENTITY = false`, no mesmo script, até o autor decidir mostrar nome e cargo na home.
+
+Um contato real só entra em outra área se `primaryFor` a citar. Hoje os quatro contatos reais têm `primaryFor: ["recruiter"]`.
+
+Regras conferidas na carga, antes de filtrar os rascunhos: ids únicos por arquivo; dado de exemplo nunca é publicado; item real não referencia skill ou projeto de exemplo, nem o contrário; toda skill referenciada existe; item publicado não referencia skill em rascunho; item publicado tem os três idiomas em todo texto traduzível, em qualquer profundidade.
 
 ## O módulo da comunidade
 

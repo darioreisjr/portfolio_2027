@@ -9,6 +9,9 @@ Todo o conteúdo do site em JSON (`data/`), validado com Zod e entregue aos apps
 - O build falha se um JSON for inválido. Item `published` precisa dos três idiomas (pt-BR, en, es).
 - O build de produção exclui `draft`. O `pnpm dev` da raiz já roda com `CONTENT_INCLUDE_DRAFTS=1`.
 - Dado de exemplo é `draft` e claramente fictício. Nunca invente conteúdo sobre o autor.
+- Dois conjuntos, pelo id: o de exemplo (`exemplo-…`) e o real (todo o resto). Cada bloco de cada área usa um ou o outro, nunca os dois, em desenvolvimento e em produção (`src/load.ts`). A carga recusa exemplo publicado e referência entre os dois conjuntos.
+- A área do recrutador usa os dados reais do autor desde 2026-10-12. Se o perfil voltar a rascunho, em desenvolvimento ela mostra o conjunto de exemplo com o nome e a frase do perfil.
+- Arquivos do autor (foto, currículo em PDF) ficam em `assets/`; ver `assets/LEIAME.md`. Ainda não são publicados.
 - Zod fica só neste pacote; não entra no bundle de nenhum app.
 - Texto que só um app usa não entra em `ui`: os MFEs importam `ui` inteiro, e cada chave nova pesa nos três.
 - `ui.construction` (título, frase e rótulo do botão de volta da tela "em construção") e `ui.pauseMotion` ficam em `ui` porque o shell, os três MFEs e o Next.js usam.
@@ -20,7 +23,7 @@ Todo o conteúdo do site em JSON (`data/`), validado com Zod e entregue aos apps
 - `client.json` guarda como o autor trabalha com clientes (etapas, forma de orçar, formas de contratar, perguntas). É dado, com `status`, porque são compromissos dele; não leva valores.
 - Depoimento: `consent` é obrigatório `true` só em item publicado. Os de exemplo levam `false`, e somem assim que houver serviço publicado.
 - A área do recrutador importa só `@portfolio/content/recruiter`: `recruiter` (um objeto por idioma, já filtrado e traduzido, ou `null` sem perfil visível) e `recruiterUi` (textos de `recruiter/<locale>.json`). Campo novo da página entra em `src/recruiter.ts`; o MFE não recebe ids soltos nem os outros idiomas.
-- Dado de exemplo: `status: "draft"`, id começando por `exemplo-`, nomes "... Exemplo" e URLs em `example.com`. O teste cobra. Exceção autorizada pelo autor em 2026-10-09: `scripts/build.mjs` liga `publishExample` para o recrutador, a área técnica, a do cliente e a comunidade: enquanto o perfil for rascunho, o recrutador vai ao ar com esses dados, e a área técnica vai enquanto não houver estudo de caso publicado, marcados por `example: true` (a página mostra a faixa "Dados de exemplo"). `profile` continua `null` em produção, então a home não muda. Publicar o perfil encerra a exceção sozinho: rascunho volta a ficar de fora.
+- Dado de exemplo: `status: "draft"`, id começando por `exemplo-`, nomes "... Exemplo" e URLs em `example.com`. O teste cobra. Exceção autorizada pelo autor em 2026-10-09 e 2026-10-10: `scripts/build.mjs` liga `publishExample` para a área técnica, a do cliente e a comunidade, que vão ao ar com esses dados enquanto não tiverem os reais, marcados por `example: true` (a página mostra a faixa "Dados de exemplo"). A do recrutador saiu da exceção em 2026-10-12. O módulo `profile` continua `null` em produção por `HOME_IDENTITY = false`, no mesmo script: a home só ganha a linha de nome e cargo quando o autor decidir.
 - Hoje existem `ui/<locale>.json`, `home/<locale>.json`, `recruiter/<locale>.json`, `tech/<locale>.json`, `site.json`, `profile.json`, `contacts.json`, `skills.json`, `experiences.json`, `education.json` e `projects.json`, `services.json`, `testimonials.json`, `client.json`, `client/<locale>.json`, `articles.json` e `community/<locale>.json`.
 
 ## Comandos

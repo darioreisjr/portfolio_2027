@@ -125,3 +125,7 @@ Os dois projetos de exemplo passaram a contar como código aberto, para aparecer
 - Firefox, Safari e celular de verdade: animação por rolagem, `clip-path` animado e `mask` só foram vistos no Chromium (B12). Leitor de tela (B11).
 - "Como foi feito" segue "em construção" e sem transição.
 - Fora desta etapa: filtro de artigos, artigo completo dentro do site, feed.
+
+## Projetos reais (2026-10-12)
+
+Com os dados reais do recrutador, os quatro projetos de código aberto do autor passaram a ocupar o bloco "Código aberto", que perdeu a faixa de exemplo. Artigos e canais continuam de exemplo. Cada cápsula mostra o repositório principal; os outros repositórios de um projeto aparecem só na área do recrutador.

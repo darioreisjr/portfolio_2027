@@ -115,7 +115,7 @@ Claude Code é a ferramenta principal. Codex e Gemini são usados para revisão 
 
 ## Nunca
 
-- Inventar conteúdo sobre o autor (experiências, projetos, depoimentos, números). Dado de exemplo leva `status: "draft"` e é claramente fictício. Exceção autorizada pelo autor em 2026-10-09 e 2026-10-10: as áreas do recrutador, técnica, do cliente e da comunidade vão ao ar com os dados de exemplo e a faixa "Dados de exemplo", até o conteúdo real chegar (`docs/plans/recrutador-conteudo.md`, `docs/plans/tecnico-conteudo.md`, `docs/plans/clientes-conteudo.md`, `docs/plans/comunidade-conteudo.md`).
+- Inventar conteúdo sobre o autor (experiências, projetos, depoimentos, números). Dado de exemplo leva `status: "draft"` e é claramente fictício. Exceção autorizada pelo autor em 2026-10-09 e 2026-10-10: as áreas do recrutador, técnica, do cliente e da comunidade vão ao ar com os dados de exemplo e a faixa "Dados de exemplo", até o conteúdo real chegar (`docs/plans/recrutador-conteudo.md`, `docs/plans/tecnico-conteudo.md`, `docs/plans/clientes-conteudo.md`, `docs/plans/comunidade-conteudo.md`). Desde 2026-10-12 a área do recrutador e o bloco de código aberto da comunidade usam os dados reais do autor; a exceção segue para a área técnica, a do cliente e os artigos e canais da comunidade. Dado real e dado de exemplo nunca aparecem juntos no mesmo bloco.
 - Instalar dependência sem justificativa de uma linha no plano.
 - Escrever segredo em arquivo versionado. Segredos só por variável de ambiente; nomes em `.env.example`.
 - Editar à mão arquivos gerados: `.claude/skills/`, `.claude/agents/`, `.codex/`, `.gemini/`, `.mcp.json` e os `CLAUDE.md` e `GEMINI.md` dentro de `apps/` e `packages/`.

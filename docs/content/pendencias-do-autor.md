@@ -1,28 +1,24 @@
 # O que falta do autor
 
-Lista do que só o autor pode fornecer ou decidir. Atualizada em 2026-10-10. Quando um item chegar, ele entra em `packages/content/data/` (modelo em `docs/content/schema.md`) e sai desta lista.
+Lista do que só o autor pode fornecer ou decidir. Atualizada em 2026-10-12. Quando um item chegar, ele entra em `packages/content/data/` (modelo em `docs/content/schema.md`) e sai desta lista.
 
 ## Para a área do recrutador
 
-Hoje a página usa dados de exemplo, todos fictícios (`docs/plans/recrutador-conteudo.md`). Para trocá-los pelos reais:
+A página usa os seus dados reais desde 2026-10-12 (`docs/plans/recrutador-conteudo.md`). Falta:
 
-| O quê                   | Detalhe pedido                                                                                                                        | Onde entra                                                     |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Frase de apresentação   | Uma linha: o que você faz e para quem                                                                                                 | `profile.json`, `tagline`                                      |
-| Resumo profissional     | Um parágrafo: tempo de atuação, tipo de produto, tecnologias principais, o que procura                                                | `profile.json`, `summary`                                      |
-| Localização             | Cidade e país                                                                                                                         | `profile.json`, `location`                                     |
-| Modelo de trabalho      | Remoto, híbrido ou presencial                                                                                                         | `profile.json`, `workMode`                                     |
-| Disponibilidade         | Texto curto: imediata, a combinar, só freelas etc.                                                                                    | `profile.json`, `availability`                                 |
-| Nível de inglês         | Básico, intermediário, avançado ou fluente                                                                                            | `profile.json`, `englishLevel`                                 |
-| Senioridade             | Júnior, pleno, sênior ou especialista                                                                                                 | `profile.json`, `seniority`                                    |
-| Tecnologias             | Nome, categoria (front-end, back-end, banco, DevOps, testes, design, outra) e nível de cada uma                                       | `skills.json`                                                  |
-| Tecnologias em destaque | As três a cinco que abrem a lista                                                                                                     | `profile.json`, `highlightSkills`                              |
-| Experiências            | Empresa, site (opcional), cargo, início e fim (mês e ano), cidade, modelo, resumo, dois a quatro destaques com resultado, tecnologias | `experiences.json`                                             |
-| Projetos em destaque    | Dois ou três: título, resumo de uma frase, seu papel, o desafio, o resultado, tecnologias, links de código e de demonstração          | `projects.json`                                                |
-| Formação e certificados | Tipo (graduação, curso, certificação), título, instituição, início e fim, link da credencial (opcional)                               | `education.json`                                               |
-| Contatos                | E-mail, LinkedIn, GitHub e WhatsApp: endereço e texto visível                                                                         | `contacts.json`                                                |
-| Currículo em PDF        | O arquivo, em pt-BR e, se houver, em en e es                                                                                          | `profile.json`, `cv`; falta definir onde o arquivo é publicado |
-| Foto (opcional)         | Quadrada, 400×400 ou maior, com um texto alternativo                                                                                  | `profile.json`, `photo`                                        |
+| O quê                         | Detalhe pedido                                                                                                     | Onde entra                                  |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------- |
+| Experiência DIO Campus Expert | Início e fim (mês e ano), modelo de trabalho, um resumo e de 2 a 4 destaques. Ficou de fora por falta desses dados | `experiences.json`                          |
+| Foto                          | Quadrada, 512×512 ou maior, JPG, PNG ou WebP, rosto centrado, e uma frase que a descreva                           | Ponha em `packages/content/assets/profile/` |
+| Currículo em PDF              | Em pt-BR e, se houver, em en e es; texto selecionável, até 1 MB                                                    | Ponha em `packages/content/assets/cv/`      |
+| Link do diploma               | Endereço público da graduação, se existir                                                                          | `education.json`, `credentialUrl`           |
+| Credencial de cibersegurança  | O link, quando o curso Foundations of Cybersecurity terminar, e a data de fim                                      | `education.json`                            |
+| Datas das tecnologias         | O ano em que começou a usar Vitest e Playwright                                                                    | `skills.json`, `since`                      |
+| Espanhol                      | Se quer mostrar o nível de espanhol (básico): a ficha hoje só tem o de inglês                                      | a definir                                   |
+| Nome e cargo na home          | Se a home deve mostrar "Dario Reis · Software Engineer"; exige medir a velocidade de novo                          | `HOME_IDENTITY` em `scripts/build.mjs`      |
+| Números                       | Resultados medidos (Core Web Vitals, cobertura de testes, releases) para trocar descrições por números             | `experiences.json`, `projects.json`         |
+
+Quando a foto ou o PDF chegarem, avise: ligar o arquivo à página é uma tarefa pequena, mas ainda não foi feita.
 
 ## Para a área técnica
 
@@ -32,7 +28,7 @@ Hoje os estudos de caso e as tecnologias são de exemplo (`docs/plans/tecnico-co
 | ------------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------- |
 | Estudos de caso     | Dois ou três projetos: o problema, a arquitetura escolhida e os trade-offs (o que se ganhou e o que se pagou) | `projects.json`, `technical` |
 | Código dos projetos | Link do repositório e, se houver, da demonstração                                                             | `projects.json`, `links`     |
-| Tecnologias         | As mesmas da área do recrutador: nome, categoria e nível                                                      | `skills.json`                |
+| Tecnologias         | Já são as reais, as mesmas do recrutador; passam a aparecer aqui com o primeiro estudo de caso real           | `skills.json`                |
 | GitHub              | Se a área deve mostrar atividade ou repositórios, e quais                                                     | a definir                    |
 
 ## Para a área do cliente
@@ -53,23 +49,23 @@ Hoje todos os blocos são de exemplo (`docs/plans/clientes-conteudo.md`).
 
 ## Para a comunidade
 
-Hoje os artigos, os projetos e os canais são de exemplo (`docs/plans/comunidade-conteudo.md`). A vitrine do design system e o repositório deste site já são reais.
+Hoje os artigos e os canais são de exemplo (`docs/plans/comunidade-conteudo.md`). A vitrine do design system, o repositório deste site e os quatro projetos de código aberto já são reais.
 
-| O quê                     | Detalhe pedido                                                                                                | Onde entra                                        |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| Artigos                   | Para cada um: título, resumo de uma frase, data, assuntos, link, idioma em que foi escrito e tempo de leitura | `articles.json`                                   |
-| Projetos de código aberto | Quais projetos são abertos, a situação de cada um (ativo, mantido, arquivado) e o link do repositório         | `projects.json`, `openSource`, `openSourceStatus` |
-| Onde acompanhar           | Os endereços reais do GitHub e do LinkedIn                                                                    | `contacts.json`                                   |
-| O que é bem-vindo         | Se a lista atual (corrigir texto, relatar problema, sugerir, trocar ideia) é a sua, ou o que mudar            | `community/<locale>.json`, `join.items`           |
-| Palestras e newsletter    | Se existem e devem entrar; hoje a página não tem esses blocos                                                 | a definir                                         |
+| O quê                  | Detalhe pedido                                                                                                | Onde entra                              |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| Artigos                | Para cada um: título, resumo de uma frase, data, assuntos, link, idioma em que foi escrito e tempo de leitura | `articles.json`                         |
+| Onde acompanhar        | Confirmar se o GitHub e o LinkedIn reais, que já estão no recrutador, podem aparecer aqui também              | `contacts.json`, `primaryFor`           |
+| O que é bem-vindo      | Se a lista atual (corrigir texto, relatar problema, sugerir, trocar ideia) é a sua, ou o que mudar            | `community/<locale>.json`, `join.items` |
+| Palestras e newsletter | Se existem e devem entrar; hoje a página não tem esses blocos                                                 | a definir                               |
 
 ## Revisões
 
-| O quê                                                                                                    | Onde                                                                            |
-| -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Textos em inglês e espanhol escritos por IA                                                              | `ui`, `home`, `recruiter` (pendência B6 de `docs/open-questions.md`)            |
-| Cargo no perfil, nos três idiomas                                                                        | `profile.json`, `role`                                                          |
-| Aparência das quatro páginas (recrutador, técnica, cliente e comunidade) e das transições de ida e volta | `http://localhost:5173/recrutador/`, `/tecnico/`, `/clientes/` e `/comunidade/` |
+| O quê                                                                                                                                      | Onde                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| Textos em inglês e espanhol escritos por IA                                                                                                | `ui`, `home`, `recruiter` (pendência B6 de `docs/open-questions.md`)            |
+| Seus dados do recrutador em inglês e espanhol, traduzidos do pt-BR por IA                                                                  | `http://localhost:5173/en/recruiter/` e `/es/reclutador/`                       |
+| Categoria de cada tecnologia: Next.js, TypeScript e JavaScript ficaram em front-end; Supabase e Prisma em banco de dados; Sentry em DevOps | `skills.json`                                                                   |
+| Aparência das quatro páginas (recrutador, técnica, cliente e comunidade) e das transições de ida e volta                                   | `http://localhost:5173/recrutador/`, `/tecnico/`, `/clientes/` e `/comunidade/` |
 
 ## Conferências que dependem de aparelho ou pessoa
 

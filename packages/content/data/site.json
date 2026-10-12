@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-10",
+  "measuredAt": "2026-10-12",
   "repository": "https://github.com/darioreisjr/portfolio_2027",
   "areas": [
     {
@@ -11,7 +11,7 @@
       "jsKb": 144.7,
       "performance": 97,
       "accessibility": 100,
-      "lcpMs": 2577
+      "lcpMs": 2573
     },
     {
       "area": "recruiter",
@@ -19,10 +19,10 @@
       "owner": "shell",
       "path": "/recrutador/",
       "maxKb": 90,
-      "jsKb": 52.2,
+      "jsKb": 59.5,
       "performance": 99,
       "accessibility": 100,
-      "lcpMs": 1811
+      "lcpMs": 1959
     },
     {
       "area": "tech",
@@ -42,9 +42,9 @@
       "path": "/clientes/",
       "maxKb": 135,
       "jsKb": 100.7,
-      "performance": 99,
+      "performance": 98,
       "accessibility": 100,
-      "lcpMs": 2110
+      "lcpMs": 2111
     },
     {
       "area": "community",
@@ -55,7 +55,7 @@
       "jsKb": 144.7,
       "performance": 97,
       "accessibility": 100,
-      "lcpMs": 2468
+      "lcpMs": 2456
     },
     {
       "area": "how-it-was-built",
@@ -66,7 +66,7 @@
       "jsKb": 144.7,
       "performance": 98,
       "accessibility": 100,
-      "lcpMs": 2383
+      "lcpMs": 2390
     }
   ],
   "parts": [
@@ -83,7 +83,7 @@
     {
       "name": "mfe-vue",
       "maxKb": 60,
-      "jsKb": 43.1
+      "jsKb": 50.4
     },
     {
       "name": "mfe-react",
