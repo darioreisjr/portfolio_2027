@@ -100,6 +100,15 @@ export function planAssembly(root, sourceList = sources) {
  * Mapeia sub-rotas dos microfrontends geridos pelo shell para seus respectivos index.html
  * e define cabeçalhos de cache agressivos para assets imutáveis e revalidação para HTML.
  */
+/**
+ * O endereço da produção (ADR 0014). Todo outro endereço em que o `dist/` for
+ * publicado (o ambiente de desenvolvimento, as prévias de pull request e os
+ * `*.vercel.app`) responde com `X-Robots-Tag: noindex`, para o mesmo conteúdo
+ * não aparecer duas vezes nos buscadores. O teste de fumaça do deploy confere
+ * isso nos dois ambientes: se o domínio mudar, mude aqui.
+ */
+export const PRODUCTION_HOST = '2027.darioreis.dev';
+
 export function buildVercelConfig(routesList = routes) {
   const shellRoutes = routesList.filter((route) => route.owner === 'shell');
   const rewrites = [];
@@ -121,6 +130,11 @@ export function buildVercelConfig(routesList = routes) {
     trailingSlash: true,
     rewrites,
     headers: [
+      {
+        source: '/(.*)',
+        missing: [{ type: 'host', value: PRODUCTION_HOST }],
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex' }],
+      },
       {
         source: '/_next/static/(.*)',
         headers: [
