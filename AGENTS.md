@@ -28,6 +28,7 @@ Idiomas: pt-BR (padrão, sem prefixo), en e es (com prefixo e rotas traduzidas).
 | `docs/architecture/adr/`       | Decisões aceitas (0001 a 0013)               |
 | `docs/quality/budgets.md`      | Limites de performance, acessibilidade e SEO |
 | `docs/open-questions.md`       | O que ainda não foi decidido                 |
+| `README.md`                    | O projeto para quem chega pelo GitHub        |
 
 Se um documento contradiz o código, pare e avise. Não escolha um dos dois em silêncio.
 
@@ -111,6 +112,7 @@ Claude Code é a ferramenta principal. Codex e Gemini são usados para revisão 
 - Conteúdo novo: passa na validação de `packages/content`.
 - Decisão de arquitetura nova: ADR escrito (skill `write-adr`).
 - Docs atualizados quando o comportamento descrito mudou.
+- `README.md` da raiz revisado antes de todo push, e atualizado se o que vai subir mudou o que ele diz (skill `commits`).
 - Commit no padrão Conventional Commits, em pt-BR e sem coautor (skill `commits`).
 
 ## Nunca

@@ -1,6 +1,6 @@
 ---
 name: commits
-description: Como escrever e criar commits neste repositório. Conventional Commits em português do Brasil, sem coautor. Use sempre que for criar, reescrever ou revisar um commit, montar a mensagem de um commit ou dividir um trabalho em commits.
+description: Como escrever e criar commits e como fazer push neste repositório. Conventional Commits em português do Brasil, sem coautor; antes de todo push, revisão do README. Use sempre que for criar, reescrever ou revisar um commit, montar a mensagem de um commit, dividir um trabalho em commits ou fazer push.
 ---
 
 # Commits
@@ -58,6 +58,24 @@ O app ou pacote que o commit toca, com o nome da pasta: `shell`, `mfe-vue`, `mfe
 ## Push
 
 Commit é local. O push só acontece quando o autor pedir. Reescrever commits já enviados (`push --force`) exige pedido explícito do autor.
+
+### Revise o README antes de todo push
+
+O `README.md` da raiz é a porta de entrada do repositório e diz como o projeto está hoje. Todo pedido de push inclui revisá-lo, sem o autor precisar pedir:
+
+1. Veja o que vai subir: `git log origin/main..HEAD --oneline` e `git diff origin/main..HEAD --stat`.
+2. Leia o `README.md` inteiro e compare com essas mudanças. Atualize se alguma delas mudou:
+   - a situação de uma área (em construção, dados de exemplo, dados reais) ou as rotas e idiomas;
+   - as tecnologias, a estrutura de pastas ou a forma de compor os apps;
+   - um comando da raiz, o jeito de rodar ou as versões de Node e pnpm;
+   - um teto de qualidade, o que o CI cobra ou a forma de publicar;
+   - a quantidade de ADRs, os documentos citados, o endereço do site ou os contatos.
+3. Se atualizou: `pnpm format:check` e um commit próprio, `docs: atualiza o README`, antes do push.
+4. No relato do push, diga em uma linha o que mudou no README ou que ele já estava em dia.
+
+O README só afirma o que existe no repositório: nada de funcionalidade planejada como se estivesse pronta, nem conteúdo sobre o autor que não esteja em `packages/content`. É escrito em pt-BR, para quem chega pelo GitHub.
+
+### Conta do GitHub
 
 O push deste projeto é sempre feito com a conta do GitHub `darioreisjr`, dona do repositório. A máquina do autor tem mais de uma conta no `gh`. Antes de cada push:
 
