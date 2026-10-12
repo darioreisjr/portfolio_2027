@@ -197,6 +197,12 @@ for (const { area, phrase, path, url, title, color } of areas) {
       expect(await area1.locator('html').getAttribute('data-arrival')).toBeNull();
 
       await area1.bringToFront();
+      // Nas áreas do shell o microfrontend entra depois do `load` e empurra o
+      // layout: clicar antes disso pode errar o botão de volta. O sinal de pronto
+      // também garante que o ouvinte do shell já está no botão.
+      if (area !== 'community') {
+        await expect(area1.locator('main')).toHaveAttribute('data-ready', area);
+      }
       const [home] = await Promise.all([
         context.waitForEvent('page'),
         area1
