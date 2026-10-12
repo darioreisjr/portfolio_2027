@@ -39,6 +39,8 @@ const content = vi.hoisted(() => {
         id: 'p',
         title: 'Projeto Teste',
         summary: 'Sobre o projeto',
+        start: '2025-01',
+        end: null,
         role: 'Meu papel',
         challenge: 'O desafio',
         result: 'O resultado',
@@ -74,6 +76,11 @@ afterEach(() => {
   document.body.replaceChildren();
   delete content['pt-BR'].cv;
   delete content['pt-BR'].photo;
+  const project = content['pt-BR'].projects[0];
+  if (project) {
+    project.end = null;
+    delete project.repos;
+  }
 });
 
 function mount(locale = 'pt-BR'): Promise<ShadowRoot> {
@@ -204,6 +211,36 @@ describe('página do recrutador', () => {
     expect(panel()).toBe('O resultado');
     // A troca é anunciada a leitores de tela.
     expect(root.querySelector('.facet-text')?.getAttribute('aria-live')).toBe('polite');
+  });
+
+  it('o projeto mostra o período, e "em andamento" enquanto não tem fim', async () => {
+    const when = (root: ParentNode) => root.querySelector('.project .when')?.textContent;
+    expect(when(await mount())).toMatch(/jan\. de 2025 – Em andamento/);
+    expect(when(await mount('en'))).toMatch(/Jan 2025 – Ongoing/);
+    const project = content['pt-BR'].projects[0];
+    if (!project) throw new Error('sem projeto');
+    project.end = '2025-06';
+    expect(when(await mount())).toMatch(/jan\. de 2025 – jun\. de 2025/);
+  });
+
+  it('projeto com vários repositórios lista um link por parte; com um só, o link simples', async () => {
+    const links = (root: ParentNode) =>
+      [...root.querySelectorAll<HTMLAnchorElement>('.project .links a')].map((link) => [
+        link.textContent?.trim(),
+        link.getAttribute('href'),
+      ]);
+    expect(links(await mount())).toEqual([['Código', 'https://example.com/repo']]);
+
+    const project = content['pt-BR'].projects[0];
+    if (!project) throw new Error('sem projeto');
+    project.repos = [
+      { label: 'Front-end', url: 'https://example.com/front' },
+      { label: 'API', url: 'https://example.com/api' },
+    ];
+    expect(links(await mount())).toEqual([
+      ['Código: Front-end', 'https://example.com/front'],
+      ['Código: API', 'https://example.com/api'],
+    ]);
   });
 
   it('a experiência mostra o período no idioma, com os destaques recolhidos', async () => {

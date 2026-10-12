@@ -253,6 +253,7 @@ onBeforeUnmount(() => {
       <span class="slash" aria-hidden="true" />
       <div class="projects cascade">
         <article v-for="project in content.projects" :key="project.id" class="project">
+          <p class="when">{{ period(project.start, project.end, text.projects.ongoing) }}</p>
           <h3>{{ project.title }}</h3>
           <p>{{ project.summary }}</p>
           <div class="filters" role="group" :aria-label="project.title">
@@ -270,8 +271,16 @@ onBeforeUnmount(() => {
           <ul v-if="project.skills.length" class="tags">
             <li v-for="name in project.skills" :key="name">{{ name }}</li>
           </ul>
-          <p v-if="project.repo || project.demo" class="links">
-            <a v-if="project.repo" :href="project.repo" rel="noopener">{{ text.projects.repo }}</a>
+          <p v-if="project.repo || project.repos || project.demo" class="links">
+            <!-- Mais de um repositório: um link por parte, com o rótulo dela. -->
+            <template v-if="project.repos">
+              <a v-for="repo in project.repos" :key="repo.url" :href="repo.url" rel="noopener">
+                {{ text.projects.repo }}: {{ repo.label }}
+              </a>
+            </template>
+            <a v-else-if="project.repo" :href="project.repo" rel="noopener">
+              {{ text.projects.repo }}
+            </a>
             <a v-if="project.demo" :href="project.demo" rel="noopener">{{ text.projects.demo }}</a>
           </p>
         </article>
@@ -700,7 +709,8 @@ details ul {
 
 .links {
   display: flex;
-  gap: var(--space-inline-md);
+  flex-wrap: wrap;
+  gap: 0 var(--space-inline-md);
 }
 
 .links a,
