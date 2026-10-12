@@ -1,0 +1,41 @@
+# Atualizações automáticas de dependências (ADR 0014). Cada PR passa pelo mesmo
+# CI de qualquer outro e entra na development; quem aprova o merge é o autor.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: America/Sao_Paulo
+    # O projeto recusa pacote publicado há menos de 24 horas (pnpm-workspace.yaml).
+    # Aqui a espera é maior: uma semana para versão nova assentar.
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    groups:
+      # Um PR só para o que não deveria quebrar; versão maior vem separada.
+      menores:
+        update-types: [minor, patch]
+    commit-message:
+      prefix: build
+      include: scope
+
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: America/Sao_Paulo
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ['*']
+    commit-message:
+      prefix: ci
+      include: scope
