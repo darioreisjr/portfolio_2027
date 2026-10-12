@@ -167,7 +167,7 @@ O projeto é desenvolvido por uma pessoa com ajuda de agentes de IA (Claude Code
 
 - A música da home é de terceiros; origem e licença em [`docs/assets-de-terceiros.md`](docs/assets-de-terceiros.md).
 - O visual usa motivos de anime e jogos, sem arte, nomes ou personagens de nenhuma obra.
-- O repositório ainda não tem um arquivo de licença. O código está aberto para leitura; para reutilizar, fale com o autor.
+- O código está sob a [licença MIT](LICENSE). Ela não cobre o conteúdo sobre o autor, a foto, o currículo nem os personagens: o que fica de fora está em [`NOTICE.md`](NOTICE.md).
 
 ## Contato
 
