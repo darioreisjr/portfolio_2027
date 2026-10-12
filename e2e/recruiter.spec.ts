@@ -1,8 +1,8 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
-// Página do recrutador, com conteúdo (ADR 0010). Enquanto o perfil for rascunho
-// ela vai ao ar com os dados de exemplo e a faixa que os identifica.
+// Página do recrutador, com conteúdo (ADR 0010) e os dados reais do autor. Os
+// textos são dele e mudam: os testes olham a estrutura, não as frases.
 const page1 = (page: Page) => page.locator('mfe-recrutador');
 
 test.use({ viewport: { width: 1280, height: 800 } });
@@ -30,7 +30,9 @@ for (const colorScheme of ['light', 'dark'] as const) {
       'Projetos em destaque',
       'Formação e certificados',
     ]);
-    await expect(page1(page).getByText('Dados de exemplo')).toBeVisible();
+    // Dado real não leva a faixa nem resto de exemplo.
+    await expect(page1(page).locator('.example')).toHaveCount(0);
+    await expect(page1(page).locator('.page')).not.toContainText(/Dados de exemplo|example\.com/);
 
     const { violations } = await new AxeBuilder({ page }).analyze();
     expect(violations.map((violation) => `${violation.id}: ${violation.help}`)).toEqual([]);
@@ -115,17 +117,47 @@ test('pelo teclado: o filtro e as faces do projeto respondem, com foco visível'
   page,
 }) => {
   await page.goto('/recrutador/');
+  const skills = page1(page).locator('.skill-name');
+  const total = await skills.count();
   const filter = page1(page).getByRole('button', { name: 'Front-end' });
   await filter.focus();
   await expect(filter).not.toHaveCSS('outline-style', 'none');
   await page.keyboard.press('Enter');
   await expect(filter).toHaveAttribute('aria-pressed', 'true');
-  await expect(page1(page).locator('.skill-name')).toHaveText(['TypeScript', 'Vue', 'React']);
+  await expect(skills).not.toHaveCount(total);
+  expect(await skills.count()).toBeGreaterThan(0);
 
+  const panel = page1(page).locator('.facet-text').first();
+  const role = await panel.textContent();
   const challenge = page1(page).getByRole('button', { name: 'Desafio' }).first();
   await challenge.focus();
   await page.keyboard.press('Space');
-  await expect(page1(page).locator('.facet-text').first()).toContainText('Desafio de exemplo');
+  await expect(challenge).toHaveAttribute('aria-pressed', 'true');
+  await expect(panel).not.toHaveText(role ?? '');
+});
+
+test('projetos: período em cada cartão e um link por repositório', async ({ page }) => {
+  await page.goto('/recrutador/');
+  const projects = page1(page).locator('.project');
+  expect(await projects.count()).toBeGreaterThan(0);
+  await expect(projects.locator('.when')).toHaveCount(await projects.count());
+  // Projeto sem data de fim diz que está em andamento.
+  await expect(projects.locator('.when').first()).toContainText('Em andamento');
+  // Quem tem mais de um repositório lista todos, com o nome da parte.
+  const parts = projects.locator('.links a').filter({ hasText: /^\s*Código: \S/ });
+  expect(await parts.count()).toBeGreaterThanOrEqual(2);
+  for (const link of await projects.locator('.links a').all()) {
+    await expect(link).toHaveAttribute('href', /^https:\/\//);
+  }
+});
+
+test('contato: os canais reais, cada um com endereço', async ({ page }) => {
+  await page.goto('/recrutador/');
+  const links = page1(page).getByRole('navigation', { name: 'Contato' }).getByRole('link');
+  await expect(links).toHaveText(['E-mail', 'LinkedIn', 'GitHub', 'WhatsApp']);
+  await expect(links.first()).toHaveAttribute('href', /^mailto:\S+@\S+$/);
+  // Sem arquivo publicado, o botão do currículo não aparece.
+  await expect(page1(page).locator('.cv')).toHaveCount(0);
 });
 
 test('a página baixa no máximo dois arquivos de fonte', async ({ page }) => {

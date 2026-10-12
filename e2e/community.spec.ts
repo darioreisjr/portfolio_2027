@@ -61,13 +61,14 @@ test('artigos: data, idioma, assuntos e o tempo de leitura como medidor', async 
   await expect(first.locator('ds-badge')).toHaveText(['arquitetura', 'front-end']);
 });
 
-test('código aberto: o repositório deste site é real e fica fora da faixa de exemplo', async ({
+test('código aberto: o repositório deste site e os projetos reais, sem faixa de exemplo', async ({
   page,
 }) => {
   await page.goto('/comunidade/');
   const section = page.locator('section[aria-labelledby="c-projects"]');
   const capsules = section.locator('.c-capsule');
-  await expect(capsules).toHaveCount(3);
+  // Este site e os projetos de código aberto do autor.
+  expect(await capsules.count()).toBeGreaterThan(1);
 
   const site = capsules.first();
   await expect(site.getByRole('heading')).toHaveText('Este site');
@@ -75,15 +76,16 @@ test('código aberto: o repositório deste site é real e fica fora da faixa de 
     'href',
     'https://github.com/darioreisjr/portfolio_2027',
   );
-  // A faixa vem depois da cápsula real e antes das de exemplo.
-  const order = await section.evaluate((element) =>
-    [...element.querySelectorAll('.c-capsule h3, .c-example')].map((node) =>
-      node.matches('.c-example') ? 'faixa' : node.textContent,
-    ),
-  );
-  expect(order).toEqual(['Este site', 'faixa', 'Projeto Exemplo Um', 'Projeto Exemplo Dois']);
-  await expect(capsules.nth(1).locator('ds-badge')).toHaveText('Ativo');
-  await expect(capsules.nth(2).locator('ds-badge')).toHaveText('Mantido');
+  // O bloco é todo real: nada de faixa nem de endereço fictício.
+  await expect(section.locator('.c-example')).toHaveCount(0);
+  await expect(section).not.toContainText(/Exemplo|example\.com/);
+  for (const capsule of await capsules.all()) {
+    await expect(capsule.locator('ds-badge')).toHaveText(/^(Ativo|Mantido|Arquivado)$/);
+    await expect(capsule.getByRole('link', { name: 'Ver repositório' })).toHaveAttribute(
+      'href',
+      /^https:\/\/github\.com\//,
+    );
+  }
 });
 
 test('os blocos fictícios levam a faixa de exemplo; a vitrine, que é real, não', async ({
@@ -95,7 +97,7 @@ test('os blocos fictícios levam a faixa de exemplo; a vitrine, que é real, nã
     .evaluateAll((banners) =>
       banners.map((banner) => banner.closest('section')?.getAttribute('aria-labelledby')),
     );
-  expect(flagged).toEqual(['c-articles', 'c-projects', 'c-join']);
+  expect(flagged).toEqual(['c-articles', 'c-join']);
 });
 
 test('vitrine: as peças de verdade, e as amostras acompanham o tema', async ({ page }) => {
