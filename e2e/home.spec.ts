@@ -507,13 +507,22 @@ test.describe('home no celular (carrossel)', () => {
     await expect(second).toBeInViewport({ ratio: 0.9 });
     // O pontinho do personagem à vista acompanha o deslize.
     await expect(list).toHaveAttribute('data-slide', '1');
-    const atRest = await figure.boundingBox();
+    // O pontinho muda na metade do deslize, antes de o encaixe assentar: a
+    // posição de repouso é a que se repete em duas leituras seguidas.
+    let atRest = await figure.boundingBox();
+    await expect
+      .poll(async () => {
+        const previous = atRest;
+        atRest = await figure.boundingBox();
+        return JSON.stringify(atRest) === JSON.stringify(previous);
+      })
+      .toBe(true);
 
     await second.tap();
     await expect(page).toHaveURL(/localhost:\d+\/$/);
     await expectSelected(page, 1);
     // O personagem não muda de lugar nem de tamanho, e os pontinhos somem.
-    expect(await figure.boundingBox()).toEqual(atRest);
+    await expect.poll(() => figure.boundingBox()).toEqual(atRest);
     await expect(page.locator('.persona-dots')).toBeHidden();
     await expectAccessible(page);
 
@@ -521,7 +530,8 @@ test.describe('home no celular (carrossel)', () => {
     await expectNoneSelected(page);
     await expect(list).toHaveAttribute('data-slide', '1');
     await expect(second).toBeInViewport({ ratio: 0.9 });
-    expect(await figure.boundingBox()).toEqual(atRest);
+    // A lista volta a rolar e o encaixe se ajusta depois: espera assentar.
+    await expect.poll(() => figure.boundingBox()).toEqual(atRest);
 
     await second.tap();
     await enter(page).tap();

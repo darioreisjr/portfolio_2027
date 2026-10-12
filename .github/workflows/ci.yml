@@ -1,36 +1,49 @@
 name: CI
 
+# Verificação, publicação e release (ADRs 0007 e 0014).
+#   pull request        verify, com prévia na Vercel
+#   push na development verify, depois deploy em develop.darioreis.dev
+#   push na production  verify, depois deploy em 2027.darioreis.dev e release
+# As duas branches só recebem pull request: o push é sempre um merge.
+
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [development, production]
 
+# Um push novo não cancela a publicação em andamento; em PR, só vale o último commit.
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
+
+env:
+  # Versão fixa: `latest` muda sem aviso. Atualize à mão, depois de ler as notas.
+  VERCEL_CLI: vercel@63.1.2
 
 jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
+      # Para o comentário com a prévia e os pesos.
+      pull-requests: write
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       # Histórico completo: com clone raso o Turborepo trata tudo como alterado.
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 
       # Versões de pnpm e Node vêm do package.json (packageManager, engines, devEngines).
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
         with:
           run_install: false
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version-file: package.json
           cache: pnpm
@@ -39,18 +52,17 @@ jobs:
 
       - name: Conventional Commits
         if: github.event_name == 'pull_request'
-        run: >
-          pnpm exec commitlint
-          --from ${{ github.event.pull_request.base.sha }}
-          --to ${{ github.event.pull_request.head.sha }}
-          --verbose
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: pnpm exec commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose
 
       - name: Configuração dos agentes em sincronia
         run: pnpm ai:check
       - run: pnpm format:check
       - run: pnpm lint
 
-      - uses: actions/cache@v6
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: .turbo
           key: turbo-${{ runner.os }}-${{ github.sha }}
@@ -76,26 +88,66 @@ jobs:
       - run: pnpm assemble
       - name: Orçamentos de JavaScript
         run: pnpm budgets
+        env:
+          BUDGETS_SUMMARY: pesos.md
       - name: E2E atravessando os apps
         run: pnpm test:e2e
       - name: Lighthouse CI
         run: pnpm lhci
 
-      - name: Deploy Preview na Vercel (Pull Request)
+      # A prévia vai para o projeto de desenvolvimento, em endereço próprio e
+      # fora dos buscadores. PR de fork ou do Dependabot não recebe os segredos.
+      - name: Prévia na Vercel
+        id: previa
         if: github.event_name == 'pull_request' && env.VERCEL_TOKEN != ''
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          PREVIEW_URL=$(pnpm dlx vercel@latest deploy dist --yes)
-          echo "### 🚀 Preview na Vercel" >> $GITHUB_STEP_SUMMARY
-          echo "URL: $PREVIEW_URL" >> $GITHUB_STEP_SUMMARY
+          url=$(pnpm dlx "$VERCEL_CLI" deploy dist --yes)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "### Prévia na Vercel" >> "$GITHUB_STEP_SUMMARY"
+          echo "$url" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Deploy Produção na Vercel (Push na main)
-        if: github.event_name == 'push' && env.VERCEL_TOKEN != ''
+      # Um comentário só por PR, atualizado a cada execução. Não derruba a
+      # verificação: em PR de fork o token é só de leitura.
+      - name: Comentário com a prévia e os pesos
+        if: github.event_name == 'pull_request' && !cancelled()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          PREVIA: ${{ steps.previa.outputs.url }}
         run: |
-          PROD_URL=$(pnpm dlx vercel@latest deploy dist --prod --yes)
-          echo "### 🚀 Produção na Vercel" >> $GITHUB_STEP_SUMMARY
-          echo "URL: $PROD_URL" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "### Prévia"
+            echo
+            if [ -n "$PREVIA" ]; then
+              echo "$PREVIA"
+            else
+              echo "Sem prévia nesta execução."
+            fi
+            echo
+            echo "### Peso de JavaScript"
+            echo
+            if [ -f pesos.md ]; then
+              cat pesos.md
+            else
+              echo "A verificação parou antes de medir."
+            fi
+          } > comentario.md
+          gh pr comment "$PR" --body-file comentario.md --edit-last --create-if-none
 
-      - uses: actions/upload-artifact@v7
+      # O deploy publica exatamente o que foi verificado.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        if: github.event_name == 'push'
+        with:
+          name: dist
+          path: dist/
+          retention-days: 3
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: failure()
         with:
           name: relatorios
@@ -103,3 +155,101 @@ jobs:
             playwright-report/
             .lighthouseci/
           if-no-files-found: ignore
+
+  # Só publica o que passou em tudo acima: o `needs` é o portão do ADR 0007.
+  deploy:
+    needs: verify
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Um ambiente por branch, com o endereço em `vars.SITE_URL`.
+    environment:
+      name: ${{ github.ref_name }}
+      url: ${{ vars.SITE_URL }}
+    concurrency:
+      group: deploy-${{ github.ref_name }}
+      cancel-in-progress: false
+    env:
+      SITE_URL: ${{ vars.SITE_URL }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+        with:
+          run_install: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version-file: package.json
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: dist
+          path: dist
+
+      # Cada ambiente é um projeto na Vercel. A produção tem segredo de nome
+      # próprio, guardado no ambiente dela: se faltar, o job falha em vez de
+      # publicar a produção no projeto de desenvolvimento.
+      - name: Publica na Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          PROJECT_DEVELOPMENT: ${{ secrets.VERCEL_PROJECT_ID }}
+          PROJECT_PRODUCTION: ${{ secrets.VERCEL_PROJECT_ID_PRODUCTION }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          case "$BRANCH" in
+            production) export VERCEL_PROJECT_ID="$PROJECT_PRODUCTION" ;;
+            development) export VERCEL_PROJECT_ID="$PROJECT_DEVELOPMENT" ;;
+            *) echo "Branch sem ambiente: $BRANCH" >&2; exit 1 ;;
+          esac
+          if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "Faltam segredos da Vercel para o ambiente $BRANCH." >&2
+            exit 1
+          fi
+          if [ -z "$SITE_URL" ]; then
+            echo "Falta a variável SITE_URL no ambiente $BRANCH." >&2
+            exit 1
+          fi
+          url=$(pnpm dlx "$VERCEL_CLI" deploy dist --prod --yes)
+          {
+            echo "### Publicado em $BRANCH"
+            echo "$SITE_URL"
+            echo "Deploy: $url"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Confere o endereço real: as páginas respondem, a produção está visível
+      # para os buscadores e o desenvolvimento não. O Node vem do setup acima,
+      # na versão do package.json; este job não instala dependências.
+      - name: Teste de fumaça no endereço publicado
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          modo=--noindex
+          if [ "$BRANCH" = production ]; then modo=--indexable; fi
+          for tentativa in 1 2 3; do
+            if node scripts/smoke.mjs "$SITE_URL" "$modo"; then exit 0; fi
+            echo "Tentativa $tentativa falhou; esperando o endereço atualizar."
+            sleep 15
+          done
+          exit 1
+
+  # A versão só existe depois de a produção estar no ar e conferida.
+  release:
+    needs: deploy
+    if: github.ref == 'refs/heads/production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      # Histórico e tags completos: a versão sai dos commits desde a última tag.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version-file: package.json
+      - name: Cria a tag e a release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/release.mjs

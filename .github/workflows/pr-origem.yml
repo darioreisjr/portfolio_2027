@@ -1,0 +1,36 @@
+name: Origem do PR
+
+# A `production` só recebe pull request vindo da `development` (ADR 0014). As
+# regras de branch do GitHub não filtram a origem; esta checagem, obrigatória
+# nas duas branches, faz isso. Fica em arquivo próprio para rodar também quando
+# a base de um PR é trocada (`edited`), sem repetir a verificação inteira.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+permissions: {}
+
+jobs:
+  origem:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Confere a branch de origem
+        # Nomes de branch vêm de quem abre o PR: entram por variável, nunca no texto do script.
+        env:
+          BASE: ${{ github.base_ref }}
+          HEAD: ${{ github.head_ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+        run: |
+          if [ "$BASE" != production ]; then
+            echo "Base $BASE: qualquer branch de tarefa pode abrir o PR."
+            exit 0
+          fi
+          if [ "$HEAD" = development ] && [ "$HEAD_REPO" = "$GITHUB_REPOSITORY" ]; then
+            echo "Promoção da development para a production."
+            exit 0
+          fi
+          echo "A production só recebe pull request da development deste repositório." >&2
+          echo "Origem recebida: $HEAD_REPO:$HEAD. Abra o PR contra a development." >&2
+          exit 1

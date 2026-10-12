@@ -5,7 +5,7 @@
 //
 //   node scripts/check-budgets.mjs
 
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
@@ -30,6 +30,14 @@ function scriptsIn(dir) {
 
 const partSize = (dir) =>
   scriptsIn(join(distDir, dir)).reduce((sum, file) => sum + gzipKb(file), 0);
+
+// O raio-x versionado guarda o que foi medido da última vez (ADR 0012): serve de
+// base para mostrar, no pull request, quanto cada parte e cada rota mudou.
+const xray = JSON.parse(readFileSync(join(repoRoot, 'packages/content/data/site.json'), 'utf8'));
+const baseline = new Map([
+  ...xray.parts.map((part) => [`parte ${part.name}`, part.jsKb]),
+  ...xray.areas.map((area) => [`rota ${area.path}`, area.jsKb]),
+]);
 
 const failures = [];
 const rows = [];
@@ -68,6 +76,30 @@ for (const file of scriptsIn(join(distDir, '_mfe'))) {
 }
 
 console.table(rows);
+
+// `BUDGETS_SUMMARY=<arquivo>` grava a mesma tabela em Markdown, com a diferença
+// para o raio-x. O CI a publica no comentário do pull request.
+if (process.env.BUDGETS_SUMMARY) {
+  const delta = (row) => {
+    const before = baseline.get(row.medido);
+    if (before === undefined) return 'novo';
+    const change = Number(row['kB (gzip)']) - before;
+    return Math.abs(change) < 0.05
+      ? '='
+      : `${change > 0 ? '+' : '−'}${Math.abs(change).toFixed(1)}`;
+  };
+  const lines = [
+    '| Medido | kB (gzip) | Mudou | Teto | |',
+    '| --- | ---: | ---: | ---: | --- |',
+    ...rows.map(
+      (row) =>
+        `| ${row.medido} | ${row['kB (gzip)']} | ${delta(row)} | ${row.teto} | ${row.ok ? '✅' : '❌'} |`,
+    ),
+    '',
+    `"Mudou" compara com o raio-x versionado, medido em ${xray.measuredAt}.`,
+  ];
+  writeFileSync(process.env.BUDGETS_SUMMARY, `${lines.join('\n')}\n`);
+}
 if (failures.length > 0) {
   console.error(`\nOrçamento estourado:\n- ${failures.join('\n- ')}`);
   process.exit(1);

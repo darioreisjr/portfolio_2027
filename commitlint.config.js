@@ -5,6 +5,9 @@ const SIGNATURE = /^(co-authored-by:|generated with|🤖)/im;
 
 export default {
   extends: ['@commitlint/config-conventional'],
+  // Os commits do Dependabot são escritos por ele, em inglês e com linhas longas
+  // no corpo. Seguem o formato (`build(deps): ...`), e o resto não é cobrado.
+  ignores: [(message) => /^Signed-off-by: dependabot\[bot\]/m.test(message)],
   plugins: [
     {
       rules: {

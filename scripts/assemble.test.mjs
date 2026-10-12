@@ -3,7 +3,12 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
-import { buildVercelConfig, flattenNextSegment, planAssembly } from './assemble.mjs';
+import {
+  buildVercelConfig,
+  flattenNextSegment,
+  planAssembly,
+  PRODUCTION_HOST,
+} from './assemble.mjs';
 
 function fixture(files) {
   const root = mkdtempSync(join(tmpdir(), 'assemble-'));
@@ -117,4 +122,16 @@ test('buildVercelConfig define cabeçalhos de cache para assets estáticos e HTM
   const html = config.headers.find((h) => h.source === '/(.*)\\.html');
   assert.ok(html);
   assert.equal(html.headers[0].value, 'public, max-age=0, must-revalidate');
+});
+
+test('buildVercelConfig esconde dos buscadores todo endereço que não seja o de produção', () => {
+  const config = buildVercelConfig();
+  const rule = config.headers.find((h) =>
+    h.headers.some((header) => header.key === 'X-Robots-Tag'),
+  );
+  assert.ok(rule);
+  assert.equal(rule.source, '/(.*)');
+  assert.deepEqual(rule.missing, [{ type: 'host', value: PRODUCTION_HOST }]);
+  assert.deepEqual(rule.headers, [{ key: 'X-Robots-Tag', value: 'noindex' }]);
+  assert.match(PRODUCTION_HOST, /^[a-z0-9.-]+$/);
 });

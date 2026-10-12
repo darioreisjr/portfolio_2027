@@ -1,0 +1,96 @@
+name: Republicar versão
+
+# Volta um ambiente para uma versão anterior, pela tag (ADR 0014). É manual:
+# em Actions, escolha este workflow, a branch do ambiente e a versão.
+# Republica o código daquela tag; não mexe nas branches nem cria release.
+# Para o site voltar a acompanhar a branch, basta o próximo merge nela.
+
+on:
+  workflow_dispatch:
+    inputs:
+      versao:
+        description: Tag a republicar, como v1.2.0
+        required: true
+        type: string
+
+concurrency:
+  group: deploy-${{ github.ref_name }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  VERCEL_CLI: vercel@63.1.2
+
+jobs:
+  republicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # O ambiente é o da branch de onde o workflow foi disparado.
+    environment:
+      name: ${{ github.ref_name }}
+      url: ${{ vars.SITE_URL }}
+    env:
+      SITE_URL: ${{ vars.SITE_URL }}
+    steps:
+      - name: Confere a versão pedida
+        env:
+          VERSAO: ${{ inputs.versao }}
+        run: |
+          if ! printf '%s' "$VERSAO" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "Versão inválida: use o formato v1.2.0." >&2
+            exit 1
+          fi
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: refs/tags/${{ inputs.versao }}
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+        with:
+          run_install: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version-file: package.json
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm assemble
+
+      - name: Publica na Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          PROJECT_DEVELOPMENT: ${{ secrets.VERCEL_PROJECT_ID }}
+          PROJECT_PRODUCTION: ${{ secrets.VERCEL_PROJECT_ID_PRODUCTION }}
+          BRANCH: ${{ github.ref_name }}
+          VERSAO: ${{ inputs.versao }}
+        run: |
+          case "$BRANCH" in
+            production) export VERCEL_PROJECT_ID="$PROJECT_PRODUCTION" ;;
+            development) export VERCEL_PROJECT_ID="$PROJECT_DEVELOPMENT" ;;
+            *) echo "Dispare da production ou da development, não de $BRANCH." >&2; exit 1 ;;
+          esac
+          if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "Faltam segredos da Vercel para o ambiente $BRANCH." >&2
+            exit 1
+          fi
+          url=$(pnpm dlx "$VERCEL_CLI" deploy dist --prod --yes)
+          {
+            echo "### $VERSAO republicada em $BRANCH"
+            echo "$SITE_URL"
+            echo "Deploy: $url"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Teste de fumaça no endereço publicado
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          modo=--noindex
+          if [ "$BRANCH" = production ]; then modo=--indexable; fi
+          for tentativa in 1 2 3; do
+            if pnpm exec node scripts/smoke.mjs "$SITE_URL" "$modo"; then exit 0; fi
+            echo "Tentativa $tentativa falhou; esperando o endereço atualizar."
+            sleep 15
+          done
+          exit 1
