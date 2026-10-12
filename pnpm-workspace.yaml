@@ -10,7 +10,7 @@ catalog:
   # Linguagem e orquestração
   typescript: 6.0.3
   turbo: 2.11.7
-  '@types/node': 24.19.1
+  '@types/node': 26.6.4
 
   # Frameworks
   next: 16.3.8
