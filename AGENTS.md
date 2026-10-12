@@ -25,7 +25,7 @@ Idiomas: pt-BR (padrão, sem prefixo), en e es (com prefixo e rotas traduzidas).
 | `docs/product/brief.md`        | Públicos, áreas, escopo                      |
 | `docs/content/schema.md`       | Modelo dos dados JSON                        |
 | `docs/architecture/mfe-map.md` | Área por app, tabela de rotas por idioma     |
-| `docs/architecture/adr/`       | Decisões aceitas (0001 a 0013)               |
+| `docs/architecture/adr/`       | Decisões aceitas (0001 a 0014)               |
 | `docs/quality/budgets.md`      | Limites de performance, acessibilidade e SEO |
 | `docs/open-questions.md`       | O que ainda não foi decidido                 |
 | `README.md`                    | O projeto para quem chega pelo GitHub        |
@@ -102,6 +102,24 @@ Pare e pergunte quando: um ADR não cobre a decisão, há item bloqueante em `do
 
 Claude Code é a ferramenta principal. Codex e Gemini são usados para revisão e segunda opinião, com as mesmas instruções.
 
+## Branches e publicação
+
+Duas branches protegidas, um ambiente para cada (ADR 0014):
+
+| Branch        | Para quê                                   | Publica em                      |
+| ------------- | ------------------------------------------ | ------------------------------- |
+| `production`  | A principal: o que está no ar              | `https://2027.darioreis.dev`    |
+| `development` | Onde o trabalho se junta antes de ir ao ar | `https://develop.darioreis.dev` |
+
+1. Toda tarefa começa em uma branch nova, saída da `development` atualizada: `tipo/descricao-curta`, com o tipo do Conventional Commits (`feat/`, `fix/`, `docs/`, `ci/`…).
+2. Nenhuma das duas aceita push direto. O código entra por pull request com `verify` e `origem` verdes.
+3. "Fazer o push" é subir a branch da tarefa e abrir o pull request contra a `development`. Só a pedido do autor.
+4. Merge do pull request e promoção da `development` para a `production` são pedidos à parte: nunca faça por conta própria.
+5. A `production` só recebe pull request da `development`. Merge por rebase na `development`; commit de merge na `production`.
+6. O merge na `production` publica o site e cria a release sozinho. `feat` sobe a versão menor, `fix` e `perf` o remendo, mudança que quebra a maior; o resto não gera versão. O tipo do commit decide a versão: escolha com cuidado.
+
+Detalhes nas skills `commits` e `deploy-vercel`.
+
 ## Definição de pronto
 
 - Plano aprovado seguido, sem escopo extra.
@@ -122,7 +140,8 @@ Claude Code é a ferramenta principal. Codex e Gemini são usados para revisão 
 - Escrever segredo em arquivo versionado. Segredos só por variável de ambiente; nomes em `.env.example`.
 - Editar à mão arquivos gerados: `.claude/skills/`, `.claude/agents/`, `.codex/`, `.gemini/`, `.mcp.json` e os `CLAUDE.md` e `GEMINI.md` dentro de `apps/` e `packages/`.
 - Pôr coautor ou assinatura de ferramenta de IA em commit (`Co-Authored-By`, "Generated with"). O `commitlint` recusa.
-- Fazer push sem o autor pedir.
+- Fazer push, merge de pull request ou promoção para a `production` sem o autor pedir.
+- Fazer commit direto na `development` ou na `production`, ou alterar as regras das branches (`.github/rulesets/`) sem o autor pedir.
 - Liberar script de instalação (`allowBuilds`) ou exceção de idade de pacote (`minimumReleaseAgeExclude`) sem autorização do autor.
 
 ## Setup dos agentes

@@ -56,6 +56,12 @@ Percorra tudo. Marque como "não se aplica" só com motivo.
 
 ## Commit e PR
 
+- [ ] A branch saiu da `development` atualizada e tem nome `tipo/descricao`.
+- [ ] A base do PR é a `development`. Só a `development` abre PR contra a `production`.
+- [ ] `verify` e `origem` verdes; o comentário do CI mostra a prévia e o peso de JavaScript.
+- [ ] O tipo de cada commit está certo: ele decide a versão da próxima release (skill `commits`).
+- [ ] `README.md` revisado.
+
 - [ ] Conventional Commits em pt-BR: `tipo(escopo): resumo`, com o app ou pacote como escopo, sem coautor (skill `commits`).
 - [ ] A descrição diz o que mudou, por quê, como foi verificado e o que não foi verificado.
 - [ ] Revisão pedida a `integration-reviewer`, a `a11y-perf-reviewer` e, com interface, a `design-system-guardian`.

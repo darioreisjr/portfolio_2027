@@ -2,7 +2,7 @@
 
 Portfólio pessoal de [Dario Reis](https://github.com/darioreisjr), Software Engineer. É um site estático, sem backend, com uma área para cada tipo de visitante, e cada área é feita em uma tecnologia diferente: Next.js, Vue, Angular e React, compostos em um só site.
 
-**No ar:** <https://develop.darioreis.dev>
+**No ar:** <https://2027.darioreis.dev> · versões em [Releases](https://github.com/darioreisjr/portfolio_2027/releases)
 
 ## O que é
 
@@ -41,7 +41,7 @@ São cinco aplicações que viram um único site estático:
 - **Design system próprio.** Web Components em Lit, carregados uma vez por documento, e tokens de cor, espaçamento e tipografia em propriedades CSS. Os apps não usam valor literal.
 - **Apps só conversam por contrato.** Eventos tipados e a tabela de rotas vivem em `packages/contracts`.
 
-As decisões estão registradas em 13 ADRs, em [`docs/architecture/adr/`](docs/architecture/adr/). A área técnica do site mostra essas decisões e os números medidos de cada rota, lidos do próprio repositório.
+As decisões estão registradas em 14 ADRs, em [`docs/architecture/adr/`](docs/architecture/adr/). A área técnica do site mostra essas decisões e os números medidos de cada rota, lidos do próprio repositório.
 
 ## Tecnologias
 
@@ -131,9 +131,20 @@ Cada item abaixo é cobrado no CI. Se um falha, o site não é publicado.
 
 Os limites e os números medidos estão em [`docs/quality/budgets.md`](docs/quality/budgets.md).
 
-## Publicação
+## Branches, publicação e versões
 
-Todo push na `main` roda o CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)): formato, lint, tipos, testes, build, orçamentos, testes de ponta a ponta e Lighthouse. Passando tudo, o `dist/` é publicado na Vercel. Pull request ganha um endereço de prévia.
+| Branch        | Para quê                                   | Publica em                      |
+| ------------- | ------------------------------------------ | ------------------------------- |
+| `production`  | A principal: o que está no ar              | <https://2027.darioreis.dev>    |
+| `development` | Onde o trabalho se junta antes de ir ao ar | <https://develop.darioreis.dev> |
+
+- Toda tarefa sai da `development` em uma branch própria e volta por pull request. As duas branches recusam push direto e só aceitam merge com o CI verde.
+- A `production` só recebe pull request da `development`.
+- O CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) roda formato, lint, tipos, testes, build, orçamentos, testes de ponta a ponta e Lighthouse. No pull request, publica uma prévia e comenta o link e o peso de JavaScript.
+- Passando tudo, o merge publica o `dist/` na Vercel e confere o endereço publicado. O ambiente de desenvolvimento fica fora dos buscadores.
+- O merge na `production` também cria a versão: tag, release e notas, calculadas pelos commits (`feat` sobe a menor, `fix` o remendo). Uma versão anterior pode ser republicada pelo workflow **Republicar versão**.
+
+Também rodam, sem bloquear o merge: análise de segurança com CodeQL, revisão de dependências, atualizações semanais do Dependabot e os testes de ponta a ponta em Firefox e WebKit, toda noite.
 
 ## Conteúdo
 

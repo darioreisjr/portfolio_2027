@@ -147,6 +147,7 @@ Cobrado no CI desde o bootstrap: a nota do Lighthouse e `<title>` e descrição 
 - Toda rota, em todo idioma, tem `<title>` e descrição próprios.
 - `hreflang` entre as quatro versões de cada página, e `canonical`.
 - `sitemap.xml` com todas as rotas e idiomas; `robots.txt`.
+- Só a produção vai para os buscadores: o ambiente de desenvolvimento e as prévias respondem `X-Robots-Tag: noindex` (ADR 0014). O teste de fumaça do deploy cobra isso.
 - Dados estruturados de pessoa (`Person`) na home.
 - Imagem e texto de compartilhamento (Open Graph) por página.
 - Conteúdo com valor de busca fica em páginas Next.js, que têm HTML completo.

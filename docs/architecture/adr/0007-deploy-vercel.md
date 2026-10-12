@@ -48,6 +48,16 @@ Motivos:
 
 O português de Portugal foi removido. As reescritas passam a cobrir as rotas em pt-BR, en e es; os endereços `/pt-pt/...` respondem 404, sem redirecionamento, por decisão do autor.
 
+## Emenda de 2026-10-12
+
+O ADR 0014 troca os gatilhos e os ambientes. O portão não muda: só é publicado o que passou em toda a verificação.
+
+- A `main` virou `production`, e existe a `development`. Cada uma publica em um projeto próprio da Vercel, com `--prod`: `2027.darioreis.dev` e `develop.darioreis.dev`.
+- O deploy saiu do job de verificação para um job próprio, que depende dele e publica o `dist/` que ele verificou.
+- A prévia de pull request continua, no projeto de desenvolvimento.
+- O `dist/vercel.json` ganha a regra que esconde dos buscadores todo endereço que não seja o de produção.
+- A CLI da Vercel passa a ter versão fixa.
+
 ## Fontes
 
 - [Vercel CLI Overview](https://vercel.com/docs/cli)
