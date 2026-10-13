@@ -177,6 +177,7 @@ describe('página do recrutador', () => {
     expect(bar?.querySelector('a')?.getAttribute('href')).toBe('mailto:teste@example.com');
     // O e-mail abre o programa de correio, na mesma aba.
     expect(bar?.querySelector('a')?.hasAttribute('target')).toBe(false);
+    expect(bar?.querySelector('a')?.hasAttribute('aria-label')).toBe(false);
   });
 
   it('os links que saem do site abrem em outra aba', async () => {
@@ -186,7 +187,14 @@ describe('página do recrutador', () => {
     for (const link of external) {
       expect(link.target, link.href).toBe('_blank');
       expect(link.rel).toContain('noopener');
+      // O nome acessível começa pelo texto visível e termina com o aviso.
+      const visible = link.textContent?.trim().replace(/\s+/g, ' ') ?? '';
+      expect(link.getAttribute('aria-label'), link.href).toBe(`${visible} (abre em nova aba)`);
     }
+    const english = await mount('en');
+    expect(english.querySelector('a[target="_blank"]')?.getAttribute('aria-label')).toMatch(
+      / \(opens in a new tab\)$/,
+    );
   });
 
   it('o filtro da stack mostra uma categoria por vez e diz qual está ativa', async () => {
