@@ -44,6 +44,16 @@ const date = (value: string) => monthYear.value.format(new Date(`${value}-01T00:
 const period = (start: string | undefined, end: string | null, open: string) =>
   [start && date(start), end ? date(end) : open].filter(Boolean).join(' – ');
 
+/**
+ * Atributos de um link que sai do site: abre outra aba e avisa disso no nome
+ * acessível, que é o texto visível seguido do aviso.
+ */
+const outgoing = (label: string) => ({
+  target: '_blank',
+  rel: 'noopener',
+  'aria-label': `${label} (${props.text.newTab})`,
+});
+
 const facetOf = (project: RecruiterContent['projects'][number]): Facet =>
   facets.value[project.id] ?? (project.role ? 'role' : 'challenge');
 const facetsOf = (project: RecruiterContent['projects'][number]): Facet[] =>
@@ -151,8 +161,7 @@ onBeforeUnmount(() => {
           <a
             :href="contact.url"
             :title="contact.display"
-            :target="contact.kind === 'email' ? undefined : '_blank'"
-            rel="noopener"
+            v-bind="contact.kind === 'email' ? {} : outgoing(text.contact.kinds[contact.kind])"
           >
             {{ text.contact.kinds[contact.kind] }}
           </a>
@@ -237,7 +246,7 @@ onBeforeUnmount(() => {
           <p class="when">{{ period(job.start, job.end, text.experience.present) }}</p>
           <h3>{{ job.role }}</h3>
           <p class="where">
-            <a v-if="job.companyUrl" :href="job.companyUrl" target="_blank" rel="noopener">{{
+            <a v-if="job.companyUrl" :href="job.companyUrl" v-bind="outgoing(job.company)">{{
               job.company
             }}</a>
             <template v-else>{{ job.company }}</template>
@@ -288,18 +297,17 @@ onBeforeUnmount(() => {
                 v-for="repo in project.repos"
                 :key="repo.url"
                 :href="repo.url"
-                target="_blank"
-                rel="noopener"
+                v-bind="outgoing(`${text.projects.repo}: ${repo.label}`)"
               >
                 {{ text.projects.repo }}: {{ repo.label }}
               </a>
             </template>
-            <a v-else-if="project.repo" :href="project.repo" target="_blank" rel="noopener">
+            <a v-else-if="project.repo" :href="project.repo" v-bind="outgoing(text.projects.repo)">
               {{ text.projects.repo }}
             </a>
-            <a v-if="project.demo" :href="project.demo" target="_blank" rel="noopener">{{
-              text.projects.demo
-            }}</a>
+            <a v-if="project.demo" :href="project.demo" v-bind="outgoing(text.projects.demo)">
+              {{ text.projects.demo }}
+            </a>
           </p>
         </article>
       </div>
@@ -315,7 +323,11 @@ onBeforeUnmount(() => {
           <p class="where">
             {{ item.institution }} · {{ period(item.start, item.end, text.education.ongoing) }}
           </p>
-          <a v-if="item.credentialUrl" :href="item.credentialUrl" target="_blank" rel="noopener">
+          <a
+            v-if="item.credentialUrl"
+            :href="item.credentialUrl"
+            v-bind="outgoing(text.education.credential)"
+          >
             {{ text.education.credential }}
           </a>
         </li>
@@ -736,6 +748,20 @@ details ul {
   display: inline-grid;
   min-block-size: var(--size-control);
   align-content: center;
+}
+
+/* Seta nos links que abrem outra aba. Quem não vê a seta ouve o aviso, que vai
+   no nome do link (`outgoing`). */
+a[target='_blank']::after {
+  margin-inline-start: var(--space-block-xs);
+  content: '↗';
+}
+
+/* Nos links em grade, a seta fica ao lado do texto, não embaixo. */
+.contact-bar a,
+.links a,
+.education a {
+  grid-auto-flow: column;
 }
 
 .education {
