@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { settled } from './support/motion';
+import { NO_JS } from './support/no-js';
 
 const STORAGE_KEY = 'portfolio:tema';
 const SURFACE = { light: 'rgb(255, 255, 255)', dark: 'rgb(12, 14, 19)' };
@@ -120,7 +121,7 @@ test.describe('sem JavaScript', () => {
   test('vale o tema do sistema e o botão fica oculto, com o espaço reservado', async ({
     browser,
   }) => {
-    const context = await browser.newContext({ javaScriptEnabled: false, colorScheme: 'dark' });
+    const context = await browser.newContext({ ...NO_JS, colorScheme: 'dark' });
     const page = await context.newPage();
     await page.goto('/comunidade/');
 

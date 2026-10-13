@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { settled } from './support/motion';
+import { NO_JS } from './support/no-js';
 
 const homes = [
   {
@@ -434,7 +435,7 @@ test.describe('home em tela larga (palco)', () => {
   }) => {
     // Sem a entrada animada: com o JavaScript desligado o Playwright não repete
     // a checagem de elemento parado, e um clique dado durante a entrada trava.
-    const context = await browser.newContext({ javaScriptEnabled: false, reducedMotion: 'reduce' });
+    const context = await browser.newContext({ ...NO_JS, reducedMotion: 'reduce' });
     const page = await context.newPage();
     await page.goto('/');
     await expect(page.locator('.persona-actions:visible')).toHaveCount(0);

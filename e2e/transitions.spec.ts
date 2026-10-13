@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { NO_JS } from './support/no-js';
 
 // Transições entre a home e as áreas que as têm (ADR 0011). Quem sai fecha a
 // cortina da área e grava uma marca; o documento seguinte lê a marca antes de
@@ -288,7 +289,7 @@ test('abrir direto, com marca velha ou de outra área, não mostra a chegada', a
 });
 
 test('sem JavaScript os links levam às páginas, sem cortina', async ({ browser }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false, reducedMotion: 'reduce' });
+  const context = await browser.newContext({ ...NO_JS, reducedMotion: 'reduce' });
   const page = await context.newPage();
   await page.goto('/');
   await expect(page.locator('#home-enter')).toBeHidden();

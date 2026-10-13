@@ -158,8 +158,15 @@ test('o cartão de serviço inclina seguindo o ponteiro e volta ao sair', async 
   const box = await card.boundingBox();
   if (!box) throw new Error('cartão sem caixa');
   const tilt = () => card.evaluate((element) => (element as HTMLElement).style.cssText);
-  await page.mouse.move(box.x + box.width * 0.9, box.y + box.height * 0.2);
-  await expect.poll(tilt).toContain('--tilt-x');
+  // O ouvinte entra depois de a página montar: o ponteiro se mexe até ele responder.
+  let nudge = 0;
+  await expect
+    .poll(async () => {
+      nudge = (nudge + 1) % 3;
+      await page.mouse.move(box.x + box.width * 0.9 + nudge, box.y + box.height * 0.2);
+      return tilt();
+    })
+    .toContain('--tilt-x');
   await page.mouse.move(5, 5);
   await expect.poll(tilt).not.toContain('--tilt-x');
 });
