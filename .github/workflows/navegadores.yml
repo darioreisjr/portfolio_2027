@@ -31,6 +31,16 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps firefox webkit
+      # O executor não tem placa de som, e sem saída o Firefox deixa o áudio
+      # suspenso: os testes de efeitos sonoros falhavam todos. Um servidor de som
+      # com saída nula basta.
+      - name: Saída de áudio nula
+        run: |
+          sudo apt-get install -y --no-install-recommends pulseaudio pulseaudio-utils
+          pulseaudio --start --exit-idle-time=-1
+          pactl load-module module-null-sink sink_name=nula
+          pactl set-default-sink nula
+          pactl info | grep -i "default sink"
       - run: pnpm build
       - run: pnpm assemble
       - name: E2E em Firefox e WebKit

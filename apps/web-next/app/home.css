@@ -61,6 +61,14 @@
   initial-value: 1;
 }
 
+/* O que o layout põe fora de `.home` (o seletor de tema e o grupo do canto) não
+   tem texto à vista, mas Firefox e WebKit baixam o peso normal da fonte para o
+   espaço em branco entre os ícones e para o texto alternativo das bandeiras.
+   O documento da home inteiro é negrito. */
+body:has(.home) {
+  font-weight: var(--text-weight-strong);
+}
+
 .home {
   /* Todo texto desta tela é negrito. Declarado aqui, o navegador não baixa o
      peso normal da fonte só para medir linhas sem texto (figuras, cenário). */
@@ -603,8 +611,10 @@ li[data-selected] > .persona::before {
 }
 
 @media (min-width: 48rem) and (hover: hover) {
-  .personas:not([data-selected]):has(.persona:is(:hover, :focus-visible))
-    > li:not(:has(.persona:is(:hover, :focus-visible)))
+  /* Os dois estados vão em lista, sem `:is()`: com `:has(.persona:is(:hover, …))`
+     o WebKit não refaz o estilo dos outros três quando o ponteiro entra. */
+  .personas:not([data-selected]):has(.persona:hover, .persona:focus-visible)
+    > li:not(:has(.persona:hover, .persona:focus-visible))
     .persona-figure {
     filter: brightness(0.45);
     scale: 0.94;

@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { NO_JS } from './support/no-js';
 
 const STORAGE_KEY = 'portfolio:musica';
 
@@ -35,6 +36,18 @@ async function watchAudio(page: Page): Promise<{ count: () => number }> {
 const music = (page: Page) => page.getByRole('button', { name: 'Som' });
 const playing = (page: Page) =>
   page.evaluate(() => [...document.querySelectorAll('audio')].some((audio) => !audio.paused));
+/**
+ * O tempo de alguma faixa está andando. Quando o arquivo falha, Firefox e
+ * WebKit deixam o elemento fora da pausa, à espera de dados que não vêm: ali
+ * olhar só a pausa diria que há música.
+ */
+const advancing = (page: Page) =>
+  page.evaluate(async () => {
+    const audios = [...document.querySelectorAll('audio')];
+    const before = audios.map((audio) => audio.currentTime);
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    return audios.some((audio, index) => audio.currentTime !== before[index]);
+  });
 const stored = (page: Page) => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY);
 
 /** Abre a home e espera o botão existir: ele só entra depois da hidratação. */
@@ -287,7 +300,7 @@ test('só a home tem o botão, no grupo do canto, antes da pausa', async ({ page
 });
 
 test('sem JavaScript o botão não aparece, mas o lugar dele fica guardado', async ({ browser }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false });
+  const context = await browser.newContext(NO_JS);
   const page = await context.newPage();
   await page.goto('/');
   await expect(page.locator('.home-music')).toHaveCount(0);
@@ -331,7 +344,7 @@ test('se o arquivo da música falhar, o botão continua ligado: os efeitos não 
   expect(await stored(page)).toBe('on');
   // Sem música, mas também sem erro.
   await page.locator('h1').click();
-  expect(await playing(page)).toBe(false);
+  expect(await advancing(page)).toBe(false);
   expect(errors).toEqual([]);
 });
 

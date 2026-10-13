@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { NO_JS } from './support/no-js';
 
 // Uma linha por área, um caminho por idioma. Escrito à mão de propósito: o teste
 // confere o site publicado contra a tabela de docs/architecture/mfe-map.md.
@@ -143,7 +144,8 @@ test('fechada, a lista não baixa as outras bandeiras', async ({ page }) => {
   await page.goto('/es/');
   await expect(current(page).getByRole('img')).toHaveAccessibleName('Español');
   await page.waitForLoadState('networkidle');
-  expect(requested).toEqual(['/_ds/flags/es.svg']);
+  // O WebKit pede a mesma imagem mais de uma vez; o que importa é quais.
+  expect([...new Set(requested)]).toEqual(['/_ds/flags/es.svg']);
 });
 
 test('pelo teclado: abre com Enter, e o grupo é o último na ordem do Tab', async ({ page }) => {
@@ -177,7 +179,7 @@ test('pelo teclado: abre com Enter, e o grupo é o último na ordem do Tab', asy
 });
 
 test('funciona sem JavaScript', async ({ browser }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false });
+  const context = await browser.newContext(NO_JS);
   const page = await context.newPage();
 
   await page.goto('/');
