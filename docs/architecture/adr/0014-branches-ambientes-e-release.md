@@ -46,10 +46,10 @@ Para a release:
 4. **Merge.** Tarefa para `development`: rebase, que preserva cada commit já validado pelo commitlint. `development` para `production`: commit de merge, que mantém os mesmos commits nas duas. Squash fica desligado. As branches não divergem: a `production` é a `development` mais os commits de merge.
 5. **Ambientes.** Cada branch publica em um projeto da Vercel, com `--prod`:
 
-   | Branch        | Endereço                        | Projeto na Vercel                        | Buscadores |
-   | ------------- | ------------------------------- | ---------------------------------------- | ---------- |
-   | `development` | `https://develop.darioreis.dev` | O que já existia                         | Escondido  |
-   | `production`  | `https://2027.darioreis.dev`    | Novo, com `VERCEL_PROJECT_ID_PRODUCTION` | Visível    |
+   | Branch        | Endereço                        | Projeto na Vercel                                                   | Buscadores |
+   | ------------- | ------------------------------- | ------------------------------------------------------------------- | ---------- |
+   | `development` | `https://develop.darioreis.dev` | `portfolio-2027-dev`, o que já existia                              | Escondido  |
+   | `production`  | `https://2027.darioreis.dev`    | `portfolio-2027-producao`, novo, com `VERCEL_PROJECT_ID_PRODUCTION` | Visível    |
 
    A prévia de pull request vai para o projeto de desenvolvimento. No GitHub, cada ambiente (`development`, `production`) é restrito à própria branch e guarda o endereço em `SITE_URL`.
 

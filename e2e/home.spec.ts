@@ -58,6 +58,21 @@ async function expectNoneSelected(page: Page): Promise<void> {
   await expect(page.locator('a.persona[aria-expanded="false"]')).toHaveCount(4);
 }
 
+test('diz de quem é o site: nome e cargo acima da chamada, em negrito, nos três idiomas', async ({
+  page,
+}) => {
+  for (const path of ['/', '/en/', '/es/']) {
+    await openHome(page, path);
+    const identity = page.locator('.home-identity');
+    await expect(identity.locator('strong')).toHaveText('Dario Reis');
+    await expect(identity.locator('span')).not.toBeEmpty();
+    // Negrito como o resto da tela: o peso normal baixaria outro arquivo de fonte.
+    await expect(identity.locator('span')).toHaveCSS('font-weight', '700');
+    const [line, title] = [await identity.boundingBox(), await page.locator('h1').boundingBox()];
+    expect((line?.y ?? 0) + (line?.height ?? 0)).toBeLessThanOrEqual(title?.y ?? 0);
+  }
+});
+
 test.describe('home em tela larga (palco)', () => {
   test.use({ viewport: { width: 1280, height: 800 }, colorScheme: 'light' });
 

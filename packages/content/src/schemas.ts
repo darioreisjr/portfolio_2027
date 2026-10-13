@@ -294,6 +294,8 @@ export const recruiterUiSchema = z
       })
       .strict(),
     cv: labels(['download']),
+    /** Aviso dos links que saem do site; entra no nome acessível do link, entre parênteses. */
+    newTab: text,
     contact: z
       .object({ title: text, kinds: labels(['email', 'linkedin', 'github', 'whatsapp']) })
       .strict(),
