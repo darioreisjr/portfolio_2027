@@ -208,7 +208,7 @@ Textos de interface da área do cliente: a abertura, os cabeçalhos de notifica�
 
 ### `recruiter/<locale>.json` (um por idioma)
 
-Textos de interface da área do recrutador: títulos das seções, rótulos das enumerações da ficha rápida (`workModes`, `englishLevels`, `seniorities`), das categorias e níveis da stack, dos tipos de formação e de contato, e a faixa "Dados de exemplo" (`example`). Sem `status`, como `ui` e `home`. Ficam fora de `ui` porque só o MFE do recrutador os usa.
+Textos de interface da área do recrutador: títulos das seções, o aviso dos links que abrem outra aba (`newTab`), rótulos das enumerações da ficha rápida (`workModes`, `englishLevels`, `seniorities`), das categorias e níveis da stack, dos tipos de formação e de contato, e a faixa "Dados de exemplo" (`example`). Sem `status`, como `ui` e `home`. Ficam fora de `ui` porque só o MFE do recrutador os usa.
 
 ### `tech/<locale>.json` (um por idioma)
 
@@ -263,7 +263,7 @@ Cada bloco de cada área usa um conjunto ou o outro, nunca os dois, em desenvolv
 
 A exceção de exemplo (`publishExample` em `packages/content/scripts/build.mjs`) põe no ar, com a faixa, os blocos que ainda não têm dado real. Vale para a área técnica, a do cliente e a comunidade. A do recrutador saiu dela em 2026-10-12.
 
-A home recebe o perfil pelo módulo `profile`. Em produção ele segue `null` por `HOME_IDENTITY = false`, no mesmo script, até o autor decidir mostrar nome e cargo na home.
+A home recebe o perfil pelo módulo `profile` e mostra nome e cargo. Em produção isso depende de `HOME_IDENTITY`, no mesmo script, ligado em 2026-10-13; com `false`, o módulo volta a ser `null` e a linha some.
 
 Um contato real só entra em outra área se `primaryFor` a citar. Hoje os quatro contatos reais têm `primaryFor: ["recruiter"]`.
 
