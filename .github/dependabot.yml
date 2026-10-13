@@ -15,6 +15,11 @@ updates:
     cooldown:
       default-days: 7
     open-pull-requests-limit: 5
+    ignore:
+      # Os tipos do Node acompanham o Node em que o projeto roda (`engines` e
+      # `devEngines` no package.json). Versão maior entra junto com a do Node.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
     groups:
       # Um PR só para o que não deveria quebrar; versão maior vem separada.
       menores:

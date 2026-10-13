@@ -20,10 +20,10 @@ O deploy é realizado pelo GitHub Actions após a execução de todos os testes 
 
 Cada branch publica em um projeto próprio da Vercel, sempre com `--prod` (ADR 0014):
 
-| Branch        | Endereço                        | Projeto na Vercel    | Buscadores |
-| ------------- | ------------------------------- | -------------------- | ---------- |
-| `development` | `https://develop.darioreis.dev` | O de desenvolvimento | Escondido  |
-| `production`  | `https://2027.darioreis.dev`    | O de produção        | Visível    |
+| Branch        | Endereço                        | Projeto na Vercel         | Buscadores |
+| ------------- | ------------------------------- | ------------------------- | ---------- |
+| `development` | `https://develop.darioreis.dev` | `portfolio-2027-dev`      | Escondido  |
+| `production`  | `https://2027.darioreis.dev`    | `portfolio-2027-producao` | Visível    |
 
 - **Pull request:** prévia no projeto de desenvolvimento, com endereço próprio. O CI comenta o link no PR.
 - **Merge na `development`:** publica no ambiente de desenvolvimento.
@@ -64,6 +64,10 @@ pnpm dlx vercel@63.1.2 deploy dist --prod --yes   # no projeto de VERCEL_PROJECT
 ```
 
 Publicar à mão pula o portão de qualidade: só a pedido do autor.
+
+## Atualizar a Vercel CLI
+
+A versão é fixa e aparece em três lugares: `VERCEL_CLI` em `.github/workflows/ci.yml`, o mesmo em `.github/workflows/republicar.yml`, e os comandos desta skill. O Dependabot não a atualiza. Para subir a versão, troque nos três e rode `pnpm test`: `scripts/vercel-cli.test.mjs` falha se ficarem diferentes. Não existe arquivo central porque o `republicar.yml` roda o código de tags antigas.
 
 ## Regras e fronteiras
 
