@@ -15,11 +15,10 @@ const includeDrafts = process.env.CONTENT_INCLUDE_DRAFTS === '1';
 // perfil voltar a rascunho, ela não põe exemplo no ar sob o nome do autor.
 const PUBLISH_EXAMPLE = { recruiter: false, tech: true, client: true, community: true };
 
-// A home mostra nome e cargo quando recebe o perfil. Com o perfil publicado ela
-// passaria a mostrá-los em produção; o autor deixou isso para uma tarefa própria
-// (2026-10-12), porque a home está perto do teto de LCP. Em desenvolvimento,
-// com rascunhos, nada muda.
-const HOME_IDENTITY = false;
+// A home mostra nome e cargo quando recebe o perfil. Ligado em 2026-10-13, com a
+// linha em negrito, para a home não baixar um segundo arquivo de fonte (issue
+// 18, pendência B10). Para tirar a linha da produção, troque para `false`.
+const HOME_IDENTITY = true;
 
 const content = loadContent(dataDir, {
   includeDrafts,

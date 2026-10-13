@@ -147,9 +147,10 @@ body:has(.home) {
   justify-content: center;
   gap: var(--space-inline-sm);
   margin: 0 var(--space-inline-md) var(--space-block-md);
+  /* Em negrito, como o resto da home: o peso normal faria a tela baixar um
+     segundo arquivo de fonte (pendência B10). O nome se destaca pela cor. */
   color: var(--color-text-muted);
   font-size: var(--text-size-sm);
-  font-weight: normal;
 }
 
 .home-identity strong {
