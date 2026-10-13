@@ -15,7 +15,6 @@ A página usa os seus dados reais desde 2026-10-12 (`docs/plans/recrutador-conte
 | Credencial de cibersegurança  | O link, quando o curso Foundations of Cybersecurity terminar, e a data de fim                                      | `education.json`                            |
 | Datas das tecnologias         | O ano em que começou a usar Vitest e Playwright                                                                    | `skills.json`, `since`                      |
 | Espanhol                      | Se quer mostrar o nível de espanhol (básico): a ficha hoje só tem o de inglês                                      | a definir                                   |
-| Nome e cargo na home          | Se a home deve mostrar "Dario Reis · Software Engineer"; exige medir a velocidade de novo                          | `HOME_IDENTITY` em `scripts/build.mjs`      |
 | Números                       | Resultados medidos (Core Web Vitals, cobertura de testes, releases) para trocar descrições por números             | `experiences.json`, `projects.json`         |
 
 Quando a foto ou o PDF chegarem, avise: ligar o arquivo à página é uma tarefa pequena, mas ainda não foi feita.
