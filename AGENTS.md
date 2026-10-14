@@ -116,7 +116,8 @@ Duas branches protegidas, um ambiente para cada (ADR 0014):
 3. "Fazer o push" é subir a branch da tarefa e abrir o pull request contra a `development`. Só a pedido do autor.
 4. Merge do pull request e promoção da `development` para a `production` são pedidos à parte: nunca faça por conta própria.
 5. A `production` só recebe pull request da `development`. Merge por rebase na `development`; commit de merge na `production`.
-6. O merge na `production` publica o site e cria a release sozinho. `feat` sobe a versão menor, `fix` e `perf` o remendo, mudança que quebra a maior; o resto não gera versão. O tipo do commit decide a versão: escolha com cuidado.
+6. Toda tarefa tem uma issue, aberta pelos formulários de `.github/ISSUE_TEMPLATE/`. O pull request cita `Closes #n`; a issue fecha quando o código chega à `production`.
+7. O merge na `production` publica o site e cria a release sozinho. `feat` sobe a versão menor, `fix` e `perf` o remendo, mudança que quebra a maior; o resto não gera versão. O tipo do commit decide a versão: escolha com cuidado.
 
 Detalhes nas skills `commits` e `deploy-vercel`.
 

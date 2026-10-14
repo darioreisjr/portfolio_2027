@@ -1,0 +1,62 @@
+name: Conteúdo do autor
+description: Dado real que só o autor tem (perfil, experiências, projetos, artigos, depoimentos) e que vai substituir um exemplo.
+title: 'Publicar <o que entra>'
+labels: ['tipo: conteúdo', 'área: content', 'aguarda o autor']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Nada aqui é inventado: se um dado não existe, ele fica de fora e a issue diz o que falta.
+        O modelo de cada arquivo está em `docs/content/schema.md`; o que já se sabe que falta, em `docs/content/pendencias-do-autor.md`.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área do site
+      multiple: true
+      options:
+        - Recrutador
+        - Técnica
+        - Cliente
+        - Comunidade
+        - Home
+        - Como foi feito
+    validations:
+      required: true
+  - type: dropdown
+    id: arquivo
+    attributes:
+      label: Arquivo em packages/content/data/
+      multiple: true
+      options:
+        - profile.json
+        - experiences.json
+        - projects.json
+        - skills.json
+        - education.json
+        - contacts.json
+        - services.json
+        - client.json
+        - testimonials.json
+        - articles.json
+        - textos de interface de uma área
+    validations:
+      required: true
+  - type: textarea
+    id: dados
+    attributes:
+      label: Os dados
+      description: Em português. A tradução para inglês e espanhol é feita na entrega e marcada para revisão.
+    validations:
+      required: true
+  - type: textarea
+    id: falta
+    attributes:
+      label: O que ainda falta
+      description: Itens que o autor ainda vai mandar. A issue pode ser entregue em partes.
+  - type: checkboxes
+    id: publico
+    attributes:
+      label: Publicação
+      options:
+        - label: Tudo aqui pode ficar público no site e no repositório.
+          required: true

@@ -57,6 +57,7 @@ Percorra tudo. Marque como "não se aplica" só com motivo.
 ## Commit e PR
 
 - [ ] A branch saiu da `development` atualizada e tem nome `tipo/descricao`.
+- [ ] O PR cita `Closes #n` para cada issue que resolve; sem issue, abra uma pelos formulários antes.
 - [ ] A base do PR é a `development`. Só a `development` abre PR contra a `production`.
 - [ ] `verify` e `origem` verdes; o comentário do CI mostra a prévia e o peso de JavaScript.
 - [ ] O tipo de cada commit está certo: ele decide a versão da próxima release (skill `commits`).

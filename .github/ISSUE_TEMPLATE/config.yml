@@ -1,0 +1,6 @@
+# Toda issue nasce de um formulário: ninguém abre issue em branco.
+blank_issues_enabled: false
+contact_links:
+  - name: Regras do projeto
+    url: https://github.com/darioreisjr/portfolio_2027/blob/production/AGENTS.md
+    about: Fluxo de trabalho, regras de fronteira e definição de pronto, antes de abrir uma issue.
