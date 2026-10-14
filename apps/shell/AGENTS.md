@@ -10,15 +10,14 @@ Casca das áreas de MFE: gera o documento HTML de cada rota e idioma, mostra o p
 - Carrega o MFE com `import()` e cria a tag. Ao sair da área, remove o elemento; nunca reinsere o mesmo.
 - Carrega o design system e os tokens uma vez por documento.
 - O documento leva o script de tema de `packages/contracts` no `<head>`, antes das folhas de estilo, e o `<ds-theme-toggle>` no `<header class="shell-header">`, que só tem ele e fica no canto de cima, sobre o palco. A troca de tema é do design system (ADR 0005); o shell não tem código de tema.
-- Dono de: foco e título ao trocar de área.
-- Um HTML por rota e idioma, com `<title>`, descrição, `hreflang` e `canonical` próprios.
+- Dono de: foco e título ao trocar de área. Trocar de área é carregar outro documento, então o foco começa no topo da página nova.
+- Um HTML por rota e idioma, com `<title>` e descrição próprios. `hreflang` e `canonical` ainda não existem (pendência B7, issue #10).
 - Troca de idioma: o documento termina com `<footer class="ds-dock">`, com um `<details class="ds-language-switcher">`. O `<summary>` é a bandeira do idioma em uso; a lista, que abre para cima, tem os outros dois como links comuns para a mesma área, vindos de `languageAlternates` de `packages/contracts`. O shell não tem código de troca (ADR 0006 e a emenda dele). O `main` reserva o espaço do grupo com `--ds-dock-reserve`.
 - Cada área é um palco (ADR 0009): o `main.area-stage` leva `data-area`, o cenário decorativo, o `h1.area-title`, o personagem da área (`personaFigure` de `packages/contracts`, no HTML inicial), o `.area-outlet`, onde o MFE é montado, e o botão de volta para a home. A aparência vem de `/_ds/areas.css`, ligada por `<link>`; o `shell.css` só cuida do cabeçalho e da altura. O botão de pausa do cenário (`label.area-motion`) fica no grupo do canto, antes da bandeira. Detalhes em `docs/plans/areas-em-construcao.md`.
 - Área com conteúdo (ADR 0010): `renderPage(..., { content: true })` escreve `data-content` no `main`, e o `shell.css` troca a caixa centrada por uma página rolável, com o personagem ao lado e o botão de volta fixo. Quem diz se há conteúdo é `src/content.ts`, usado só pelo gerador e pelo servidor de desenvolvimento. O shell continua dono de cenário, título, personagem, volta e pausa.
 - Quem diz se uma área tem conteúdo é o mapa de `src/content.ts` (hoje recrutador, técnica e cliente).
 - Transições (ADR 0011), só nas áreas de `AREA_TRANSITIONS`: o `<head>` leva `arrivalInitScript([área])`, que liga `data-arrival`; `div.area-arrival` é a cortina que abre e `div.area-departure` a que fecha na volta, com o aviso `ui.leaving`. O clique no botão de volta é tratado em `src/main.ts`. A aparência de cada área fica em `shell.css`, repetida em `home.css`; área nova com transição precisa das regras nos dois.
 - As áreas não têm menu (decisão do autor em 2026-10-08): não há marca nem links para as outras áreas. Troca-se de área pelo botão de volta à escolha de perfil.
-- Ainda não implementado: foco e título ao trocar de área, `hreflang` e `canonical`.
 - Teto de JavaScript: ver `docs/quality/budgets.md`.
 
 ## Comandos
