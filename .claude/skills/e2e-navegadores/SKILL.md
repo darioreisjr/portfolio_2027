@@ -62,6 +62,7 @@ Do ambiente de teste:
 - **Sem JavaScript, no Firefox.** O `storageState` da configuração grava no `localStorage` rodando um script; com `javaScriptEnabled: false` o Firefox trava ao criar o contexto. Use `NO_JS` de `e2e/support/no-js.ts`.
 - **Sem placa de som, no CI.** O Firefox deixa o `AudioContext` suspenso sem saída de áudio. O workflow sobe um PulseAudio com saída nula antes dos testes.
 - **Ctrl+clique abrindo aba de verdade.** Abrir a aba é do navegador e depende de a janela estar em primeiro plano, o que testes em paralelo disputam. Teste o que é do site: que o clique com tecla modificadora não é interceptado (`modifiedClick` em `e2e/transitions.spec.ts`).
+- **WebKit no CI congela depois de tocar uma nota.** Às vezes a página para por cerca de 27 s logo depois de um efeito sonoro: até uma espera de 80 ms dentro dela leva esse tempo, e o teste estoura (`home-sfx.spec.ts`, "pelo teclado", 3 de 10 em 2026-10-14). É o WebKit do Linux com a saída de áudio nula do executor, não o site; a repetição automática cobre. Não mexa no site por causa disso.
 - **WebKit no Windows.** Não tem `AudioContext`, não passa o áudio pela interceptação de rede do Playwright e o Tab não foca links. Os testes de som e de teclado falham só na máquina local; no CI (Linux) passam. Não corrija o site por causa deles.
 
 ## Ao escrever um teste novo
