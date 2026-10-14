@@ -2,6 +2,10 @@
 
 <!-- Uma ou duas frases: o que este PR faz e por quê. -->
 
+Closes #
+
+<!-- Uma linha "Closes #n" por issue resolvida. A issue fecha quando o PR chegar à production. -->
+
 ## Como foi verificado
 
 <!-- Comandos que rodaram, telas conferidas, e o que NÃO foi verificado. -->

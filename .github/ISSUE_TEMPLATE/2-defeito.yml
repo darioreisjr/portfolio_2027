@@ -1,0 +1,78 @@
+name: Defeito
+description: Algo no site ou no pipeline não funciona como deveria.
+title: 'Corrigir <o que está errado>'
+labels: ['tipo: fix']
+body:
+  - type: markdown
+    attributes:
+      value: Um defeito por issue. Se for teste instável, diga quantas vezes falhou e em quantas execuções.
+  - type: input
+    id: endereco
+    attributes:
+      label: Onde
+      description: O endereço da página, ou o link da execução do GitHub Actions.
+      placeholder: https://2027.darioreis.dev/recrutador/
+    validations:
+      required: true
+  - type: dropdown
+    id: ambiente
+    attributes:
+      label: Ambiente
+      options:
+        - produção (2027.darioreis.dev)
+        - desenvolvimento (develop.darioreis.dev)
+        - prévia de pull request
+        - local (pnpm dev ou pnpm preview)
+        - CI
+    validations:
+      required: true
+  - type: dropdown
+    id: navegador
+    attributes:
+      label: Navegador
+      multiple: true
+      options:
+        - Chrome ou Edge
+        - Firefox
+        - Safari
+        - Celular (iOS)
+        - Celular (Android)
+        - Leitor de tela
+        - Não se aplica
+  - type: textarea
+    id: aconteceu
+    attributes:
+      label: O que aconteceu
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: O que era esperado
+    validations:
+      required: true
+  - type: textarea
+    id: reproduzir
+    attributes:
+      label: Como reproduzir
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: evidencias
+    attributes:
+      label: Evidências
+      description: Captura de tela, trecho do log, mensagem de erro.
+  - type: dropdown
+    id: prioridade
+    attributes:
+      label: Prioridade
+      options:
+        - alta (fazer primeiro)
+        - média (fazer em seguida)
+        - baixa (quando houver tempo)
+    validations:
+      required: true
