@@ -101,7 +101,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: var(--space-block-md) var(--space-inline-md);
-  border-inline-start: calc(var(--border-width-thick) * 2) solid var(--area-color);
+  border-inline-start: var(--border-width-marker) solid var(--area-color);
   background-color: var(--color-surface);
   color: var(--color-text);
   clip-path: polygon(
@@ -119,7 +119,7 @@
   margin: 0;
   color: var(--area-color);
   font-size: var(--text-size-title);
-  line-height: 1.2;
+  line-height: var(--text-line-height-tight);
 }
 
 .area-message-text,
@@ -369,8 +369,12 @@
   inset: -2rem;
   transform-origin: center bottom;
   mask:
-    repeating-linear-gradient(90deg, transparent 0 var(--gap), black var(--gap) var(--pitch)),
-    repeating-linear-gradient(0deg, black 0 6rem, transparent 6rem 6.25rem);
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 var(--gap),
+      var(--color-pattern-ink) var(--gap) var(--pitch)
+    ),
+    repeating-linear-gradient(0deg, var(--color-pattern-ink) 0 6rem, transparent 6rem 6.25rem);
   mask-composite: intersect;
 }
 
@@ -477,9 +481,9 @@
   inset-block-end: 0;
   /* Uma fileira de cristas arredondadas e, abaixo dela, a faixa cheia. */
   mask:
-    radial-gradient(ellipse 50% 100% at 50% 100%, black 98%, transparent) 0 0 / var(--tile) 2rem
-      repeat-x,
-    linear-gradient(black, black) 0 2rem / 100% 100% no-repeat;
+    radial-gradient(ellipse 50% 100% at 50% 100%, var(--color-pattern-ink) 98%, transparent) 0 0 /
+      var(--tile) 2rem repeat-x,
+    linear-gradient(var(--color-pattern-ink), var(--color-pattern-ink)) 0 2rem / 100% 100% no-repeat;
 }
 
 .area-stage[data-area='client'] .area-scene-back {

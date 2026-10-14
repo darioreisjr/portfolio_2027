@@ -14,7 +14,12 @@ const otherApps = (own) =>
 
 // Regras de fronteira do AGENTS.md que dá para cobrar por lint.
 const boundaries = (app, { forbidDesignSystemRuntime }) => ({
-  files: [`apps/${app}/src/**`, `apps/${app}/app/**`],
+  files: [
+    `apps/${app}/src/**`,
+    `apps/${app}/app/**`,
+    `apps/${app}/lib/**`,
+    `apps/${app}/scripts/**`,
+  ],
   rules: {
     '@typescript-eslint/no-restricted-imports': [
       'error',
