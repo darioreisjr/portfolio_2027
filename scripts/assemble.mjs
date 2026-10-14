@@ -96,11 +96,6 @@ export function planAssembly(root, sourceList = sources) {
 }
 
 /**
- * Constrói a configuração da Vercel (ADR 0007) com base na tabela canônica de rotas.
- * Mapeia sub-rotas dos microfrontends geridos pelo shell para seus respectivos index.html
- * e define cabeçalhos de cache agressivos para assets imutáveis e revalidação para HTML.
- */
-/**
  * O endereço da produção (ADR 0014). Todo outro endereço em que o `dist/` for
  * publicado (o ambiente de desenvolvimento, as prévias de pull request e os
  * `*.vercel.app`) responde com `X-Robots-Tag: noindex`, para o mesmo conteúdo
@@ -109,6 +104,11 @@ export function planAssembly(root, sourceList = sources) {
  */
 export const PRODUCTION_HOST = '2027.darioreis.dev';
 
+/**
+ * Constrói a configuração da Vercel (ADR 0007) com base na tabela canônica de rotas.
+ * Mapeia sub-rotas dos microfrontends geridos pelo shell para seus respectivos index.html
+ * e define cabeçalhos de cache agressivos para assets imutáveis e revalidação para HTML.
+ */
 export function buildVercelConfig(routesList = routes) {
   const shellRoutes = routesList.filter((route) => route.owner === 'shell');
   const rewrites = [];
@@ -172,12 +172,15 @@ export function buildVercelConfig(routesList = routes) {
           },
         ],
       },
+      // Os bundles dos microfrontends têm nome fixo (`mfe.js`, `main.js`): com
+      // cache imutável, quem já visitou ficaria com o código antigo depois de
+      // cada deploy. Revalidam como o HTML; a resposta sem mudança é um 304.
       {
         source: '/_mfe/(.*)',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value: 'public, max-age=0, must-revalidate',
           },
         ],
       },
