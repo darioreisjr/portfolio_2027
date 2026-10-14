@@ -42,6 +42,11 @@ jobs:
             echo "Versão inválida: use o formato v1.2.0." >&2
             exit 1
           fi
+          # A tag precisa existir: sem isto, o checkout falha com uma mensagem do git.
+          if ! git ls-remote --exit-code --tags "https://github.com/$GITHUB_REPOSITORY" "refs/tags/$VERSAO" >/dev/null; then
+            echo "A versão $VERSAO não existe. As publicadas estão em Releases." >&2
+            exit 1
+          fi
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:

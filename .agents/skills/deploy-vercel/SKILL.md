@@ -53,6 +53,24 @@ Os ids ficam em Projeto > Settings > General. O segredo da produção tem nome p
 
 Em Actions, rode **Republicar versão** a partir da branch do ambiente (`production` ou `development`), informando a tag (`v1.2.0`). Ele monta o site daquela tag, publica e roda o teste de fumaça. Não mexe nas branches. A alternativa é o rollback pelo painel da Vercel, que só o autor faz.
 
+```bash
+gh workflow run "Republicar versão" --ref production -f versao=v1.1.0
+gh run list --workflow "Republicar versão" --limit 1
+```
+
+Ensaiado em 2026-10-14 (issue #8):
+
+| Execução                               | Resultado                                        | Tempo |
+| -------------------------------------- | ------------------------------------------------ | ----- |
+| `development`, voltar para a `v1.0.1`  | A home ficou sem a linha de nome, como na v1.0.1 | 73 s  |
+| `development`, avançar para a `v1.1.0` | A linha voltou                                   | 73 s  |
+| `production`, republicar a `v1.1.0`    | Nada mudou para quem visita; fumaça verde        | 53 s  |
+| Versão `1.0`                           | Recusada no primeiro passo, sem publicar         |       |
+| Versão `v9.9.9`                        | Recusada no primeiro passo: a tag não existe     |       |
+
+- O ambiente volta a acompanhar a branch no merge seguinte nela; até lá fica na versão republicada.
+- O código republicado é o da tag, mas o workflow é o da branch de onde foi disparado.
+
 ## Comandos manuais (emergência)
 
 O caminho normal é o CI. Para publicar o `dist/` pelo terminal, com os três valores da Vercel no ambiente:
