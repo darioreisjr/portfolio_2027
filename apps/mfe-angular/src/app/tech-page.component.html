@@ -16,9 +16,14 @@
       }
       @for (line of log(); track $index) {
         <p [class]="line.kind">
-          <span>{{ line.text }}</span>
+          <span [id]="'linha-' + $index">{{ line.text }}</span>
           @if (line.target; as target) {
-            <button type="button" class="goto" (click)="goTo(target)">
+            <button
+              type="button"
+              class="goto"
+              [attr.aria-describedby]="'linha-' + $index"
+              (click)="goTo(target)"
+            >
               {{ text().terminal.goto }}
             </button>
           }

@@ -109,8 +109,13 @@ function Intro({ intro }: { intro: HomeModel['intro'] }) {
         ))}
       </ul>
       <label className="home-intro-immersion">
-        <input type="checkbox" aria-describedby="home-intro-hint" />
-        <span>{intro.immersion}</span>
+        <input
+          type="checkbox"
+          aria-labelledby="home-intro-immersion"
+          aria-describedby="home-intro-hint"
+        />
+        {/* O nome é só o rótulo; a dica, dentro do mesmo <label> para o clique, é a descrição. */}
+        <span id="home-intro-immersion">{intro.immersion}</span>
         {/* Duas dicas, uma à vista: com movimento reduzido só a música liga. */}
         <small id="home-intro-hint">
           <span className="home-intro-hint">{intro.hint}</span>
