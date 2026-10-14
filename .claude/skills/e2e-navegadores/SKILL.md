@@ -34,6 +34,13 @@ Sem `E2E_BROWSERS=all` os dois projetos não existem. Rode poucos arquivos por v
 
 Para achar a causa, um script à parte que abre a página nos três motores e imprime o estilo computado ou os pedidos de rede resolve mais que reler o teste.
 
+O workflow guarda o relatório e os traces de toda execução por 7 dias, inclusive quando tudo passa: um teste que só passou na repetição deixa o trace da tentativa que falhou. Para caçar um instável, dispare só ele, repetido:
+
+```bash
+gh workflow run "Outros navegadores" --ref <branch> -f filtro="<parte do nome do teste>" -f repeticoes=20
+gh run download <id> -n relatorio-navegadores
+```
+
 Para provar a correção no ambiente de verdade, dispare o workflow na branch da tarefa, depois do push:
 
 ```bash
@@ -48,11 +55,13 @@ Diferenças reais entre motores, encontradas em 2026-10-13:
 - **Fonte para texto que não se vê.** Firefox e WebKit baixam o arquivo da fonte para espaço em branco e para texto alternativo de imagem; o Chromium não. Onde a página só pode baixar um peso, declare o peso no `body`, não só no bloco de conteúdo.
 - **Áudio que falhou.** Depois de um `play()` em arquivo que não carrega, Firefox e WebKit deixam `paused` em `false`. "Está tocando" se mede pelo tempo andando.
 - **Imagem pedida duas vezes.** O WebKit repete o pedido de uma mesma imagem. Compare conjuntos, não listas.
+- **Foco depois de fechar um `<dialog>`.** Quando o diálogo abre sozinho, sem foco anterior para devolver, o Chromium deixa o foco na página e o WebKit às vezes o deixa no botão do diálogo já fechado. Ao fechar, tire o foco de dentro dele (`lib/intro.ts`).
 
 Do ambiente de teste:
 
 - **Sem JavaScript, no Firefox.** O `storageState` da configuração grava no `localStorage` rodando um script; com `javaScriptEnabled: false` o Firefox trava ao criar o contexto. Use `NO_JS` de `e2e/support/no-js.ts`.
 - **Sem placa de som, no CI.** O Firefox deixa o `AudioContext` suspenso sem saída de áudio. O workflow sobe um PulseAudio com saída nula antes dos testes.
+- **Ctrl+clique abrindo aba de verdade.** Abrir a aba é do navegador e depende de a janela estar em primeiro plano, o que testes em paralelo disputam. Teste o que é do site: que o clique com tecla modificadora não é interceptado (`modifiedClick` em `e2e/transitions.spec.ts`).
 - **WebKit no Windows.** Não tem `AudioContext`, não passa o áudio pela interceptação de rede do Playwright e o Tab não foca links. Os testes de som e de teclado falham só na máquina local; no CI (Linux) passam. Não corrija o site por causa deles.
 
 ## Ao escrever um teste novo

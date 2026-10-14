@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 import { NO_JS } from './support/no-js';
 
 // Transições entre a home e as áreas que as têm (ADR 0011). Quem sai fecha a
@@ -84,6 +84,37 @@ const choose = async (page: Page, phrase: string) => {
   await expect(page.getByRole('link', { name: 'Entrar' })).toBeFocused();
 };
 const arrived = (page: Page) => page.locator('html').getAttribute('data-arrival');
+/** Um pouco mais que o atraso da transição (`TRANSITION_DELAY_MS`, 0,45 s). */
+const TRANSITION_WAIT = 700;
+/**
+ * Ctrl+clique sem abrir aba de verdade. Abrir a aba é do navegador, e depende de
+ * a janela estar em primeiro plano, o que testes em paralelo disputam: era a
+ * causa da instabilidade. O que cabe ao site é não interceptar o clique. Um
+ * ouvinte na janela, o último a ouvir, diz se alguém chamou `preventDefault` e
+ * depois cancela a navegação, para o teste continuar na mesma página.
+ */
+const modifiedClick = (link: Locator) =>
+  link.evaluate(
+    (anchor) =>
+      new Promise<boolean>((resolve) => {
+        window.addEventListener(
+          'click',
+          (event) => {
+            resolve(event.defaultPrevented);
+            event.preventDefault();
+          },
+          { once: true },
+        );
+        anchor.dispatchEvent(
+          new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            ctrlKey: true,
+            metaKey: true,
+          }),
+        );
+      }),
+  );
 const mark = (page: Page) => page.evaluate((key) => sessionStorage.getItem(key), KEY);
 /** A cor de uma das metades da cortina. */
 const curtainColor = (page: Page, selector: string) =>
@@ -180,40 +211,31 @@ for (const { area, phrase, path, url, title, color } of areas) {
       expect(await arrived(page)).toBeNull();
     });
 
-    test('Ctrl+clique abre em outra aba, sem cortina, na ida e na volta', async ({
+    test('Ctrl+clique fica com o navegador: sem cortina e sem marca, na ida e na volta', async ({
       page,
-      context,
     }) => {
       await page.goto('/');
       await choose(page, phrase);
-      // O navegador só abre a aba nova se a página estiver em primeiro plano.
-      await page.bringToFront();
-      const [area1] = await Promise.all([
-        context.waitForEvent('page'),
-        page.getByRole('link', { name: 'Entrar' }).click({ modifiers: ['ControlOrMeta'] }),
-      ]);
-      await area1.waitForURL(path);
-      expect(new URL(area1.url()).pathname).toBe(url);
+      const enter = page.getByRole('link', { name: 'Entrar' });
+      await expect(enter).toHaveAttribute('href', url);
+      // O site não pode interceptar o clique com tecla modificadora.
+      expect(await modifiedClick(enter)).toBe(false);
+      await page.waitForTimeout(TRANSITION_WAIT);
       await expect(page.locator('#home-enter')).toBeHidden();
-      expect(await area1.locator('html').getAttribute('data-arrival')).toBeNull();
+      expect(await mark(page)).toBeNull();
+      await expect(page).toHaveURL(HOME);
 
-      await area1.bringToFront();
-      // Nas áreas do shell o microfrontend entra depois do `load` e empurra o
-      // layout: clicar antes disso pode errar o botão de volta. O sinal de pronto
-      // também garante que o ouvinte do shell já está no botão.
+      await page.goto(url);
+      // Nas áreas do shell o ouvinte do botão de volta só existe depois do script.
       if (area !== 'community') {
-        await expect(area1.locator('main')).toHaveAttribute('data-ready', area);
+        await expect(page.locator('main')).toHaveAttribute('data-ready', area);
       }
-      const [home] = await Promise.all([
-        context.waitForEvent('page'),
-        area1
-          .getByRole('link', { name: 'Voltar à escolha de perfil' })
-          .click({ modifiers: ['ControlOrMeta'] }),
-      ]);
-      await home.waitForURL(HOME);
-      expect(new URL(home.url()).pathname).toBe('/');
-      await expect(area1.locator(departure)).toBeHidden();
-      expect(await home.locator('html').getAttribute('data-arrival')).toBeNull();
+      const back = page.getByRole('link', { name: 'Voltar à escolha de perfil' });
+      expect(await modifiedClick(back)).toBe(false);
+      await page.waitForTimeout(TRANSITION_WAIT);
+      await expect(page.locator(departure)).toBeHidden();
+      expect(await mark(page)).toBeNull();
+      await expect(page).toHaveURL(path);
     });
 
     test('voltar pelo navegador devolve cada página sem a cortina fechada', async ({ page }) => {

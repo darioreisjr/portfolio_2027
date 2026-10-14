@@ -7,7 +7,18 @@ name: Outros navegadores
 on:
   schedule:
     - cron: '0 5 * * *'
+  # Disparo manual, para investigar um teste instável: filtra pelo nome e repete.
   workflow_dispatch:
+    inputs:
+      filtro:
+        description: Parte do nome do teste (vazio roda todos)
+        required: false
+        type: string
+      repeticoes:
+        description: Quantas vezes repetir cada teste
+        required: false
+        default: '1'
+        type: string
 
 concurrency:
   group: navegadores-${{ github.ref }}
@@ -44,12 +55,22 @@ jobs:
       - run: pnpm build
       - run: pnpm assemble
       - name: E2E em Firefox e WebKit
-        run: pnpm test:e2e --project=firefox --project=webkit
+        run: |
+          set -- --project=firefox --project=webkit --repeat-each="${REPETICOES:-1}"
+          if [ -n "$FILTRO" ]; then set -- "$@" --grep "$FILTRO"; fi
+          pnpm test:e2e "$@"
         env:
           E2E_BROWSERS: all
+          FILTRO: ${{ inputs.filtro }}
+          REPETICOES: ${{ inputs.repeticoes }}
+      # Sempre: um teste que só passou na repetição guarda o trace da tentativa
+      # que falhou, e é por ele que se acha a causa (skill `e2e-navegadores`).
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
-        if: failure()
+        if: always()
         with:
           name: relatorio-navegadores
-          path: playwright-report/
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
           if-no-files-found: ignore
