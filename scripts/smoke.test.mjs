@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
-import { pagesIn, problemsOf } from './smoke.mjs';
+import { pagesIn, problemsOf, scriptProblemsOf, scriptsIn } from './smoke.mjs';
 
 test('as páginas são os index.html do dist, fora as pastas de assets', () => {
   const root = mkdtempSync(join(tmpdir(), 'smoke-'));
@@ -38,4 +38,36 @@ test('a produção precisa responder e não pode estar escondida dos buscadores'
 test('o ambiente de desenvolvimento precisa do noindex', () => {
   assert.deepEqual(problemsOf(page({ robots: 'noindex' }), false), []);
   assert.match(problemsOf(page(), false)[0], /sem X-Robots-Tag: noindex/);
+});
+
+test('os scripts conferidos são o do shell, o do design system e o de cada microfrontend', () => {
+  const root = mkdtempSync(join(tmpdir(), 'smoke-'));
+  for (const file of [
+    '_shell/shell.js',
+    '_ds/ds.js',
+    '_mfe/vue/mfe.js',
+    '_mfe/angular/main.js',
+    '_mfe/vue/chunk.js',
+  ]) {
+    mkdirSync(dirname(join(root, file)), { recursive: true });
+    writeFileSync(join(root, file), '');
+  }
+  assert.deepEqual(scriptsIn(root), [
+    '/_shell/shell.js',
+    '/_ds/ds.js',
+    '/_mfe/angular/main.js',
+    '/_mfe/vue/mfe.js',
+  ]);
+});
+
+test('script que não responde ou não é JavaScript é problema', () => {
+  assert.deepEqual(scriptProblemsOf({ path: '/a.js', status: 200, type: 'text/javascript' }), []);
+  assert.match(
+    scriptProblemsOf({ path: '/a.js', status: 404, type: 'text/html' })[0],
+    /respondeu 404/,
+  );
+  assert.match(
+    scriptProblemsOf({ path: '/a.js', status: 200, type: 'text/html' })[0],
+    /não JavaScript/,
+  );
 });
