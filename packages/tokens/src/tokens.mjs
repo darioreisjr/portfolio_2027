@@ -61,6 +61,7 @@ export const primitives = {
   'font-size-500': '1.75rem',
   'font-weight-strong': '700',
   'line-height-body': '1.5',
+  'line-height-tight': '1.15',
 };
 
 /** Mudam de valor conforme o tema. As duas listas têm as mesmas chaves. */
@@ -161,6 +162,8 @@ export const semanticStatic = {
   'text-size-title': 'var(--font-size-500)',
   'text-weight-strong': 'var(--font-weight-strong)',
   'text-line-height': 'var(--line-height-body)',
+  /** Títulos grandes, em uma ou duas linhas. */
+  'text-line-height-tight': 'var(--line-height-tight)',
   'radius-md': 'var(--radius-12)',
   'radius-full': 'var(--radius-pill)',
 };

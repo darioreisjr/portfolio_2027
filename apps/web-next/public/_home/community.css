@@ -123,7 +123,7 @@
   max-inline-size: 18ch;
   font-size: var(--text-size-title);
   font-weight: var(--text-weight-strong);
-  line-height: 1.15;
+  line-height: var(--text-line-height-tight);
 }
 
 .c-lead {
