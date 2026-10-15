@@ -44,6 +44,7 @@ Páginas com HTML completo para SEO: `/`, `/comunidade`, `/como-foi-feito` e as 
 - Não usa Module Federation.
 - Dados de `packages/content` usados hoje: `profile`, `home`, `ui`, `community` e `tech`, este só pelo `site` (o raio-x, com o endereço do repositório).
 - Teto de JavaScript: ver `docs/quality/budgets.md`.
+- No Turborepo (`turbo.json`), a tarefa `web-next#typecheck` depende de `build` do próprio app (`"dependsOn": ["^build", "build"]`): o `build` compila e estabiliza `.next/types/` antes de o `typecheck` rodar (`next typegen && tsc --noEmit`), evitando a condição de corrida entre os dois processos concorrentes no CI (issue #6).
 
 ## Comandos
 
