@@ -477,7 +477,7 @@ li[data-selected] > .persona::before {
 }
 
 .persona-dots {
-  --dot-size: 0.5rem;
+  --dot-size: var(--space-inline-sm);
 
   display: flex;
   justify-content: center;

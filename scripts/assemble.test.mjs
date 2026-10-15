@@ -135,3 +135,10 @@ test('buildVercelConfig esconde dos buscadores todo endereço que não seja o de
   assert.deepEqual(rule.headers, [{ key: 'X-Robots-Tag', value: 'noindex' }]);
   assert.match(PRODUCTION_HOST, /^[a-z0-9.-]+$/);
 });
+
+test('buildVercelConfig não guarda os bundles de nome fixo como imutáveis', () => {
+  const config = buildVercelConfig();
+  const mfe = config.headers.find((h) => h.source === '/_mfe/(.*)');
+  assert.ok(mfe);
+  assert.equal(mfe.headers[0].value, 'public, max-age=0, must-revalidate');
+});

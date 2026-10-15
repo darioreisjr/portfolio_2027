@@ -27,6 +27,31 @@ export function pagesIn(distDir) {
 }
 
 /**
+ * Os scripts que as páginas carregam: o do shell, o do design system e o de
+ * entrada de cada microfrontend. Se um deles falhar, a página responde, mas a
+ * área fica vazia; o teste de páginas sozinho não pegaria isso.
+ */
+export function scriptsIn(distDir) {
+  const entries = ['_shell/shell.js', '_ds/ds.js'];
+  const mfes = join(distDir, '_mfe');
+  if (existsSync(mfes)) {
+    for (const app of readdirSync(mfes).sort()) {
+      for (const name of ['mfe.js', 'main.js']) {
+        if (existsSync(join(mfes, app, name))) entries.push(`_mfe/${app}/${name}`);
+      }
+    }
+  }
+  return entries.filter((path) => existsSync(join(distDir, path))).map((path) => `/${path}`);
+}
+
+/** Confere a resposta de um script. */
+export function scriptProblemsOf({ path, status, type }) {
+  if (status !== 200) return [`${path}: respondeu ${status}`];
+  if (!/javascript/i.test(type ?? '')) return [`${path}: veio como ${type}, e não JavaScript`];
+  return [];
+}
+
+/**
  * Confere uma resposta. `expectIndexable` diz se o ambiente pode ir para os
  * buscadores: a produção não leva `X-Robots-Tag`; todo o resto leva `noindex`.
  */
@@ -64,6 +89,18 @@ async function main() {
       ),
     );
   }
+  const scripts = scriptsIn(distDir);
+  for (const path of scripts) {
+    const response = await fetch(new URL(path, origin));
+    problems.push(
+      ...scriptProblemsOf({
+        path,
+        status: response.status,
+        type: response.headers.get('content-type'),
+      }),
+    );
+    await response.arrayBuffer();
+  }
   // Endereço que não existe continua não existindo.
   const missing = await fetch(new URL('/pagina-que-nao-existe/', origin));
   if (missing.status !== 404) {
@@ -72,7 +109,9 @@ async function main() {
 
   if (problems.length > 0)
     throw new Error(`Fumaça em ${origin} falhou:\n- ${problems.join('\n- ')}`);
-  console.log(`Fumaça em ${origin}: ${pages.length} páginas respondem, ${mode.slice(2)}.`);
+  console.log(
+    `Fumaça em ${origin}: ${pages.length} páginas e ${scripts.length} scripts respondem, ${mode.slice(2)}.`,
+  );
 }
 
 if (import.meta.main) {

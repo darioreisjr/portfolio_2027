@@ -1,3 +1,4 @@
+import { HOME_ASSETS_PATH } from '@portfolio/contracts';
 import type { CommunityModel } from '../../lib/community';
 
 /** Marcador de seção: uma esfera numerada, decorativa. */
@@ -30,8 +31,7 @@ export function CommunityPage({ model }: { model: CommunityModel }) {
     <>
       {/* A folha desta página entra por <link>, nunca por `import`: o Next.js
           junta o CSS da rota única e ela iria para a home. */}
-      {/* eslint-disable-next-line @next/next/no-css-tags -- folha só desta página, fora do bundle */}
-      <link rel="stylesheet" href="/_home/community.css" precedence="default" />
+      <link rel="stylesheet" href={`${HOME_ASSETS_PATH}community.css`} precedence="default" />
       {/* Cortinas da transição "explosão de aura" (ADR 0011): a que abre para
           quem chega pela home e a que fecha ao voltar. */}
       <div className="community-arrival" aria-hidden="true" />
@@ -77,7 +77,7 @@ export function CommunityPage({ model }: { model: CommunityModel }) {
             {model.articles.map((article) => (
               <li key={article.id}>
                 <h3>
-                  <a href={article.url} rel="noopener">
+                  <a href={article.url} hrefLang={article.locale} rel="noopener">
                     {article.title}
                   </a>
                 </h3>
@@ -85,7 +85,7 @@ export function CommunityPage({ model }: { model: CommunityModel }) {
                 <p className="c-meta">
                   <time dateTime={article.publishedAt}>{article.date}</time>
                   {' · '}
-                  {text.articles.written} {article.language}
+                  {text.articles.written} <span lang={article.locale}>{article.language}</span>
                 </p>
                 {/* Medidor de "poder": o tempo de leitura, em desenho e em texto. */}
                 <p className="c-power">
@@ -96,7 +96,7 @@ export function CommunityPage({ model }: { model: CommunityModel }) {
                   <strong>{count(text.power.minutes, article.readingMinutes)}</strong>
                 </p>
                 {article.tags.length > 0 && (
-                  <ul className="c-tags">
+                  <ul className="c-tags" lang={article.locale}>
                     {article.tags.map((tag) => (
                       <li key={tag}>
                         <ds-badge>{tag}</ds-badge>

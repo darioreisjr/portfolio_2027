@@ -17,7 +17,8 @@ export const AREA_TRANSITIONS: readonly AreaId[] = ['recruiter', 'tech', 'client
 
 /**
  * Quanto o documento espera, com a cortina fechando, antes de navegar. Acompanha
- * a duração das animações de saída em `home.css` e em `shell.css`.
+ * a duração das animações de saída em `home.css`, em `shell.css` e, para a
+ * comunidade, em `public/_home/community.css`.
  */
 export const TRANSITION_DELAY_MS = 450;
 
@@ -25,7 +26,10 @@ export const TRANSITION_DELAY_MS = 450;
 const ARRIVAL_MAX_AGE_MS = 5000;
 
 /** Valor gravado na marca: a área e a hora, separadas por dois-pontos. */
-export const entryMark = (area: AreaId, now: number): string => `${area}:${now}`;
+/** O começo da marca de uma área: o que vem antes da hora. */
+export const entryMarkPrefix = (area: AreaId): string => `${area}:`;
+
+export const entryMark = (area: AreaId, now: number): string => `${entryMarkPrefix(area)}${now}`;
 
 /**
  * Script que o documento põe inline no `<head>`: consome a marca e, se ela for

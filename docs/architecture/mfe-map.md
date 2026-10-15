@@ -4,15 +4,15 @@ Status: **aprovado** pelo autor em 2026-10-06. Base: áreas do `docs/product/bri
 
 ## Quem renderiza o quê
 
-| Rota (pt-BR) | Área | App | Framework | Por quê |
-| ----------------------- | -------------- | ------------------ | --------------- |
-| `/` | Home | `apps/web-next` | Next.js | Primeira impressão de todos os públicos; precisa de HTML pronto para SEO e LCP |
-| `/comunidade` | Comunidade | `apps/web-next` | Next.js | Artigos e open source são o conteúdo com mais valor de busca; é conteúdo de leitura, sem interação pesada |
-| `/como-foi-feito` | Como foi feito | `apps/web-next` | Next.js | Página de texto e diagramas, indexável |
-| `/recrutador` | Recrutador | `apps/mfe-vue` | Vue | Linha do tempo de experiência e formação: lista reativa com transições, bom caso para Vue |
-| `/tecnico` | Técnica | `apps/mfe-angular` | Angular | Skills com filtro e projetos filtráveis por tecnologia: é a seção de filtro complexo |
-| `/clientes` | Cliente | `apps/mfe-react` | React | Serviços, depoimentos e projetos por resultado: composição de cartões e listas |
-| (todas as rotas de MFE) | Casca | `apps/shell` | JavaScript puro | Documento HTML, cabeçalho, rodapé, carga do script da área |
+| Rota (pt-BR)            | Área           | App                | Framework       | Por quê                                                                                                   |
+| ----------------------- | -------------- | ------------------ | --------------- | --------------------------------------------------------------------------------------------------------- |
+| `/`                     | Home           | `apps/web-next`    | Next.js         | Primeira impressão de todos os públicos; precisa de HTML pronto para SEO e LCP                            |
+| `/comunidade`           | Comunidade     | `apps/web-next`    | Next.js         | Artigos e open source são o conteúdo com mais valor de busca; é conteúdo de leitura, sem interação pesada |
+| `/como-foi-feito`       | Como foi feito | `apps/web-next`    | Next.js         | Página de texto e diagramas, indexável                                                                    |
+| `/recrutador`           | Recrutador     | `apps/mfe-vue`     | Vue             | Linha do tempo de experiência e formação: lista reativa com transições, bom caso para Vue                 |
+| `/tecnico`              | Técnica        | `apps/mfe-angular` | Angular         | Skills com filtro e projetos filtráveis por tecnologia: é a seção de filtro complexo                      |
+| `/clientes`             | Cliente        | `apps/mfe-react`   | React           | Serviços, depoimentos e projetos por resultado: composição de cartões e listas                            |
+| (todas as rotas de MFE) | Casca          | `apps/shell`       | JavaScript puro | Documento HTML, cabeçalho, rodapé, carga do script da área                                                |
 
 Isso mantém a proposta inicial (Next.js para entrada e SEO, React para projetos, Vue para linha do tempo, Angular para filtro, JavaScript puro para o shell) e encaixa cada framework em um público: Vue para recrutadores, Angular para tech leads, React para clientes, Next.js para a comunidade.
 
@@ -62,4 +62,4 @@ Navegar entre os dois tipos recarrega o documento (link `<a>` comum). Navegar de
 
 ## Projetos em duas áreas
 
-O mesmo projeto aparece em `/tecnico` (Angular, narrativa técnica) e em `/clientes` (React, narrativa de resultado). Não há código compartilhado entre os dois: cada MFE lê `projects.json` e renderiza a narrativa que lhe cabe.
+O mesmo projeto aparece em `/tecnico` (Angular, narrativa técnica) e em `/clientes` (React, narrativa de resultado). Não há código compartilhado entre os dois: cada MFE recebe os projetos pelo módulo da própria área em `@portfolio/content` e renderiza a narrativa que lhe cabe.

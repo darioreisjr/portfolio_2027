@@ -42,6 +42,10 @@ export function setupIntro(setSound: (on: boolean) => void): () => void {
   const onStart = () => dialog.close();
   // Fechar pelo botão ou por Esc vale a caixa como estiver.
   const onClose = () => {
+    // O pop-up abriu sozinho, sem foco anterior para devolver. O Chromium deixa
+    // o foco na página; o WebKit às vezes o deixa no botão do diálogo fechado,
+    // invisível. Os dois passam a fazer o mesmo.
+    if (dialog.contains(document.activeElement)) (document.activeElement as HTMLElement).blur();
     pause.checked = !immersion.checked;
     save(immersion.checked);
     setSound(immersion.checked);

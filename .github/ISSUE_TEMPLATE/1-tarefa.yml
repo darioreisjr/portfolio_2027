@@ -1,0 +1,121 @@
+name: Tarefa
+description: Funcionalidade, melhoria, documentação, CI ou revisão, com escopo e critérios de aceite.
+title: '<verbo no infinitivo> <o que muda>'
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Escreva para quem vai fazer a tarefa sem ter participado da conversa: cite arquivos, ADRs e números.
+        A definição de pronto vale para toda issue e está no `AGENTS.md`; não precisa repetir aqui.
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: Tipo
+      description: O tipo do Conventional Commits que a entrega vai usar. Ele decide a versão.
+      options:
+        - feat (funcionalidade nova; sobe a versão menor)
+        - fix (correção; sobe o remendo)
+        - perf (desempenho; sobe o remendo)
+        - docs (só documentação; não gera versão)
+        - ci (pipeline e automação; não gera versão)
+        - test (testes; não gera versão)
+        - refactor, build ou chore (não gera versão)
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      multiple: true
+      options:
+        - web-next (home, comunidade, como-foi-feito)
+        - mfe-vue (recrutador)
+        - mfe-angular (técnica)
+        - mfe-react (cliente)
+        - shell
+        - content
+        - design-system ou tokens
+        - contracts
+        - ci-cd
+        - docs
+    validations:
+      required: true
+  - type: dropdown
+    id: prioridade
+    attributes:
+      label: Prioridade
+      options:
+        - alta (fazer primeiro)
+        - média (fazer em seguida)
+        - baixa (quando houver tempo)
+    validations:
+      required: true
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+      description: Como está hoje e por que isso importa. Cite arquivos, ADRs e pendências de `docs/open-questions.md`.
+    validations:
+      required: true
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: Objetivo
+      description: Uma frase. Se fizer sentido, no formato "Como <público>, quero <ação>, para <resultado>".
+    validations:
+      required: true
+  - type: textarea
+    id: escopo
+    attributes:
+      label: Escopo
+      description: O que entra e, numa lista à parte, o que fica fora.
+      value: |
+        -
+
+        **Fora do escopo:**
+
+        -
+    validations:
+      required: true
+  - type: textarea
+    id: tarefas
+    attributes:
+      label: Tarefas
+      description: Passos pequenos, na ordem. Comece pelo `discovery-analyst` e pelo `architect` quando houver decisão.
+      value: |
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: aceite
+    attributes:
+      label: Critérios de aceite
+      description: Cada item passa ou falha, sem interpretação.
+      value: |
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: verificar
+    attributes:
+      label: Como verificar
+      description: Os comandos ou o endereço que provam que funcionou.
+      render: bash
+  - type: textarea
+    id: dependencias
+    attributes:
+      label: Dependências e bloqueios
+      description: O que precisa vir antes, e o que só o autor pode fornecer ou decidir.
+  - type: textarea
+    id: referencias
+    attributes:
+      label: Referências
+      description: Arquivos, ADRs, issues, pull requests e documentação externa.
+  - type: dropdown
+    id: tamanho
+    attributes:
+      label: Tamanho
+      options:
+        - P (até meio dia)
+        - M (cerca de um dia)
+        - G (mais de um dia)

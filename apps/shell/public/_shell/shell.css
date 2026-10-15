@@ -243,3 +243,10 @@ html[data-arrival] .area-arrival {
     display: none;
   }
 }
+
+/* Foco não encoberto (WCAG 2.4.11). Nas áreas com conteúdo, o que recebe foco
+   por rolagem para longe da barra de contato, que gruda no alto, e do grupo do
+   canto, fixo embaixo. */
+html:has(main[data-content]) {
+  scroll-padding-block: calc(var(--size-control) + var(--space-block-sm)) var(--ds-dock-reserve);
+}
