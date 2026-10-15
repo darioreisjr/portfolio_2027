@@ -86,7 +86,6 @@ jobs:
       - name: Testes dos scripts do repositório
         run: pnpm exec node --test "scripts/*.test.mjs"
 
-
       # O site é verificado inteiro; o que não mudou vem do cache do Turborepo.
       - run: pnpm build
       # ADR 0012: ADR novo ou teto alterado sem regravar o raio-x falha aqui.
