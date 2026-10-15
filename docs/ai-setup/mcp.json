@@ -10,7 +10,7 @@
       "purpose": "Navegador para testes e verificação visual",
       "transport": "stdio",
       "command": "npx",
-      "args": ["@playwright/mcp@latest"]
+      "args": ["@playwright/mcp@0.0.83"]
     },
     "github": {
       "purpose": "Repositório, issues, pull requests e Actions",
