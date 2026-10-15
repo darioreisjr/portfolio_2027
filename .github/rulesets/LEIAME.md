@@ -2,11 +2,11 @@
 
 Cópia versionada das regras (rulesets) que o GitHub aplica a este repositório (ADR 0014). O que vale é o que está no GitHub; estes arquivos servem para ler, revisar e recriar.
 
-| Arquivo            | O que protege             | Regra                                                                                |
-| ------------------ | ------------------------- | ------------------------------------------------------------------------------------ |
-| `development.json` | A branch `development`    | Só por pull request, com `verify` e `origem` verdes, branch em dia, merge por rebase |
-| `production.json`  | A branch `production`     | Só por pull request, com `verify` e `origem` verdes, merge com commit de merge       |
-| `versoes.json`     | As tags `v*` das releases | Não podem ser apagadas nem movidas                                                   |
+| Arquivo            | O que protege             | Regra                                                                                                                      |
+| ------------------ | ------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `development.json` | A branch `development`    | Só por pull request, com `verify` e `origem` verdes, branch em dia, merge por rebase, sem alerta alto ou crítico do CodeQL |
+| `production.json`  | A branch `production`     | Só por pull request, com `verify` e `origem` verdes, merge com commit de merge, sem alerta alto ou crítico do CodeQL       |
+| `versoes.json`     | As tags `v*` das releases | Não podem ser apagadas nem movidas                                                                                         |
 
 Ninguém fura as regras, nem o dono do repositório (`bypass_actors` vazio). Em emergência, o caminho é editar a regra, a pedido do autor.
 

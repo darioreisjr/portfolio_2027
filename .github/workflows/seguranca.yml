@@ -1,7 +1,9 @@
 name: Segurança
 
 # Análise de código (CodeQL) e revisão das dependências de cada pull request.
-# Não são checagens obrigatórias do merge: avisam, e o autor decide.
+# As regras das branches recusam o merge quando o CodeQL acha alerta de
+# gravidade alta ou crítica (`.github/rulesets/`); o resto avisa, e o autor
+# decide. Como tratar cada alerta: skill `seguranca`.
 
 on:
   pull_request:
@@ -34,6 +36,8 @@ jobs:
       - uses: github/codeql-action/init@24c54180a607b1449ed407dd24f251e4e9147c8d # v4
         with:
           languages: ${{ matrix.language }}
+          # Conjunto ampliado de regras de segurança (decisão do autor, 2026-10-15).
+          queries: security-extended
       - uses: github/codeql-action/analyze@24c54180a607b1449ed407dd24f251e4e9147c8d # v4
         with:
           category: /language:${{ matrix.language }}
