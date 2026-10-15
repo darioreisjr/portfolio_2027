@@ -45,12 +45,12 @@ export function renderPage(
   const alternates = languageAlternates(entry.area, locale);
   const currentLanguage = alternates.find((alternate) => alternate.current);
   const flagImage = (flag: string, alt: string) =>
-    `<img src="${flag}" alt="${escapeHtml(alt)}" width="28" height="28" loading="lazy" decoding="async" />`;
+    `<img src="${escapeHtml(flag)}" alt="${escapeHtml(alt)}" width="28" height="28" loading="lazy" decoding="async" />`;
   const languages = alternates
     .filter((alternate) => !alternate.current)
     .map(
       ({ locale: target, name, href, flag }) =>
-        `<li><a href="${href}" lang="${target}" hreflang="${target}" aria-label="${escapeHtml(name)}" title="${escapeHtml(name)}">${flagImage(flag, '')}</a></li>`,
+        `<li><a href="${escapeHtml(href)}" lang="${escapeHtml(target)}" hreflang="${escapeHtml(target)}" aria-label="${escapeHtml(name)}" title="${escapeHtml(name)}">${flagImage(flag, '')}</a></li>`,
     )
     .join('\n            ');
 
@@ -59,8 +59,8 @@ export function renderPage(
   const figure = personaFigure(entry.area);
   const figureImage = figure
     ? `<picture>
-        <source type="image/avif" srcset="${figure.avif}" />
-        <img class="area-figure" src="${figure.src}" alt="" width="${figure.width}" height="${figure.height}" loading="eager" fetchpriority="high" decoding="async" />
+        <source type="image/avif" srcset="${escapeHtml(figure.avif)}" />
+        <img class="area-figure" src="${escapeHtml(figure.src)}" alt="" width="${figure.width}" height="${figure.height}" loading="eager" fetchpriority="high" decoding="async" />
       </picture>`
     : '';
 
@@ -70,12 +70,12 @@ export function renderPage(
   const arrival = transition ? `;${arrivalInitScript([entry.area])}` : '';
   const curtains = transition
     ? `    <div class="area-arrival" aria-hidden="true"></div>
-    <div class="area-departure" data-area="${entry.area}" role="status" hidden><span>${escapeHtml(ui.leaving)}</span></div>
+    <div class="area-departure" data-area="${escapeHtml(entry.area)}" role="status" hidden><span>${escapeHtml(ui.leaving)}</span></div>
 `
     : '';
 
   return `<!doctype html>
-<html lang="${locale}">
+<html lang="${escapeHtml(locale)}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -92,12 +92,12 @@ export function renderPage(
 ${curtains}    <header class="shell-header">
       <ds-theme-toggle label="${escapeHtml(ui.themeToggle)}"></ds-theme-toggle>
     </header>
-    <main class="area-stage" data-area="${entry.area}"${content ? ' data-content' : ''}>
+    <main class="area-stage" data-area="${escapeHtml(entry.area)}"${content ? ' data-content' : ''}>
       ${AREA_SCENE}
       <h1 class="area-title">${escapeHtml(area.title)}</h1>
       ${figureImage}
       <div class="area-outlet" data-load-error="${escapeHtml(ui.loadError)}"></div>
-      <a class="area-back" href="${pathFor('home', locale)}">${escapeHtml(ui.construction.back)}</a>
+      <a class="area-back" href="${escapeHtml(pathFor('home', locale))}">${escapeHtml(ui.construction.back)}</a>
     </main>
     <footer class="ds-dock">
       <label class="area-motion" title="${escapeHtml(ui.pauseMotion)}">

@@ -43,6 +43,6 @@ export const arrivalInitScript = (accepted: readonly AreaId[]): string =>
     ENTRY_STORAGE_KEY,
   )},v=(sessionStorage.getItem(k)||"").split(":");sessionStorage.removeItem(k);if(${scriptValue(
     accepted,
-  )}.indexOf(v[0])+1&&${ARRIVAL_MAX_AGE_MS}>Date.now()-v[1])document.documentElement.setAttribute(${scriptValue(
+  )}.indexOf(v[0])+1&&${scriptValue(ARRIVAL_MAX_AGE_MS)}>Date.now()-v[1])document.documentElement.setAttribute(${scriptValue(
     ARRIVAL_ATTRIBUTE,
   )},v[0])}catch(e){}})()`;

@@ -16,4 +16,4 @@ import {
  */
 export const COMMUNITY_LEAVE_SCRIPT = `(function(){var d=document,q=function(s){return d.querySelector(s)};d.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a.c-back"),p=q(".area-motion input");if(!a||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey||matchMedia("(prefers-reduced-motion: reduce)").matches||(p&&p.checked))return;e.preventDefault();try{sessionStorage.setItem(${scriptValue(
   ENTRY_STORAGE_KEY,
-)},${scriptValue(entryMarkPrefix('community'))}+Date.now())}catch(x){}var c=q(".community-departure");if(c)c.hidden=false;setTimeout(function(){location.assign(a.href)},${TRANSITION_DELAY_MS})});addEventListener("pageshow",function(){var c=q(".community-departure");if(c)c.hidden=true})})()`;
+)},${scriptValue(entryMarkPrefix('community'))}+Date.now())}catch(x){}var c=q(".community-departure");if(c)c.hidden=false;setTimeout(function(){location.assign(a.href)},${scriptValue(TRANSITION_DELAY_MS)})});addEventListener("pageshow",function(){var c=q(".community-departure");if(c)c.hidden=true})})()`;
