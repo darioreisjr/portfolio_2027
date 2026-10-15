@@ -3,6 +3,8 @@ import { test } from 'node:test';
 import { FIRST_VERSION, nextVersion, parseCommit, renderNotes } from './release.mjs';
 
 const commit = (message, hash = 'abcdef1234567890') => ({ ...parseCommit(message), hash });
+/** As linhas das notas, para comparar uma linha inteira por igualdade. */
+const lines = (notes) => notes.split(String.fromCharCode(10));
 
 test('interpreta tipo, escopo, resumo e mudança que quebra', () => {
   assert.deepEqual(parseCommit('feat(mfe-vue): período nos projetos'), {
@@ -69,7 +71,12 @@ test('as notas agrupam por tipo, em português, e deixam o resto de fora', () =>
   // A mudança que quebra aparece uma vez só, na seção dela.
   assert.equal(notes.match(/troca o modelo/g).length, 1);
   assert.doesNotMatch(notes, /README/);
-  assert.match(notes, /https:\/\/github\.com\/dono\/repo\/compare\/v1\.0\.0\.\.\.v1\.1\.0/);
+  // A linha inteira, por igualdade: endereço não se confere com expressão regular.
+  assert.ok(
+    lines(notes).includes(
+      'Todas as mudanças: https://github.com/dono/repo/compare/v1.0.0...v1.1.0',
+    ),
+  );
 });
 
 test('a primeira release leva uma nota curta, com o caminho do histórico', () => {
@@ -80,6 +87,8 @@ test('a primeira release leva uma nota curta, com o caminho do histórico', () =
     commits: [commit('feat: tudo')],
   });
   assert.match(notes, /Primeira versão publicada/);
-  assert.match(notes, /https:\/\/github\.com\/dono\/repo\/commits\/v1\.0\.0/);
+  assert.ok(
+    lines(notes).includes('Histórico completo: https://github.com/dono/repo/commits/v1.0.0'),
+  );
   assert.doesNotMatch(notes, /## /);
 });
