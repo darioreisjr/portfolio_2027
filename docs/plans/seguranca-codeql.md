@@ -16,7 +16,7 @@
 | CodeQL       | Conjunto `security-extended`                                                                                    |
 | Bloqueio     | Merge recusado com alerta alto ou crítico, nas duas branches                                                    |
 | Dependabot   | Correções automáticas desligadas: abririam PR contra a `production`. Os alertas continuam                       |
-| Tags `v*`    | Só o GitHub Actions cria                                                                                        |
+| Tags `v*`    | Só o GitHub Actions cria; trocado por: só se republica versão que está na `production`                          |
 | Vercel CLI   | Continua por `pnpm dlx`: no lockfile trouxe 37 vulnerabilidades conhecidas e travaria a revisão de dependências |
 | Idade mínima | 24 horas declaradas; a exceção do `vite@8.3.3` saiu                                                             |
 | Contatos     | E-mail e WhatsApp continuam publicados; risco aceito                                                            |
@@ -30,19 +30,19 @@
 
 O `security-reviewer` achou 16 pontos. Corrigidos nesta entrega:
 
-| Achado                                                                          | Gravidade | Correção                                                         |
-| ------------------------------------------------------------------------------- | --------- | ---------------------------------------------------------------- |
-| `VERCEL_TOKEN` no ambiente do job inteiro, onde roda o código do PR             | alta      | O token só existe no passo da prévia                             |
-| Token do GitHub em `.git/config` durante o job                                  | média     | `persist-credentials: false` em todo checkout                    |
-| Qualquer um com escrita cria tag `v*` publicável                                | média     | Só o GitHub Actions cria                                         |
-| MCP do Playwright com `@latest`                                                 | média     | Versão fixa                                                      |
-| Sem proteção contra moldura, `nosniff`, `Referrer-Policy`, `Permissions-Policy` | baixa     | `SECURITY_HEADERS` no `vercel.json`                              |
-| Checagens obrigatórias sem origem fixa                                          | baixa     | `integration_id` do GitHub Actions                               |
-| Idade mínima não declarada; exceção sem motivo                                  | baixa     | `minimumReleaseAge: 1440`; exceção removida                      |
-| Números no script inline sem `scriptValue`                                      | baixa     | Passam por ela                                                   |
-| Caminho do currículo aceitava `javascript:`                                     | baixa     | Só caminho do próprio site                                       |
-| Atributos do HTML do shell sem escape                                           | baixa     | `escapeHtml` em todos                                            |
-| Servidor local de prévia na rede e com caminho frouxo                           | baixa     | Só `127.0.0.1`, separador conferido, `%` malformado sem derrubar |
+| Achado                                                                          | Gravidade | Correção                                                                                                                                       |
+| ------------------------------------------------------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `VERCEL_TOKEN` no ambiente do job inteiro, onde roda o código do PR             | alta      | O token só existe no passo da prévia                                                                                                           |
+| Token do GitHub em `.git/config` durante o job                                  | média     | `persist-credentials: false` em todo checkout                                                                                                  |
+| Qualquer um com escrita cria tag `v*` publicável                                | média     | `republicar.yml` só publica versão cujo commit está na `production`; bloquear a criação de tags não é possível em repositório de conta pessoal |
+| MCP do Playwright com `@latest`                                                 | média     | Versão fixa                                                                                                                                    |
+| Sem proteção contra moldura, `nosniff`, `Referrer-Policy`, `Permissions-Policy` | baixa     | `SECURITY_HEADERS` no `vercel.json`                                                                                                            |
+| Checagens obrigatórias sem origem fixa                                          | baixa     | `integration_id` do GitHub Actions                                                                                                             |
+| Idade mínima não declarada; exceção sem motivo                                  | baixa     | `minimumReleaseAge: 1440`; exceção removida                                                                                                    |
+| Números no script inline sem `scriptValue`                                      | baixa     | Passam por ela                                                                                                                                 |
+| Caminho do currículo aceitava `javascript:`                                     | baixa     | Só caminho do próprio site                                                                                                                     |
+| Atributos do HTML do shell sem escape                                           | baixa     | `escapeHtml` em todos                                                                                                                          |
+| Servidor local de prévia na rede e com caminho frouxo                           | baixa     | Só `127.0.0.1`, separador conferido, `%` malformado sem derrubar                                                                               |
 
 Viraram issue: a CSP (#47, média) e as vulnerabilidades nas dependências do Lighthouse CI (#48, baixa). Fica como risco aceito: e-mail e WhatsApp publicados.
 

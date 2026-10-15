@@ -6,9 +6,9 @@ Cópia versionada das regras (rulesets) que o GitHub aplica a este repositório 
 | ------------------ | ------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `development.json` | A branch `development`    | Só por pull request, com `verify` e `origem` verdes, branch em dia, merge por rebase, sem alerta alto ou crítico do CodeQL |
 | `production.json`  | A branch `production`     | Só por pull request, com `verify` e `origem` verdes, merge com commit de merge, sem alerta alto ou crítico do CodeQL       |
-| `versoes.json`     | As tags `v*` das releases | Só o GitHub Actions (a release automática) cria; ninguém apaga nem move                                                    |
+| `versoes.json`     | As tags `v*` das releases | Não podem ser apagadas nem movidas                                                                                         |
 
-Ninguém fura as regras das branches, nem o dono do repositório (`bypass_actors` vazio). Nas tags, a única exceção é o GitHub Actions (`actor_id` 15368), que cria a versão. As checagens obrigatórias só valem se vierem do GitHub Actions (`integration_id` 15368): outro sistema não destrava o merge com uma checagem de mesmo nome. Em emergência, o caminho é editar a regra, a pedido do autor.
+Ninguém fura as regras das branches, nem o dono do repositório (`bypass_actors` vazio). Criar tag não é bloqueado: o GitHub só aceita o GitHub Actions como exceção de regra em repositório de organização, e sem ela a release automática não criaria a versão. Quem impede publicar tag feita à mão é o workflow `republicar.yml`, que só publica versão cujo commit está na `production`. As checagens obrigatórias só valem se vierem do GitHub Actions (`integration_id` 15368): outro sistema não destrava o merge com uma checagem de mesmo nome. Em emergência, o caminho é editar a regra, a pedido do autor.
 
 Criar uma regra:
 
