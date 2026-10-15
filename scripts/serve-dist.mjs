@@ -6,7 +6,7 @@
 
 import { createReadStream, existsSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
-import { dirname, extname, join, normalize, resolve } from 'node:path';
+import { dirname, extname, join, normalize, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const distDir = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
@@ -25,8 +25,16 @@ const contentTypes = {
 };
 
 function resolveFile(pathname) {
-  const candidate = normalize(join(distDir, decodeURIComponent(pathname)));
-  if (!candidate.startsWith(distDir)) return undefined;
+  let decoded;
+  try {
+    decoded = decodeURIComponent(pathname);
+  } catch {
+    // Endereço com `%` malformado: não existe, em vez de derrubar o servidor.
+    return undefined;
+  }
+  const candidate = normalize(join(distDir, decoded));
+  // Com o separador: uma pasta irmã chamada `dist-algo` não passa.
+  if (candidate !== distDir && !candidate.startsWith(distDir + sep)) return undefined;
   if (existsSync(candidate) && statSync(candidate).isFile()) return candidate;
   const index = join(candidate, 'index.html');
   return existsSync(index) ? index : undefined;
@@ -66,4 +74,5 @@ createServer((request, response) => {
 
   response.writeHead(file ? 200 : 404, { 'Content-Type': type, 'Accept-Ranges': 'bytes' });
   createReadStream(target).pipe(response);
-}).listen(port, () => console.log(`dist/ em http://localhost:${port}`));
+  // Só nesta máquina: ninguém da rede local lê o que está sendo servido.
+}).listen(port, '127.0.0.1', () => console.log(`dist/ em http://localhost:${port}`));
