@@ -96,7 +96,7 @@ Explorar, planejar, aprovação humana, implementar, revisar. Nenhuma ferramenta
 2. **Planejar:** o `architect` entrega um plano em etapas pequenas, cada uma com o comando que prova que funcionou. Não edita código.
 3. **Aprovação humana:** o autor aprova o plano. Sem aprovação explícita, pare.
 4. **Implementar:** o `implementer` executa só o plano aprovado. Mudança de escopo volta ao passo 2.
-5. **Revisar:** `integration-reviewer`, `a11y-perf-reviewer` e, se houver interface, `design-system-guardian`.
+5. **Revisar:** `integration-reviewer`, `a11y-perf-reviewer`, se houver interface, `design-system-guardian` e, se a mudança mexer em HTML gerado, scripts inline, `vercel.json`, workflows ou dependências, `security-reviewer` (skill `seguranca`).
 
 Pare e pergunte quando: um ADR não cobre a decisão, há item bloqueante em `docs/open-questions.md`, ou a tarefa pede conteúdo sobre o autor que não existe em `packages/content`.
 

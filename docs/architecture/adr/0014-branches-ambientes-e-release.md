@@ -79,6 +79,18 @@ Para a release:
 - Se o domínio de produção mudar, `PRODUCTION_HOST` muda junto. O teste de fumaça falha o deploy se a produção sair com `noindex` ou o desenvolvimento sem ele.
 - Quando `canonical`, sitemap e `robots.txt` forem feitos (pendência B7), o endereço de produção deve sair de `scripts/` e ir para `packages/contracts`.
 
+## Emenda de 2026-10-15
+
+Segurança passa a ser portão do merge (issue #46, decisão do autor):
+
+- O CodeQL roda com o conjunto `security-extended`.
+- As regras da `development` e da `production` ganham a regra `code_scanning`: o merge exige o resultado do CodeQL e é recusado com alerta de gravidade alta ou crítica. Média e baixa avisam no pull request, sem travar.
+- As correções automáticas de segurança do Dependabot ficam desligadas: o GitHub só as abre contra a branch padrão, a `production`, que só aceita pull request da `development`. Os alertas do Dependabot continuam ligados, e a correção segue o fluxo de qualquer tarefa (skill `seguranca`).
+- O subagente `security-reviewer` entra no passo de revisão do `AGENTS.md` para mudanças em HTML gerado, scripts inline, `vercel.json`, workflows ou dependências.
+- Tags `v*`: só o GitHub Actions cria (a release automática), para toda versão publicável ter passado pelo pipeline. As checagens obrigatórias passam a exigir origem no GitHub Actions (`integration_id`).
+- O `VERCEL_TOKEN` sai do ambiente do job de verificação e fica só no passo que publica; nenhum checkout deixa o token do GitHub em `.git/config`.
+- A Vercel CLI continua por `pnpm dlx` com versão fixa: no lockfile ela traria 37 vulnerabilidades conhecidas em partes que o deploy não usa, e a revisão de dependências travaria todo pull request.
+
 ## Fontes
 
 - [Vercel: ambientes](https://vercel.com/docs/deployments/environments)
