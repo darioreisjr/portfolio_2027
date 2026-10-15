@@ -2,6 +2,8 @@ import type { Ui } from '@portfolio/content/schemas';
 import {
   AREA_TRANSITIONS,
   arrivalInitScript,
+  canonicalUrl,
+  hreflangAlternates,
   languageAlternates,
   pathFor,
   personaFigure,
@@ -74,6 +76,14 @@ export function renderPage(
 `
     : '';
 
+  const canonical = canonicalUrl(entry.area, locale);
+  const alternatesLinks = hreflangAlternates(entry.area)
+    .map(
+      ({ hreflang, href }) =>
+        `<link rel="alternate" hreflang="${escapeHtml(hreflang)}" href="${escapeHtml(href)}" />`,
+    )
+    .join('\n    ');
+
   return `<!doctype html>
 <html lang="${escapeHtml(locale)}">
   <head>
@@ -82,6 +92,8 @@ export function renderPage(
     <script>${THEME_INIT_SCRIPT}${arrival}</script>
     <title>${escapeHtml(area.title)} | ${escapeHtml(ui.siteName)}</title>
     <meta name="description" content="${escapeHtml(area.description)}" />
+    <link rel="canonical" href="${escapeHtml(canonical)}" />
+    ${alternatesLinks}
     <link rel="stylesheet" href="/_ds/tokens.css" />
     <link rel="stylesheet" href="/_ds/areas.css" />
     <link rel="stylesheet" href="/_shell/shell.css" />

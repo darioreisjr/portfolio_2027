@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
-import { pagesIn, problemsOf, scriptProblemsOf, scriptsIn } from './smoke.mjs';
+import { assetProblemsOf, pagesIn, problemsOf, scriptProblemsOf, scriptsIn } from './smoke.mjs';
 
 test('as páginas são os index.html do dist, fora as pastas de assets', () => {
   const root = mkdtempSync(join(tmpdir(), 'smoke-'));
@@ -69,5 +69,13 @@ test('script que não responde ou não é JavaScript é problema', () => {
   assert.match(
     scriptProblemsOf({ path: '/a.js', status: 200, type: 'text/html' })[0],
     /não JavaScript/,
+  );
+});
+
+test('arquivo estático que não responde 200 é problema', () => {
+  assert.deepEqual(assetProblemsOf({ path: '/sitemap.xml', status: 200 }), []);
+  assert.match(
+    assetProblemsOf({ path: '/sitemap.xml', status: 404 })[0],
+    /\/sitemap\.xml: respondeu 404, e não 200/,
   );
 });

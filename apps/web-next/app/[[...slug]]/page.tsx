@@ -1,4 +1,5 @@
 import { ui } from '@portfolio/content/ui';
+import { canonicalUrl, hreflangAlternates } from '@portfolio/contracts';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { buildCommunityPage } from '../../lib/community';
@@ -23,7 +24,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!match) return {};
   const text = ui[match.locale];
   const area = text.areas[match.entry.area];
-  return { title: `${area.title} | ${text.siteName}`, description: area.description };
+  const canonical = canonicalUrl(match.entry.area, match.locale);
+  const languages = Object.fromEntries(
+    hreflangAlternates(match.entry.area).map(({ hreflang, href }) => [hreflang, href]),
+  );
+  return {
+    title: `${area.title} | ${text.siteName}`,
+    description: area.description,
+    alternates: {
+      canonical,
+      languages,
+    },
+  };
 }
 
 export default async function Page({ params }: PageProps) {

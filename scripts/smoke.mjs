@@ -51,6 +51,12 @@ export function scriptProblemsOf({ path, status, type }) {
   return [];
 }
 
+/** Confere a resposta de um arquivo estático auxiliar (sitemap.xml, robots.txt). */
+export function assetProblemsOf({ path, status }) {
+  if (status !== 200) return [`${path}: respondeu ${status}, e não 200`];
+  return [];
+}
+
 /**
  * Confere uma resposta. `expectIndexable` diz se o ambiente pode ir para os
  * buscadores: a produção não leva `X-Robots-Tag`; todo o resto leva `noindex`.
@@ -100,6 +106,11 @@ async function main() {
       }),
     );
     await response.arrayBuffer();
+  }
+  // Sitemap e robots.txt (ADR 0014, issue #10).
+  for (const path of ['/sitemap.xml', '/robots.txt']) {
+    const response = await fetch(new URL(path, origin));
+    problems.push(...assetProblemsOf({ path, status: response.status }));
   }
   // Endereço que não existe continua não existindo.
   const missing = await fetch(new URL('/pagina-que-nao-existe/', origin));

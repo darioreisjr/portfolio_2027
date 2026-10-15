@@ -4,6 +4,8 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 import {
+  buildRobotsTxt,
+  buildSitemap,
   buildVercelConfig,
   flattenNextSegment,
   planAssembly,
@@ -155,4 +157,50 @@ test('buildVercelConfig manda os cabeçalhos de segurança em toda resposta', ()
   assert.equal(keys['X-Content-Type-Options'], 'nosniff');
   assert.match(keys['Referrer-Policy'], /strict-origin/);
   assert.match(keys['Permissions-Policy'], /camera=\(\)/);
+});
+
+test('buildSitemap lista as 18 páginas com os alternates de idioma e x-default', () => {
+  const xml = buildSitemap();
+  assert.ok(xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>'));
+  assert.ok(xml.includes('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"'));
+  assert.ok(xml.includes('xmlns:xhtml="http://www.w3.org/1999/xhtml"'));
+
+  const urlMatches = xml.match(/<url>/g);
+  assert.equal(urlMatches?.length, 18);
+
+  // Confere a home pt-BR
+  assert.ok(xml.includes('<loc>https://2027.darioreis.dev/</loc>'));
+  // Confere área de recrutador
+  assert.ok(xml.includes('<loc>https://2027.darioreis.dev/recrutador/</loc>'));
+  assert.ok(xml.includes('<loc>https://2027.darioreis.dev/en/recruiter/</loc>'));
+  assert.ok(xml.includes('<loc>https://2027.darioreis.dev/es/reclutador/</loc>'));
+
+  // Confere os alternates
+  assert.ok(
+    xml.includes(
+      '<xhtml:link rel="alternate" hreflang="pt-BR" href="https://2027.darioreis.dev/recrutador/" />',
+    ),
+  );
+  assert.ok(
+    xml.includes(
+      '<xhtml:link rel="alternate" hreflang="en" href="https://2027.darioreis.dev/en/recruiter/" />',
+    ),
+  );
+  assert.ok(
+    xml.includes(
+      '<xhtml:link rel="alternate" hreflang="es" href="https://2027.darioreis.dev/es/reclutador/" />',
+    ),
+  );
+  assert.ok(
+    xml.includes(
+      '<xhtml:link rel="alternate" hreflang="x-default" href="https://2027.darioreis.dev/recrutador/" />',
+    ),
+  );
+});
+
+test('buildRobotsTxt aponta para o sitemap de produção', () => {
+  const robots = buildRobotsTxt();
+  assert.ok(robots.includes('User-agent: *'));
+  assert.ok(robots.includes('Allow: /'));
+  assert.ok(robots.includes('Sitemap: https://2027.darioreis.dev/sitemap.xml'));
 });

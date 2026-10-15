@@ -2,6 +2,13 @@ export const locales = ['pt-BR', 'en', 'es'] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'pt-BR';
 
+/**
+ * O endereço da produção (ADR 0014). Usado para canonical, sitemap, robots e
+ * vercel.json. Todo outro endereço responde com `X-Robots-Tag: noindex`.
+ */
+export const PRODUCTION_HOST = '2027.darioreis.dev';
+export const PRODUCTION_ORIGIN = `https://${PRODUCTION_HOST}`;
+
 export type AreaId = 'home' | 'recruiter' | 'tech' | 'client' | 'community' | 'how-it-was-built';
 export type AppOwner = 'web-next' | 'shell';
 export type Framework = 'Next.js' | 'Vue' | 'Angular' | 'React';
@@ -115,4 +122,32 @@ export function findRoute(pathname: string): RouteMatch | undefined {
 
 export function routesOwnedBy(owner: AppOwner): RouteEntry[] {
   return routes.filter((route) => route.owner === owner);
+}
+
+/** Monta a URL canônica absoluta de uma área e idioma no endereço de produção. */
+export function canonicalUrl(area: AreaId, locale: Locale): string {
+  const path = pathFor(area, locale);
+  return `${PRODUCTION_ORIGIN}${path.startsWith('/') ? path : `/${path}`}`;
+}
+
+export interface HreflangAlternate {
+  hreflang: string;
+  href: string;
+}
+
+/**
+ * As versões de idioma de uma área para buscadores (os 3 idiomas mais a
+ * entrada x-default apontando para o idioma padrão, pt-BR).
+ */
+export function hreflangAlternates(area: AreaId): HreflangAlternate[] {
+  return [
+    ...locales.map((locale) => ({
+      hreflang: locale,
+      href: canonicalUrl(area, locale),
+    })),
+    {
+      hreflang: 'x-default',
+      href: canonicalUrl(area, defaultLocale),
+    },
+  ];
 }
