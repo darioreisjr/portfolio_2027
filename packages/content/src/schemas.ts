@@ -99,6 +99,12 @@ export const workModeSchema = z.enum(['remote', 'hybrid', 'onsite']);
 export const imageSchema = z.object({ src: text, alt: localizedSchema }).strict();
 export type Image = z.infer<typeof imageSchema>;
 
+/** Caminho de arquivo do próprio site, como `/_content/cv/dario-reis-pt-br.pdf`. */
+const sitePath = z
+  .string()
+  .regex(/^\/[\w./-]+$/, 'caminho do próprio site, começando por /')
+  .refine((path) => !path.includes('..'), 'caminho sem ..');
+
 export const profileSchema = z
   .object({
     status: statusSchema,
@@ -114,7 +120,8 @@ export const profileSchema = z
     seniority: z.enum(['junior', 'mid', 'senior', 'specialist']).optional(),
     photo: imageSchema.optional(),
     /** Caminho do currículo em PDF, por idioma. */
-    cv: z.object({ 'pt-BR': text, en: text, es: text }).partial().strict().optional(),
+    // Só arquivo do próprio site: um `javascript:` aqui viraria script no clique.
+    cv: z.object({ 'pt-BR': sitePath, en: sitePath, es: sitePath }).partial().strict().optional(),
     highlightSkills: z.array(text),
   })
   .strict()
