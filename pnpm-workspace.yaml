@@ -83,7 +83,7 @@ allowBuilds:
   lmdb: false
   msgpackr-extract: false
 
-# O pnpm recusa versões com menos de 24 horas. Exceção autorizada pelo autor
-# em 2026-10-06: correção publicada no mesmo dia em todas as linhas do Vite.
-minimumReleaseAgeExclude:
-  - vite@8.3.3
+# O pnpm recusa versões com menos de 24 horas (1440 minutos), declarado aqui
+# para não depender do padrão da versão instalada (autor, 2026-10-15). Uma
+# exceção vai em `minimumReleaseAgeExclude`, só com autorização do autor.
+minimumReleaseAge: 1440

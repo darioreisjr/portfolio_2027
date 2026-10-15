@@ -109,6 +109,14 @@ export const PRODUCTION_HOST = '2027.darioreis.dev';
  * Mapeia sub-rotas dos microfrontends geridos pelo shell para seus respectivos index.html
  * e define cabeçalhos de cache agressivos para assets imutáveis e revalidação para HTML.
  */
+/** Cabeçalhos de segurança de toda resposta. */
+export const SECURITY_HEADERS = [
+  { key: 'X-Frame-Options', value: 'DENY' },
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+];
+
 export function buildVercelConfig(routesList = routes) {
   const shellRoutes = routesList.filter((route) => route.owner === 'shell');
   const rewrites = [];
@@ -130,6 +138,15 @@ export function buildVercelConfig(routesList = routes) {
     trailingSlash: true,
     rewrites,
     headers: [
+      // Em toda resposta (issue #46): ninguém põe o site numa moldura de outro
+      // (clickjacking), o navegador não adivinha tipo de arquivo, outros sites
+      // não recebem o endereço completo de onde veio o visitante, e a página não
+      // pede câmera, microfone nem localização. A CSP depende dos scripts
+      // inline e tem issue própria.
+      {
+        source: '/(.*)',
+        headers: SECURITY_HEADERS,
+      },
       {
         source: '/(.*)',
         missing: [{ type: 'host', value: PRODUCTION_HOST }],
