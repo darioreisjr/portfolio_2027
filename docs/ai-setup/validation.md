@@ -20,8 +20,8 @@ Nenhuma das três ferramentas foi marcada como confiável por mim: confiar em um
 
 Verificado dentro da sessão do Claude Code (extensão do VS Code) que fez o bootstrap. Depois de criados os arquivos, a sessão passou a listar:
 
-- Skills: `angular-mfe`, `content-schema`, `cross-mfe-contract`, `new-ds-component`, `next-zone`, `pr-checklist`, `project-context`, `react-mfe`, `vanilla-shell`, `vue-mfe`, `write-adr`.
-- Subagentes, com as ferramentas restritas: `a11y-perf-reviewer`, `design-system-guardian`, `discovery-analyst` e `integration-reviewer` (Read, Grep, Glob); `architect` (mais WebFetch e WebSearch); `implementer` (mais Edit, Write, Bash).
+- Skills: `angular-mfe`, `commits`, `content-schema`, `cross-mfe-contract`, `deploy-vercel`, `e2e-navegadores`, `new-ds-component`, `next-zone`, `pr-checklist`, `project-context`, `react-mfe`, `seguranca`, `vanilla-shell`, `vue-mfe`, `write-adr`.
+- Subagentes, com as ferramentas restritas: `a11y-perf-reviewer`, `design-system-guardian`, `discovery-analyst`, `integration-reviewer` e `security-reviewer` (Read, Grep, Glob); `architect` (mais WebFetch e WebSearch); `implementer` (mais Edit, Write, Bash).
 
 Os subagentes só apareceram em uma mensagem posterior à criação dos arquivos; na primeira tentativa de uso a sessão ainda não os conhecia.
 
