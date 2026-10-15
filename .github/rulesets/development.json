@@ -36,10 +36,12 @@
         "strict_required_status_checks_policy": true,
         "required_status_checks": [
           {
-            "context": "verify"
+            "context": "verify",
+            "integration_id": 15368
           },
           {
-            "context": "origem"
+            "context": "origem",
+            "integration_id": 15368
           }
         ]
       }
