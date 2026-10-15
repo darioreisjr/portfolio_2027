@@ -31,12 +31,15 @@ jobs:
       contents: read
       # Para o comentário com a prévia e os pesos.
       pull-requests: write
-    env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    # O token da Vercel não fica no job: aqui roda o código do PR (instalação,
+    # build, testes), e um pacote comprometido o leria. Ele só existe no passo
+    # da prévia (issue #46).
     steps:
       # Histórico completo: com clone raso o Turborepo trata tudo como alterado.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          # O token do GitHub não fica em .git/config para o código que roda depois.
+          persist-credentials: false
           fetch-depth: 0
 
       # Versões de pnpm e Node vêm do package.json (packageManager, engines, devEngines).
@@ -100,11 +103,20 @@ jobs:
         run: pnpm lhci
 
       # A prévia vai para o projeto de desenvolvimento, em endereço próprio e
-      # fora dos buscadores. PR de fork ou do Dependabot não recebe os segredos.
+      # fora dos buscadores. PR de fork ou do Dependabot não recebe os segredos;
+      # o passo abaixo descobre isso sem pôr o token no ambiente do job.
+      - name: Há token da Vercel?
+        id: token
+        if: github.event_name == 'pull_request'
+        env:
+          TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -n "$TOKEN" ]; then echo "existe=sim" >> "$GITHUB_OUTPUT"; fi
       - name: Prévia na Vercel
         id: previa
-        if: github.event_name == 'pull_request' && env.VERCEL_TOKEN != ''
+        if: steps.token.outputs.existe == 'sim'
         env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
@@ -177,6 +189,9 @@ jobs:
       SITE_URL: ${{ vars.SITE_URL }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          # O token do GitHub não fica em .git/config para o código que roda depois.
+          persist-credentials: false
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
         with:
           run_install: false
@@ -248,6 +263,8 @@ jobs:
       # Histórico e tags completos: a versão sai dos commits desde a última tag.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          # O token do GitHub não fica em .git/config para o código que roda depois.
+          persist-credentials: false
           fetch-depth: 0
           fetch-tags: true
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
