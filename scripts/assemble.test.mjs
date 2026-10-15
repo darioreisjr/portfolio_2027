@@ -8,6 +8,7 @@ import {
   flattenNextSegment,
   planAssembly,
   PRODUCTION_HOST,
+  SECURITY_HEADERS,
 } from './assemble.mjs';
 
 function fixture(files) {
@@ -141,4 +142,17 @@ test('buildVercelConfig não guarda os bundles de nome fixo como imutáveis', ()
   const mfe = config.headers.find((h) => h.source === '/_mfe/(.*)');
   assert.ok(mfe);
   assert.equal(mfe.headers[0].value, 'public, max-age=0, must-revalidate');
+});
+
+test('buildVercelConfig manda os cabeçalhos de segurança em toda resposta', () => {
+  const config = buildVercelConfig();
+  const rule = config.headers.find((h) => h.headers === SECURITY_HEADERS);
+  assert.ok(rule);
+  assert.equal(rule.source, '/(.*)');
+  assert.equal(rule.missing, undefined);
+  const keys = Object.fromEntries(SECURITY_HEADERS.map(({ key, value }) => [key, value]));
+  assert.equal(keys['X-Frame-Options'], 'DENY');
+  assert.equal(keys['X-Content-Type-Options'], 'nosniff');
+  assert.match(keys['Referrer-Policy'], /strict-origin/);
+  assert.match(keys['Permissions-Policy'], /camera=\(\)/);
 });
