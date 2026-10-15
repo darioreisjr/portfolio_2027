@@ -105,4 +105,23 @@ describe('documento de uma área', () => {
     const html = renderPage(recruiter, 'pt-BR', { ...ui['pt-BR'], siteName: '<b>x</b>' });
     expect(html).not.toContain('<b>x</b>');
   });
+
+  it('inclui link canonical e alternates hreflang no head', () => {
+    const html = renderPage(recruiter, 'en', ui.en);
+    expect(html).toContain(
+      '<link rel="canonical" href="https://2027.darioreis.dev/en/recruiter/" />',
+    );
+    expect(html).toContain(
+      '<link rel="alternate" hreflang="pt-BR" href="https://2027.darioreis.dev/recrutador/" />',
+    );
+    expect(html).toContain(
+      '<link rel="alternate" hreflang="en" href="https://2027.darioreis.dev/en/recruiter/" />',
+    );
+    expect(html).toContain(
+      '<link rel="alternate" hreflang="es" href="https://2027.darioreis.dev/es/reclutador/" />',
+    );
+    expect(html).toContain(
+      '<link rel="alternate" hreflang="x-default" href="https://2027.darioreis.dev/recrutador/" />',
+    );
+  });
 });

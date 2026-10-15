@@ -9,7 +9,14 @@
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { routes } from '../packages/contracts/src/routes.ts';
+import {
+  canonicalUrl,
+  hreflangAlternates,
+  locales,
+  PRODUCTION_HOST,
+  PRODUCTION_ORIGIN,
+  routes,
+} from '../packages/contracts/src/routes.ts';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -96,13 +103,46 @@ export function planAssembly(root, sourceList = sources) {
 }
 
 /**
- * O endereço da produção (ADR 0014). Todo outro endereço em que o `dist/` for
- * publicado (o ambiente de desenvolvimento, as prévias de pull request e os
- * `*.vercel.app`) responde com `X-Robots-Tag: noindex`, para o mesmo conteúdo
- * não aparecer duas vezes nos buscadores. O teste de fumaça do deploy confere
- * isso nos dois ambientes: se o domínio mudar, mude aqui.
+ * O endereço da produção (ADR 0014). Reexportado de packages/contracts.
  */
-export const PRODUCTION_HOST = '2027.darioreis.dev';
+export { PRODUCTION_HOST, PRODUCTION_ORIGIN };
+
+/**
+ * Constrói o sitemap.xml com as 18 páginas (6 áreas × 3 idiomas) e os links
+ * alternate de idioma e x-default (ADR 0014, issue #10).
+ */
+export function buildSitemap(routesList = routes) {
+  const urls = [];
+  for (const route of routesList) {
+    for (const locale of locales) {
+      const loc = canonicalUrl(route.area, locale);
+      const links = hreflangAlternates(route.area)
+        .map(
+          (alt) =>
+            `    <xhtml:link rel="alternate" hreflang="${alt.hreflang}" href="${alt.href}" />`,
+        )
+        .join('\n');
+      urls.push(`  <url>\n    <loc>${loc}</loc>\n${links}\n  </url>`);
+    }
+  }
+
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+    urls.join('\n'),
+    '</urlset>',
+    '',
+  ].join('\n');
+}
+
+/**
+ * Constrói o robots.txt apontando para o sitemap de produção (ADR 0014, issue #10).
+ */
+export function buildRobotsTxt() {
+  return ['User-agent: *', 'Allow: /', '', `Sitemap: ${PRODUCTION_ORIGIN}/sitemap.xml`, ''].join(
+    '\n',
+  );
+}
 
 /**
  * Constrói a configuração da Vercel (ADR 0007) com base na tabela canônica de rotas.
@@ -229,7 +269,10 @@ export function assemble(root, outDir = join(root, 'dist')) {
   const vercelConfig = buildVercelConfig();
   writeFileSync(join(outDir, 'vercel.json'), `${JSON.stringify(vercelConfig, null, 2)}\n`);
 
-  return plan.size + 1;
+  writeFileSync(join(outDir, 'sitemap.xml'), buildSitemap());
+  writeFileSync(join(outDir, 'robots.txt'), buildRobotsTxt());
+
+  return plan.size + 3;
 }
 
 if (import.meta.main) {

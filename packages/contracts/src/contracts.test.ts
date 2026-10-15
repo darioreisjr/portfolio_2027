@@ -1,13 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import {
+  canonicalUrl,
+  defaultLocale,
   emitMfeReady,
   findRoute,
+  hreflangAlternates,
   languageAlternates,
   locales,
   onMfeReady,
   pathFor,
   personaAreas,
   personaFigure,
+  PRODUCTION_HOST,
+  PRODUCTION_ORIGIN,
   routes,
   routesOwnedBy,
 } from './index.js';
@@ -105,5 +110,36 @@ describe('evento mfe-pronto', () => {
     emitMfeReady({ area: 'client', locale: 'en' }, target);
 
     expect(received).toEqual([{ area: 'tech', locale: 'es' }]);
+  });
+});
+
+describe('seo e canonical', () => {
+  it('define o host e a origem de produção', () => {
+    expect(PRODUCTION_HOST).toBe('2027.darioreis.dev');
+    expect(PRODUCTION_ORIGIN).toBe('https://2027.darioreis.dev');
+  });
+
+  it('monta a URL canônica absoluta para cada área e idioma', () => {
+    expect(canonicalUrl('home', 'pt-BR')).toBe('https://2027.darioreis.dev/');
+    expect(canonicalUrl('home', 'en')).toBe('https://2027.darioreis.dev/en/');
+    expect(canonicalUrl('recruiter', 'pt-BR')).toBe('https://2027.darioreis.dev/recrutador/');
+    expect(canonicalUrl('recruiter', 'en')).toBe('https://2027.darioreis.dev/en/recruiter/');
+    expect(canonicalUrl('tech', 'es')).toBe('https://2027.darioreis.dev/es/tecnico/');
+  });
+
+  it('fornece as 4 tags hreflang de uma área (3 idiomas + x-default apontando para pt-BR)', () => {
+    for (const { area } of routes) {
+      const alternates = hreflangAlternates(area);
+      expect(alternates).toHaveLength(4);
+      expect(alternates.map((a) => a.hreflang)).toEqual(['pt-BR', 'en', 'es', 'x-default']);
+      expect(alternates.find((a) => a.hreflang === 'x-default')?.href).toBe(
+        canonicalUrl(area, defaultLocale),
+      );
+      for (const locale of locales) {
+        expect(alternates.find((a) => a.hreflang === locale)?.href).toBe(
+          canonicalUrl(area, locale),
+        );
+      }
+    }
   });
 });

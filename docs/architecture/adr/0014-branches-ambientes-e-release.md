@@ -91,6 +91,15 @@ Segurança passa a ser portão do merge (issue #46, decisão do autor):
 - O `VERCEL_TOKEN` sai do ambiente do job de verificação e fica só no passo que publica; nenhum checkout deixa o token do GitHub em `.git/config`.
 - A Vercel CLI continua por `pnpm dlx` com versão fixa: no lockfile ela traria 37 vulnerabilidades conhecidas em partes que o deploy não usa, e a revisão de dependências travaria todo pull request.
 
+## Emenda de 2026-10-15: Canonical, sitemap, robots.txt e hreflang (issue #10)
+
+Publicação da infraestrutura de SEO em produção (pendência B7):
+
+- O endereço oficial de produção (`PRODUCTION_HOST` e `PRODUCTION_ORIGIN`) sai de `scripts/assemble.mjs` e passa a viver canonicamente em `packages/contracts/src/routes.ts`, sendo reexportado em `scripts/assemble.mjs`.
+- `assemble` gera `dist/sitemap.xml` contendo todas as 18 páginas (6 áreas × 3 idiomas) com marcação `<xhtml:link rel="alternate" hreflang="..." href="..." />` para `pt-BR`, `en`, `es` e `x-default`.
+- `assemble` gera `dist/robots.txt` apontando para `https://2027.darioreis.dev/sitemap.xml` e liberando a indexação para todos os buscadores.
+- Todas as páginas geradas pelo Shell (`apps/shell/src/page.ts`) e pelo Next.js (`apps/web-next/app/[[...slug]]/page.tsx`) incluem `<link rel="canonical" href="...">` com URL absoluta da produção e os 4 links `<link rel="alternate" hreflang="..." href="...">`.
+
 ## Fontes
 
 - [Vercel: ambientes](https://vercel.com/docs/deployments/environments)
