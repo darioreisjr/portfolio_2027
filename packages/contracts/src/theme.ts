@@ -1,3 +1,4 @@
+import { scriptValue } from './inline-script.js';
 /** Atributo do `<html>` que fixa o tema. Sem ele, vale a preferência do sistema. */
 export const THEME_ATTRIBUTE = 'data-theme';
 /** Onde a escolha do visitante fica guardada. */
@@ -13,13 +14,13 @@ export const isTheme = (value: unknown): value is Theme => themes.some((theme) =
  * aplica o tema salvo antes da primeira pintura, para a página não piscar.
  * Exportado como texto; este pacote não executa API de navegador.
  */
-export const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem(${JSON.stringify(
+export const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem(${scriptValue(
   THEME_STORAGE_KEY,
 )});if(${themes
-  .map((theme) => `t===${JSON.stringify(theme)}`)
+  .map((theme) => `t===${scriptValue(theme)}`)
   .join(
     '||',
-  )})document.documentElement.setAttribute(${JSON.stringify(THEME_ATTRIBUTE)},t)}catch(e){}})()`;
+  )})document.documentElement.setAttribute(${scriptValue(THEME_ATTRIBUTE)},t)}catch(e){}})()`;
 
 /** Emitido quando o visitante troca o tema. */
 export const THEME_CHANGED = 'portfolio:tema-alterado';

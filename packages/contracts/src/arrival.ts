@@ -1,4 +1,5 @@
 import type { AreaId } from './routes.js';
+import { scriptValue } from './inline-script.js';
 
 /**
  * Transições entre a home e uma área (ADR 0011). Quem sai grava aqui a área e a
@@ -25,10 +26,10 @@ export const TRANSITION_DELAY_MS = 450;
 /** A marca só vale por este tempo: depois disso a navegação não foi a da transição. */
 const ARRIVAL_MAX_AGE_MS = 5000;
 
-/** Valor gravado na marca: a área e a hora, separadas por dois-pontos. */
 /** O começo da marca de uma área: o que vem antes da hora. */
 export const entryMarkPrefix = (area: AreaId): string => `${area}:`;
 
+/** Valor gravado na marca: a área e a hora, separadas por dois-pontos. */
 export const entryMark = (area: AreaId, now: number): string => `${entryMarkPrefix(area)}${now}`;
 
 /**
@@ -38,10 +39,10 @@ export const entryMark = (area: AreaId, now: number): string => `${entryMarkPref
  * Devolve texto; este pacote não executa API de navegador.
  */
 export const arrivalInitScript = (accepted: readonly AreaId[]): string =>
-  `(function(){try{var k=${JSON.stringify(
+  `(function(){try{var k=${scriptValue(
     ENTRY_STORAGE_KEY,
-  )},v=(sessionStorage.getItem(k)||"").split(":");sessionStorage.removeItem(k);if(${JSON.stringify(
+  )},v=(sessionStorage.getItem(k)||"").split(":");sessionStorage.removeItem(k);if(${scriptValue(
     accepted,
-  )}.indexOf(v[0])+1&&${ARRIVAL_MAX_AGE_MS}>Date.now()-v[1])document.documentElement.setAttribute(${JSON.stringify(
+  )}.indexOf(v[0])+1&&${ARRIVAL_MAX_AGE_MS}>Date.now()-v[1])document.documentElement.setAttribute(${scriptValue(
     ARRIVAL_ATTRIBUTE,
   )},v[0])}catch(e){}})()`;
