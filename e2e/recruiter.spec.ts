@@ -129,10 +129,10 @@ test('pelo teclado: o filtro e as faces do projeto respondem, com foco visível'
 
   const panel = page1(page).locator('.facet-text').first();
   const role = await panel.textContent();
-  const challenge = page1(page).getByRole('button', { name: 'Desafio' }).first();
+  const challenge = page1(page).getByRole('tab', { name: 'Desafio' }).first();
   await challenge.focus();
   await page.keyboard.press('Space');
-  await expect(challenge).toHaveAttribute('aria-pressed', 'true');
+  await expect(challenge).toHaveAttribute('aria-selected', 'true');
   await expect(panel).not.toHaveText(role ?? '');
 });
 
