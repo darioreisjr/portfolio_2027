@@ -233,6 +233,15 @@ describe('área do recrutador', () => {
     expect(recruiter?.['pt-BR'].skills).toEqual([]);
   });
 
+  it('se o perfil voltar a rascunho em desenvolvimento, o recrutador usa perfil de exemplo completo', () => {
+    const draft = profileWith({ status: 'draft', name: 'Dario Reis' });
+    const { recruiter } = loadContent(draft, { includeDrafts: true });
+    expect(recruiter?.['pt-BR'].example).toBe(true);
+    expect(recruiter?.['pt-BR'].name).toBe('Pessoa Exemplo');
+    expect(recruiter?.['pt-BR'].role).toBe('Cargo de exemplo');
+    expect(recruiter?.['pt-BR'].experiences.length).toBeGreaterThan(0);
+  });
+
   it('com rascunhos, entrega o conteúdo de exemplo traduzido e marcado como exemplo', () => {
     const { recruiter } = loadContent(exampleData(), { includeDrafts: true });
     if (!recruiter) throw new Error('sem conteúdo');

@@ -10,7 +10,7 @@ Todo o conteúdo do site em JSON (`data/`), validado com Zod e entregue aos apps
 - O build de produção exclui `draft`. O `pnpm dev` da raiz já roda com `CONTENT_INCLUDE_DRAFTS=1`.
 - Dado de exemplo é `draft` e claramente fictício. Nunca invente conteúdo sobre o autor.
 - Dois conjuntos, pelo id: o de exemplo (`exemplo-…`) e o real (todo o resto). Cada bloco de cada área usa um ou o outro, nunca os dois, em desenvolvimento e em produção (`src/load.ts`). A carga recusa exemplo publicado e referência entre os dois conjuntos.
-- A área do recrutador usa os dados reais do autor desde 2026-10-12. Se o perfil voltar a rascunho, em desenvolvimento ela mostra o conjunto de exemplo com o nome e a frase do perfil.
+- A área do recrutador usa os dados reais do autor desde 2026-10-12. Se o perfil voltar a rascunho, em desenvolvimento ela mostra o conjunto de exemplo com o perfil de exemplo completo (`Pessoa Exemplo`), sem misturar dado real com exemplo.
 - Arquivos do autor (foto, currículo em PDF) ficam em `assets/`; ver `assets/LEIAME.md`. Ainda não são publicados.
 - Zod fica só neste pacote; não entra no bundle de nenhum app.
 - Texto que só um app usa não entra em `ui`: os MFEs importam `ui` inteiro, e cada chave nova pesa nos três.

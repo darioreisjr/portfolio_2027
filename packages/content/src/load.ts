@@ -154,6 +154,33 @@ function checkSkillRefs(
   }
 }
 
+const EXAMPLE_PROFILE: Profile = {
+  status: 'draft',
+  name: 'Pessoa Exemplo',
+  role: {
+    'pt-BR': 'Cargo de exemplo',
+    en: 'Example role',
+    es: 'Cargo de ejemplo',
+  },
+  tagline: {
+    'pt-BR': 'Exemplo de perfil para visualização em desenvolvimento.',
+    en: 'Example profile for development preview.',
+    es: 'Perfil de ejemplo para vista previa en desarrollo.',
+  },
+  summary: {
+    'pt-BR':
+      'Perfil demonstrativo com dados de exemplo. Nenhuma informação aqui representa uma pessoa real.',
+    en: 'Demonstration profile with example data. No information here represents a real person.',
+    es: 'Perfil demostrativo con datos de ejemplo. Ninguna información aquí representa a una persona real.',
+  },
+  location: {
+    'pt-BR': 'Exemplo, Brasil',
+    en: 'Example, Brazil',
+    es: 'Ejemplo, Brasil',
+  },
+  highlightSkills: ['exemplo-typescript', 'exemplo-vue', 'exemplo-node'],
+};
+
 export function loadContent(
   dataDir: string,
   { includeDrafts, publishExample = {} }: LoadOptions,
@@ -209,7 +236,14 @@ export function loadContent(
   const example =
     rawProfile.status === 'draft' && (includeDrafts || Boolean(publishExample.recruiter));
   const visible = example ? examples : real;
-  const recruiterProfile = rawProfile.status === 'published' || example ? rawProfile : null;
+  const recruiterProfile =
+    rawProfile.status === 'published'
+      ? rawProfile
+      : example
+        ? rawProfile.name === 'Pessoa Exemplo'
+          ? rawProfile
+          : EXAMPLE_PROFILE
+        : null;
   const sources = recruiterProfile && {
     profile: recruiterProfile,
     contacts: visible(contacts),
