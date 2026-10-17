@@ -131,7 +131,7 @@
 /* Barra de progresso de enfeite: listras que andam, sem porcentagem. */
 .area-bar,
 .area-outlet > *::part(bar) {
-  block-size: var(--space-block-md);
+  block-size: var(--size-bar-md);
   margin-block-start: var(--space-block-xs);
   border: var(--border-width-control) solid var(--area-color);
   background: var(--scene-wash);

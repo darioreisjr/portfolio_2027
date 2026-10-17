@@ -32,4 +32,15 @@ describe('ds-badge', () => {
     document.documentElement.dataset.theme = 'dark';
     expect(getComputedStyle(badge).backgroundColor).toBe('rgb(147, 197, 253)');
   });
+
+  it('suporta variante outline', async () => {
+    const badge = document.createElement('ds-badge');
+    badge.setAttribute('variant', 'outline');
+    badge.textContent = 'TypeScript';
+    document.body.append(badge);
+    await badge.updateComplete;
+
+    expect(badge.getAttribute('variant')).toBe('outline');
+    expect(getComputedStyle(badge).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  });
 });

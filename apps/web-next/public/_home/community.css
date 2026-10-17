@@ -575,7 +575,7 @@ html[data-arrival='community'] .community-arrival::after {
   .c-capsule:focus-within,
   .c-back:hover {
     translate: 0 calc(var(--space-block-xs) * -1);
-    box-shadow: 0 0 var(--space-block-md) color-mix(in srgb, var(--energy) 35%, transparent);
+    box-shadow: 0 0 var(--glow-spread) color-mix(in srgb, var(--energy) 35%, transparent);
   }
 }
 
