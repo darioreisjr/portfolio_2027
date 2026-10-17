@@ -50,6 +50,52 @@ main.area-stage[data-content] .area-outlet {
   min-block-size: 60svh;
 }
 
+/* Resumo estático da área com conteúdo para sem-JS e buscadores (ADR 0010, issue #39). */
+.area-fallback {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-block-md);
+  color: var(--color-text);
+  max-inline-size: 48rem;
+}
+
+.area-fallback-title {
+  margin: 0;
+  font-size: var(--text-size-title);
+  font-weight: var(--text-weight-strong);
+  color: var(--color-text);
+}
+
+.area-fallback-role {
+  margin: var(--space-block-xs) 0 0;
+  font-weight: var(--text-weight-strong);
+  color: var(--color-text-muted);
+}
+
+.area-fallback-tagline {
+  margin: var(--space-block-xs) 0 0;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.area-fallback-summary {
+  margin: 0;
+  line-height: var(--text-line-height);
+  color: var(--color-text);
+}
+
+.area-fallback-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-block-sm);
+  margin: 0;
+  padding-inline-start: var(--space-inline-md);
+}
+
+.area-fallback-list li {
+  line-height: var(--text-line-height);
+}
+
 @media (min-width: 60rem) {
   main.area-stage[data-content] {
     grid-template-areas:

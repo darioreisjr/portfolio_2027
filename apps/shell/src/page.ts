@@ -12,6 +12,7 @@ import {
   type Locale,
   type RouteEntry,
 } from '@portfolio/contracts';
+import { areaSummary } from './content.ts';
 
 /** Cenário decorativo: três camadas e dez partículas, que a folha desenha por área. */
 const AREA_SCENE = `<div class="area-scene" aria-hidden="true">
@@ -86,6 +87,8 @@ export function renderPage(
     )
     .join('\n    ');
 
+  const summary = content ? areaSummary(entry.area, locale) : '';
+
   return `<!doctype html>
 <html lang="${escapeHtml(locale)}">
   <head>
@@ -110,7 +113,7 @@ ${curtains}    <header class="shell-header">
       ${AREA_SCENE}
       <h1 class="area-title">${escapeHtml(area.title)}</h1>
       ${figureImage}
-      <div class="area-outlet" data-load-error="${escapeHtml(ui.loadError)}"></div>
+      <div class="area-outlet" data-load-error="${escapeHtml(ui.loadError)}">${summary}</div>
       <a class="area-back" href="${escapeHtml(pathFor('home', locale))}">${escapeHtml(ui.construction.back)}</a>
     </main>
     <footer class="ds-dock">
