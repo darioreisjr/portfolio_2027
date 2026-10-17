@@ -35,9 +35,15 @@ export function CommunityPage({ model }: { model: CommunityModel }) {
       {/* Cortinas da transição "explosão de aura" (ADR 0011): a que abre para
           quem chega pela home e a que fecha ao voltar. */}
       <div className="community-arrival" aria-hidden="true" />
-      <div className="community-departure" role="status" hidden>
+      <div className="community-departure" aria-hidden="true" hidden>
         <span>{model.leaving}</span>
       </div>
+      <div
+        className="community-departure-status"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      />
 
       <main className="community">
         <header className="c-hero">

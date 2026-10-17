@@ -469,6 +469,19 @@ html[data-arrival='community'] .community-arrival {
     backwards;
 }
 
+/* Aviso acessível no DOM para leitores de tela (WCAG 4.1.3). */
+.community-departure-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 html[data-arrival='community'] .community-arrival::before {
   animation: aura-open var(--motion-duration-lg) var(--motion-ease-out) var(--motion-duration-md)
     forwards;
