@@ -224,3 +224,28 @@ test.describe('no celular', () => {
     });
   }
 });
+
+test('CLS das três áreas de microfrontend fica abaixo de 0,1 (issue #39)', async ({ page }) => {
+  for (const path of ['/recrutador/', '/tecnico/', '/clientes/']) {
+    await page.goto(path);
+    await page.waitForLoadState('networkidle');
+    const cls = await page.evaluate(() => {
+      return new Promise<number>((resolve) => {
+        let clsValue = 0;
+        const observer = new PerformanceObserver((entryList) => {
+          for (const entry of entryList.getEntries()) {
+            if (!(entry as { hadRecentInput?: boolean }).hadRecentInput) {
+              clsValue += (entry as { value: number }).value;
+            }
+          }
+        });
+        observer.observe({ type: 'layout-shift', buffered: true });
+        setTimeout(() => {
+          observer.disconnect();
+          resolve(clsValue);
+        }, 500);
+      });
+    });
+    expect(cls).toBeLessThan(0.1);
+  }
+});

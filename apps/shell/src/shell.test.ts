@@ -86,12 +86,27 @@ describe('documento de uma área', () => {
     expect(html).not.toContain('ds-badge');
   });
 
-  it('marca o palco de uma área com conteúdo, sem mudar o resto do documento', () => {
+  it('marca o palco de uma área com conteúdo e injeta o resumo estático (ADR 0010, issue #39)', () => {
     const construction = renderPage(recruiter, 'pt-BR', ui['pt-BR']);
     const content = renderPage(recruiter, 'pt-BR', ui['pt-BR'], { content: true });
+    expect(construction).toContain(
+      `<div class="area-outlet" data-load-error="${ui['pt-BR'].loadError}"></div>`,
+    );
     expect(content).toContain('<main class="area-stage" data-area="recruiter" data-content>');
-    // O palco continua do documento: título, personagem, volta e pausa (ADR 0010).
-    expect(content.replace(' data-content', '')).toBe(construction);
+    expect(content).toContain('class="area-fallback"');
+    expect(content).toContain('class="area-fallback-title">Dario Reis</h2>');
+    expect(content).toContain('class="area-fallback-role">Software Engineer</p>');
+    expect(content).toContain('class="area-fallback-summary"');
+  });
+
+  it('mantém região de status no DOM e cortina de partida como decorativa (WCAG 4.1.3)', () => {
+    const html = renderPage(recruiter, 'pt-BR', ui['pt-BR']);
+    expect(html).toContain(
+      `<div class="area-departure" data-area="recruiter" aria-hidden="true" hidden><span>${ui['pt-BR'].leaving}</span></div>`,
+    );
+    expect(html).toContain(
+      '<div class="area-departure-status" role="status" aria-live="polite" aria-atomic="true"></div>',
+    );
   });
 
   it('põe a pausa do cenário no grupo do canto, antes das bandeiras', () => {
@@ -99,6 +114,12 @@ describe('documento de uma área', () => {
     const pause = html.indexOf(`<input type="checkbox" aria-label="${ui.es.pauseMotion}" />`);
     expect(pause).toBeGreaterThan(html.indexOf('class="ds-dock"'));
     expect(pause).toBeLessThan(html.indexOf('class="ds-language-switcher"'));
+  });
+
+  it('inclui script inline de sincronização da pausa de movimento no head (ADR 0008)', () => {
+    const html = renderPage(recruiter, 'pt-BR', ui['pt-BR']);
+    expect(html).toContain('portfolio:home-animacoes');
+    expect(html).toContain('.area-motion input');
   });
 
   it('escapa texto vindo do conteúdo', () => {
@@ -123,5 +144,12 @@ describe('documento de uma área', () => {
     expect(html).toContain(
       '<link rel="alternate" hreflang="x-default" href="https://2027.darioreis.dev/recrutador/" />',
     );
+  });
+
+  it('injeta resumo textual estático no HTML para todas as áreas com conteúdo', () => {
+    for (const route of routesOwnedBy('shell')) {
+      const html = renderPage(route, 'pt-BR', ui['pt-BR'], { content: true });
+      expect(html).toContain('class="area-fallback"');
+    }
   });
 });

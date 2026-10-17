@@ -88,6 +88,14 @@ ds-badge:not(:defined) {
   line-height: var(--text-line-height);
 }
 
+ds-badge[variant='outline']:not(:defined) {
+  border: var(--ds-badge-border-width) solid var(--ds-badge-border-color);
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-text);
+  font-weight: normal;
+}
+
 /* Só funciona com JavaScript: fica oculto até o upgrade, com o espaço reservado (ADR 0005). */
 ds-theme-toggle:not(:defined) {
   display: inline-block;

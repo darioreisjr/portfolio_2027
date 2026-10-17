@@ -2,6 +2,7 @@ import '@portfolio/tokens/tokens.css';
 import '../site.css';
 import { ui } from '@portfolio/content/ui';
 import {
+  AREA_MOTION_INIT_SCRIPT,
   AREA_TRANSITIONS,
   arrivalInitScript,
   defaultLocale,
@@ -31,6 +32,7 @@ export default async function RootLayout({
 
   const scripts = [THEME_INIT_SCRIPT];
   if (area === 'home') scripts.push(arrivalInitScript(AREA_TRANSITIONS));
+  if (area && area !== 'home') scripts.push(AREA_MOTION_INIT_SCRIPT);
   // Só quando a comunidade tem página: a tela "em construção" não tem transição.
   if (area === 'community' && buildCommunityPage(locale)) {
     scripts.push(arrivalInitScript(['community']), COMMUNITY_LEAVE_SCRIPT);

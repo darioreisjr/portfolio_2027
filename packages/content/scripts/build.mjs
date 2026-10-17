@@ -105,6 +105,15 @@ const modules = {
       'export declare const communityUi: Readonly<Record<Locale, CommunityUi>>;',
     ],
   },
+  // Módulo independente com o raio-x do próprio site (ADR 0012, issue #41).
+  site: {
+    value: site,
+    types: [
+      "import type { Site } from '../schemas.js';",
+      'export type { Site };',
+      'export declare const site: Readonly<Site>;',
+    ],
+  },
 };
 
 mkdirSync(outDir, { recursive: true });

@@ -66,11 +66,17 @@ const watchCurtain = (page: Page, selector: string) =>
   page.locator(selector).evaluate((curtain) => {
     new MutationObserver(() => {
       if ((curtain as HTMLElement).hidden) return;
+      const status =
+        curtain.id === 'home-enter'
+          ? document.getElementById('home-enter-status')
+          : curtain.classList.contains('community-departure')
+            ? document.querySelector('.community-departure-status')
+            : document.querySelector('.area-departure-status');
       sessionStorage.setItem(
         'teste:cortina',
         JSON.stringify({
-          role: curtain.getAttribute('role'),
-          text: curtain.textContent?.trim(),
+          role: status ? status.getAttribute('role') : curtain.getAttribute('role'),
+          text: (status?.textContent || curtain.textContent)?.trim(),
           color: getComputedStyle(curtain, '::before').backgroundColor,
         }),
       );
@@ -203,9 +209,7 @@ for (const { area, phrase, path, url, title, color } of areas) {
       await choose(page, phrase);
       await page.getByRole('link', { name: 'Entrar' }).click();
       await expect(page).toHaveURL(path);
-      expect(await arrived(page)).toBeNull();
-
-      await page.locator('.area-motion input').check();
+      await expect(page.locator('.area-motion input')).toBeChecked();
       await page.getByRole('link', { name: 'Voltar à escolha de perfil' }).click();
       await expect(page).toHaveURL(HOME);
       expect(await arrived(page)).toBeNull();
@@ -323,10 +327,7 @@ test('sem JavaScript os links levam às páginas, sem cortina', async ({ browser
   await context.close();
 });
 
-test('a cortina da volta não muda o que a home baixa nem trava com a pausa lembrada', async ({
-  browser,
-}) => {
-  // Quem recusou a imersão tem a pausa lembrada: a home marca a caixa ao abrir.
+test('com pausa lembrada, voltar de uma área abre a home direto', async ({ browser }) => {
   const context = await browser.newContext({
     storageState: {
       cookies: [],
@@ -340,10 +341,37 @@ test('a cortina da volta não muda o que a home baixa nem trava com a pausa lemb
   });
   const page = await context.newPage();
   await page.goto('/recrutador/');
+  await expect(page.locator('.area-motion input')).toBeChecked();
   await page.getByRole('link', { name: 'Voltar à escolha de perfil' }).click();
   await expect(page).toHaveURL(HOME);
   await expect(page.locator('.home-motion input')).toBeChecked();
-  // Mesmo com a home pausada, a cortina se abre até o fim.
+  expect(await arrived(page)).toBeNull();
+  await context.close();
+});
+
+test('a cortina da chegada abre até o fim mesmo com a pausa lembrada', async ({ browser }) => {
+  // Visita com pausa lembrada e com marca de chegada de uma área
+  const context = await browser.newContext({
+    storageState: {
+      cookies: [],
+      origins: [
+        {
+          origin: 'http://localhost:4173',
+          localStorage: [{ name: 'portfolio:home-animacoes', value: 'off' }],
+        },
+      ],
+    },
+  });
+  const page = await context.newPage();
+  await page.addInitScript(
+    ({ key, value }) => {
+      sessionStorage.setItem(key, value);
+    },
+    { key: KEY, value: `recruiter:${Date.now()}` },
+  );
+  await page.goto('/');
+  await expect(page.locator('.home-motion input')).toBeChecked();
+  // Mesmo com a home pausada, a cortina de chegada se abre até o fim.
   await opened(page, '.home-arrival');
   const scripts = await page
     .locator('script[src]')

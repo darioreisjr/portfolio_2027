@@ -101,6 +101,39 @@ async function pickFacet(id: string, facet: Facet, event: Event): Promise<void> 
   }
 }
 
+function onFacetKey(
+  project: RecruiterContent['projects'][number],
+  facet: Facet,
+  event: KeyboardEvent,
+): void {
+  const list = facetsOf(project);
+  const index = list.indexOf(facet);
+  let nextIndex = -1;
+
+  if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+    nextIndex = (index + 1) % list.length;
+  } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+    nextIndex = (index - 1 + list.length) % list.length;
+  } else if (event.key === 'Home') {
+    nextIndex = 0;
+  } else if (event.key === 'End') {
+    nextIndex = list.length - 1;
+  }
+
+  if (nextIndex !== -1) {
+    event.preventDefault();
+    const nextFacet = list[nextIndex];
+    if (nextFacet) {
+      const container = (event.currentTarget as HTMLElement | null)?.parentElement;
+      void pickFacet(project.id, nextFacet, event);
+      void nextTick().then(() => {
+        const tab = container?.querySelector<HTMLElement>(`#tab-${project.id}-${nextFacet}`);
+        tab?.focus();
+      });
+    }
+  }
+}
+
 onMounted(() => {
   const page = root.value;
   if (!page || !moving()) return;
@@ -261,7 +294,9 @@ onBeforeUnmount(() => {
             </ul>
           </details>
           <ul v-if="job.skills.length" class="tags">
-            <li v-for="name in job.skills" :key="name">{{ name }}</li>
+            <li v-for="name in job.skills" :key="name">
+              <ds-badge variant="outline">{{ name }}</ds-badge>
+            </li>
           </ul>
         </li>
       </ol>
@@ -275,20 +310,35 @@ onBeforeUnmount(() => {
           <p class="when">{{ period(project.start, project.end, text.projects.ongoing) }}</p>
           <h3>{{ project.title }}</h3>
           <p>{{ project.summary }}</p>
-          <div class="filters" role="group" :aria-label="project.title">
+          <div class="filters" role="tablist" :aria-label="project.title">
             <button
               v-for="facet in facetsOf(project)"
+              :id="`tab-${project.id}-${facet}`"
               :key="facet"
               type="button"
-              :aria-pressed="facetOf(project) === facet"
+              role="tab"
+              :aria-selected="facetOf(project) === facet ? 'true' : 'false'"
+              :aria-controls="`panel-${project.id}-${facet}`"
+              :tabindex="facetOf(project) === facet ? 0 : -1"
+              @keydown="onFacetKey(project, facet, $event)"
               @click="pickFacet(project.id, facet, $event)"
             >
               {{ text.projects[facet] }}
             </button>
           </div>
-          <p class="facet-text" aria-live="polite">{{ project[facetOf(project)] }}</p>
+          <p
+            :id="`panel-${project.id}-${facetOf(project)}`"
+            class="facet-text"
+            role="tabpanel"
+            :aria-labelledby="`tab-${project.id}-${facetOf(project)}`"
+            tabindex="0"
+          >
+            {{ project[facetOf(project)] }}
+          </p>
           <ul v-if="project.skills.length" class="tags">
-            <li v-for="name in project.skills" :key="name">{{ name }}</li>
+            <li v-for="name in project.skills" :key="name">
+              <ds-badge variant="outline">{{ name }}</ds-badge>
+            </li>
           </ul>
           <p v-if="project.repo || project.repos || project.demo" class="links">
             <!-- Mais de um repositório: um link por parte, com o rótulo dela. -->
@@ -585,7 +635,7 @@ summary:focus-visible {
     color var(--motion-duration-md) var(--motion-ease-out);
 }
 
-.filters button[aria-pressed='true'] {
+.filters button:is([aria-pressed='true'], [aria-selected='true']) {
   background: var(--green);
   color: var(--color-on-area);
 }
@@ -637,8 +687,8 @@ summary:focus-visible {
 }
 
 .pips i {
-  inline-size: var(--space-inline-sm);
-  block-size: var(--space-inline-sm);
+  inline-size: var(--size-indicator-sm);
+  block-size: var(--size-indicator-sm);
   border: var(--border-width-control) solid var(--green);
   rotate: 45deg;
 }
@@ -664,9 +714,9 @@ summary:focus-visible {
 .job::before {
   position: absolute;
   inset-block-start: var(--space-block-xs);
-  inset-inline-start: calc(var(--space-inline-lg) * -1 - var(--space-inline-sm) * 0.5 - 1px);
-  inline-size: var(--space-inline-sm);
-  block-size: var(--space-inline-sm);
+  inset-inline-start: calc(var(--space-inline-lg) * -1 - var(--size-indicator-sm) * 0.5 - 1px);
+  inline-size: var(--size-indicator-sm);
+  block-size: var(--size-indicator-sm);
   background: var(--green);
   content: '';
   rotate: 45deg;
@@ -706,9 +756,7 @@ details ul {
 }
 
 .tags li {
-  padding: 0 var(--space-inline-sm);
-  border: var(--border-width-control) solid var(--color-border);
-  font-size: var(--text-size-sm);
+  display: inline-flex;
 }
 
 .projects {
@@ -735,6 +783,11 @@ details ul {
 
 .facet-text {
   min-block-size: 3lh;
+}
+
+.facet-text:focus-visible {
+  outline: var(--border-width-control) solid var(--green);
+  outline-offset: var(--space-inline-xs);
 }
 
 .links {

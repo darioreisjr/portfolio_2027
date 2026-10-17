@@ -5,19 +5,19 @@ Todo o conteúdo do site em JSON (`data/`), validado com Zod e entregue aos apps
 ## Convenções
 
 - Modelo em `docs/content/schema.md`; schemas em `src/schemas.ts`. Mude os dois juntos.
-- Os apps importam só por subcaminho: `@portfolio/content/ui`, `@portfolio/content/home`, `@portfolio/content/profile`, `@portfolio/content/recruiter`, `@portfolio/content/tech`, `@portfolio/content/client`, `@portfolio/content/community`. Nunca leem `data/` direto.
+- Os apps importam só por subcaminho: `@portfolio/content/ui`, `@portfolio/content/home`, `@portfolio/content/profile`, `@portfolio/content/recruiter`, `@portfolio/content/tech`, `@portfolio/content/client`, `@portfolio/content/community`, `@portfolio/content/site`. Nunca leem `data/` direto.
 - O build falha se um JSON for inválido. Item `published` precisa dos três idiomas (pt-BR, en, es).
 - O build de produção exclui `draft`. O `pnpm dev` da raiz já roda com `CONTENT_INCLUDE_DRAFTS=1`.
 - Dado de exemplo é `draft` e claramente fictício. Nunca invente conteúdo sobre o autor.
 - Dois conjuntos, pelo id: o de exemplo (`exemplo-…`) e o real (todo o resto). Cada bloco de cada área usa um ou o outro, nunca os dois, em desenvolvimento e em produção (`src/load.ts`). A carga recusa exemplo publicado e referência entre os dois conjuntos.
-- A área do recrutador usa os dados reais do autor desde 2026-10-12. Se o perfil voltar a rascunho, em desenvolvimento ela mostra o conjunto de exemplo com o nome e a frase do perfil.
+- A área do recrutador usa os dados reais do autor desde 2026-10-12. Se o perfil voltar a rascunho, em desenvolvimento ela mostra o conjunto de exemplo com o perfil de exemplo completo (`Pessoa Exemplo`), sem misturar dado real com exemplo.
 - Arquivos do autor (foto, currículo em PDF) ficam em `assets/`; ver `assets/LEIAME.md`. Ainda não são publicados.
 - Zod fica só neste pacote; não entra no bundle de nenhum app.
 - Texto que só um app usa não entra em `ui`: os MFEs importam `ui` inteiro, e cada chave nova pesa nos três.
 - `ui.construction` (título, frase e rótulo do botão de volta da tela "em construção") e `ui.pauseMotion` ficam em `ui` porque o shell, os três MFEs e o Next.js usam.
 - A área técnica importa só `@portfolio/content/tech`: `tech` (estudos de caso e tecnologias por idioma, ou `null`), `techUi` (textos de `tech/<locale>.json`, com os comandos do terminal) e `site`.
-- `data/site.json` é o raio-x do próprio site (ADR 0012): dado real do repositório, sem `status`, que não é de exemplo. Não edite à mão: rode `node scripts/site-xray.mjs` depois de `pnpm build && pnpm assemble && pnpm lhci`. O `pnpm test` roda `--check`, que acusa ADR novo ou teto alterado sem regravar.
-- A página da comunidade importa `@portfolio/content/community`: `community` (artigos, projetos de código aberto e canais por idioma, ou `null` sem artigo nem projeto) e `communityUi` (textos de `community/<locale>.json`, com a lista do que é bem-vindo). `example` vem por bloco.
+- `data/site.json` é o raio-x do próprio site (ADR 0012): dado real do repositório, sem `status`, que não é de exemplo. Exposto em `@portfolio/content/site` (e por conveniência em `@portfolio/content/tech`). Não edite à mão: rode `node scripts/site-xray.mjs` depois de `pnpm build && pnpm assemble && pnpm lhci`. O `pnpm test` roda `--check`, que acusa ADR novo ou teto alterado sem regravar.
+- A página da comunidade importa `@portfolio/content/community`: `community` (artigos, projetos de código aberto e canais por idioma, ou `null` sem artigo nem projeto) e `communityUi` (textos de `community/<locale>.json`, com a lista do que é bem-vindo). `example` vem por bloco. O repositório real é lido de `@portfolio/content/site`.
 - Projeto com `openSource: true` precisa de `openSourceStatus`. O endereço real do repositório deste site fica em `site.json` (`repository`), lido do `package.json` da raiz pelo raio-x.
 - A área do cliente importa só `@portfolio/content/client`: `client` (serviços, etapas, casos, depoimentos, formas de contratar, perguntas e canais de orçamento, por idioma, ou `null` sem serviço para mostrar) e `clientUi` (textos de `client/<locale>.json`). `example` vem por bloco.
 - `client.json` guarda como o autor trabalha com clientes (etapas, forma de orçar, formas de contratar, perguntas). É dado, com `status`, porque são compromissos dele; não leva valores.

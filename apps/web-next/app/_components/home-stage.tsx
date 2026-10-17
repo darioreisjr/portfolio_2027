@@ -166,9 +166,16 @@ export function HomeStage({ locale }: { locale: Locale }) {
           mostra é `persona-list.tsx`, ao clicar em "Entrar" em uma área que tem
           transição. A de chegada abre para quem volta de uma área: o script do
           <head> liga `data-arrival` e o CSS faz o resto. */}
-      <div className="home-enter" id={ENTER_OVERLAY_ID} role="status" hidden>
+      <div className="home-enter" id={ENTER_OVERLAY_ID} aria-hidden="true" hidden>
         <span>{entering}</span>
       </div>
+      <div
+        className="home-enter-status"
+        id="home-enter-status"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      />
       <div className="home-arrival" aria-hidden="true" />
     </main>
   );

@@ -218,19 +218,25 @@ describe('página do recrutador', () => {
     expect(texts(root, '.skill-name')).toHaveLength(2);
   });
 
-  it('cada projeto alterna entre papel, desafio e resultado', async () => {
+  it('cada projeto alterna entre papel, desafio e resultado com abas acessíveis', async () => {
     const root = await mount();
-    const panel = () => root.querySelector('.facet-text')?.textContent;
-    expect(panel()).toBe('Meu papel');
+    const tablist = root.querySelector('.project [role="tablist"]');
+    expect(tablist).not.toBeNull();
+    const panel = () => root.querySelector('.facet-text');
+    expect(panel()?.textContent).toBe('Meu papel');
+    expect(panel()?.getAttribute('role')).toBe('tabpanel');
     const challenge = press(root, 'Desafio');
     await settle();
-    expect(panel()).toBe('O desafio');
-    expect(challenge.getAttribute('aria-pressed')).toBe('true');
-    press(root, 'Resultado');
+    expect(panel()?.textContent).toBe('O desafio');
+    expect(challenge.getAttribute('role')).toBe('tab');
+    expect(challenge.getAttribute('aria-selected')).toBe('true');
+    expect(panel()?.getAttribute('id')).toBe(challenge.getAttribute('aria-controls'));
+    expect(panel()?.getAttribute('aria-labelledby')).toBe(challenge.getAttribute('id'));
+
+    // Navegação por teclado com setas entre as abas
+    challenge.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
     await settle();
-    expect(panel()).toBe('O resultado');
-    // A troca é anunciada a leitores de tela.
-    expect(root.querySelector('.facet-text')?.getAttribute('aria-live')).toBe('polite');
+    expect(panel()?.textContent).toBe('O resultado');
   });
 
   it('o projeto mostra o período, e "em andamento" enquanto não tem fim', async () => {

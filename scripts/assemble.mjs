@@ -201,12 +201,14 @@ export function buildVercelConfig(routesList = routes) {
           },
         ],
       },
+      // Fontes e bandeiras não têm versão no nome: sem immutable, para
+      // alterações chegarem a quem já visitou (issue #41).
       {
         source: '/_ds/fonts/(.*)',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value: 'public, max-age=86400, stale-while-revalidate=604800',
           },
         ],
       },
@@ -215,7 +217,7 @@ export function buildVercelConfig(routesList = routes) {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            value: 'public, max-age=86400, stale-while-revalidate=604800',
           },
         ],
       },

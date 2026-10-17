@@ -47,11 +47,15 @@ if (back && departure && area && AREA_TRANSITIONS.includes(area)) {
     } catch {
       // Sem armazenamento, a home abre sem a chegada.
     }
+    const status = document.querySelector<HTMLElement>('.area-departure-status');
+    if (status) status.textContent = departure.querySelector('span')?.textContent ?? '';
     departure.hidden = false;
     setTimeout(() => location.assign(back.href), TRANSITION_DELAY_MS);
   });
   // Voltar pelo navegador devolve a página como estava: a cortina sai.
   addEventListener('pageshow', () => {
     departure.hidden = true;
+    const status = document.querySelector<HTMLElement>('.area-departure-status');
+    if (status) status.textContent = '';
   });
 }

@@ -1,5 +1,6 @@
 import type { Ui } from '@portfolio/content/schemas';
 import {
+  AREA_MOTION_INIT_SCRIPT,
   AREA_TRANSITIONS,
   arrivalInitScript,
   canonicalUrl,
@@ -11,6 +12,7 @@ import {
   type Locale,
   type RouteEntry,
 } from '@portfolio/contracts';
+import { areaSummary } from './content.ts';
 
 /** Cenário decorativo: três camadas e dez partículas, que a folha desenha por área. */
 const AREA_SCENE = `<div class="area-scene" aria-hidden="true">
@@ -72,7 +74,8 @@ export function renderPage(
   const arrival = transition ? `;${arrivalInitScript([entry.area])}` : '';
   const curtains = transition
     ? `    <div class="area-arrival" aria-hidden="true"></div>
-    <div class="area-departure" data-area="${escapeHtml(entry.area)}" role="status" hidden><span>${escapeHtml(ui.leaving)}</span></div>
+    <div class="area-departure" data-area="${escapeHtml(entry.area)}" aria-hidden="true" hidden><span>${escapeHtml(ui.leaving)}</span></div>
+    <div class="area-departure-status" role="status" aria-live="polite" aria-atomic="true"></div>
 `
     : '';
 
@@ -84,12 +87,14 @@ export function renderPage(
     )
     .join('\n    ');
 
+  const summary = content ? areaSummary(entry.area, locale) : '';
+
   return `<!doctype html>
 <html lang="${escapeHtml(locale)}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>${THEME_INIT_SCRIPT}${arrival}</script>
+    <script>${THEME_INIT_SCRIPT}${arrival};${AREA_MOTION_INIT_SCRIPT}</script>
     <title>${escapeHtml(area.title)} | ${escapeHtml(ui.siteName)}</title>
     <meta name="description" content="${escapeHtml(area.description)}" />
     <link rel="canonical" href="${escapeHtml(canonical)}" />
@@ -108,7 +113,7 @@ ${curtains}    <header class="shell-header">
       ${AREA_SCENE}
       <h1 class="area-title">${escapeHtml(area.title)}</h1>
       ${figureImage}
-      <div class="area-outlet" data-load-error="${escapeHtml(ui.loadError)}"></div>
+      <div class="area-outlet" data-load-error="${escapeHtml(ui.loadError)}">${summary}</div>
       <a class="area-back" href="${escapeHtml(pathFor('home', locale))}">${escapeHtml(ui.construction.back)}</a>
     </main>
     <footer class="ds-dock">

@@ -109,6 +109,13 @@ describe('TechAreaComponent', () => {
     expect(log.textContent).toContain('Digite um comando');
   });
 
+  it('os atalhos do terminal têm rótulo acessível com nome e descrição (WCAG 1.3.1)', async () => {
+    const { shadow } = await mount('pt-BR');
+    const shortcut = shadow.querySelector('.shortcuts button');
+    expect(shortcut?.getAttribute('aria-label')).toBe('projetos: estudos de caso');
+    expect(shortcut?.getAttribute('title')).toBe('estudos de caso');
+  });
+
   it('"ir para a seção" põe o foco no título, que âncora não alcançaria no shadow DOM', async () => {
     const { fixture, shadow } = await mount('pt-BR');
     document.body.append(fixture.nativeElement as Element);

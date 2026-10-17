@@ -140,6 +140,8 @@ export function PersonaList({
     const onPageShow = () => {
       const overlay = document.getElementById(ENTER_OVERLAY_ID);
       if (overlay) overlay.hidden = true;
+      const status = document.getElementById('home-enter-status');
+      if (status) status.textContent = '';
     };
     document.addEventListener('keydown', onKeyDown);
     document.addEventListener('click', onClick);
@@ -184,6 +186,8 @@ export function PersonaList({
         // O corte de lâmina é do recrutador; as outras áreas confirmam com as notas.
         if (area === 'recruiter') slash();
         else sfx(ENTER);
+        const status = document.getElementById('home-enter-status');
+        if (status) status.textContent = overlay.querySelector('span')?.textContent ?? '';
         overlay.dataset.area = area;
         overlay.hidden = false;
         setTimeout(() => location.assign(enter.href), TRANSITION_DELAY_MS);
