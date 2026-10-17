@@ -4,7 +4,7 @@ import {
   type CommunityContent,
   type CommunityUi,
 } from '@portfolio/content/community';
-import { site } from '@portfolio/content/tech';
+import { site } from '@portfolio/content/site';
 import { ui } from '@portfolio/content/ui';
 import {
   localeNames,
