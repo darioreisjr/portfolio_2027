@@ -418,8 +418,8 @@ a {
 }
 
 .meter i {
-  inline-size: var(--space-inline-sm);
-  block-size: var(--space-block-md);
+  inline-size: var(--size-indicator-sm);
+  block-size: var(--size-bar-md);
   border: var(--border-width-control) solid var(--ink);
 }
 

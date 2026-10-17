@@ -294,7 +294,9 @@ onBeforeUnmount(() => {
             </ul>
           </details>
           <ul v-if="job.skills.length" class="tags">
-            <li v-for="name in job.skills" :key="name">{{ name }}</li>
+            <li v-for="name in job.skills" :key="name">
+              <ds-badge variant="outline">{{ name }}</ds-badge>
+            </li>
           </ul>
         </li>
       </ol>
@@ -334,7 +336,9 @@ onBeforeUnmount(() => {
             {{ project[facetOf(project)] }}
           </p>
           <ul v-if="project.skills.length" class="tags">
-            <li v-for="name in project.skills" :key="name">{{ name }}</li>
+            <li v-for="name in project.skills" :key="name">
+              <ds-badge variant="outline">{{ name }}</ds-badge>
+            </li>
           </ul>
           <p v-if="project.repo || project.repos || project.demo" class="links">
             <!-- Mais de um repositório: um link por parte, com o rótulo dela. -->
@@ -683,8 +687,8 @@ summary:focus-visible {
 }
 
 .pips i {
-  inline-size: var(--space-inline-sm);
-  block-size: var(--space-inline-sm);
+  inline-size: var(--size-indicator-sm);
+  block-size: var(--size-indicator-sm);
   border: var(--border-width-control) solid var(--green);
   rotate: 45deg;
 }
@@ -710,9 +714,9 @@ summary:focus-visible {
 .job::before {
   position: absolute;
   inset-block-start: var(--space-block-xs);
-  inset-inline-start: calc(var(--space-inline-lg) * -1 - var(--space-inline-sm) * 0.5 - 1px);
-  inline-size: var(--space-inline-sm);
-  block-size: var(--space-inline-sm);
+  inset-inline-start: calc(var(--space-inline-lg) * -1 - var(--size-indicator-sm) * 0.5 - 1px);
+  inline-size: var(--size-indicator-sm);
+  block-size: var(--size-indicator-sm);
   background: var(--green);
   content: '';
   rotate: 45deg;
@@ -752,9 +756,7 @@ details ul {
 }
 
 .tags li {
-  padding: 0 var(--space-inline-sm);
-  border: var(--border-width-control) solid var(--color-border);
-  font-size: var(--text-size-sm);
+  display: inline-flex;
 }
 
 .projects {

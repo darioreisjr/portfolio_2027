@@ -710,7 +710,7 @@ li[data-selected] > .persona::before {
 @media (prefers-reduced-motion: no-preference) and (min-width: 48rem) {
   .personas {
     /* Passo entre um personagem e o seguinte na entrada. */
-    --step: 90ms;
+    --step: var(--motion-duration-step);
     --panel-delay: var(--motion-duration-md);
   }
 
@@ -1065,7 +1065,8 @@ li[data-selected] > .persona::before {
   right: 8%;
   width: var(--orb-size);
   height: var(--orb-size);
-  animation: sakura-drift calc(var(--motion-duration-drift) * 5) ease-in-out infinite alternate;
+  animation: sakura-drift calc(var(--motion-duration-drift) * 5) var(--motion-ease-in-out) infinite
+    alternate;
 }
 
 /* Sol e lua no mesmo lugar: um desce e some enquanto o outro sobe. */
@@ -1098,7 +1099,8 @@ li[data-selected] > .persona::before {
   background: radial-gradient(closest-side, var(--orb-color) 50%, transparent);
   opacity: 0.45;
   content: '';
-  animation: sakura-breathe calc(var(--motion-duration-sway) * 1.5) ease-in-out infinite alternate;
+  animation: sakura-breathe calc(var(--motion-duration-sway) * 1.5) var(--motion-ease-in-out)
+    infinite alternate;
 }
 
 /* Névoa em faixas, cruzando o alto do céu na frente do astro. */
@@ -1135,7 +1137,7 @@ li[data-selected] > .persona::before {
   display: block;
   overflow: visible;
   transform-origin: left top;
-  animation: sakura-gust var(--gust) ease-in-out infinite;
+  animation: sakura-gust var(--gust) var(--motion-ease-in-out) infinite;
 }
 
 /* Ritmo próprio, para os dois galhos não se moverem juntos. */
@@ -1147,7 +1149,8 @@ li[data-selected] > .persona::before {
 .sakura-flower {
   transform-box: fill-box;
   transform-origin: center;
-  animation: sakura-flutter var(--gust) ease-in-out calc(var(--i) * 90ms) infinite;
+  animation: sakura-flutter var(--gust) var(--motion-ease-in-out)
+    calc(var(--i) * var(--motion-duration-step)) infinite;
 }
 
 .sakura-wood {
@@ -1394,7 +1397,6 @@ body:has(.home-motion input:checked) li[data-selected] > .persona::before {
   box-sizing: border-box;
   inline-size: var(--ds-language-switcher-size);
   block-size: var(--ds-language-switcher-size);
-  border: var(--ds-language-switcher-ring-width) solid transparent;
   border-radius: var(--radius-full);
 }
 
@@ -1403,10 +1405,14 @@ body:has(.home-motion input:checked) li[data-selected] > .persona::before {
   inline-size: var(--ds-language-switcher-flag-size);
   block-size: var(--ds-language-switcher-flag-size);
   border-radius: var(--radius-full);
+  object-fit: cover;
+  box-shadow: 0 0 0 var(--ds-language-switcher-ring-width) var(--ds-language-switcher-edge);
+  outline: var(--ds-language-switcher-ring-width) solid var(--ds-language-switcher-edge);
 }
 
-.home-intro-flag[aria-current] {
-  border-color: var(--ds-language-switcher-current);
+.home-intro-flag[aria-current] img {
+  outline-color: var(--ds-language-switcher-current);
+  outline-offset: var(--ds-language-switcher-ring-width);
 }
 
 .home-intro-flag:focus-visible,

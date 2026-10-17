@@ -61,7 +61,7 @@ h3 {
   border: var(--line) solid var(--blue);
   background: var(--panel);
   box-shadow:
-    0 0 var(--space-block-md) var(--glow),
+    0 0 var(--glow-spread) var(--glow),
     inset 0 0 var(--space-block-lg) color-mix(in srgb, var(--blue) 8%, transparent);
   isolation: isolate;
   overflow: clip;
@@ -250,7 +250,7 @@ h3 {
 .card:hover,
 .card:focus-within {
   border-color: var(--blue);
-  box-shadow: 0 0 var(--space-block-md) var(--glow);
+  box-shadow: 0 0 var(--glow-spread) var(--glow);
 }
 
 .checks {

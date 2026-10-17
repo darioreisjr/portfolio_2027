@@ -11,3 +11,8 @@ export const Padrao: StoryObj = {
   name: 'Padrão',
   render: () => html`<ds-badge>Olá</ds-badge>`,
 };
+
+export const Contorno: StoryObj = {
+  name: 'Contorno',
+  render: () => html`<ds-badge variant="outline">TypeScript</ds-badge>`,
+};
