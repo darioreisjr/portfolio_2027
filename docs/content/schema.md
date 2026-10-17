@@ -291,6 +291,10 @@ Regras: cada bloco usa os itens publicados se houver algum; sem nenhum, os rascu
 
 `TechContent.example` é `true` quando os projetos e as tecnologias são rascunho: a página põe a faixa "Dados de exemplo" no bloco deles. O raio-x nunca leva faixa. A mesma exceção do recrutador vale aqui (`publishExample.tech`): enquanto não houver estudo de caso publicado, a área vai ao ar com os exemplos; com um publicado, só o que é publicado entra.
 
+## O módulo do site
+
+`@portfolio/content/site` expõe `site` (`Readonly<Site>`), o raio-x do próprio site (ADR 0012, issue #41), de forma independente para consumidores como a comunidade, sem exigir que dependam do módulo da área técnica.
+
 ## Quem consome o quê
 
 | Área       | Arquivos                                                                                                                         |
@@ -299,7 +303,7 @@ Regras: cada bloco usa os itens publicados se houver algum; sem nenhum, os rascu
 | Recrutador | `recruiter` (montado de `profile`, `experiences`, `education`, `skills`, `projects` com narrativa `recruiter`, `contacts`), `ui` |
 | Técnica    | `tech` (montado de `projects` com narrativa `technical` e `skills`), `site`, `ui`                                                |
 | Cliente    | `client` (montado de `services`, `testimonials`, `client.json`, `projects` com narrativa `outcome` e `contacts`), `ui`           |
-| Comunidade | `community` (montado de `articles`, `projects` com `openSource: true` e `contacts`), `site` (`repository`), `ui`                 |
+| Comunidade | `community` (montado de `articles`, `projects` com `openSource: true` e `contacts`), `site` (de `@portfolio/content/site`), `ui` |
 
 ## Como mudar o schema sem quebrar consumidores
 
