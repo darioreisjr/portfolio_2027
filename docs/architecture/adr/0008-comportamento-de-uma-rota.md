@@ -46,6 +46,10 @@ Este ADR esclarece o item 3 do ADR 0006 sem revogá-lo: ali a frase separa "marc
 
 Registrada em `docs/plans/home-imersao.md`. A home ganha um pop-up de primeira visita (idioma e imersão). Ele segue esta decisão: é comportamento de uma rota só, mora em `apps/web-next` (`lib/intro.ts`, chamado por `persona-list.tsx`) e não cria arquivo de script. A chave `portfolio:home-animacoes` é só da home (item 4) e guarda a resposta e, depois dela, o estado do botão de pausa. O item 3 ganha uma exceção: o pop-up é um `<dialog>` na camada superior, não ocupa lugar no layout e por isso não reserva espaço; sem JavaScript ele não aparece. O item 5 continua valendo: a primeira página de uma visita só pede áudio depois de um gesto, e o "Começar" com a caixa marcada é esse gesto.
 
+## Emenda de 2026-10-17
+
+A preferência de pausa do movimento passa a valer para o site todo (WCAG 2.2.2, issue #38). Quem recusa animações na home ou marca a pausa em qualquer página não deve ver o cenário das outras áreas se mover ao navegar. A chave de armazenamento é promovida de `apps/web-next/lib/intro.ts` para `packages/contracts` (`MOTION_STORAGE_KEY = 'portfolio:home-animacoes'`). O shell (`apps/shell/src/page.ts`) e as páginas internas do Next.js (`apps/web-next`) inicializam a caixa `.area-motion` pelo script inline compartilhado (`AREA_MOTION_INIT_SCRIPT`) e sincronizam a preferência no `localStorage`.
+
 ## Fontes
 
 - [Next.js: Server e Client Components](https://nextjs.org/docs/app/getting-started/server-and-client-components), conferido na documentação que acompanha o Next.js 16.3.8 instalado.

@@ -111,6 +111,12 @@ describe('documento de uma área', () => {
     expect(pause).toBeLessThan(html.indexOf('class="ds-language-switcher"'));
   });
 
+  it('inclui script inline de sincronização da pausa de movimento no head (ADR 0008)', () => {
+    const html = renderPage(recruiter, 'pt-BR', ui['pt-BR']);
+    expect(html).toContain('portfolio:home-animacoes');
+    expect(html).toContain('.area-motion input');
+  });
+
   it('escapa texto vindo do conteúdo', () => {
     const html = renderPage(recruiter, 'pt-BR', { ...ui['pt-BR'], siteName: '<b>x</b>' });
     expect(html).not.toContain('<b>x</b>');
