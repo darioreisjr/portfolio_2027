@@ -41,11 +41,10 @@ Falta a `Content-Security-Policy` (issue #47, pendência B14): exige hash de cad
 
 ## Riscos aceitos
 
-| Risco                                                                              | Decisão                                                                                      |
-| ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| E-mail e WhatsApp do autor em texto na área do recrutador (robôs colhem para spam) | Mantido pelo autor em 2026-10-12 e de novo em 2026-10-15: recrutador precisa achar o contato |
-
-Em aberto, sem decisão: o `pnpm audit` acusa 8 vulnerabilidades conhecidas nas dependências do Lighthouse CI (`@lhci/cli`), que só roda no CI e na máquina local. Destino na issue #48.
+| Risco                                                                                                                                                                     | Decisão                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| E-mail e WhatsApp do autor em texto na área do recrutador (robôs colhem para spam)                                                                                        | Mantido pelo autor em 2026-10-12 e de novo em 2026-10-15: recrutador precisa achar o contato                                                                                                                                                                                                                                                                            |
+| Vulnerabilidades conhecidas nas dependências de desenvolvimento/CI do `@lhci/cli` e do ESLint Next.js (`tmp`, `uuid`, `extract-zip`, `basic-ftp`, `sprintf-js`, `braces`) | Risco aceito em 2026-10-17 (issue #48): ferramentas que rodam exclusivamente na máquina local e no pipeline de CI contra o `dist/` estático próprio, sem expor portas nem empacotar código no site publicado. Além disso, `extract-zip`, `sprintf-js` e `braces` não possuem patch publicado upstream, e `uuid` v11 é ESM-only (incompatível com `@lhci/cli` CommonJS). |
 
 ## Ler os alertas
 
