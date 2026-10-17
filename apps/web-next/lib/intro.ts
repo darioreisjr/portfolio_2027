@@ -1,9 +1,11 @@
+import { MOTION_STORAGE_KEY } from '@portfolio/contracts';
+
 /**
  * Resposta ao pop-up de imersão da home e, depois dela, o estado do botão de
  * pausa: `on` (animações rodando) ou `off` (pausadas). Ausente: a pessoa ainda
- * não respondeu, e o pop-up aparece. Só este app lê a chave (ADR 0008).
+ * não respondeu, e o pop-up aparece. Chave promovida a @portfolio/contracts (ADR 0008).
  */
-export const INTRO_STORAGE_KEY = 'portfolio:home-animacoes';
+export const INTRO_STORAGE_KEY = MOTION_STORAGE_KEY;
 
 /** O `<dialog>` do pop-up, renderizado no servidor por `home-stage.tsx`. */
 export const INTRO_ID = 'home-intro';

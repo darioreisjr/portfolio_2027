@@ -1,5 +1,6 @@
 import type { Ui } from '@portfolio/content/schemas';
 import {
+  AREA_MOTION_INIT_SCRIPT,
   AREA_TRANSITIONS,
   arrivalInitScript,
   canonicalUrl,
@@ -90,7 +91,7 @@ export function renderPage(
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script>${THEME_INIT_SCRIPT}${arrival}</script>
+    <script>${THEME_INIT_SCRIPT}${arrival};${AREA_MOTION_INIT_SCRIPT}</script>
     <title>${escapeHtml(area.title)} | ${escapeHtml(ui.siteName)}</title>
     <meta name="description" content="${escapeHtml(area.description)}" />
     <link rel="canonical" href="${escapeHtml(canonical)}" />
