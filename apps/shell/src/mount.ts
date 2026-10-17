@@ -22,12 +22,12 @@ export async function mountMfe(
     const message = document.createElement('p');
     message.setAttribute('role', 'alert');
     message.textContent = outlet.dataset.loadError ?? '';
-    outlet.append(message);
+    outlet.replaceChildren(message);
     return;
   }
 
   const element = document.createElement(mfe.tag);
   element.setAttribute('locale', locale);
   element.setAttribute('base-path', basePath);
-  outlet.append(element);
+  outlet.replaceChildren(element);
 }

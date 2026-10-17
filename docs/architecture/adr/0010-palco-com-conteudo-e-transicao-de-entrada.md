@@ -66,6 +66,10 @@ Em 2026-10-10 a área do cliente passou a seguir esta decisão, e a exceção qu
 
 O item 5 (transição de entrada) foi substituído pelo ADR 0011, que dá a volta e uma cortina por área.
 
+## Emenda de 2026-10-17
+
+Resumo estático em HTML nas áreas de microfrontend (issue #39). O shell passa a gerar no `.area-outlet` um resumo textual estático em HTML a partir do conteúdo (`packages/content`) para as áreas com conteúdo. Buscadores e visitantes sem JavaScript encontram nome, cargo e resumo profissional (e os estudos ou serviços nas outras áreas). Ao montar, o script do shell (`apps/shell/src/mount.ts`) substitui o conteúdo inicial pelo elemento do microfrontend (`outlet.replaceChildren(element)`), garantindo CLS abaixo de 0,1.
+
 ## Fontes
 
 - [MDN: herança de propriedades customizadas e shadow DOM](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM)

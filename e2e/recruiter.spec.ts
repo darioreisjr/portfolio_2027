@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { NO_JS } from './support/no-js';
 
 // Página do recrutador, com conteúdo (ADR 0010) e os dados reais do autor. Os
 // textos são dele e mudam: os testes olham a estrutura, não as frases.
@@ -182,4 +183,16 @@ test.describe('no celular', () => {
     await page1(page).getByRole('heading', { name: 'Experiencia' }).scrollIntoViewIfNeeded();
     await expect(page1(page).getByRole('navigation', { name: 'Contacto' })).toBeInViewport();
   });
+});
+
+test('sem JavaScript, mostra o nome, cargo e resumo profissional (issue #39)', async ({
+  browser,
+}) => {
+  const context = await browser.newContext({ ...NO_JS });
+  const page = await context.newPage();
+  await page.goto('/recrutador/');
+  await expect(page.locator('.area-fallback-title')).toHaveText('Dario Reis');
+  await expect(page.locator('.area-fallback-role')).toHaveText('Software Engineer');
+  await expect(page.locator('.area-fallback-summary')).toContainText('Dario Reis');
+  await context.close();
 });
