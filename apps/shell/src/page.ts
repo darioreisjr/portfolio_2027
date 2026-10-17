@@ -72,7 +72,8 @@ export function renderPage(
   const arrival = transition ? `;${arrivalInitScript([entry.area])}` : '';
   const curtains = transition
     ? `    <div class="area-arrival" aria-hidden="true"></div>
-    <div class="area-departure" data-area="${escapeHtml(entry.area)}" role="status" hidden><span>${escapeHtml(ui.leaving)}</span></div>
+    <div class="area-departure" data-area="${escapeHtml(entry.area)}" aria-hidden="true" hidden><span>${escapeHtml(ui.leaving)}</span></div>
+    <div class="area-departure-status" role="status" aria-live="polite" aria-atomic="true"></div>
 `
     : '';
 

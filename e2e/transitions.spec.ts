@@ -66,11 +66,18 @@ const watchCurtain = (page: Page, selector: string) =>
   page.locator(selector).evaluate((curtain) => {
     new MutationObserver(() => {
       if ((curtain as HTMLElement).hidden) return;
+      const statusSelector =
+        selector === '#home-enter'
+          ? '#home-enter-status'
+          : selector === '.community-departure'
+            ? '.community-departure-status'
+            : '.area-departure-status';
+      const status = document.querySelector(statusSelector);
       sessionStorage.setItem(
         'teste:cortina',
         JSON.stringify({
-          role: curtain.getAttribute('role'),
-          text: curtain.textContent?.trim(),
+          role: status ? status.getAttribute('role') : curtain.getAttribute('role'),
+          text: (status?.textContent || curtain.textContent)?.trim(),
           color: getComputedStyle(curtain, '::before').backgroundColor,
         }),
       );

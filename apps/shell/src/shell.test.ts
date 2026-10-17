@@ -94,6 +94,16 @@ describe('documento de uma área', () => {
     expect(content.replace(' data-content', '')).toBe(construction);
   });
 
+  it('mantém região de status no DOM e cortina de partida como decorativa (WCAG 4.1.3)', () => {
+    const html = renderPage(recruiter, 'pt-BR', ui['pt-BR']);
+    expect(html).toContain(
+      `<div class="area-departure" data-area="recruiter" aria-hidden="true" hidden><span>${ui['pt-BR'].leaving}</span></div>`,
+    );
+    expect(html).toContain(
+      '<div class="area-departure-status" role="status" aria-live="polite" aria-atomic="true"></div>',
+    );
+  });
+
   it('põe a pausa do cenário no grupo do canto, antes das bandeiras', () => {
     const html = renderPage(recruiter, 'es', ui.es);
     const pause = html.indexOf(`<input type="checkbox" aria-label="${ui.es.pauseMotion}" />`);

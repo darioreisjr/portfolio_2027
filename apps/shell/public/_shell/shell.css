@@ -217,6 +217,19 @@ html[data-arrival] .area-arrival {
     backwards;
 }
 
+/* Aviso acessível no DOM para leitores de tela (WCAG 4.1.3). */
+.area-departure-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 @keyframes curtain-close {
   from {
     translate: var(--away-x) var(--away-y);
