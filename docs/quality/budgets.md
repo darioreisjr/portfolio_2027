@@ -34,7 +34,7 @@ Tamanho transferido (comprimido) de todo o JavaScript necessário para a rota fi
 | MFE Vue (`/recrutador`)           | 60 kB  | A doc do Vue cita cerca de 16 kB de base para custom elements; o resto é folga para a linha do tempo                           |
 | MFE React (`/clientes`)           | 105 kB | `react-dom` é o maior custo fixo (77,7 kB); a página soma marcação, estilo, textos e a `motion` mini. Era 80 kB até 2026-10-10 |
 | MFE Angular (`/tecnico`)          | 110 kB | Maior runtime dos três, e a área tem filtros e formulários                                                                     |
-| Página Next.js                    | 130 kB | React mais o runtime do Next.js; páginas de leitura, poucos Client Components                                                  |
+| Página Next.js                    | 140 kB | React mais o runtime do Next.js e interações da home (138,9 kB medidos). Era 130 kB até 2026-10-21 (decisão na issue #31)      |
 
 Total por rota:
 
@@ -50,6 +50,7 @@ Regras:
 - Nenhuma rota carrega o runtime de dois frameworks de MFE.
 - Dependência nova em um MFE precisa caber no teto da rota; se não couber, é carregada sob demanda ou não entra.
 - Aumentar um teto exige registrar o motivo neste arquivo.
+- **Subida do teto da parte Next.js autorizada pelo autor em 2026-10-21 (issue #31):** de 130 kB para 140 kB, para refletir o peso real medido do runtime do Next.js 16 + React 19 com as interações da home (138,9 kB medidos), mantendo o teto da rota em 150 kB.
 
 ### Linha de base medida no bootstrap (2026-10-06)
 

@@ -13,95 +13,133 @@ import { findRoute } from '../packages/contracts/dist/index.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = join(repoRoot, 'dist');
-const budgets = JSON.parse(readFileSync(join(repoRoot, 'docs/quality/budgets.json'), 'utf8'));
 
-if (!existsSync(distDir)) {
-  console.error('dist/ não existe. Rode "pnpm build && pnpm assemble" antes.');
-  process.exit(1);
-}
+export const gzipKb = (file) => gzipSync(readFileSync(file)).length / 1000;
 
-const gzipKb = (file) => gzipSync(readFileSync(file)).length / 1000;
-
-function scriptsIn(dir) {
+export function scriptsIn(dir) {
+  if (!existsSync(dir)) return [];
   return readdirSync(dir, { withFileTypes: true, recursive: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith('.js'))
     .map((entry) => join(entry.parentPath, entry.name));
 }
 
-const partSize = (dir) =>
-  scriptsIn(join(distDir, dir)).reduce((sum, file) => sum + gzipKb(file), 0);
-
-// O raio-x versionado guarda o que foi medido da última vez (ADR 0012): serve de
-// base para mostrar, no pull request, quanto cada parte e cada rota mudou.
-const xray = JSON.parse(readFileSync(join(repoRoot, 'packages/content/data/site.json'), 'utf8'));
-const baseline = new Map([
-  ...xray.parts.map((part) => [`parte ${part.name}`, part.jsKb]),
-  ...xray.areas.map((area) => [`rota ${area.path}`, area.jsKb]),
-]);
-
-const failures = [];
-const rows = [];
-const check = (label, sizeKb, maxKb) => {
-  rows.push({ medido: label, 'kB (gzip)': sizeKb.toFixed(1), teto: maxKb, ok: sizeKb <= maxKb });
-  if (sizeKb > maxKb)
-    failures.push(`${label}: ${sizeKb.toFixed(1)} kB passa do teto de ${maxKb} kB`);
-};
-
-for (const [name, { dir, maxKb }] of Object.entries(budgets.parts)) {
-  check(`parte ${name}`, partSize(dir), maxKb);
+/** Extrai scripts do HTML ignorando nomodule, com filtro opcional de prefixo. */
+export function extractHtmlScripts(html, prefix = '') {
+  return [...html.matchAll(/<script[^>]+src="(\/[^"]+\.js)"[^>]*>/g)]
+    .filter((match) => !/\snomodule/i.test(match[0]))
+    .map((match) => match[1])
+    .filter((src) => !prefix || src.startsWith(prefix));
 }
 
-// JavaScript de uma rota: os scripts do HTML dela e, nas áreas do shell, o MFE.
-for (const [route, maxKb] of Object.entries(budgets.routes)) {
+/** Mede o tamanho em kB (gzip) de uma parte (MFE, shell, design system ou Next.js). */
+export function partSize(distDir, name, config) {
+  if (config.dir === '_next' || name === 'web-next') {
+    // Next.js: mede os scripts da página gerados pelo Next.js (sem design system nem nomodule).
+    const nextRoutes = ['/', '/comunidade/', '/como-foi-feito/'];
+    let max = 0;
+    for (const route of nextRoutes) {
+      const htmlFile = join(distDir, route, 'index.html');
+      if (!existsSync(htmlFile)) continue;
+      const html = readFileSync(htmlFile, 'utf8');
+      const scripts = extractHtmlScripts(html, '/_next/');
+      const size = [...new Set(scripts)].reduce((sum, src) => sum + gzipKb(join(distDir, src)), 0);
+      if (size > max) max = size;
+    }
+    return max;
+  }
+  return scriptsIn(join(distDir, config.dir)).reduce((sum, file) => sum + gzipKb(file), 0);
+}
+
+/** Mede o total de JavaScript de uma rota no dist/. */
+export function routeSize(distDir, route) {
   const html = readFileSync(join(distDir, route, 'index.html'), 'utf8');
-  // Scripts `nomodule` são polyfills que navegadores atuais não baixam.
-  const fromHtml = [...html.matchAll(/<script[^>]+src="(\/[^"]+\.js)"[^>]*>/g)]
-    .filter((match) => !/\snomodule/i.test(match[0]))
-    .map((match) => match[1]);
+  const fromHtml = extractHtmlScripts(html);
   let total = [...new Set(fromHtml)].reduce((sum, src) => sum + gzipKb(join(distDir, src)), 0);
 
   const mfeScript = findRoute(route)?.entry.mfe?.script;
-  if (mfeScript) total += partSize(dirname(mfeScript));
-
-  check(`rota ${route}`, total, maxKb);
-}
-
-// Regra 6 do AGENTS.md: MFEs não empacotam o Lit nem o design system.
-for (const file of scriptsIn(join(distDir, '_mfe'))) {
-  if (readFileSync(file, 'utf8').includes('lit$')) {
-    failures.push(
-      `${file.slice(distDir.length + 1)}: contém o Lit; MFEs não empacotam o design system`,
+  if (mfeScript) {
+    total += scriptsIn(join(distDir, dirname(mfeScript))).reduce(
+      (sum, file) => sum + gzipKb(file),
+      0,
     );
   }
+  return total;
 }
 
-console.table(rows);
-
-// `BUDGETS_SUMMARY=<arquivo>` grava a mesma tabela em Markdown, com a diferença
-// para o raio-x. O CI a publica no comentário do pull request.
-if (process.env.BUDGETS_SUMMARY) {
-  const delta = (row) => {
-    const before = baseline.get(row.medido);
-    if (before === undefined) return 'novo';
-    const change = Number(row['kB (gzip)']) - before;
-    return Math.abs(change) < 0.05
-      ? '='
-      : `${change > 0 ? '+' : '−'}${Math.abs(change).toFixed(1)}`;
+export function runBudgetChecks(distDir, budgets) {
+  const failures = [];
+  const rows = [];
+  const check = (label, sizeKb, maxKb) => {
+    rows.push({ medido: label, 'kB (gzip)': sizeKb.toFixed(1), teto: maxKb, ok: sizeKb <= maxKb });
+    if (sizeKb > maxKb)
+      failures.push(`${label}: ${sizeKb.toFixed(1)} kB passa do teto de ${maxKb} kB`);
   };
-  const lines = [
-    '| Medido | kB (gzip) | Mudou | Teto | |',
-    '| --- | ---: | ---: | ---: | --- |',
-    ...rows.map(
-      (row) =>
-        `| ${row.medido} | ${row['kB (gzip)']} | ${delta(row)} | ${row.teto} | ${row.ok ? '✅' : '❌'} |`,
-    ),
-    '',
-    `"Mudou" compara com o raio-x versionado, medido em ${xray.measuredAt}.`,
-  ];
-  writeFileSync(process.env.BUDGETS_SUMMARY, `${lines.join('\n')}\n`);
+
+  for (const [name, config] of Object.entries(budgets.parts)) {
+    check(`parte ${name}`, partSize(distDir, name, config), config.maxKb);
+  }
+
+  for (const [route, maxKb] of Object.entries(budgets.routes)) {
+    check(`rota ${route}`, routeSize(distDir, route), maxKb);
+  }
+
+  for (const file of scriptsIn(join(distDir, '_mfe'))) {
+    if (readFileSync(file, 'utf8').includes('lit$')) {
+      failures.push(
+        `${file.slice(distDir.length + 1)}: contém o Lit; MFEs não empacotam o design system`,
+      );
+    }
+  }
+
+  return { failures, rows };
 }
-if (failures.length > 0) {
-  console.error(`\nOrçamento estourado:\n- ${failures.join('\n- ')}`);
-  process.exit(1);
+
+function main() {
+  if (!existsSync(distDir)) {
+    console.error('dist/ não existe. Rode "pnpm build && pnpm assemble" antes.');
+    process.exit(1);
+  }
+
+  const budgets = JSON.parse(readFileSync(join(repoRoot, 'docs/quality/budgets.json'), 'utf8'));
+  const xray = JSON.parse(readFileSync(join(repoRoot, 'packages/content/data/site.json'), 'utf8'));
+  const baseline = new Map([
+    ...xray.parts.map((part) => [`parte ${part.name}`, part.jsKb]),
+    ...xray.areas.map((area) => [`rota ${area.path}`, area.jsKb]),
+  ]);
+
+  const { failures, rows } = runBudgetChecks(distDir, budgets);
+
+  console.table(rows);
+
+  if (process.env.BUDGETS_SUMMARY) {
+    const delta = (row) => {
+      const before = baseline.get(row.medido);
+      if (before === undefined) return 'novo';
+      const change = Number(row['kB (gzip)']) - before;
+      return Math.abs(change) < 0.05
+        ? '='
+        : `${change > 0 ? '+' : '−'}${Math.abs(change).toFixed(1)}`;
+    };
+    const lines = [
+      '| Medido | kB (gzip) | Mudou | Teto | |',
+      '| --- | ---: | ---: | ---: | --- |',
+      ...rows.map(
+        (row) =>
+          `| ${row.medido} | ${row['kB (gzip)']} | ${delta(row)} | ${row.teto} | ${row.ok ? '✅' : '❌'} |`,
+      ),
+      '',
+      `"Mudou" compara com o raio-x versionado, medido em ${xray.measuredAt}.`,
+    ];
+    writeFileSync(process.env.BUDGETS_SUMMARY, `${lines.join('\n')}\n`);
+  }
+
+  if (failures.length > 0) {
+    console.error(`\nOrçamento estourado:\n- ${failures.join('\n- ')}`);
+    process.exit(1);
+  }
+  console.log('Orçamentos de JavaScript respeitados.');
 }
-console.log('Orçamentos de JavaScript respeitados.');
+
+if (import.meta.main) {
+  main();
+}
