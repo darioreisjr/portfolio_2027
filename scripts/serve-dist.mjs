@@ -20,6 +20,9 @@ const contentTypes = {
   '.txt': 'text/plain; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
+  '.png': 'image/png',
+  '.webp': 'image/webp',
+  '.avif': 'image/avif',
   '.woff2': 'font/woff2',
   '.mp3': 'audio/mpeg',
 };

@@ -26,6 +26,7 @@ const content = loadContent(dataDir, {
 });
 const { ui, home, recruiter, recruiterUi, tech, techUi, site, client, clientUi } = content;
 const profile = includeDrafts || HOME_IDENTITY ? content.profile : null;
+const contacts = includeDrafts || HOME_IDENTITY ? content.contacts : [];
 const { community, communityUi } = content;
 
 const modules = {
@@ -47,9 +48,12 @@ const modules = {
   },
   profile: {
     value: profile,
+    extra: { contacts },
     types: [
-      "import type { Profile } from '../schemas.js';",
+      "import type { Contact, Profile } from '../schemas.js';",
+      'export type { Contact, Profile };',
       'export declare const profile: Readonly<Profile> | null;',
+      'export declare const contacts: Readonly<Contact[]>;',
     ],
   },
   // Dois exports no mesmo módulo: o conteúdo da área e os textos de interface dela.

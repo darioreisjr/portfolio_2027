@@ -151,3 +151,9 @@ export function hreflangAlternates(area: AreaId): HreflangAlternate[] {
     },
   ];
 }
+
+/** Imagem de compartilhamento padrão para Open Graph (1200x630). */
+export const OG_IMAGE_PATH = '/_home/og-image.png';
+export const OG_IMAGE_URL = `${PRODUCTION_ORIGIN}${OG_IMAGE_PATH}`;
+export const OG_IMAGE_WIDTH = 1200;
+export const OG_IMAGE_HEIGHT = 630;
