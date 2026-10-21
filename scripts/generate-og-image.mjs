@@ -311,7 +311,7 @@ const html = `<!doctype html>
 
     <div class="footer">
       <span class="footer-icon"></span>
-      <span>2027.darioreis.dev</span>
+      <span>darioreis.dev</span>
     </div>
   </div>
 

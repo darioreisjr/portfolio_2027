@@ -58,6 +58,10 @@ O ADR 0014 troca os gatilhos e os ambientes. O portão não muda: só é publica
 - O `dist/vercel.json` ganha a regra que esconde dos buscadores todo endereço que não seja o de produção.
 - A CLI da Vercel passa a ter versão fixa.
 
+## Emenda de 2026-10-21
+
+A geração dinâmica de `dist/vercel.json` por `scripts/assemble.mjs` passa a inspecionar todos os arquivos `.html` gerados na montagem, calcular os hashes SHA-256 de todos os scripts inline executáveis (desconsiderando dados `type="application/ld+json"` e scripts externos com `src`), e publicar uma diretiva `Content-Security-Policy` restritiva sem `'unsafe-inline'` em `script-src` nos `SECURITY_HEADERS` de todas as respostas (issue #47, pendência B14). O servidor de prévia local (`scripts/serve-dist.mjs`) também aplica estes cabeçalhos.
+
 ## Fontes
 
 - [Vercel CLI Overview](https://vercel.com/docs/cli)

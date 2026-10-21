@@ -22,14 +22,15 @@ As correções automáticas do Dependabot estão **desligadas de propósito**: e
 
 O `vercel.json` gerado por `scripts/assemble.mjs` (`SECURITY_HEADERS`) põe em toda resposta:
 
-| Cabeçalho                | Valor                                      | Para quê                                                              |
-| ------------------------ | ------------------------------------------ | --------------------------------------------------------------------- |
-| `X-Frame-Options`        | `DENY`                                     | Ninguém põe o site numa moldura de outro (clickjacking)               |
-| `X-Content-Type-Options` | `nosniff`                                  | O navegador não adivinha o tipo de um arquivo                         |
-| `Referrer-Policy`        | `strict-origin-when-cross-origin`          | Outros sites não recebem o endereço completo de onde veio o visitante |
-| `Permissions-Policy`     | `camera=(), microphone=(), geolocation=()` | A página não pede câmera, microfone nem localização                   |
+| Cabeçalho                 | Valor                                                                                   | Para quê                                                                               |
+| ------------------------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `X-Frame-Options`         | `DENY`                                                                                  | Ninguém põe o site numa moldura de outro (clickjacking)                                |
+| `X-Content-Type-Options`  | `nosniff`                                                                               | O navegador não adivinha o tipo de um arquivo                                          |
+| `Referrer-Policy`         | `strict-origin-when-cross-origin`                                                       | Outros sites não recebem o endereço completo de onde veio o visitante                  |
+| `Permissions-Policy`      | `camera=(), microphone=(), geolocation=()`                                              | A página não pede câmera, microfone nem localização                                    |
+| `Content-Security-Policy` | `default-src 'self'; script-src 'self' <hashes>; style-src 'self' 'unsafe-inline'; ...` | Apenas scripts próprios e os hashes exatos compilados executam (sem `'unsafe-inline'`) |
 
-Falta a `Content-Security-Policy` (issue #47, pendência B14): exige hash de cada script inline, inclusive os que o Next.js gera.
+A `Content-Security-Policy` foi entregue na issue #47 (pendência B14): `scripts/assemble.mjs` calcula os hashes SHA-256 de cada script inline gerado e monta a política automaticamente.
 
 ## Pipeline
 
@@ -104,3 +105,4 @@ O mesmo fluxo de qualquer tarefa (skill `commits`):
 | 2026-10-15 | 8 × `js/bad-code-sanitization` (média)                                            | Scripts inline do tema, da chegada e da volta da comunidade com valores por `JSON.stringify`  | `scriptValue` em `packages/contracts` (issue #46)                                                                                                                                                                                                                                  |
 | 2026-10-15 | Revisão do `security-reviewer`: token da Vercel no job inteiro (alta) e 15 outros | Ver issue #46                                                                                 | Token só no passo de deploy, `persist-credentials: false`, cabeçalhos, republicação só de versão que está na `production`, checagens com origem fixa, caminho do currículo validado, atributos do shell escapados, servidor local só na máquina, MCP do Playwright com versão fixa |
 | 2026-10-15 | 2 × `js/regex/missing-regexp-anchor` (alta), em `scripts/release.test.mjs`        | Apareceram com o conjunto ampliado do CodeQL: o teste conferia endereços com regex sem âncora | Comparação da linha inteira por igualdade                                                                                                                                                                                                                                          |
+| 2026-10-21 | Ausência de Content-Security-Policy (pendência B14)                               | Scripts inline gerados no build sem política de segurança configurada                         | Hashes SHA-256 de scripts inline calculados no assemble e CSP restritiva em SECURITY_HEADERS (issue #47)                                                                                                                                                                           |

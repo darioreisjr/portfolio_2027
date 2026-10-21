@@ -127,7 +127,7 @@ Cada item abaixo é cobrado no CI. Se um falha, o site não é publicado.
 - **Peso de JavaScript por rota:** teto de 90 kB em `/recrutador`, 135 kB em `/clientes`, 140 kB em `/tecnico` e 150 kB nas páginas Next.js (comprimido).
 - **Velocidade:** LCP de até 2,5 s (2,7 s na home), medido pelo Lighthouse CI.
 - **Acessibilidade:** WCAG AA. Toda página passa pelo axe nos temas claro e escuro, funciona pelo teclado e respeita o pedido de menos movimento.
-- **Testes:** unitários por pacote e mais de 260 testes de ponta a ponta atravessando os apps.
+- **Testes:** unitários por pacote e mais de 290 testes de ponta a ponta atravessando os apps.
 
 Os limites e os números medidos estão em [`docs/quality/budgets.md`](docs/quality/budgets.md).
 
