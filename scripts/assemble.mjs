@@ -48,6 +48,7 @@ export const sources = [
 const REQUIRED = [
   'index.html',
   '404.html',
+  '_home/og-image.png',
   '_shell/shell.js',
   '_ds/ds.js',
   '_ds/tokens.css',

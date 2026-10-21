@@ -6,6 +6,10 @@ import {
   canonicalUrl,
   hreflangAlternates,
   languageAlternates,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_URL,
+  OG_IMAGE_WIDTH,
+  openGraphLocale,
   pathFor,
   personaFigure,
   THEME_INIT_SCRIPT,
@@ -99,6 +103,16 @@ export function renderPage(
     <meta name="description" content="${escapeHtml(area.description)}" />
     <link rel="canonical" href="${escapeHtml(canonical)}" />
     ${alternatesLinks}
+    <meta property="og:title" content="${escapeHtml(area.title)} | ${escapeHtml(ui.siteName)}" />
+    <meta property="og:description" content="${escapeHtml(area.description)}" />
+    <meta property="og:url" content="${escapeHtml(canonical)}" />
+    <meta property="og:site_name" content="${escapeHtml(ui.siteName)}" />
+    <meta property="og:locale" content="${escapeHtml(openGraphLocale(locale))}" />
+    <meta property="og:image" content="${escapeHtml(OG_IMAGE_URL)}" />
+    <meta property="og:image:width" content="${OG_IMAGE_WIDTH}" />
+    <meta property="og:image:height" content="${OG_IMAGE_HEIGHT}" />
+    <meta property="og:image:alt" content="${escapeHtml(ui.siteName)} - ${escapeHtml(area.title)}" />
+    <meta property="og:type" content="website" />
     <link rel="stylesheet" href="/_ds/tokens.css" />
     <link rel="stylesheet" href="/_ds/areas.css" />
     <link rel="stylesheet" href="/_shell/shell.css" />

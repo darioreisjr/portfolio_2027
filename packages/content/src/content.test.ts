@@ -103,6 +103,17 @@ describe('rascunhos', () => {
     const published = profileWith({ status: 'published' });
     expect(loadContent(published, { includeDrafts: false }).profile?.status).toBe('published');
   });
+
+  it('entrega contatos publicados em produção e inclui rascunhos em desenvolvimento', () => {
+    const prod = loadContent(dataDir, { includeDrafts: false });
+    const dev = loadContent(dataDir, { includeDrafts: true });
+    expect(
+      prod.contacts.every((c) => c.status === 'published' && !c.id.startsWith('exemplo-')),
+    ).toBe(true);
+    expect(prod.contacts.some((c) => c.kind === 'linkedin')).toBe(true);
+    expect(prod.contacts.some((c) => c.kind === 'github')).toBe(true);
+    expect(dev.contacts.length).toBeGreaterThanOrEqual(prod.contacts.length);
+  });
 });
 
 describe('validação', () => {

@@ -126,6 +126,70 @@ for (const { area, paths } of areas) {
 
       const alternateDefault = page.locator('link[rel="alternate"][hreflang="x-default"]');
       await expect(alternateDefault).toHaveAttribute('href', ptUrl);
+
+      // Confere tags Open Graph
+      const ogLocaleMap = { 'pt-BR': 'pt_BR', en: 'en_US', es: 'es_ES' };
+      const siteNameMap = { 'pt-BR': 'Portfólio', en: 'Portfolio', es: 'Portafolio' };
+      await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /.+/);
+      await expect(page.locator('meta[property="og:description"]')).toHaveAttribute(
+        'content',
+        /.+/,
+      );
+      await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+        'content',
+        expectedCanonical,
+      );
+      await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute(
+        'content',
+        siteNameMap[locale],
+      );
+      await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute(
+        'content',
+        ogLocaleMap[locale],
+      );
+      await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+        'content',
+        `${PRODUCTION_ORIGIN}/_home/og-image.png`,
+      );
+      await expect(page.locator('meta[property="og:image:width"]')).toHaveAttribute(
+        'content',
+        '1200',
+      );
+      await expect(page.locator('meta[property="og:image:height"]')).toHaveAttribute(
+        'content',
+        '630',
+      );
+      await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'website');
     }
   });
 }
+
+test('imagem de compartilhamento og-image.png responde 200 com tipo png', async ({ request }) => {
+  const response = await request.get('/_home/og-image.png');
+  expect(response.status()).toBe(200);
+  expect(response.headers()['content-type']).toContain('image/png');
+});
+
+test('home possui dados estruturados Person em JSON-LD nos três idiomas', async ({ page }) => {
+  const homePaths = ['/', '/en/', '/es/'] as const;
+
+  for (const path of homePaths) {
+    await page.goto(path);
+    const jsonLdLocator = page.locator('script[type="application/ld+json"]');
+    await expect(jsonLdLocator).toHaveCount(1);
+
+    const jsonLdText = await jsonLdLocator.textContent();
+    expect(jsonLdText).toBeTruthy();
+
+    const data = JSON.parse(jsonLdText ?? '{}');
+    expect(data['@context']).toBe('https://schema.org');
+    expect(data['@type']).toBe('Person');
+    expect(data.name).toBe('Dario Reis');
+    expect(data.jobTitle).toBe('Software Engineer');
+    expect(data.url).toBe(`${PRODUCTION_ORIGIN}${path}`);
+    expect(Array.isArray(data.sameAs)).toBe(true);
+    expect(data.sameAs).toContain('https://www.linkedin.com/in/darioreisjr/');
+    expect(data.sameAs).toContain('https://github.com/darioreisjr');
+    expect(data.description).toBeTruthy();
+  }
+});

@@ -29,3 +29,14 @@ export function languageAlternates(area: AreaId, current: Locale): LanguageAlter
     current: locale === current,
   }));
 }
+
+/** Formato de locale exigido pelo protocolo Open Graph (ex.: pt_BR, en_US, es_ES). */
+export const openGraphLocales: Record<Locale, string> = {
+  'pt-BR': 'pt_BR',
+  en: 'en_US',
+  es: 'es_ES',
+};
+
+export function openGraphLocale(locale: Locale): string {
+  return openGraphLocales[locale];
+}

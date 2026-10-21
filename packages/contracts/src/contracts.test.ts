@@ -13,6 +13,11 @@ import {
   personaFigure,
   PRODUCTION_HOST,
   PRODUCTION_ORIGIN,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_PATH,
+  OG_IMAGE_URL,
+  OG_IMAGE_WIDTH,
+  openGraphLocale,
   routes,
   routesOwnedBy,
 } from './index.js';
@@ -141,5 +146,18 @@ describe('seo e canonical', () => {
         );
       }
     }
+  });
+
+  it('converte locale para formato do protocolo Open Graph (pt_BR, en_US, es_ES)', () => {
+    expect(openGraphLocale('pt-BR')).toBe('pt_BR');
+    expect(openGraphLocale('en')).toBe('en_US');
+    expect(openGraphLocale('es')).toBe('es_ES');
+  });
+
+  it('exporta constantes da imagem de compartilhamento Open Graph', () => {
+    expect(OG_IMAGE_PATH).toBe('/_home/og-image.png');
+    expect(OG_IMAGE_URL).toBe('https://2027.darioreis.dev/_home/og-image.png');
+    expect(OG_IMAGE_WIDTH).toBe(1200);
+    expect(OG_IMAGE_HEIGHT).toBe(630);
   });
 });
