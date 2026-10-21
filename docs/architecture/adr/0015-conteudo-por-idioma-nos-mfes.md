@@ -1,6 +1,6 @@
 # ADR 0015: Conteúdo por idioma nos microfrontends
 
-- Status: **proposto**
+- Status: **aceito** pelo autor em 2026-10-21
 - Data: 2026-10-21
 
 ## Contexto

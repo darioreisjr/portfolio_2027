@@ -49,10 +49,15 @@ const areas = [
  * As cortinas da página da área. As três áreas de microfrontend usam as do
  * shell; a comunidade, que é página do Next.js, tem as próprias.
  */
-const curtainsOf = (area: string) =>
-  area === 'community'
-    ? { arrival: '.community-arrival', departure: '.community-departure' }
-    : { arrival: '.area-arrival', departure: '.area-departure' };
+const curtainsOf = (area: string) => {
+  if (area === 'community') {
+    return { arrival: '.community-arrival', departure: '.community-departure' };
+  }
+  if (area === 'how-it-was-built') {
+    return { arrival: '.built-arrival', departure: '.built-departure' };
+  }
+  return { arrival: '.area-arrival', departure: '.area-departure' };
+};
 
 test.use({ viewport: { width: 1280, height: 800 }, colorScheme: 'light' });
 
@@ -71,7 +76,9 @@ const watchCurtain = (page: Page, selector: string) =>
           ? document.getElementById('home-enter-status')
           : curtain.classList.contains('community-departure')
             ? document.querySelector('.community-departure-status')
-            : document.querySelector('.area-departure-status');
+            : curtain.classList.contains('built-departure')
+              ? document.querySelector('.built-departure-status')
+              : document.querySelector('.area-departure-status');
       sessionStorage.setItem(
         'teste:cortina',
         JSON.stringify({
@@ -281,13 +288,33 @@ test('pelo teclado o Enter passa pelas mesmas transições', async ({ page }) =>
   await expect(page.locator('html')).toHaveAttribute('data-arrival', 'recruiter');
 });
 
-test('a página sem transição continua voltando na hora', async ({ page }) => {
-  // "Como foi feito" ainda mostra a tela "em construção", sem cortina.
+test('em "como foi feito" o botão de volta fecha a cortina de blueprint e volta à home com a cortina abrindo', async ({
+  page,
+}) => {
   await page.goto('/como-foi-feito/');
-  await expect(page.locator('.area-arrival, .area-departure, .community-departure')).toHaveCount(0);
+  await watchCurtain(page, '.built-departure');
+  await page.getByRole('link', { name: 'Voltar à escolha de perfil' }).click();
+  await expect(page).toHaveURL(HOME);
+  expect(await curtainSeen(page)).toMatchObject({ text: 'Voltando...' });
+  await expect(page.locator('html')).toHaveAttribute('data-arrival', 'how-it-was-built');
+});
+
+test('em "como foi feito" com pausa a volta é na hora, sem cortina', async ({ page }) => {
+  await page.goto('/como-foi-feito/');
+  await page.getByRole('checkbox', { name: 'Pausar animação' }).check();
   await page.getByRole('link', { name: 'Voltar à escolha de perfil' }).click();
   await expect(page).toHaveURL(HOME);
   expect(await arrived(page)).toBeNull();
+});
+
+test('ao abrir "como foi feito" com marca recente a cortina de blueprint se desfaz', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.evaluate((key) => sessionStorage.setItem(key, `how-it-was-built:${Date.now()}`), KEY);
+  await page.goto('/como-foi-feito/');
+  await expect(page.locator('html')).toHaveAttribute('data-arrival', 'how-it-was-built');
+  await expect(page.locator('.built-arrival')).toBeVisible();
 });
 
 test('abrir direto, com marca velha ou de outra área, não mostra a chegada', async ({ page }) => {

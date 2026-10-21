@@ -13,6 +13,8 @@ import type {} from '@portfolio/design-system/react';
 import type { ReactNode } from 'react';
 import { buildCommunityPage } from '../../lib/community';
 import { COMMUNITY_LEAVE_SCRIPT } from '../../lib/community-leave';
+import { buildHowItWasBuiltPage } from '../../lib/how-it-was-built';
+import { HOW_IT_WAS_BUILT_LEAVE_SCRIPT } from '../../lib/how-it-was-built-leave';
 import { MUSIC_SLOT_ID } from '../../lib/music';
 import { resolvePage, type PageParams } from '../../lib/route';
 
@@ -36,6 +38,10 @@ export default async function RootLayout({
   // Só quando a comunidade tem página: a tela "em construção" não tem transição.
   if (area === 'community' && buildCommunityPage(locale)) {
     scripts.push(arrivalInitScript(['community']), COMMUNITY_LEAVE_SCRIPT);
+  }
+  // Só quando "Como foi feito" tem página: a tela "em construção" não tem transição.
+  if (area === 'how-it-was-built' && buildHowItWasBuiltPage(locale)) {
+    scripts.push(arrivalInitScript(['how-it-was-built']), HOW_IT_WAS_BUILT_LEAVE_SCRIPT);
   }
   const inlineScript = scripts.join(';');
 
