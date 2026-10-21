@@ -15,7 +15,7 @@ Quem chega escolhe um perfil na tela inicial, como quem escolhe um personagem em
 | Técnica        | Quem quer ver código e arquitetura   | `/tecnico`        | Angular    | No ar: raio-x real do site; estudos de caso de exemplo              |
 | Cliente        | Quem quer contratar um projeto       | `/clientes`       | React      | No ar, com dados de exemplo                                         |
 | Comunidade     | Quem veio aprender e trocar ideia    | `/comunidade`     | Next.js    | No ar: projetos de código aberto reais; artigos e canais de exemplo |
-| Como foi feito | Quem quer entender o site por dentro | `/como-foi-feito` | Next.js    | Em construção                                                       |
+| Como foi feito | Quem quer entender o site por dentro | `/como-foi-feito` | Next.js    | No ar: arquitetura, 15 ADRs e raio-x real do repositório            |
 
 O site existe em português do Brasil (sem prefixo), inglês (`/en`) e espanhol (`/es`), com as rotas traduzidas: `/recrutador`, `/en/recruiter`, `/es/reclutador`.
 
