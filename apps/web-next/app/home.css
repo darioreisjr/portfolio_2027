@@ -276,6 +276,7 @@ li[data-selected] > .persona::before {
   color: var(--color-text);
   font-size: var(--text-size-lg);
   font-weight: var(--text-weight-strong);
+  transition: opacity var(--motion-duration-md) var(--motion-ease-out);
 }
 
 /* Painel do personagem escolhido, em estilo menu de RPG: a descrição em uma
@@ -584,24 +585,10 @@ li[data-selected] > .persona::before {
   }
 }
 
-/* Com mouse a tela fica limpa: a frase só aparece em quem está sob o ponteiro,
-   em foco ou escolhido. Sem mouse (tablet) ela fica sempre visível, senão a
-   pessoa teria de tocar às cegas. */
-@media (min-width: 48rem) and (hover: hover) {
-  .persona:hover {
-    --active: 1;
-  }
-
-  .persona-phrase {
-    opacity: var(--active);
-    transition: opacity var(--motion-duration-md) var(--motion-ease-out);
-  }
-}
-
-/* Com um personagem apontado, os outros três escurecem e recuam: a impressão é
-   de que ele está sendo escolhido. Vale para o foco de teclado em tela larga e,
-   onde há mouse, para o ponteiro. Escurece a figura, não o link: a área de
-   clique e o som de passar o mouse não mudam. */
+/* As quatro frases ficam visíveis sem hover (issue #36). Ao apontar um personagem
+   ou focar pelo teclado, os outros três escurecem, recuam e suas frases esmaecem:
+   a impressão é de que ele está sendo escolhido. Vale para o foco de teclado em
+   tela larga e, onde há mouse, para o ponteiro. */
 @media (min-width: 48rem) {
   .personas:not([data-selected]):has(.persona:focus-visible)
     > li:not(:has(.persona:focus-visible))
@@ -609,9 +596,19 @@ li[data-selected] > .persona::before {
     filter: brightness(0.45);
     scale: 0.94;
   }
+
+  .personas:not([data-selected]):has(.persona:focus-visible)
+    > li:not(:has(.persona:focus-visible))
+    .persona-phrase {
+    opacity: 0.5;
+  }
 }
 
 @media (min-width: 48rem) and (hover: hover) {
+  .persona:hover {
+    --active: 1;
+  }
+
   /* Os dois estados vão em lista, sem `:is()`: com `:has(.persona:is(:hover, …))`
      o WebKit não refaz o estilo dos outros três quando o ponteiro entra. */
   .personas:not([data-selected]):has(.persona:hover, .persona:focus-visible)
@@ -619,6 +616,12 @@ li[data-selected] > .persona::before {
     .persona-figure {
     filter: brightness(0.45);
     scale: 0.94;
+  }
+
+  .personas:not([data-selected]):has(.persona:hover, .persona:focus-visible)
+    > li:not(:has(.persona:hover, .persona:focus-visible))
+    .persona-phrase {
+    opacity: 0.5;
   }
 }
 
