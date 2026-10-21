@@ -553,6 +553,29 @@ test.describe('home no celular (carrossel)', () => {
     await enter(page).tap();
     await expect(page).toHaveURL(/\/tecnico\/$/);
   });
+
+  test('tocar no pedaço visível do vizinho centraliza e escolhe o personagem por inteiro', async ({
+    page,
+  }) => {
+    await openHome(page);
+    const second = personas(page).nth(1);
+
+    // No início, apenas uma fatia do segundo personagem está visível na lateral.
+    await expect(second).not.toBeInViewport({ ratio: 0.5 });
+
+    // Toca no pedaço visível do vizinho (coordenada dentro da área visível à direita).
+    await page.touchscreen.tap(370, 300);
+
+    // O personagem vizinho é centralizado e fica inteiro na tela, com o painel aberto.
+    await expectSelected(page, 1);
+    await expect(second).toBeInViewport({ ratio: 0.9 });
+    await expectAccessible(page);
+
+    // Ao voltar, o carrossel continua posicionado nele.
+    await back(page).tap();
+    await expectNoneSelected(page);
+    await expect(second).toBeInViewport({ ratio: 0.9 });
+  });
 });
 
 // ---------------------------------------------------------------------------
