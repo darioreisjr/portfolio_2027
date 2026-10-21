@@ -142,6 +142,29 @@ test.describe('visita com o som lembrado', () => {
     expect(audio.count()).toBeGreaterThan(0);
   });
 
+  test('navegar pelo teclado não liga a música sozinho (WCAG 1.4.2)', async ({ page }) => {
+    await watchAudio(page);
+    await openHome(page);
+
+    await expect(music(page)).toHaveAttribute('aria-pressed', 'false');
+    expect(await playing(page)).toBe(false);
+
+    // Navega pelo teclado: o áudio não pode tocar por cima de leitor de tela.
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('ArrowLeft');
+
+    await expect(music(page)).toHaveAttribute('aria-pressed', 'false');
+    expect(await playing(page)).toBe(false);
+
+    // Mas ao acionar intencionalmente o botão de som pelo teclado, ele liga.
+    await music(page).focus();
+    await page.keyboard.press('Enter');
+    await expect(music(page)).toHaveAttribute('aria-pressed', 'true');
+    await expect.poll(() => playing(page)).toBe(true);
+  });
+
   test('clicar no botão liga; clicar de novo desliga e esquece a escolha', async ({ page }) => {
     await watchAudio(page);
     await openHome(page);
