@@ -9,6 +9,14 @@
       "types": "./dist/data/ui.d.ts",
       "default": "./dist/data/ui.js"
     },
+    "./ui/pt-br": {
+      "types": "./dist/data/ui/pt-BR.d.ts",
+      "default": "./dist/data/ui/pt-BR.js"
+    },
+    "./ui/*": {
+      "types": "./dist/data/ui/*.d.ts",
+      "default": "./dist/data/ui/*.js"
+    },
     "./home": {
       "types": "./dist/data/home.d.ts",
       "default": "./dist/data/home.js"
@@ -21,13 +29,37 @@
       "types": "./dist/data/recruiter.d.ts",
       "default": "./dist/data/recruiter.js"
     },
+    "./recruiter/pt-br": {
+      "types": "./dist/data/recruiter/pt-BR.d.ts",
+      "default": "./dist/data/recruiter/pt-BR.js"
+    },
+    "./recruiter/*": {
+      "types": "./dist/data/recruiter/*.d.ts",
+      "default": "./dist/data/recruiter/*.js"
+    },
     "./tech": {
       "types": "./dist/data/tech.d.ts",
       "default": "./dist/data/tech.js"
     },
+    "./tech/pt-br": {
+      "types": "./dist/data/tech/pt-BR.d.ts",
+      "default": "./dist/data/tech/pt-BR.js"
+    },
+    "./tech/*": {
+      "types": "./dist/data/tech/*.d.ts",
+      "default": "./dist/data/tech/*.js"
+    },
     "./client": {
       "types": "./dist/data/client.d.ts",
       "default": "./dist/data/client.js"
+    },
+    "./client/pt-br": {
+      "types": "./dist/data/client/pt-BR.d.ts",
+      "default": "./dist/data/client/pt-BR.js"
+    },
+    "./client/*": {
+      "types": "./dist/data/client/*.d.ts",
+      "default": "./dist/data/client/*.js"
     },
     "./community": {
       "types": "./dist/data/community.d.ts",

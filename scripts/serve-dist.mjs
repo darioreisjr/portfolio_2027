@@ -4,7 +4,7 @@
 //
 //   node scripts/serve-dist.mjs [porta]
 
-import { createReadStream, existsSync, statSync } from 'node:fs';
+import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { dirname, extname, join, normalize, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -20,6 +20,9 @@ const contentTypes = {
   '.txt': 'text/plain; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
+  '.png': 'image/png',
+  '.webp': 'image/webp',
+  '.avif': 'image/avif',
   '.woff2': 'font/woff2',
   '.mp3': 'audio/mpeg',
 };
@@ -45,11 +48,32 @@ if (!existsSync(distDir)) {
   process.exit(1);
 }
 
+// Aplica os cabeçalhos de segurança globais definidos em vercel.json (issue #47)
+let vercelHeaders = [];
+const vercelJsonPath = join(distDir, 'vercel.json');
+if (existsSync(vercelJsonPath)) {
+  try {
+    const config = JSON.parse(readFileSync(vercelJsonPath, 'utf8'));
+    if (Array.isArray(config.headers)) {
+      const globalRule = config.headers.find((rule) => rule.source === '/(.*)' && !rule.missing);
+      if (globalRule?.headers) {
+        vercelHeaders = globalRule.headers;
+      }
+    }
+  } catch {
+    // segue sem cabeçalhos adicionais caso o arquivo não seja legível
+  }
+}
+
 createServer((request, response) => {
   const { pathname } = new URL(request.url ?? '/', 'http://localhost');
   const file = resolveFile(pathname);
   const target = file ?? join(distDir, '404.html');
   const type = contentTypes[extname(target)] ?? 'application/octet-stream';
+
+  for (const { key, value } of vercelHeaders) {
+    response.setHeader(key, value);
+  }
 
   // Navegadores pedem mídia em pedaços (o Safari exige): atende um intervalo só.
   const range = file && /^bytes=(\d*)-(\d*)$/.exec(request.headers.range ?? '');

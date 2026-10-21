@@ -217,20 +217,20 @@ test.describe('home em tela larga (palco)', () => {
   const REST = 'none 1';
   const LIFTED = 'none 1.12';
 
-  test('em repouso não há texto; a frase aparece só no personagem sob o mouse', async ({
+  test('em repouso as quatro frases ficam visíveis; ao apontar um, os outros esmaecem', async ({
     page,
   }) => {
     await openHome(page);
     const [first, second] = [personas(page).nth(0), personas(page).nth(1)];
 
     for (const persona of await personas(page).all()) {
-      await expect(phrase(persona)).toHaveCSS('opacity', '0');
+      await expect(phrase(persona)).toHaveCSS('opacity', '1');
     }
     expect(await figureLook(page)).toEqual([REST, REST, REST, REST]);
 
     await second.hover();
     await expect(phrase(second)).toHaveCSS('opacity', '1');
-    await expect(phrase(first)).toHaveCSS('opacity', '0');
+    await expect(phrase(first)).toHaveCSS('opacity', '0.5');
     // E nada aparece abaixo do personagem.
     await expect(page.locator('.persona-actions:visible')).toHaveCount(0);
   });
@@ -552,6 +552,29 @@ test.describe('home no celular (carrossel)', () => {
     await second.tap();
     await enter(page).tap();
     await expect(page).toHaveURL(/\/tecnico\/$/);
+  });
+
+  test('tocar no pedaço visível do vizinho centraliza e escolhe o personagem por inteiro', async ({
+    page,
+  }) => {
+    await openHome(page);
+    const second = personas(page).nth(1);
+
+    // No início, apenas uma fatia do segundo personagem está visível na lateral.
+    await expect(second).not.toBeInViewport({ ratio: 0.5 });
+
+    // Toca no pedaço visível do vizinho (coordenada dentro da área visível à direita).
+    await page.touchscreen.tap(370, 300);
+
+    // O personagem vizinho é centralizado e fica inteiro na tela, com o painel aberto.
+    await expectSelected(page, 1);
+    await expect(second).toBeInViewport({ ratio: 0.9 });
+    await expectAccessible(page);
+
+    // Ao voltar, o carrossel continua posicionado nele.
+    await back(page).tap();
+    await expectNoneSelected(page);
+    await expect(second).toBeInViewport({ ratio: 0.9 });
   });
 });
 

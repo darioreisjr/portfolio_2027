@@ -2,6 +2,7 @@
 // Roda depois do tsc, porque usa o validador já compilado em dist/.
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { locales } from '@portfolio/contracts';
 import { loadContent } from '../dist/load.js';
 
 const dataDir = fileURLToPath(new URL('../data', import.meta.url));
@@ -26,6 +27,7 @@ const content = loadContent(dataDir, {
 });
 const { ui, home, recruiter, recruiterUi, tech, techUi, site, client, clientUi } = content;
 const profile = includeDrafts || HOME_IDENTITY ? content.profile : null;
+const contacts = includeDrafts || HOME_IDENTITY ? content.contacts : [];
 const { community, communityUi } = content;
 
 const modules = {
@@ -47,9 +49,12 @@ const modules = {
   },
   profile: {
     value: profile,
+    extra: { contacts },
     types: [
-      "import type { Profile } from '../schemas.js';",
+      "import type { Contact, Profile } from '../schemas.js';",
+      'export type { Contact, Profile };',
       'export declare const profile: Readonly<Profile> | null;',
+      'export declare const contacts: Readonly<Contact[]>;',
     ],
   },
   // Dois exports no mesmo módulo: o conteúdo da área e os textos de interface dela.
@@ -123,6 +128,80 @@ for (const [name, { value, types, extra = {} }] of Object.entries(modules)) {
     .join('');
   writeFileSync(`${outDir}/${name}.js`, source);
   writeFileSync(`${outDir}/${name}.d.ts`, `${types.join('\n')}\n`);
+}
+
+// Submódulos por idioma (Issue #32): cada MFE pode importar só o idioma da página,
+// reduzindo o JavaScript transferido sem custo no LCP.
+const localeSubmodules = {
+  recruiter: (loc) => ({
+    dir: 'recruiter',
+    entries: {
+      recruiter: recruiter ? recruiter[loc] : null,
+      recruiterUi: recruiterUi[loc],
+    },
+    types: [
+      "import type { RecruiterContent } from '../../recruiter.js';",
+      "import type { RecruiterUi } from '../../schemas.js';",
+      'export type { RecruiterContent, RecruiterUi };',
+      'export declare const recruiter: Readonly<RecruiterContent> | null;',
+      'export declare const recruiterUi: Readonly<RecruiterUi>;',
+    ],
+  }),
+  tech: (loc) => ({
+    dir: 'tech',
+    entries: {
+      tech: tech ? tech[loc] : null,
+      techUi: techUi[loc],
+      site,
+    },
+    types: [
+      "import type { Site, TechUi } from '../../schemas.js';",
+      "import type { TechContent } from '../../tech.js';",
+      'export type { Site, TechContent, TechUi };',
+      'export declare const tech: Readonly<TechContent> | null;',
+      'export declare const techUi: Readonly<TechUi>;',
+      'export declare const site: Readonly<Site>;',
+    ],
+  }),
+  client: (loc) => ({
+    dir: 'client',
+    entries: {
+      client: client ? client[loc] : null,
+      clientUi: clientUi[loc],
+    },
+    types: [
+      "import type { ClientContent } from '../../client.js';",
+      "import type { ClientUi } from '../../schemas.js';",
+      'export type { ClientContent, ClientUi };',
+      'export declare const client: Readonly<ClientContent> | null;',
+      'export declare const clientUi: Readonly<ClientUi>;',
+    ],
+  }),
+  ui: (loc) => ({
+    dir: 'ui',
+    entries: {
+      ui: ui[loc],
+    },
+    types: [
+      "import type { Ui } from '../../schemas.js';",
+      'export type { Ui };',
+      'export declare const ui: Readonly<Ui>;',
+    ],
+  }),
+};
+
+for (const factory of Object.values(localeSubmodules)) {
+  for (const locale of locales) {
+    const { dir, entries, types } = factory(locale);
+    const subDir = `${outDir}/${dir}`;
+    mkdirSync(subDir, { recursive: true });
+
+    const source = Object.entries(entries)
+      .map(([key, entry]) => `export const ${key} = ${JSON.stringify(entry, null, 2)};\n`)
+      .join('');
+    writeFileSync(`${subDir}/${locale}.js`, source);
+    writeFileSync(`${subDir}/${locale}.d.ts`, `${types.join('\n')}\n`);
+  }
 }
 
 console.log(`Conteúdo validado (${includeDrafts ? 'com' : 'sem'} rascunhos).`);

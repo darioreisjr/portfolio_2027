@@ -7,12 +7,18 @@ import {
   hreflangAlternates,
   languageAlternates,
   locales,
+  mfeScript,
   onMfeReady,
   pathFor,
   personaAreas,
   personaFigure,
   PRODUCTION_HOST,
   PRODUCTION_ORIGIN,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_PATH,
+  OG_IMAGE_URL,
+  OG_IMAGE_WIDTH,
+  openGraphLocale,
   routes,
   routesOwnedBy,
 } from './index.js';
@@ -50,6 +56,24 @@ describe('tabela de rotas', () => {
     });
     expect(findRoute('/tecnico/')).toMatchObject({ locale: 'pt-BR', entry: { area: 'tech' } });
     expect(findRoute('/nao-existe/')).toBeUndefined();
+  });
+
+  it('resolve o script do MFE injetando o idioma ativo quando parametrizado', () => {
+    const recruiter = routes.find((r) => r.area === 'recruiter');
+    expect(recruiter?.mfe).toBeDefined();
+    if (recruiter?.mfe) {
+      expect(mfeScript(recruiter.mfe, 'pt-BR')).toBe('/_mfe/vue/pt-br/mfe.js');
+      expect(mfeScript(recruiter.mfe, 'en')).toBe('/_mfe/vue/en/mfe.js');
+      expect(mfeScript(recruiter.mfe, 'es')).toBe('/_mfe/vue/es/mfe.js');
+    }
+    const tech = routes.find((r) => r.area === 'tech');
+    if (tech?.mfe) {
+      expect(mfeScript(tech.mfe, 'pt-BR')).toBe('/_mfe/angular/pt-br/main.js');
+    }
+    const client = routes.find((r) => r.area === 'client');
+    if (client?.mfe) {
+      expect(mfeScript(client.mfe, 'pt-BR')).toBe('/_mfe/react/pt-br/mfe.js');
+    }
   });
 });
 
@@ -141,5 +165,18 @@ describe('seo e canonical', () => {
         );
       }
     }
+  });
+
+  it('converte locale para formato do protocolo Open Graph (pt_BR, en_US, es_ES)', () => {
+    expect(openGraphLocale('pt-BR')).toBe('pt_BR');
+    expect(openGraphLocale('en')).toBe('en_US');
+    expect(openGraphLocale('es')).toBe('es_ES');
+  });
+
+  it('exporta constantes da imagem de compartilhamento Open Graph', () => {
+    expect(OG_IMAGE_PATH).toBe('/_home/og-image.png');
+    expect(OG_IMAGE_URL).toBe('https://2027.darioreis.dev/_home/og-image.png');
+    expect(OG_IMAGE_WIDTH).toBe(1200);
+    expect(OG_IMAGE_HEIGHT).toBe(630);
   });
 });

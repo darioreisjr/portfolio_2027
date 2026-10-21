@@ -146,6 +146,30 @@ describe('documento de uma área', () => {
     );
   });
 
+  it('inclui tags Open Graph completas com imagem de compartilhamento e locale correto', () => {
+    const htmlEn = renderPage(recruiter, 'en', ui.en);
+    expect(htmlEn).toContain(
+      `<meta property="og:title" content="${ui.en.areas.recruiter.title} | ${ui.en.siteName}" />`,
+    );
+    expect(htmlEn).toContain(
+      `<meta property="og:description" content="${ui.en.areas.recruiter.description}" />`,
+    );
+    expect(htmlEn).toContain(
+      '<meta property="og:url" content="https://2027.darioreis.dev/en/recruiter/" />',
+    );
+    expect(htmlEn).toContain(`<meta property="og:site_name" content="${ui.en.siteName}" />`);
+    expect(htmlEn).toContain('<meta property="og:locale" content="en_US" />');
+    expect(htmlEn).toContain(
+      '<meta property="og:image" content="https://2027.darioreis.dev/_home/og-image.png" />',
+    );
+    expect(htmlEn).toContain('<meta property="og:image:width" content="1200" />');
+    expect(htmlEn).toContain('<meta property="og:image:height" content="630" />');
+    expect(htmlEn).toContain('<meta property="og:type" content="website" />');
+
+    const htmlPt = renderPage(recruiter, 'pt-BR', ui['pt-BR']);
+    expect(htmlPt).toContain('<meta property="og:locale" content="pt_BR" />');
+  });
+
   it('injeta resumo textual estático no HTML para todas as áreas com conteúdo', () => {
     for (const route of routesOwnedBy('shell')) {
       const html = renderPage(route, 'pt-BR', ui['pt-BR'], { content: true });

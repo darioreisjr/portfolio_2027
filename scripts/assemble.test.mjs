@@ -4,9 +4,13 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 import {
+  buildCspPolicy,
   buildRobotsTxt,
+  buildSecurityHeaders,
   buildSitemap,
   buildVercelConfig,
+  collectDirectoryScriptHashes,
+  extractInlineScriptHashes,
   flattenNextSegment,
   planAssembly,
   PRODUCTION_HOST,
@@ -207,4 +211,70 @@ test('buildRobotsTxt aponta para o sitemap de produção', () => {
   assert.ok(robots.includes('User-agent: *'));
   assert.ok(robots.includes('Allow: /'));
   assert.ok(robots.includes('Sitemap: https://2027.darioreis.dev/sitemap.xml'));
+});
+
+test('extractInlineScriptHashes extrai hashes sha256 de scripts inline e ignora scripts com src ou ld+json', () => {
+  const html = `
+    <!doctype html>
+    <html>
+      <head>
+        <script src="/_shell/shell.js"></script>
+        <script type="application/ld+json">{"@type":"Person"}</script>
+        <script>console.log("hello");</script>
+        <script id="_R_">const x = 42;</script>
+      </head>
+      <body></body>
+    </html>
+  `;
+  const hashes = extractInlineScriptHashes(html);
+  assert.equal(hashes.length, 2);
+  // Ambos os hashes devem começar com 'sha256- e terminar com '
+  for (const h of hashes) {
+    assert.match(h, /^'sha256-[A-Za-z0-9+/=]+'$/);
+  }
+  // Hashes devem estar ordenados
+  assert.deepEqual(hashes, [...hashes].sort());
+});
+
+test('buildCspPolicy monta diretiva de segurança restritiva sem unsafe-inline em script-src', () => {
+  const policy = buildCspPolicy(["'sha256-abc'", "'sha256-def'"]);
+  assert.ok(policy.includes("default-src 'self'"));
+  assert.ok(policy.includes("script-src 'self' 'sha256-abc' 'sha256-def'"));
+  assert.ok(!policy.includes("script-src 'self' 'unsafe-inline'"));
+  assert.ok(policy.includes("style-src 'self' 'unsafe-inline'"));
+  assert.ok(policy.includes("img-src 'self' data:"));
+  assert.ok(policy.includes("font-src 'self'"));
+  assert.ok(policy.includes("media-src 'self'"));
+  assert.ok(policy.includes("connect-src 'self'"));
+  assert.ok(policy.includes("frame-ancestors 'none'"));
+  assert.ok(policy.includes("base-uri 'self'"));
+  assert.ok(policy.includes("form-action 'none'"));
+  assert.ok(policy.includes("object-src 'none'"));
+});
+
+test('buildSecurityHeaders e buildVercelConfig incluem Content-Security-Policy quando hashes são fornecidos', () => {
+  const dummyHashes = ["'sha256-test1'", "'sha256-test2'"];
+  const headers = buildSecurityHeaders(dummyHashes);
+  const csp = headers.find((h) => h.key === 'Content-Security-Policy');
+  assert.ok(csp);
+  assert.ok(csp.value.includes("'sha256-test1'"));
+
+  const config = buildVercelConfig(undefined, dummyHashes);
+  const rule = config.headers.find((h) => h.source === '/(.*)' && !h.missing);
+  assert.ok(rule);
+  const cspHeader = rule.headers.find((h) => h.key === 'Content-Security-Policy');
+  assert.ok(cspHeader);
+  assert.ok(cspHeader.value.includes("'sha256-test1'"));
+});
+
+test('collectDirectoryScriptHashes coleta e unifica hashes de múltiplos arquivos html', () => {
+  const root = fixture(['a.html', 'b.html', 'c.txt']);
+  // sobrescreve com conteúdo contendo script
+  writeFileSync(join(root, 'a.html'), '<script>const a = 1;</script>');
+  writeFileSync(join(root, 'b.html'), '<script>const b = 2;</script><script>const a = 1;</script>');
+  writeFileSync(join(root, 'c.txt'), '<script>const ignore = true;</script>');
+
+  const hashes = collectDirectoryScriptHashes(root);
+  assert.equal(hashes.length, 2); // a e b, com a desduplicado
+  assert.deepEqual(hashes, [...hashes].sort());
 });

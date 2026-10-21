@@ -34,7 +34,7 @@ Tamanho transferido (comprimido) de todo o JavaScript necessário para a rota fi
 | MFE Vue (`/recrutador`)           | 60 kB  | A doc do Vue cita cerca de 16 kB de base para custom elements; o resto é folga para a linha do tempo                           |
 | MFE React (`/clientes`)           | 105 kB | `react-dom` é o maior custo fixo (77,7 kB); a página soma marcação, estilo, textos e a `motion` mini. Era 80 kB até 2026-10-10 |
 | MFE Angular (`/tecnico`)          | 110 kB | Maior runtime dos três, e a área tem filtros e formulários                                                                     |
-| Página Next.js                    | 130 kB | React mais o runtime do Next.js; páginas de leitura, poucos Client Components                                                  |
+| Página Next.js                    | 140 kB | React mais o runtime do Next.js e interações da home (138,9 kB medidos). Era 130 kB até 2026-10-21 (decisão na issue #31)      |
 
 Total por rota:
 
@@ -50,6 +50,7 @@ Regras:
 - Nenhuma rota carrega o runtime de dois frameworks de MFE.
 - Dependência nova em um MFE precisa caber no teto da rota; se não couber, é carregada sob demanda ou não entra.
 - Aumentar um teto exige registrar o motivo neste arquivo.
+- **Subida do teto da parte Next.js autorizada pelo autor em 2026-10-21 (issue #31):** de 130 kB para 140 kB, para refletir o peso real medido do runtime do Next.js 16 + React 19 com as interações da home (138,9 kB medidos), mantendo o teto da rota em 150 kB.
 
 ### Linha de base medida no bootstrap (2026-10-06)
 
@@ -110,6 +111,8 @@ Com a página do cliente e a transição de onda (2026-10-10): **o teto do MFE R
 Com a página da comunidade e a explosão de aura (2026-10-10, ADR 0013): o JavaScript das três páginas Next.js cai de 148,4 para 144,7 kB e a home passa de nove para oito arquivos de script, porque o roteador de links do Next.js saiu: toda área é outro documento. A página da comunidade não tem JavaScript próprio; o script inline do botão de volta (cerca de 0,5 kB) e o da chegada ficam no HTML, fora desta conta. LCP de `/comunidade`: 2,47 s nas três execuções, com CLS de 0,001. A primeira medição com conteúdo deu de 2,53 a 2,54 s; resolveu carregar o personagem pequeno da abertura depois, com prioridade baixa. O autor tinha autorizado até 2,7 s para esta rota; a exceção não foi usada, e o teto continua 2,5 s. Detalhes em `docs/plans/comunidade-conteudo.md`.
 
 Com o nome e o cargo na home e o aviso de nova aba no recrutador (2026-10-13): a home segue em 144,7 kB e um arquivo de fonte, com LCP de 2,55 a 2,58 s (teto 2,7 s) e CLS 0; a linha entrou em negrito para não baixar o peso normal. O MFE Vue vai de 50,4 para 50,7 kB e `/recrutador` de 59,5 para 59,7 kB. Detalhes em `docs/plans/issues-prioridade-baixa.md`.
+
+Com o carregamento nos microfrontends só do conteúdo do idioma da página (2026-10-21, ADR 0015, issue #32): cada microfrontend passa a compilar entradas independentes por idioma (`[locale]/mfe.js`) carregadas diretamente pelo shell de acordo com a rota ativa, eliminando os dados dos outros idiomas do bundle de execução. Medido: `mfe-vue` caiu para 45,2 kB gzip (teto 60 kB), `mfe-react` para 94,3 kB gzip (teto 105 kB) e `mfe-angular` para 63,1 kB gzip (teto 110 kB). As rotas `/recrutador`, `/clientes` e `/tecnico` medem respectivamente 54,5 kB, 103,7 kB e 72,4 kB transferidos, com folga ampla em relação aos tetos e zero waterfalls de rede.
 
 As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um terço do teto. O React nasceu perto dele, e o teto subiu para 105 kB com a página do cliente. As páginas Next.js medem 144,7 kB, dos quais 7,8 kB são do design system: o Next.js sozinho já passa dos 130 kB da tabela acima, e essa parte não é cobrada por `budgets.json`, que só tem o total de 150 kB por rota (issue aberta na rodada de 2026-10-14). O MFE Vue cresce com o conteúdo dos três idiomas dentro do JavaScript; o mesmo vai acontecer com os dados reais das áreas técnica e do cliente.
 

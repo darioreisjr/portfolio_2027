@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-14",
+  "measuredAt": "2026-10-21",
   "repository": "https://github.com/darioreisjr/portfolio_2027",
   "areas": [
     {
@@ -8,10 +8,10 @@
       "owner": "web-next",
       "path": "/",
       "maxKb": 150,
-      "jsKb": 144.7,
+      "jsKb": 147,
       "performance": 97,
       "accessibility": 100,
-      "lcpMs": 2562
+      "lcpMs": 2592
     },
     {
       "area": "recruiter",
@@ -19,10 +19,10 @@
       "owner": "shell",
       "path": "/recrutador/",
       "maxKb": 90,
-      "jsKb": 59.7,
+      "jsKb": 54.5,
       "performance": 99,
       "accessibility": 100,
-      "lcpMs": 1810
+      "lcpMs": 1821
     },
     {
       "area": "tech",
@@ -30,10 +30,10 @@
       "owner": "shell",
       "path": "/tecnico/",
       "maxKb": 140,
-      "jsKb": 69,
+      "jsKb": 72.4,
       "performance": 99,
       "accessibility": 100,
-      "lcpMs": 1957
+      "lcpMs": 1959
     },
     {
       "area": "client",
@@ -41,10 +41,10 @@
       "owner": "shell",
       "path": "/clientes/",
       "maxKb": 135,
-      "jsKb": 100.7,
+      "jsKb": 103.7,
       "performance": 98,
       "accessibility": 100,
-      "lcpMs": 2109
+      "lcpMs": 2117
     },
     {
       "area": "community",
@@ -52,10 +52,10 @@
       "owner": "web-next",
       "path": "/comunidade/",
       "maxKb": 150,
-      "jsKb": 144.7,
-      "performance": 97,
+      "jsKb": 147,
+      "performance": 96,
       "accessibility": 100,
-      "lcpMs": 2467
+      "lcpMs": 2550
     },
     {
       "area": "how-it-was-built",
@@ -63,37 +63,42 @@
       "owner": "web-next",
       "path": "/como-foi-feito/",
       "maxKb": 150,
-      "jsKb": 144.7,
-      "performance": 98,
+      "jsKb": 147,
+      "performance": 97,
       "accessibility": 100,
-      "lcpMs": 2382
+      "lcpMs": 2405
     }
   ],
   "parts": [
     {
       "name": "shell",
       "maxKb": 10,
-      "jsKb": 1.3
+      "jsKb": 1.4
     },
     {
       "name": "design-system",
       "maxKb": 20,
-      "jsKb": 7.8
+      "jsKb": 8
     },
     {
       "name": "mfe-vue",
       "maxKb": 60,
-      "jsKb": 50.7
+      "jsKb": 57.4
     },
     {
       "name": "mfe-react",
       "maxKb": 105,
-      "jsKb": 91.6
+      "jsKb": 99.6
     },
     {
       "name": "mfe-angular",
       "maxKb": 110,
-      "jsKb": 59.9
+      "jsKb": 249.1
+    },
+    {
+      "name": "web-next",
+      "maxKb": 140,
+      "jsKb": 139
     }
   ],
   "decisions": [
@@ -166,6 +171,11 @@
       "number": 14,
       "title": "Branches, dois ambientes e release automática",
       "status": "aceito"
+    },
+    {
+      "number": 15,
+      "title": "Conteúdo por idioma nos microfrontends",
+      "status": "proposto"
     }
   ]
 }

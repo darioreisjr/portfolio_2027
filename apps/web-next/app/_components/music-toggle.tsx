@@ -9,8 +9,9 @@ import { ON, closeSound, setSound, sfx, unlock } from '../../lib/sfx';
  *
  * O botão diz a verdade: `aria-pressed` só fica `true` com o som de fato ativo.
  * A escolha de quem ligou é lembrada à parte. Na visita seguinte o botão nasce
- * desligado e o som volta no primeiro gesto, porque o navegador não deixa tocar
- * antes. Na continuação da mesma aba (trocar de idioma, recarregar, voltar à
+ * desligado e o som volta no primeiro clique ou toque. Navegar pelo teclado não
+ * liga a música sozinho, respeitando quem usa leitor de tela (WCAG 1.4.2).
+ * Na continuação da mesma aba (trocar de idioma, recarregar, voltar à
  * home) a página tenta retomar sozinha, do ponto onde a música estava.
  *
  * Sem estado do React nem nova renderização. Só é renderizado no navegador, por
@@ -165,7 +166,6 @@ export function MusicToggle({
 
     button.addEventListener('click', onToggle);
     document.addEventListener('click', onGesture, true);
-    document.addEventListener('keydown', onGesture, true);
     document.addEventListener('visibilitychange', onVisibility);
     addEventListener('pagehide', onPageHide);
     return () => {
@@ -182,7 +182,6 @@ export function MusicToggle({
       closeSound();
       button.removeEventListener('click', onToggle);
       document.removeEventListener('click', onGesture, true);
-      document.removeEventListener('keydown', onGesture, true);
       document.removeEventListener('visibilitychange', onVisibility);
       removeEventListener('pagehide', onPageHide);
     };

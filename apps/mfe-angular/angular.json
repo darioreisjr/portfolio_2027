@@ -27,6 +27,21 @@
             "production": {
               "optimization": true
             },
+            "pt-br": {
+              "browser": "src/entries/pt-br.ts",
+              "outputPath": "dist/pt-br",
+              "optimization": true
+            },
+            "en": {
+              "browser": "src/entries/en.ts",
+              "outputPath": "dist/en",
+              "optimization": true
+            },
+            "es": {
+              "browser": "src/entries/es.ts",
+              "outputPath": "dist/es",
+              "optimization": true
+            },
             "development": {
               "optimization": false,
               "sourceMap": true

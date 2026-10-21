@@ -1,4 +1,4 @@
-import { cpSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -102,6 +102,17 @@ describe('rascunhos', () => {
   it('não escondem item publicado', () => {
     const published = profileWith({ status: 'published' });
     expect(loadContent(published, { includeDrafts: false }).profile?.status).toBe('published');
+  });
+
+  it('entrega contatos publicados em produção e inclui rascunhos em desenvolvimento', () => {
+    const prod = loadContent(dataDir, { includeDrafts: false });
+    const dev = loadContent(dataDir, { includeDrafts: true });
+    expect(
+      prod.contacts.every((c) => c.status === 'published' && !c.id.startsWith('exemplo-')),
+    ).toBe(true);
+    expect(prod.contacts.some((c) => c.kind === 'linkedin')).toBe(true);
+    expect(prod.contacts.some((c) => c.kind === 'github')).toBe(true);
+    expect(dev.contacts.length).toBeGreaterThanOrEqual(prod.contacts.length);
   });
 });
 
@@ -519,5 +530,45 @@ describe('comunidade', () => {
     expect(community?.['pt-BR'].articles).toHaveLength(1);
     // Os outros blocos continuam de exemplo, cada um com a própria faixa.
     expect(community?.['pt-BR'].example.channels).toBe(true);
+  });
+});
+
+describe('submódulos por idioma gerados', () => {
+  it('geram dados isolados por idioma para recrutador, tech, client e ui', async () => {
+    const { recruiterUi, techUi, clientUi, ui } = loadContent(dataDir, { includeDrafts: false });
+    for (const locale of locales) {
+      expect(recruiterUi[locale]).toBeDefined();
+      expect(recruiterUi[locale].contact).toBeDefined();
+      expect(techUi[locale].projects).toBeDefined();
+      expect(clientUi[locale].services).toBeDefined();
+      expect(ui[locale].construction.title).not.toBe('');
+    }
+
+    const distDir = fileURLToPath(new URL('../dist/data', import.meta.url));
+    if (existsSync(join(distDir, 'recruiter/pt-BR.js'))) {
+      for (const locale of locales) {
+        const rec = (await import(`../dist/data/recruiter/${locale}.js`)) as {
+          recruiter: { name: string } | null;
+          recruiterUi: { contact?: unknown };
+        };
+        expect(rec.recruiterUi).toBeDefined();
+        expect(rec.recruiterUi.contact).toBeDefined();
+
+        const u = (await import(`../dist/data/ui/${locale}.js`)) as {
+          ui: { construction: { title: string } };
+        };
+        expect(u.ui.construction.title).not.toBe('');
+
+        const t = (await import(`../dist/data/tech/${locale}.js`)) as {
+          techUi: { projects: unknown };
+        };
+        expect(t.techUi.projects).toBeDefined();
+
+        const c = (await import(`../dist/data/client/${locale}.js`)) as {
+          clientUi: { services: unknown };
+        };
+        expect(c.clientUi.services).toBeDefined();
+      }
+    }
   });
 });

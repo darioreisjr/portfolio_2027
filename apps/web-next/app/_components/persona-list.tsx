@@ -53,6 +53,16 @@ function focusQuietly(element: HTMLElement | null | undefined) {
 
 /** Escolhe um personagem: os outros somem (CSS) e o painel dele aparece. */
 function select(list: HTMLElement, item: HTMLLIElement) {
+  const smooth =
+    !matchMedia('(prefers-reduced-motion: reduce)').matches &&
+    !document.querySelector<HTMLInputElement>('.home-motion input')?.checked;
+
+  item.scrollIntoView({
+    behavior: smooth ? 'smooth' : 'instant',
+    inline: 'center',
+    block: 'nearest',
+  });
+
   list.setAttribute('data-selected', '');
   item.setAttribute('data-selected', '');
   item.querySelector('a.persona')?.setAttribute('aria-expanded', 'true');

@@ -26,6 +26,7 @@ import {
   uiSchema,
   type ClientUi,
   type CommunityUi,
+  type Contact,
   type Home,
   type Profile,
   type RecruiterUi,
@@ -40,6 +41,8 @@ export interface Content {
   home: Record<Locale, Home>;
   /** `null` quando não há perfil publicado e os rascunhos estão fora. */
   profile: Profile | null;
+  /** Contatos do autor: os publicados e, em desenvolvimento, também os rascunhos. */
+  contacts: Contact[];
   /** Textos de interface da área do recrutador. */
   recruiterUi: Record<Locale, RecruiterUi>;
   /**
@@ -385,6 +388,7 @@ export function loadContent(
     ui,
     home,
     profile,
+    contacts: real(contacts),
     communityUi,
     community: communitySources
       ? (Object.fromEntries(

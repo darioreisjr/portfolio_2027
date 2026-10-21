@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ng build --watch",
     "dev:solo": "ng serve --port 4200",
-    "build": "ng build",
+    "build": "node scripts/build.mjs",
     "typecheck": "ngc -p tsconfig.app.json --noEmit",
     "test": "ng test --watch=false"
   },

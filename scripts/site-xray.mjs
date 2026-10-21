@@ -14,6 +14,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
 import { routes } from '../packages/contracts/dist/index.js';
+import { routeSize } from './check-budgets.mjs';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = join(repoRoot, 'dist');
@@ -29,18 +30,28 @@ const scriptsIn = (dir) =>
   readdirSync(dir, { withFileTypes: true, recursive: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith('.js'))
     .map((entry) => join(entry.parentPath, entry.name));
-const partKb = (dir) => scriptsIn(join(distDir, dir)).reduce((sum, file) => sum + gzipKb(file), 0);
+const partKb = (name, dir) => {
+  if (dir === '_next' || name === 'web-next') {
+    const nextRoutes = ['/', '/comunidade/', '/como-foi-feito/'];
+    let max = 0;
+    for (const route of nextRoutes) {
+      const htmlFile = join(distDir, route, 'index.html');
+      if (!existsSync(htmlFile)) continue;
+      const html = readFileSync(htmlFile, 'utf8');
+      const fromHtml = [...html.matchAll(/<script[^>]+src="(\/_next\/[^"]+\.js)"[^>]*>/g)]
+        .filter((match) => !/\snomodule/i.test(match[0]))
+        .map((match) => match[1]);
+      const size = [...new Set(fromHtml)].reduce((sum, src) => sum + gzipKb(join(distDir, src)), 0);
+      if (size > max) max = size;
+    }
+    return max;
+  }
+  return scriptsIn(join(distDir, dir)).reduce((sum, file) => sum + gzipKb(file), 0);
+};
 
 /** O JavaScript de uma rota, medido como em check-budgets.mjs. */
 function routeKb(entry) {
-  const path = entry.paths['pt-BR'];
-  const html = readFileSync(join(distDir, path, 'index.html'), 'utf8');
-  const fromHtml = [...html.matchAll(/<script[^>]+src="(\/[^"]+\.js)"[^>]*>/g)]
-    .filter((match) => !/\snomodule/i.test(match[0]))
-    .map((match) => match[1]);
-  let total = [...new Set(fromHtml)].reduce((sum, src) => sum + gzipKb(join(distDir, src)), 0);
-  if (entry.mfe) total += partKb(dirname(entry.mfe.script));
-  return total;
+  return routeSize(distDir, entry.paths['pt-BR']);
 }
 
 /** Mediana do Lighthouse por rota, se houver relatórios de `pnpm lhci`. */
@@ -141,7 +152,7 @@ if (process.argv.includes('--check')) {
     })),
     parts: base.parts.map((part) => ({
       ...part,
-      jsKb: round(partKb(budgets.parts[part.name].dir)),
+      jsKb: round(partKb(part.name, budgets.parts[part.name].dir)),
     })),
     decisions: base.decisions,
   };

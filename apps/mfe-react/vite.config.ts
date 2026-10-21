@@ -7,9 +7,13 @@ export default defineConfig(({ command }) => ({
   define: command === 'build' ? { 'process.env.NODE_ENV': JSON.stringify('production') } : {},
   build: {
     lib: {
-      entry: 'src/main.ts',
+      entry: {
+        'pt-br': 'src/entries/pt-br.ts',
+        en: 'src/entries/en.ts',
+        es: 'src/entries/es.ts',
+      },
       formats: ['es'],
-      fileName: () => 'mfe.js',
+      fileName: (_format, entryName) => `${entryName}/mfe.js`,
     },
   },
 }));

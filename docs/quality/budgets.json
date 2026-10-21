@@ -20,6 +20,10 @@
     "mfe-angular": {
       "dir": "_mfe/angular",
       "maxKb": 110
+    },
+    "web-next": {
+      "dir": "_next",
+      "maxKb": 140
     }
   },
   "routes": {
