@@ -6,7 +6,16 @@
 //
 // Rode depois de `pnpm build`.
 
-import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
+import { createHash } from 'node:crypto';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -150,15 +159,85 @@ export function buildRobotsTxt() {
  * Mapeia sub-rotas dos microfrontends geridos pelo shell para seus respectivos index.html
  * e define cabeçalhos de cache agressivos para assets imutáveis e revalidação para HTML.
  */
-/** Cabeçalhos de segurança de toda resposta. */
-export const SECURITY_HEADERS = [
+/**
+ * Extrai os hashes sha256 dos scripts inline executáveis de um conteúdo HTML.
+ * Ignora scripts externos (com src) e blocos de dados JSON-LD (type="application/ld+json").
+ */
+export function extractInlineScriptHashes(html) {
+  const matches = [...html.matchAll(/<script(?![^>]*\bsrc=)([^>]*)>([\s\S]*?)<\/script>/gi)];
+  const hashes = new Set();
+  for (const m of matches) {
+    const attrs = m[1];
+    const code = m[2];
+    if (attrs.includes('application/ld+json')) continue;
+    const hash = createHash('sha256').update(code, 'utf8').digest('base64');
+    hashes.add(`'sha256-${hash}'`);
+  }
+  return [...hashes].sort();
+}
+
+/**
+ * Monta a diretiva Content-Security-Policy com base nos hashes dos scripts inline.
+ * script-src permite apenas 'self' e os hashes específicos, sem 'unsafe-inline'.
+ */
+export function buildCspPolicy(scriptHashes = []) {
+  const scriptSources = ["'self'", ...scriptHashes].join(' ');
+  return [
+    "default-src 'self'",
+    `script-src ${scriptSources}`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data:",
+    "font-src 'self'",
+    "media-src 'self'",
+    "connect-src 'self'",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'none'",
+    "object-src 'none'",
+  ].join('; ');
+}
+
+/**
+ * Varre todos os arquivos .html em um diretório e extrai a união ordenada de todos
+ * os hashes sha256 de scripts inline executáveis.
+ */
+export function collectDirectoryScriptHashes(dir) {
+  const files = walk(dir);
+  const hashes = new Set();
+  for (const file of files) {
+    if (!file.endsWith('.html')) continue;
+    const content = readFileSync(join(dir, file), 'utf8');
+    for (const h of extractInlineScriptHashes(content)) {
+      hashes.add(h);
+    }
+  }
+  return [...hashes].sort();
+}
+
+/** Cabeçalhos de segurança básicos de toda resposta. */
+export const BASE_SECURITY_HEADERS = [
   { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
 ];
 
-export function buildVercelConfig(routesList = routes) {
+/** Mantido para retrocompatibilidade em testes e imports diretos. */
+export const SECURITY_HEADERS = BASE_SECURITY_HEADERS;
+
+/**
+ * Constrói os cabeçalhos de segurança de toda resposta, incluindo a CSP
+ * calculada a partir dos hashes de scripts inline (issue #47).
+ */
+export function buildSecurityHeaders(scriptHashes = []) {
+  if (scriptHashes.length === 0) return SECURITY_HEADERS;
+  return [
+    ...BASE_SECURITY_HEADERS,
+    { key: 'Content-Security-Policy', value: buildCspPolicy(scriptHashes) },
+  ];
+}
+
+export function buildVercelConfig(routesList = routes, scriptHashes = []) {
   const shellRoutes = routesList.filter((route) => route.owner === 'shell');
   const rewrites = [];
 
@@ -173,20 +252,20 @@ export function buildVercelConfig(routesList = routes) {
     }
   }
 
+  const securityHeaders = buildSecurityHeaders(scriptHashes);
+
   return {
     $schema: 'https://openapi.vercel.sh/vercel.json',
     cleanUrls: true,
     trailingSlash: true,
     rewrites,
     headers: [
-      // Em toda resposta (issue #46): ninguém põe o site numa moldura de outro
-      // (clickjacking), o navegador não adivinha tipo de arquivo, outros sites
-      // não recebem o endereço completo de onde veio o visitante, e a página não
-      // pede câmera, microfone nem localização. A CSP depende dos scripts
-      // inline e tem issue própria.
+      // Em toda resposta (issue #46 e #47): proteção contra clickjacking,
+      // MIME sniffing, vazamento de referrer, APIs de sensores e execução
+      // indevida de scripts (CSP com hashes dos scripts inline compilados).
       {
         source: '/(.*)',
-        headers: SECURITY_HEADERS,
+        headers: securityHeaders,
       },
       {
         source: '/(.*)',
@@ -269,7 +348,8 @@ export function assemble(root, outDir = join(root, 'dist')) {
     cpSync(join(root, origin), target);
   }
 
-  const vercelConfig = buildVercelConfig();
+  const scriptHashes = collectDirectoryScriptHashes(outDir);
+  const vercelConfig = buildVercelConfig(routes, scriptHashes);
   writeFileSync(join(outDir, 'vercel.json'), `${JSON.stringify(vercelConfig, null, 2)}\n`);
 
   writeFileSync(join(outDir, 'sitemap.xml'), buildSitemap());
