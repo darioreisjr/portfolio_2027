@@ -72,6 +72,7 @@ test('fala com quem contrata: serviços, etapas, resultado e condições, sem va
 
 test('os dados fictícios levam a faixa de exemplo; abertura e chamada não', async ({ page }) => {
   await page.goto('/clientes/');
+  await expect(area(page).locator('.example')).toHaveCount(6);
   const flagged = await area(page)
     .locator('.example')
     .evaluateAll((banners) =>

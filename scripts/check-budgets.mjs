@@ -6,10 +6,10 @@
 //   node scripts/check-budgets.mjs
 
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, normalize, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
-import { findRoute } from '../packages/contracts/dist/index.js';
+import { findRoute, locales, mfeScript, routes } from '../packages/contracts/dist/index.js';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = join(repoRoot, 'dist');
@@ -31,6 +31,36 @@ export function extractHtmlScripts(html, prefix = '') {
     .filter((src) => !prefix || src.startsWith(prefix));
 }
 
+/**
+ * Coleta recursivamente todos os arquivos JavaScript importados a partir de um módulo de entrada.
+ */
+export function collectModuleDependencies(distDir, entryRelPath) {
+  const visited = new Set();
+  const queue = [entryRelPath.replace(/\\/g, '/')];
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+    if (!current || visited.has(current)) continue;
+    const absPath = join(distDir, current);
+    if (!existsSync(absPath)) continue;
+    visited.add(current);
+
+    const code = readFileSync(absPath, 'utf8');
+    const importMatches = [
+      ...code.matchAll(/(?:import|export)\s+(?:.+?\s+from\s+)?['"](\.[^'"]+)['"]/g),
+    ];
+    for (const match of importMatches) {
+      const relPath = match[1];
+      const resolved = normalize(join(dirname(current), relPath)).replace(/\\/g, '/');
+      if (!visited.has(resolved)) {
+        queue.push(resolved);
+      }
+    }
+  }
+
+  return [...visited];
+}
+
 /** Mede o tamanho em kB (gzip) de uma parte (MFE, shell, design system ou Next.js). */
 export function partSize(distDir, name, config) {
   if (config.dir === '_next' || name === 'web-next') {
@@ -47,6 +77,26 @@ export function partSize(distDir, name, config) {
     }
     return max;
   }
+
+  // Microfrontends com scripts separados por idioma ([locale]): mede o maior idioma transferido.
+  const mfeRoute = routes.find(
+    (r) =>
+      r.owner === 'shell' &&
+      r.mfe?.script.includes('[locale]') &&
+      `_mfe/${r.framework.toLowerCase()}` === config.dir.toLowerCase().replace(/\\/g, '/'),
+  );
+  if (mfeRoute?.mfe) {
+    let max = 0;
+    for (const locale of locales) {
+      const script = mfeScript(mfeRoute.mfe, locale);
+      const scriptRel = script.startsWith('/') ? script.slice(1) : script;
+      const deps = collectModuleDependencies(distDir, scriptRel);
+      const size = deps.reduce((sum, file) => sum + gzipKb(join(distDir, file)), 0);
+      if (size > max) max = size;
+    }
+    return max;
+  }
+
   return scriptsIn(join(distDir, config.dir)).reduce((sum, file) => sum + gzipKb(file), 0);
 }
 
@@ -56,12 +106,20 @@ export function routeSize(distDir, route) {
   const fromHtml = extractHtmlScripts(html);
   let total = [...new Set(fromHtml)].reduce((sum, src) => sum + gzipKb(join(distDir, src)), 0);
 
-  const mfeScript = findRoute(route)?.entry.mfe?.script;
-  if (mfeScript) {
-    total += scriptsIn(join(distDir, dirname(mfeScript))).reduce(
-      (sum, file) => sum + gzipKb(file),
-      0,
-    );
+  const match = findRoute(route);
+  const mfe = match?.entry.mfe;
+  if (mfe) {
+    if (mfe.script.includes('[locale]')) {
+      const script = mfeScript(mfe, match.locale);
+      const scriptRel = script.startsWith('/') ? script.slice(1) : script;
+      const deps = collectModuleDependencies(distDir, scriptRel);
+      total += deps.reduce((sum, file) => sum + gzipKb(join(distDir, file)), 0);
+    } else {
+      total += scriptsIn(join(distDir, dirname(mfe.script))).reduce(
+        (sum, file) => sum + gzipKb(file),
+        0,
+      );
+    }
   }
   return total;
 }

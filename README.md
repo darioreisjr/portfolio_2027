@@ -35,13 +35,13 @@ São cinco aplicações que viram um único site estático:
                     └────────────────────────────────────────────────────────────────┘
 ```
 
-- **Composição no build, sem Module Federation nem single-spa.** Cada microfrontend é um custom element com shadow DOM. A casca (`apps/shell`, JavaScript puro) gera o HTML de cada rota e idioma e carrega só o script da área daquela rota.
+- **Composição no build, sem Module Federation nem single-spa.** Cada microfrontend é um custom element com shadow DOM. A casca (`apps/shell`, JavaScript puro) gera o HTML de cada rota e idioma e carrega só o script da área daquela rota, no idioma da página.
 - **Nenhuma rota baixa dois frameworks.** Trocar de área é trocar de documento, com um `<a>` comum.
 - **Conteúdo em JSON.** Tudo que o site diz sobre o autor está em `packages/content`, validado com Zod no build. Nenhum app embute conteúdo nem lê JSON por caminho relativo.
 - **Design system próprio.** Web Components em Lit, carregados uma vez por documento, e tokens de cor, espaçamento e tipografia em propriedades CSS. Os apps não usam valor literal.
 - **Apps só conversam por contrato.** Eventos tipados e a tabela de rotas vivem em `packages/contracts`.
 
-As decisões estão registradas em 14 ADRs, em [`docs/architecture/adr/`](docs/architecture/adr/). A área técnica do site mostra essas decisões e os números medidos de cada rota, lidos do próprio repositório.
+As decisões estão registradas em 15 ADRs, em [`docs/architecture/adr/`](docs/architecture/adr/). A área técnica do site mostra essas decisões e os números medidos de cada rota, lidos do próprio repositório.
 
 ## Tecnologias
 

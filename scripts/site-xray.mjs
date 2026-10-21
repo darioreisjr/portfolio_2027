@@ -14,6 +14,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
 import { routes } from '../packages/contracts/dist/index.js';
+import { routeSize } from './check-budgets.mjs';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = join(repoRoot, 'dist');
@@ -50,14 +51,7 @@ const partKb = (name, dir) => {
 
 /** O JavaScript de uma rota, medido como em check-budgets.mjs. */
 function routeKb(entry) {
-  const path = entry.paths['pt-BR'];
-  const html = readFileSync(join(distDir, path, 'index.html'), 'utf8');
-  const fromHtml = [...html.matchAll(/<script[^>]+src="(\/[^"]+\.js)"[^>]*>/g)]
-    .filter((match) => !/\snomodule/i.test(match[0]))
-    .map((match) => match[1]);
-  let total = [...new Set(fromHtml)].reduce((sum, src) => sum + gzipKb(join(distDir, src)), 0);
-  if (entry.mfe) total += partKb(null, dirname(entry.mfe.script));
-  return total;
+  return routeSize(distDir, entry.paths['pt-BR']);
 }
 
 /** Mediana do Lighthouse por rota, se houver relatórios de `pnpm lhci`. */

@@ -140,6 +140,7 @@ test('pelo teclado: o filtro e as faces do projeto respondem, com foco visível'
 test('projetos: período em cada cartão e um link por repositório', async ({ page }) => {
   await page.goto('/recrutador/');
   const projects = page1(page).locator('.project');
+  await expect(projects.first()).toBeVisible();
   expect(await projects.count()).toBeGreaterThan(0);
   await expect(projects.locator('.when')).toHaveCount(await projects.count());
   // Projeto sem data de fim diz que está em andamento.

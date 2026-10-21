@@ -3,6 +3,12 @@
   "compilerOptions": {
     "types": []
   },
-  "files": ["src/main.ts", "dev/main.ts"],
+  "files": [
+    "src/main.ts",
+    "dev/main.ts",
+    "src/entries/pt-br.ts",
+    "src/entries/en.ts",
+    "src/entries/es.ts"
+  ],
   "include": ["src/**/*.d.ts"]
 }
