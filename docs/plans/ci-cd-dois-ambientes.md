@@ -1,6 +1,6 @@
 # Plano: CI/CD com dois ambientes, fluxo de branches e release automática
 
-- Status: **aprovado** pelo autor em 2026-10-12. Código e documentação prontos; a migração no GitHub e na Vercel aguarda os passos do autor
+- Status: **concluído** em 2026-10-12 (PRs #1 e #3, release `v1.0.0`)
 - Origem: pedido e entrevista com o autor, `architect`
 - Decisão de arquitetura: ADR 0014, com emenda ao ADR 0007
 
@@ -67,6 +67,14 @@ Legenda: **A** é passo do autor; **G** é chamada ao GitHub feita pelo agente, 
 - `develop.darioreis.dev` não sai do ar em nenhum momento. O endereço novo responde 404 até o passo 11.
 - Outro clone do repositório, depois do passo 4: `git branch -m main production && git fetch origin && git branch -u origin/production production && git remote set-head origin -a`.
 
+### Execução da migração (2026-10-12)
+
+A migração foi concluída em 2026-10-12 com os PRs #1 e #3 e a publicação da `v1.0.0`:
+
+- **Grafo de dependências:** O workflow de segurança (`seguranca.yml`, revisão de dependências) falhou na primeira tentativa porque o grafo de dependências do GitHub estava desativado no repositório. Foi necessário ativá-lo nas configurações do GitHub para a checagem passar.
+- **Armadilha do push direto (incidente no PR #1):** Após abrir o PR #1 (`ci/dois-ambientes` para `development`) e obter as checagens verdes, um agente executou `git push origin HEAD:development` para testar se a regra de proteção recusaria o push direto. Como o commit já pertencia a um pull request aberto e com todos os status checks aprovados, o GitHub aceitou o push e marcou o PR #1 como merged automaticamente, sem que o autor tivesse aprovado ou solicitado o merge. A proteção de branch do GitHub por checks obrigatórios considera o push aceitável quando o commit satisfaz as regras em um PR existente. A documentação e as skills de commit foram atualizadas para proibir expressamente qualquer push direto para branches protegidas, inclusive a título de teste.
+- **Promoção para produção (PR #3):** O PR #3 promoveu a `development` para a `production`, realizou o deploy em `https://2027.darioreis.dev`, passou no teste de fumaça e gerou a release automática `v1.0.0`.
+
 ### Se algo der errado
 
 | Desfazer            | Como                                                                                          |
@@ -80,8 +88,9 @@ Legenda: **A** é passo do autor; **G** é chamada ao GitHub feita pelo agente, 
 ## Riscos que ficam
 
 - Sem ninguém furando as regras, um e2e instável segura até correção urgente. O caminho é reexecutar o job e, em último caso, editar a regra a pedido do autor.
-- A execução noturna em Firefox e WebKit nunca rodou: pode revelar falhas reais (pendência B12), que viram tarefas.
+- A execução noturna em Firefox e WebKit (`navegadores.yml`) passou a rodar diariamente desde 2026-10-12 e revelou falhas reais tratadas na pendência B12 (WebKit com `:has()` e download de fontes).
 - O Dependabot abre pull requests sem os segredos da Vercel: eles não têm prévia, só a verificação.
+- O workflow de republicação (`republicar.yml`) segue disponível para acionamento manual em caso de necessidade de rollback ou republicação sem novo commit.
 - A CLI da Vercel tem versão fixa em dois workflows e na skill `deploy-vercel`; atualizar é manual.
 
 ## Fora desta etapa

@@ -59,7 +59,7 @@ O app ou pacote que o commit toca, com o nome da pasta: `shell`, `mfe-vue`, `mfe
 
 Commit é local. O push só acontece quando o autor pedir. Reescrever commits já enviados (`push --force`) exige pedido explícito do autor.
 
-"Fazer o push" neste projeto é subir a branch da tarefa e abrir o pull request contra a `development` (seção "Branches e pull request"). Ninguém faz push direto na `development` nem na `production`: o GitHub recusa.
+"Fazer o push" neste projeto é subir a branch da tarefa e abrir o pull request contra a `development` (seção "Branches e pull request"). Nunca faça `git push` direto para `development` nem para `production`, nem para testar: se o commit já estiver em um pull request com checagens verdes, o GitHub aceita o push direto e marca o PR como merged, fazendo o merge sem o autor ter pedido.
 
 ### Revise o README antes de todo push
 
@@ -90,7 +90,7 @@ O push deste projeto é sempre feito com a conta do GitHub `darioreisjr`, dona d
 Fluxo do ADR 0014. A `production` é o que está no ar; a `development` é onde o trabalho se junta.
 
 1. **Comece da `development` atualizada:** `git fetch origin` e `git switch -c tipo/descricao-curta origin/development`. O tipo é o do Conventional Commits: `feat/pagina-como-foi-feito`, `fix/foco-do-menu`, `docs/readme`.
-2. **Commits na branch da tarefa,** como sempre. Nunca na `development` nem na `production`.
+2. **Commits na branch da tarefa,** como sempre. Nunca na `development` nem na `production`. Nunca faça `git push` para essas branches diretamente, nem como teste.
 3. **Push, a pedido do autor:** depois da revisão do README e da conta do GitHub (acima), `git push -u origin <branch>` e `gh pr create --base development`. O corpo segue o modelo de `.github/pull_request_template.md`; a skill `pr-checklist` tem a lista completa.
 4. **Acompanhe o CI:** `gh pr checks --watch`. As checagens obrigatórias são `verify` e `origem`. O CI comenta no PR o endereço da prévia e a tabela de peso de JavaScript.
 5. **Merge, só a pedido do autor:** `gh pr merge --rebase --delete-branch`. O merge publica em `https://develop.darioreis.dev`.
