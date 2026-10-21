@@ -10,7 +10,7 @@ catalog:
   # Linguagem e orquestração
   typescript: 6.0.3
   turbo: 2.11.7
-  '@types/node': 24.19.1
+  '@types/node': 24.19.2
 
   # Frameworks
   next: 16.4.0
@@ -22,16 +22,16 @@ catalog:
   # Animação dos três microfrontends: só as funções `animate` (mini), `inView` e
   # `stagger`, que somam 4,4 kB em cada um. A motion-v, com a camada de Vue, não
   # coube no teto do MFE do recrutador (docs/plans/recrutador-conteudo.md).
-  motion: 14.0.0
-  vue-tsc: 3.3.12
+  motion: 14.1.0
+  vue-tsc: 3.3.13
   '@angular/build': 22.2.2
   '@angular/cli': 22.2.2
-  '@angular/common': 22.2.1
-  '@angular/compiler': 22.2.1
-  '@angular/compiler-cli': 22.2.1
-  '@angular/core': 22.2.1
-  '@angular/elements': 22.2.1
-  '@angular/platform-browser': 22.2.1
+  '@angular/common': 22.2.2
+  '@angular/compiler': 22.2.2
+  '@angular/compiler-cli': 22.2.2
+  '@angular/core': 22.2.2
+  '@angular/elements': 22.2.2
+  '@angular/platform-browser': 22.2.2
   rxjs: 7.8.2
   tslib: 2.8.1
   lit: 3.3.3
@@ -40,12 +40,12 @@ catalog:
   '@fontsource/m-plus-rounded-1c': 5.3.0
 
   # Build
-  vite: 8.3.3
+  vite: 8.3.4
   '@vitejs/plugin-react': 6.1.2
-  '@vitejs/plugin-vue': 6.0.9
+  '@vitejs/plugin-vue': 6.0.10
 
   # Conteúdo
-  zod: 4.6.5
+  zod: 4.6.6
 
   # Testes
   vitest: 5.0.3
@@ -68,10 +68,10 @@ catalog:
   typescript-eslint: 8.71.1
   eslint-plugin-vue: 10.11.1
   vue-eslint-parser: 10.4.1
-  angular-eslint: 22.5.0
+  angular-eslint: 22.6.0
   '@next/eslint-plugin-next': 16.4.0
   eslint-plugin-react-hooks: 7.1.1
-  prettier: 3.9.9
+  prettier: 3.9.10
   husky: 9.1.7
   '@commitlint/cli': 21.2.3
   '@commitlint/config-conventional': 21.2.3
