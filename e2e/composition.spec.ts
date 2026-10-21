@@ -78,8 +78,7 @@ for (const path of nextPages) {
 
     await expect(page.locator('html')).toHaveAttribute('lang', 'pt-BR');
     await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('.area-message')).toContainText('Fase em construção');
-    await expect(page.locator('.area-message')).toHaveCSS('background-color', SURFACE_LIGHT);
+    await expect(page.locator('.how-it-was-built')).toBeVisible();
     // O design system é carregado uma vez pelo layout.
     await expect
       .poll(() => page.evaluate(() => Boolean(customElements.get('ds-theme-toggle'))))

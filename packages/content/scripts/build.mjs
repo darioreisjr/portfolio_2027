@@ -28,7 +28,7 @@ const content = loadContent(dataDir, {
 const { ui, home, recruiter, recruiterUi, tech, techUi, site, client, clientUi } = content;
 const profile = includeDrafts || HOME_IDENTITY ? content.profile : null;
 const contacts = includeDrafts || HOME_IDENTITY ? content.contacts : [];
-const { community, communityUi } = content;
+const { community, communityUi, howItWasBuilt, howItWasBuiltUi } = content;
 
 const modules = {
   ui: {
@@ -110,6 +110,19 @@ const modules = {
       'export declare const communityUi: Readonly<Record<Locale, CommunityUi>>;',
     ],
   },
+  'how-it-was-built': {
+    exportName: 'howItWasBuilt',
+    value: howItWasBuilt,
+    extra: { howItWasBuiltUi },
+    types: [
+      "import type { Locale } from '@portfolio/contracts';",
+      "import type { HowItWasBuiltContent } from '../how-it-was-built.js';",
+      "import type { HowItWasBuiltUi } from '../schemas.js';",
+      'export type { HowItWasBuiltContent, HowItWasBuiltUi };',
+      'export declare const howItWasBuilt: Readonly<Record<Locale, HowItWasBuiltContent>>;',
+      'export declare const howItWasBuiltUi: Readonly<Record<Locale, HowItWasBuiltUi>>;',
+    ],
+  },
   // Módulo independente com o raio-x do próprio site (ADR 0012, issue #41).
   site: {
     value: site,
@@ -122,8 +135,8 @@ const modules = {
 };
 
 mkdirSync(outDir, { recursive: true });
-for (const [name, { value, types, extra = {} }] of Object.entries(modules)) {
-  const source = Object.entries({ [name]: value, ...extra })
+for (const [name, { value, types, extra = {}, exportName = name }] of Object.entries(modules)) {
+  const source = Object.entries({ [exportName]: value, ...extra })
     .map(([key, entry]) => `export const ${key} = ${JSON.stringify(entry, null, 2)};\n`)
     .join('');
   writeFileSync(`${outDir}/${name}.js`, source);

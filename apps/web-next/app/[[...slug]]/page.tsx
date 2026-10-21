@@ -10,11 +10,13 @@ import {
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { buildCommunityPage } from '../../lib/community';
+import { buildHowItWasBuiltPage } from '../../lib/how-it-was-built';
 import { buildPersonJsonLd } from '../../lib/json-ld';
 import { resolvePage, staticPageParams, type PageParams } from '../../lib/route';
 import { AreaConstruction } from '../_components/area-construction';
 import { CommunityPage } from '../_components/community-page';
 import { HomeStage } from '../_components/home-stage';
+import { HowItWasBuiltPage } from '../_components/how-it-was-built-page';
 
 interface PageProps {
   params: Promise<PageParams>;
@@ -84,10 +86,16 @@ export default async function Page({ params }: PageProps) {
   }
 
   // A comunidade tem página própria quando há o que mostrar (ADR 0013).
-  const community = entry.area === 'community' ? buildCommunityPage(locale) : null;
-  return community ? (
-    <CommunityPage model={community} />
-  ) : (
-    <AreaConstruction area={entry.area} locale={locale} />
-  );
+  if (entry.area === 'community') {
+    const community = buildCommunityPage(locale);
+    if (community) return <CommunityPage model={community} />;
+  }
+
+  // Como foi feito tem página própria (ADR 0013).
+  if (entry.area === 'how-it-was-built') {
+    const model = buildHowItWasBuiltPage(locale);
+    if (model) return <HowItWasBuiltPage model={model} />;
+  }
+
+  return <AreaConstruction area={entry.area} locale={locale} />;
 }

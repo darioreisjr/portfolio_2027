@@ -42,8 +42,8 @@ describe('script de chegada pelas transições entre a home e as áreas', () => 
     }
     // O documento da área técnica não abre com a cortina do recrutador.
     expect(run(entryMark('recruiter', now), ['tech']).attributes.size).toBe(0);
-    // Área sem transição nunca liga o atributo.
-    expect(run(entryMark('how-it-was-built', now)).attributes.size).toBe(0);
+    // Área sem transição de entrada nunca liga o atributo.
+    expect(run(entryMark('home', now)).attributes.size).toBe(0);
   });
 
   it('não quebra a página sem armazenamento', () => {

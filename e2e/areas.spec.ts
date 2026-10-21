@@ -2,25 +2,21 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { settled } from './support/motion';
 
-// A página interna que ainda mostra a tela "em construção" (ADR 0009). Na do
-// shell a mensagem é do MFE, em shadow DOM; nas duas do Next.js, do próprio
-// documento. Os localizadores do Playwright atravessam o shadow DOM.
-// As quatro áreas com personagem já têm página de conteúdo e são testadas em
-// recruiter.spec.ts, tech.spec.ts, client.spec.ts e community.spec.ts. Só
-// "Como foi feito" continua na tela "em construção". A mensagem de um MFE,
-// estilizada por `::part()`, é coberta pelo teste unitário do React.
-const areas = [
-  {
-    area: 'how-it-was-built',
-    path: '/como-foi-feito/',
-    title: 'Como foi feito',
-    mfe: undefined,
-    // "Como foi feito" não tem personagem próprio.
-    figure: undefined,
-    color: { light: 'rgb(12, 14, 19)', dark: 'rgb(255, 255, 255)' },
-    scene: 'area-glow',
-  },
-] as const;
+// Testes das páginas internas (ADR 0009). Todas as cinco áreas
+// (recrutador, técnico, clientes, comunidade e como foi feito) já têm páginas
+// de conteúdo próprias e são testadas em recruiter.spec.ts, tech.spec.ts,
+// client.spec.ts, community.spec.ts e how-it-was-built.spec.ts.
+// Este arquivo preserva os testes do palco compartilhado das páginas internas
+// do shell (carregamento de areas.css, CLS e controle do dock).
+const areas: readonly {
+  area: string;
+  path: string;
+  title: string;
+  mfe?: string;
+  figure?: string;
+  color: { light: string; dark: string };
+  scene: string;
+}[] = [];
 
 const message = (page: Page) => page.getByRole('heading', { level: 2 });
 /** O preenchimento da barra: parte do MFE ou elemento do documento. */
@@ -99,25 +95,6 @@ for (const colorScheme of ['light', 'dark'] as const) {
   }
 }
 
-test('a mensagem e o botão acompanham o idioma, no MFE e nas páginas Next.js', async ({ page }) => {
-  const cases = [
-    ['/es/como-se-hizo/', 'Fase en construcción', 'Volver a la elección de perfil', '/es/'],
-    ['/en/how-it-was-built/', 'Stage under construction', 'Back to profile selection', '/en/'],
-  ] as const;
-  for (const [path, title, back, home] of cases) {
-    await page.goto(path);
-    await expect(message(page), path).toHaveText(title);
-    await expect(page.getByRole('link', { name: back }), path).toHaveAttribute('href', home);
-  }
-});
-
-test('o botão de volta leva à tela de escolha de perfil', async ({ page }) => {
-  await page.goto('/es/como-se-hizo/');
-  await page.getByRole('link', { name: 'Volver a la elección de perfil' }).click();
-  await expect(page).toHaveURL(/\/es\/$/);
-  await expect(page.locator('h1')).toHaveText('Elige tu camino');
-});
-
 for (const { path, scene } of areas) {
   test(`${path} tem cenário e barra em movimento, e a pausa para os dois`, async ({ page }) => {
     await page.goto(path);
@@ -164,7 +141,7 @@ test('com movimento reduzido nada se mexe e não há botão de pausa', async ({ 
 test('a pausa fica no grupo do canto, antes da bandeira, e funciona pelo teclado', async ({
   page,
 }) => {
-  await page.goto('/como-foi-feito/');
+  await page.goto('/recrutador/');
   const [pauseBox, flagBox] = [
     await pause(page).boundingBox(),
     await page.locator('.ds-language-switcher summary').boundingBox(),
@@ -175,9 +152,9 @@ test('a pausa fica no grupo do canto, antes da bandeira, e funciona pelo teclado
   await pause(page).focus();
   await page.keyboard.press('Space');
   await expect(pause(page)).toBeChecked();
-  await expect(barFill(page)).toHaveCSS('animation-play-state', 'paused');
+  await expect(page.locator('.area-scene-back')).toHaveCSS('animation-play-state', 'paused');
   await page.keyboard.press('Space');
-  await expect(barFill(page)).toHaveCSS('animation-play-state', 'running');
+  await expect(page.locator('.area-scene-back')).toHaveCSS('animation-play-state', 'running');
 });
 
 test('a home não carrega a folha das páginas internas', async ({ page }) => {
@@ -187,7 +164,7 @@ test('a home não carrega a folha das páginas internas', async ({ page }) => {
   await page.waitForLoadState('networkidle');
   expect(requested.filter((path) => path.includes('areas.css'))).toEqual([]);
   // E as páginas internas carregam, das duas origens de documento.
-  for (const path of ['/recrutador/', '/como-foi-feito/']) {
+  for (const path of ['/recrutador/', '/tecnico/', '/clientes/']) {
     requested.length = 0;
     await page.goto(path);
     await page.waitForLoadState('networkidle');

@@ -1,0 +1,202 @@
+{
+  "hero": {
+    "badge": "ESQUEMÁTICO TÉCNICO // REF-2027",
+    "title": "Como foi feito",
+    "subtitle": "Engenharia de software sem concessões",
+    "lead": "A anatomia interna deste portfólio: quatro públicos, quatro frameworks, desenvolvedor solo e zero backend, com limites rígidos de performance e contratos estritos.",
+    "stamps": {
+      "spec": "ESPECIFICAÇÃO 2027",
+      "rev": "REV 1.4.0",
+      "measured": "MEDIÇÃO {date}",
+      "repo": "CÓDIGO ABERTO"
+    }
+  },
+  "architecture": {
+    "tag": "SYS-01 // ARQUITETURA DE MICROFRONTENDS",
+    "title": "Composição sem Module Federation",
+    "lead": "Em vez de bibliotecas pesadas de orquestração em tempo de execução, cada microfrontend é compilado isoladamente e envelopado em um Custom Element (Web Component). O shell em JavaScript puro orquestra a carga sob demanda com base na rota.",
+    "appsTitle": "Módulos e Tecnologias",
+    "apps": [
+      {
+        "id": "shell",
+        "name": "Shell Vanilla",
+        "framework": "JavaScript Puro",
+        "role": "Orquestrador da Casca",
+        "description": "Documento raiz, cabeçalho, rodapé e montagem dinâmica do microfrontend da rota. Menos de 2 kB de JS."
+      },
+      {
+        "id": "mfe-vue",
+        "name": "MFE Vue",
+        "framework": "Vue 3",
+        "role": "Área do Recrutador",
+        "description": "Ficha rápida de competências, filtros reativos e linha do tempo de experiência profissional."
+      },
+      {
+        "id": "mfe-angular",
+        "name": "MFE Angular",
+        "framework": "Angular 19",
+        "role": "Área Técnica",
+        "description": "Estudos de caso aprofundados, terminal interativo de comandos e raio-x detalhado do repositório."
+      },
+      {
+        "id": "mfe-react",
+        "name": "MFE React",
+        "framework": "React 19",
+        "role": "Área do Cliente",
+        "description": "Catálogo comercial de serviços, depoimentos de clientes e fluxo de proposta comercial."
+      },
+      {
+        "id": "web-next",
+        "name": "Web Next",
+        "framework": "Next.js 15 (Estático)",
+        "role": "Home, Comunidade e Como Foi Feito",
+        "description": "Export estático via Server Components com hidratação seletiva e transições visuais imersivas."
+      }
+    ],
+    "boundariesTitle": "Regras de Fronteira Estritas",
+    "boundaries": [
+      "Nenhum MFE importa código de outro MFE ou aplicação.",
+      "Comunicação entre áreas feita exclusivamente por eventos tipados (@portfolio/contracts).",
+      "Dados centralizados e validados com Zod em @portfolio/content; nenhum app embute JSON próprio.",
+      "Cores, espaçamentos e tipografia consumidos estritamente por tokens semânticos (@portfolio/tokens).",
+      "Componentes visuais reutilizáveis vivem no design system em Lit (@portfolio/design-system).",
+      "Cada MFE é carregado apenas na própria rota e roda de forma independente em desenvolvimento."
+    ],
+    "pipelineTitle": "Pipeline de Montagem Estática",
+    "pipelineDescription": "Cada pacote compila seus próprios artefatos de forma incremental via Turborepo (pnpm build). O script pnpm assemble reúne os pacotes no diretório dist/, gerando um site 100% estático com Content-Security-Policy e hashes SHA-256 calculados no build."
+  },
+  "adrs": {
+    "tag": "SYS-02 // REGISTROS DE DECISÃO DE ARQUITETURA",
+    "title": "15 Decisões de Arquitetura (ADRs)",
+    "lead": "Toda escolha estrutural foi documentada e versionada em docs/architecture/adr/. Nenhuma decisão é tomada em silêncio.",
+    "categories": {
+      "composition": "Composição & Frameworks",
+      "designSystem": "Design System & Temas",
+      "navigation": "Navegação & Transições",
+      "governance": "Governança, CI/CD & Qualidade"
+    },
+    "statusLabels": {
+      "aceito": "Aceito",
+      "substituído": "Substituído",
+      "proposto": "Proposto"
+    },
+    "adrs": [
+      {
+        "number": 1,
+        "category": "composition",
+        "summary": "Microfrontends com cinco tecnologias: Next.js na home e páginas institucionais, Vue no recrutador, Angular no técnico, React no cliente e Shell vanilla."
+      },
+      {
+        "number": 2,
+        "category": "composition",
+        "summary": "Composição no navegador via Custom Elements: isolamento nativo por Web Components sem a sobrecarga ou fragilidade de Module Federation ou single-spa."
+      },
+      {
+        "number": 3,
+        "category": "designSystem",
+        "summary": "Design system universal em Web Components usando Lit e tokens CSS, garantindo consumo idêntico em qualquer tecnologia sem dependências pesadas."
+      },
+      {
+        "number": 4,
+        "category": "governance",
+        "summary": "Hospedagem e deploy inicial (substituído pela ADR 0007 para automação completa via GitHub Actions e Vercel)."
+      },
+      {
+        "number": 5,
+        "category": "designSystem",
+        "summary": "Controle de tema semântico no design system via atributo data-theme no <html>, sem flash de tema claro e com persistência em localStorage."
+      },
+      {
+        "number": 6,
+        "category": "navigation",
+        "summary": "Troca de idioma por links no documento HTML: cada idioma possui URL canônica própria, sem donos de estado globais em tempo de execução."
+      },
+      {
+        "number": 7,
+        "category": "governance",
+        "summary": "Hospedagem e deploy estático na Vercel via GitHub Actions com verificações completas de CI antes de qualquer publicação."
+      },
+      {
+        "number": 8,
+        "category": "composition",
+        "summary": "Comportamento de uma rota mora no app dono da rota: nenhuma biblioteca injeta lógica ou scripts na rota de outro microfrontend."
+      },
+      {
+        "number": 9,
+        "category": "designSystem",
+        "summary": "Palco das páginas internas isolado em CSS próprio, evitando contaminação de estilos globais entre os diferentes microfrontends."
+      },
+      {
+        "number": 10,
+        "category": "navigation",
+        "summary": "Palco com conteúdo e transição de entrada entre a home imersiva e as áreas temáticas."
+      },
+      {
+        "number": 11,
+        "category": "navigation",
+        "summary": "Transições bidirecionais entre a home e as áreas com registro em sessionStorage e cortinas visuais temáticas em CSS puro."
+      },
+      {
+        "number": 12,
+        "category": "governance",
+        "summary": "Raio-x do site em arquivo versionado (site.json), gravado a partir de medições reais de build e Lighthouse CI."
+      },
+      {
+        "number": 13,
+        "category": "composition",
+        "summary": "Páginas de conteúdo em rotas do Next.js como Server Components com folha isolada em public/, sem elevar o teto de JavaScript da rota."
+      },
+      {
+        "number": 14,
+        "category": "governance",
+        "summary": "Branches protegidas (development e production), dois ambientes independentes e geração automática de releases semânticas."
+      },
+      {
+        "number": 15,
+        "category": "composition",
+        "summary": "Conteúdo por idioma nos microfrontends: cada MFE compila entradas separadas para baixar apenas o JSON do idioma visualizado."
+      }
+    ]
+  },
+  "designSystem": {
+    "tag": "SYS-03 // DESIGN SYSTEM & TOKENS",
+    "title": "Web Components Universais & Tokens CSS",
+    "lead": "Uma única biblioteca de componentes em Lit atende a todos os frameworks, garantindo consistência visual estrita sem wrappers proprietários.",
+    "points": [
+      {
+        "title": "Lit & Custom Elements",
+        "text": "Componentes nativos do navegador encapsulados com Shadow DOM. O pacote do design system é carregado apenas uma vez pelo shell ou Next.js."
+      },
+      {
+        "title": "Tokens CSS Semânticos",
+        "text": "Cores, tipografia, espaçamento e raios definidos em CSS custom properties. Zero runtime JS para troca de tema."
+      },
+      {
+        "title": "Acessibilidade Universal",
+        "text": "Operação por teclado, foco visível, contraste WCAG AA nos temas claro e escuro e suporte a leitor de tela embutidos em cada componente."
+      }
+    ]
+  },
+  "metrics": {
+    "tag": "SYS-04 // QUALIDADE & AUDITORIA REAL",
+    "title": "Métricas e Orçamentos Reais",
+    "lead": "Dados medidos e auditados no pipeline de CI/CD pelo Lighthouse CI e verificador de orçamentos. Zero waterfall de rede.",
+    "tableHeaders": {
+      "area": "Área",
+      "framework": "Tecnologia",
+      "jsBudget": "JavaScript / Teto",
+      "lcp": "LCP",
+      "a11y": "Acessibilidade"
+    },
+    "zeroWaterfallTitle": "Zero Waterfall de Rede",
+    "zeroWaterfallText": "Cada rota recebe seu conteúdo empacotado para seu idioma. O custom element renderiza instantaneamente sem requisições de API subsequentes.",
+    "measuredAt": "Medição realizada em: {date}"
+  },
+  "footer": {
+    "tag": "SYS-05 // REPOSITÓRIO & AUDITORIA",
+    "title": "Código 100% Aberto",
+    "text": "Explore todo o histórico de commits, workflows de CI/CD, testes E2E e documentação de arquitetura diretamente no GitHub.",
+    "repoButton": "Ver repositório no GitHub",
+    "backButton": "Voltar à escolha de perfil"
+  }
+}

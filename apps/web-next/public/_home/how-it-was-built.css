@@ -1,0 +1,683 @@
+/* Página "Como foi feito" (ADR 0013, docs/plans/como-foi-feito-conteudo.md).
+   Folha própria, servida de /_home/ e ligada apenas nesta página.
+   Identidade: Blueprint / Esquemático Técnico (Ghost in the Shell / Fullmetal Alchemist).
+   Reticulado milimetrado, linhas de cota, carimbos de especificação e cantos chanfrados.
+   Apenas tokens semânticos e CSS nativo. */
+
+.how-it-was-built {
+  --b-grid-color: color-mix(in srgb, var(--color-border) 20%, transparent);
+  --b-accent: var(--color-area-tech);
+  --b-accent-glow: color-mix(in srgb, var(--b-accent) 25%, transparent);
+
+  display: grid;
+  gap: var(--space-block-xl);
+  box-sizing: border-box;
+  max-inline-size: 68rem;
+  margin-inline: auto;
+  padding: var(--space-block-lg) var(--space-inline-md) var(--ds-dock-reserve);
+  color: var(--color-text);
+  font-size: var(--text-size-md);
+  line-height: var(--text-line-height);
+  position: relative;
+}
+
+.how-it-was-built :is(h1, h2, h3, h4, p, ul, ol, dl, dd) {
+  margin: 0;
+  padding: 0;
+}
+
+.how-it-was-built :is(ul, ol) {
+  list-style: none;
+}
+
+.how-it-was-built a {
+  color: var(--color-text);
+  font-weight: var(--text-weight-strong);
+  text-decoration-thickness: var(--border-width-control);
+}
+
+.how-it-was-built :is(a, button, [tabindex]):focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ---------------------------------------------------------------------------
+   Reticulado de fundo e linhas de cota
+   --------------------------------------------------------------------------- */
+.b-grid-pattern {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image:
+    linear-gradient(to right, var(--b-grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--b-grid-color) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.2) 100%);
+  opacity: 0.6;
+}
+
+.b-dimension-line-top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-code);
+  font-size: var(--text-size-xs);
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  border-block-start: 1px dashed var(--b-grid-color);
+  padding-block-start: var(--space-block-xs);
+  max-inline-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   Hero / Carimbo de Engenharia
+   --------------------------------------------------------------------------- */
+.b-hero {
+  display: grid;
+  gap: var(--space-block-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding: var(--space-block-lg) var(--space-inline-lg);
+  position: relative;
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.b-hero-stamp {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-inline-xs);
+  font-family: var(--font-code);
+  font-size: var(--text-size-xs);
+}
+
+.b-stamp-item {
+  border: 1px solid var(--color-border);
+  padding: 2px var(--space-inline-xs);
+  background: color-mix(in srgb, var(--color-surface) 90%, var(--b-accent));
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+}
+
+.b-stamp-highlight {
+  border-color: var(--b-accent);
+  color: var(--b-accent);
+  font-weight: var(--text-weight-strong);
+}
+
+.b-badge {
+  font-family: var(--font-code);
+  font-size: var(--text-size-xs);
+  color: var(--b-accent);
+  letter-spacing: 0.1em;
+  font-weight: var(--text-weight-strong);
+}
+
+.b-title {
+  font-size: var(--text-size-xl);
+  font-weight: var(--text-weight-strong);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.b-subtitle {
+  font-size: var(--text-size-lg);
+  color: var(--color-text-muted);
+  font-weight: var(--text-weight-strong);
+}
+
+.b-lead {
+  max-inline-size: 50rem;
+  line-height: 1.6;
+}
+
+/* ---------------------------------------------------------------------------
+   Seções Técnicas
+   --------------------------------------------------------------------------- */
+.b-section {
+  display: grid;
+  gap: var(--space-block-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding: var(--space-block-lg) var(--space-inline-lg);
+  position: relative;
+}
+
+.b-section-header {
+  display: grid;
+  gap: var(--space-block-xs);
+  border-block-end: 1px solid var(--color-border);
+  padding-block-end: var(--space-block-sm);
+}
+
+.b-tag {
+  font-family: var(--font-code);
+  font-size: var(--text-size-xs);
+  color: var(--b-accent);
+  letter-spacing: 0.08em;
+  font-weight: var(--text-weight-strong);
+}
+
+.b-section h2 {
+  font-size: var(--text-size-lg);
+  font-weight: var(--text-weight-strong);
+}
+
+.b-section-lead {
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.b-subheading {
+  font-size: var(--text-size-md);
+  font-weight: var(--text-weight-strong);
+  letter-spacing: 0.02em;
+  margin-block-start: var(--space-block-xs);
+}
+
+/* ---------------------------------------------------------------------------
+   Bloco 1: Arquitetura & Apps Grid
+   --------------------------------------------------------------------------- */
+.b-apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  gap: var(--space-block-sm);
+}
+
+.b-app-card {
+  border: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-surface) 95%, var(--color-text));
+  padding: var(--space-block-md);
+  display: grid;
+  gap: var(--space-block-xs);
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+  position: relative;
+}
+
+.b-card-spec {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-code);
+  font-size: var(--text-size-xs);
+  color: var(--color-text-muted);
+  border-block-end: 1px dashed var(--color-border);
+  padding-block-end: 4px;
+}
+
+.b-app-card h4 {
+  font-size: var(--text-size-md);
+  font-weight: var(--text-weight-strong);
+}
+
+.b-app-role {
+  font-family: var(--font-code);
+  font-size: var(--text-size-xs);
+  color: var(--b-accent);
+}
+
+.b-app-desc {
+  font-size: var(--text-size-sm);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.b-arch-details {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-block-md);
+}
+
+@media (min-width: 48rem) {
+  .b-arch-details {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+}
+
+.b-boundaries-list {
+  display: grid;
+  gap: var(--space-block-xs);
+}
+
+.b-boundaries-list li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-inline-xs);
+  font-size: var(--text-size-sm);
+  align-items: baseline;
+}
+
+.b-rule-index {
+  font-family: var(--font-code);
+  font-size: var(--text-size-xs);
+  color: var(--b-accent);
+}
+
+.b-pipeline-box {
+  border: 1px dashed var(--color-border);
+  padding: var(--space-block-md);
+  background: color-mix(in srgb, var(--color-surface) 90%, var(--b-accent));
+  display: grid;
+  gap: var(--space-block-sm);
+  align-content: start;
+}
+
+.b-pipeline-box p {
+  font-size: var(--text-size-sm);
+  line-height: 1.5;
+}
+
+.b-flow-diagram {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-inline-xs);
+  font-family: var(--font-code);
+  font-size: var(--text-size-xs);
+}
+
+.b-flow-step {
+  border: 1px solid var(--b-accent);
+  padding: 4px var(--space-inline-xs);
+  background: var(--color-surface);
+  font-weight: var(--text-weight-strong);
+}
+
+.b-flow-arrow {
+  color: var(--b-accent);
+}
+
+/* ---------------------------------------------------------------------------
+   Bloco 2: ADRs Grid
+   --------------------------------------------------------------------------- */
+.b-adrs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+  gap: var(--space-block-sm);
+}
+
+.b-adr-card {
+  border: 1px solid var(--color-border);
+  padding: var(--space-block-sm);
+  display: grid;
+  gap: 4px;
+  background: var(--color-surface);
+  transition:
+    transform var(--motion-duration-sm) ease,
+    border-color var(--motion-duration-sm) ease;
+}
+
+.b-adr-card:hover {
+  border-color: var(--b-accent);
+  transform: translateY(-2px);
+}
+
+.b-adr-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  font-family: var(--font-code);
+  font-size: var(--text-size-xs);
+}
+
+.b-adr-num {
+  font-weight: var(--text-weight-strong);
+  color: var(--b-accent);
+}
+
+.b-adr-status {
+  padding: 2px 6px;
+  font-size: var(--text-size-xs);
+  border-radius: 2px;
+  font-weight: var(--text-weight-strong);
+}
+
+.b-badge-aceito {
+  background: color-mix(in srgb, var(--color-surface) 60%, #10b981);
+  color: var(--color-text);
+  border: 1px solid color-mix(in srgb, #10b981 70%, var(--color-border));
+}
+
+.b-badge-substituído {
+  background: color-mix(in srgb, var(--color-surface) 80%, var(--color-border));
+  color: var(--color-text-muted);
+  border: 1px dashed var(--color-border);
+}
+
+.b-badge-proposto {
+  background: color-mix(in srgb, var(--color-surface) 60%, #f59e0b);
+  color: var(--color-text);
+  border: 1px solid color-mix(in srgb, #f59e0b 70%, var(--color-border));
+}
+
+.b-adr-cat {
+  color: var(--color-text-muted);
+  margin-inline-start: auto;
+}
+
+.b-adr-title {
+  font-size: var(--text-size-sm);
+  font-weight: var(--text-weight-strong);
+  line-height: 1.3;
+}
+
+.b-adr-summary {
+  font-size: var(--text-size-xs);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+/* ---------------------------------------------------------------------------
+   Bloco 3: Design System & Tokens
+   --------------------------------------------------------------------------- */
+.b-points-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  gap: var(--space-block-md);
+}
+
+.b-point-card {
+  border: 1px solid var(--color-border);
+  padding: var(--space-block-md);
+  display: grid;
+  gap: var(--space-block-xs);
+  background: color-mix(in srgb, var(--color-surface) 95%, var(--b-accent));
+}
+
+.b-point-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-inline-xs);
+}
+
+.b-point-index {
+  font-family: var(--font-code);
+  font-size: var(--text-size-lg);
+  font-weight: var(--text-weight-strong);
+  color: var(--b-accent);
+}
+
+.b-point-card h3 {
+  font-size: var(--text-size-md);
+  font-weight: var(--text-weight-strong);
+}
+
+.b-point-card p {
+  font-size: var(--text-size-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* ---------------------------------------------------------------------------
+   Bloco 4: Métricas & Tabela de Orçamentos
+   --------------------------------------------------------------------------- */
+.b-table-container {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+}
+
+.b-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  text-align: start;
+  font-size: var(--text-size-sm);
+}
+
+.b-table th,
+.b-table td {
+  padding: var(--space-block-xs) var(--space-inline-sm);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.b-table thead th {
+  background: color-mix(in srgb, var(--color-surface) 85%, var(--b-accent));
+  font-family: var(--font-code);
+  font-size: var(--text-size-xs);
+  letter-spacing: 0.05em;
+  font-weight: var(--text-weight-strong);
+}
+
+.b-table-area code {
+  font-family: var(--font-code);
+  font-size: var(--text-size-xs);
+  color: var(--b-accent);
+}
+
+.b-budget-cell {
+  display: grid;
+  gap: 4px;
+}
+
+.b-budget-bar {
+  inline-size: 100%;
+  block-size: 6px;
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.b-budget-bar i {
+  display: block;
+  block-size: 100%;
+  background: var(--b-accent);
+}
+
+.b-score-100 {
+  font-family: var(--font-code);
+  font-weight: var(--text-weight-strong);
+  color: var(--color-text);
+}
+
+.b-metrics-footer {
+  display: grid;
+  gap: var(--space-block-sm);
+  margin-block-start: var(--space-block-sm);
+}
+
+.b-waterfall-card {
+  border: 1px dashed var(--b-accent);
+  padding: var(--space-block-sm);
+  background: color-mix(in srgb, var(--color-surface) 95%, var(--b-accent));
+}
+
+.b-waterfall-card h3 {
+  font-size: var(--text-size-sm);
+  font-weight: var(--text-weight-strong);
+  margin-block-end: 4px;
+}
+
+.b-waterfall-card p {
+  font-size: var(--text-size-xs);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.b-timestamp {
+  font-family: var(--font-code);
+  font-size: var(--text-size-xs);
+  color: var(--color-text-muted);
+  text-align: end;
+}
+
+/* ---------------------------------------------------------------------------
+   Conclusão & Botões de Ação
+   --------------------------------------------------------------------------- */
+.b-footer {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding: var(--space-block-lg) var(--space-inline-lg);
+  display: grid;
+  gap: var(--space-block-sm);
+  text-align: center;
+  justify-items: center;
+}
+
+.b-footer-text {
+  max-inline-size: 40rem;
+  color: var(--color-text-muted);
+}
+
+.b-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-inline-sm);
+  justify-content: center;
+  margin-block-start: var(--space-block-xs);
+}
+
+.b-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 44px;
+  min-inline-size: 44px;
+  padding: var(--space-block-xs) var(--space-inline-md);
+  font-family: var(--font-code);
+  font-size: var(--text-size-sm);
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  border: 1px solid var(--b-accent);
+  background: var(--color-surface);
+  cursor: pointer;
+  transition:
+    background var(--motion-duration-sm) ease,
+    color var(--motion-duration-sm) ease;
+}
+
+.b-btn-repo {
+  background: var(--color-text);
+  color: var(--color-surface);
+  border-color: var(--color-text);
+}
+
+.b-btn-repo:hover {
+  background: var(--b-accent);
+  color: #ffffff;
+  border-color: var(--b-accent);
+}
+
+.b-back {
+  color: var(--b-accent);
+}
+
+.b-back:hover {
+  background: color-mix(in srgb, var(--b-accent) 15%, transparent);
+}
+
+/* ---------------------------------------------------------------------------
+   Transição: Desdobramento de Blueprint (ADR 0011)
+   --------------------------------------------------------------------------- */
+.built-arrival,
+.built-departure:not([hidden]) {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+}
+
+.built-arrival::before,
+.built-departure:not([hidden])::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: #0c2340;
+  background-image:
+    linear-gradient(to right, rgba(0, 212, 255, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 212, 255, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.built-departure span {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-code);
+  font-size: var(--text-size-md);
+  letter-spacing: 0.1em;
+  color: #00d4ff;
+  border: 1px solid #00d4ff;
+  padding: var(--space-block-xs) var(--space-inline-md);
+  background: rgba(12, 35, 64, 0.9);
+}
+
+/* Aviso acessível no DOM para leitores de tela (WCAG 4.1.3). */
+.built-departure-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-arrival='how-it-was-built'] .built-arrival::before {
+    animation: blueprint-unfold var(--motion-duration-lg) var(--motion-ease-out)
+      var(--motion-duration-md) forwards;
+  }
+
+  .built-departure:not([hidden])::before {
+    animation: blueprint-fold var(--motion-duration-md) var(--motion-ease-out) backwards;
+  }
+}
+
+@keyframes blueprint-unfold {
+  from {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+  to {
+    clip-path: inset(0 50% 0 50%);
+    opacity: 0;
+  }
+}
+
+@keyframes blueprint-fold {
+  from {
+    clip-path: inset(0 50% 0 50%);
+    opacity: 0;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+/* Ajustes para telas pequenas */
+@media (max-width: 40rem) {
+  .how-it-was-built {
+    padding-inline: var(--space-inline-sm);
+  }
+
+  .b-section,
+  .b-hero,
+  .b-footer {
+    padding-inline: var(--space-inline-sm);
+    padding-block: var(--space-block-md);
+  }
+
+  .b-dimension-line-top {
+    font-size: 0.65rem;
+  }
+}
+
+/* Pausa de animações */
+body:has(.area-motion input:checked) .b-grid-pattern {
+  animation-play-state: paused;
+}
+
+/* Movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  .area-motion,
+  .built-arrival,
+  html[data-arrival='how-it-was-built'] .built-arrival {
+    display: none;
+  }
+}

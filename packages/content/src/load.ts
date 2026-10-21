@@ -4,6 +4,7 @@ import { locales, type Locale } from '@portfolio/contracts';
 import { z } from 'zod';
 import { buildClient, type ClientContent } from './client.js';
 import { buildCommunity, type CommunityContent } from './community.js';
+import { buildHowItWasBuilt, type HowItWasBuiltContent } from './how-it-was-built.js';
 import { buildRecruiter, type RecruiterContent } from './recruiter.js';
 import { buildTech, type TechContent } from './tech.js';
 import {
@@ -15,6 +16,7 @@ import {
   educationSchema,
   experienceSchema,
   homeSchema,
+  howItWasBuiltUiSchema,
   profileSchema,
   projectSchema,
   recruiterUiSchema,
@@ -28,6 +30,7 @@ import {
   type CommunityUi,
   type Contact,
   type Home,
+  type HowItWasBuiltUi,
   type Profile,
   type RecruiterUi,
   type Site,
@@ -64,6 +67,10 @@ export interface Content {
   communityUi: Record<Locale, CommunityUi>;
   /** Artigos, código aberto e canais por idioma; `null` sem artigo nem projeto. */
   community: Record<Locale, CommunityContent> | null;
+  /** Textos de interface da página "Como foi feito". */
+  howItWasBuiltUi: Record<Locale, HowItWasBuiltUi>;
+  /** Conteúdo da página "Como foi feito" por idioma. */
+  howItWasBuilt: Record<Locale, HowItWasBuiltContent>;
 }
 
 export interface LoadOptions {
@@ -384,6 +391,13 @@ export function loadContent(
         }
       : null;
 
+  const howItWasBuiltUi = Object.fromEntries(
+    locales.map((locale) => [
+      locale,
+      parseFile(dataDir, `how-it-was-built/${locale}.json`, howItWasBuiltUiSchema),
+    ]),
+  ) as Record<Locale, HowItWasBuiltUi>;
+
   return {
     ui,
     home,
@@ -395,6 +409,10 @@ export function loadContent(
           locales.map((locale) => [locale, buildCommunity(communitySources, locale)]),
         ) as Record<Locale, CommunityContent>)
       : null,
+    howItWasBuiltUi,
+    howItWasBuilt: Object.fromEntries(
+      locales.map((locale) => [locale, buildHowItWasBuilt(site, howItWasBuiltUi[locale], locale)]),
+    ) as Record<Locale, HowItWasBuiltContent>,
     clientUi,
     client: clientSources
       ? (Object.fromEntries(

@@ -572,3 +572,56 @@ describe('submódulos por idioma gerados', () => {
     }
   });
 });
+
+describe('how-it-was-built (como foi feito)', () => {
+  it('carrega conteúdo válido e completo nos três idiomas', () => {
+    const { howItWasBuilt, howItWasBuiltUi, site } = loadContent(dataDir, { includeDrafts: false });
+
+    expect(site.decisions).toHaveLength(15);
+    const adr15 = site.decisions.find((d) => d.number === 15);
+    expect(adr15?.status).toBe('aceito');
+
+    for (const locale of locales) {
+      const page = howItWasBuilt[locale];
+      const text = howItWasBuiltUi[locale];
+
+      expect(page).toBeDefined();
+      expect(text).toBeDefined();
+
+      // Hero
+      expect(page.hero.title).not.toBe('');
+      expect(page.hero.subtitle).not.toBe('');
+      expect(page.hero.lead).not.toBe('');
+      expect(page.hero.stamps.measured).toContain(site.measuredAt);
+
+      // Arquitetura
+      expect(page.architecture.apps).toHaveLength(5);
+      expect(page.architecture.boundaries.length).toBeGreaterThanOrEqual(5);
+      expect(page.architecture.pipelineDescription).not.toBe('');
+
+      // ADRs
+      expect(page.adrs.items).toHaveLength(15);
+      for (const item of page.adrs.items) {
+        expect(item.number).toBeGreaterThan(0);
+        expect(item.title).not.toBe('');
+        expect(item.status).toMatch(/aceito|substituído|proposto/);
+        expect(item.statusLabel).not.toBe('');
+        expect(item.category).toMatch(/composition|designSystem|navigation|governance/);
+        expect(item.summary).not.toBe('');
+      }
+
+      // Design System & Tokens
+      expect(page.designSystem.points.length).toBeGreaterThanOrEqual(3);
+
+      // Métricas
+      expect(page.metrics.areas).toHaveLength(6);
+      expect(page.metrics.parts.length).toBeGreaterThanOrEqual(5);
+      expect(page.metrics.zeroWaterfallTitle).not.toBe('');
+
+      // Repositório e rodapé
+      expect(page.repository).toBe('https://github.com/darioreisjr/portfolio_2027');
+      expect(page.footer.repoButton).not.toBe('');
+      expect(page.footer.backButton).not.toBe('');
+    }
+  });
+});

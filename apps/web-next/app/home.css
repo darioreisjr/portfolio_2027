@@ -1680,6 +1680,66 @@ html[data-arrival='community'] .home-arrival::after {
     forwards;
 }
 
+/* Como foi feito, desdobramento de blueprint: a tela se abre ou desdobra como uma planta técnica com reticulado. */
+:is(
+  .home-enter[data-area='how-it-was-built'],
+  html[data-arrival='how-it-was-built'] .home-arrival
+) {
+  --curtain: #0c2340;
+  --away-x: 0%;
+  --away-y: 0%;
+}
+
+:is(
+  .home-enter[data-area='how-it-was-built'],
+  html[data-arrival='how-it-was-built'] .home-arrival
+)::after {
+  z-index: -2;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(to right, rgba(0, 212, 255, 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 212, 255, 0.25) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.home-enter[data-area='how-it-was-built']::before {
+  animation: blueprint-close var(--motion-duration-md) var(--motion-ease-out) backwards;
+}
+
+html[data-arrival='how-it-was-built'] .home-arrival::before {
+  animation: blueprint-open var(--motion-duration-lg) var(--motion-ease-out)
+    var(--motion-duration-md) forwards;
+}
+
+html[data-arrival='how-it-was-built'] .home-arrival::after {
+  animation: blueprint-open var(--motion-duration-lg) var(--motion-ease-out)
+    var(--motion-duration-md) forwards;
+}
+
+@keyframes blueprint-close {
+  from {
+    clip-path: inset(0 50% 0 50%);
+    opacity: 0;
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+@keyframes blueprint-open {
+  from {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+
+  to {
+    clip-path: inset(0 50% 0 50%);
+    opacity: 0;
+  }
+}
+
 @keyframes aura-close {
   from {
     clip-path: circle(0% at 50% 50%);
