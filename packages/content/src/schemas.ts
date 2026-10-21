@@ -637,3 +637,104 @@ export const communityUiSchema = z
   })
   .strict();
 export type CommunityUi = z.infer<typeof communityUiSchema>;
+
+/**
+ * Textos de interface da página "Como foi feito". Ficam fora de `ui` porque
+ * só a página dela os usa (ADR 0013).
+ */
+export const howItWasBuiltUiSchema = z
+  .object({
+    hero: z
+      .object({
+        badge: text,
+        title: text,
+        subtitle: text,
+        lead: text,
+        stamps: labels(['spec', 'rev', 'measured', 'repo']),
+      })
+      .strict(),
+    architecture: z
+      .object({
+        tag: text,
+        title: text,
+        lead: text,
+        appsTitle: text,
+        apps: z
+          .array(
+            z
+              .object({
+                id: text,
+                name: text,
+                framework: text,
+                role: text,
+                description: text,
+              })
+              .strict(),
+          )
+          .min(1),
+        boundariesTitle: text,
+        boundaries: z.array(text).min(1),
+        pipelineTitle: text,
+        pipelineDescription: text,
+      })
+      .strict(),
+    adrs: z
+      .object({
+        tag: text,
+        title: text,
+        lead: text,
+        categories: labels(['composition', 'designSystem', 'navigation', 'governance']),
+        statusLabels: labels(['aceito', 'substituído', 'proposto']),
+        adrs: z
+          .array(
+            z
+              .object({
+                number: z.number().int().positive(),
+                category: z.enum(['composition', 'designSystem', 'navigation', 'governance']),
+                summary: text,
+              })
+              .strict(),
+          )
+          .min(1),
+      })
+      .strict(),
+    designSystem: z
+      .object({
+        tag: text,
+        title: text,
+        lead: text,
+        points: z
+          .array(
+            z
+              .object({
+                title: text,
+                text: text,
+              })
+              .strict(),
+          )
+          .min(1),
+      })
+      .strict(),
+    metrics: z
+      .object({
+        tag: text,
+        title: text,
+        lead: text,
+        tableHeaders: labels(['area', 'framework', 'jsBudget', 'lcp', 'a11y']),
+        zeroWaterfallTitle: text,
+        zeroWaterfallText: text,
+        measuredAt: text,
+      })
+      .strict(),
+    footer: z
+      .object({
+        tag: text,
+        title: text,
+        text: text,
+        repoButton: text,
+        backButton: text,
+      })
+      .strict(),
+  })
+  .strict();
+export type HowItWasBuiltUi = z.infer<typeof howItWasBuiltUiSchema>;

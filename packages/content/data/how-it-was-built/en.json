@@ -1,0 +1,202 @@
+{
+  "hero": {
+    "badge": "TECHNICAL BLUEPRINT // REF-2027",
+    "title": "How it was built",
+    "subtitle": "Software engineering without compromises",
+    "lead": "The internal anatomy of this portfolio: four audiences, four frameworks, solo developer and zero backend, with strict performance budgets and explicit contracts.",
+    "stamps": {
+      "spec": "SPECIFICATION 2027",
+      "rev": "REV 1.4.0",
+      "measured": "MEASURED {date}",
+      "repo": "OPEN SOURCE"
+    }
+  },
+  "architecture": {
+    "tag": "SYS-01 // MICROFRONTEND ARCHITECTURE",
+    "title": "Composition without Module Federation",
+    "lead": "Rather than relying on heavy runtime orchestration libraries, each microfrontend is compiled independently and wrapped in a Custom Element (Web Component). A vanilla JavaScript shell orchestrates on-demand loading based on the URL route.",
+    "appsTitle": "Modules and Technologies",
+    "apps": [
+      {
+        "id": "shell",
+        "name": "Vanilla Shell",
+        "framework": "Pure JavaScript",
+        "role": "Shell Orchestrator",
+        "description": "Root document, header, footer, and dynamic microfrontend mounting. Under 2 kB of JS."
+      },
+      {
+        "id": "mfe-vue",
+        "name": "Vue MFE",
+        "framework": "Vue 3",
+        "role": "Recruiter Area",
+        "description": "Quick skills profile, reactive filters, and career timeline."
+      },
+      {
+        "id": "mfe-angular",
+        "name": "Angular MFE",
+        "framework": "Angular 19",
+        "role": "Technical Area",
+        "description": "In-depth case studies, interactive terminal, and repository site x-ray."
+      },
+      {
+        "id": "mfe-react",
+        "name": "React MFE",
+        "framework": "React 19",
+        "role": "Client Area",
+        "description": "Commercial service catalog, client testimonials, and proposal inquiry flow."
+      },
+      {
+        "id": "web-next",
+        "name": "Web Next",
+        "framework": "Next.js 15 (Static)",
+        "role": "Home, Community and How It Was Built",
+        "description": "Static export via Server Components with selective hydration and immersive visual transitions."
+      }
+    ],
+    "boundariesTitle": "Strict Boundary Rules",
+    "boundaries": [
+      "No MFE imports code from another MFE or application.",
+      "Cross-area communication happens exclusively through typed events (@portfolio/contracts).",
+      "Centralized data validated with Zod in @portfolio/content; no app embeds custom JSON.",
+      "Colors, spacing, and typography consumed strictly via semantic tokens (@portfolio/tokens).",
+      "Reusable UI components reside in the Lit design system (@portfolio/design-system).",
+      "Each MFE is loaded only on its own route and runs independently in development."
+    ],
+    "pipelineTitle": "Static Assembly Pipeline",
+    "pipelineDescription": "Each package compiles its own artifacts incrementally using Turborepo (pnpm build). The pnpm assemble script gathers all packages into the dist/ directory, producing a 100% static site with Content-Security-Policy and SHA-256 hashes computed at build time."
+  },
+  "adrs": {
+    "tag": "SYS-02 // ARCHITECTURE DECISION RECORDS",
+    "title": "15 Architecture Decisions (ADRs)",
+    "lead": "Every architectural choice was documented and version-controlled in docs/architecture/adr/. No decision is made silently.",
+    "categories": {
+      "composition": "Composition & Frameworks",
+      "designSystem": "Design System & Themes",
+      "navigation": "Navigation & Transitions",
+      "governance": "Governance, CI/CD & Quality"
+    },
+    "statusLabels": {
+      "aceito": "Accepted",
+      "substituído": "Superseded",
+      "proposto": "Proposed"
+    },
+    "adrs": [
+      {
+        "number": 1,
+        "category": "composition",
+        "summary": "Microfrontends with five technologies: Next.js on home and static pages, Vue for recruiter, Angular for technical, React for client, and vanilla Shell."
+      },
+      {
+        "number": 2,
+        "category": "composition",
+        "summary": "Browser composition via Custom Elements: native isolation through Web Components without the overhead or fragility of Module Federation or single-spa."
+      },
+      {
+        "number": 3,
+        "category": "designSystem",
+        "summary": "Universal Web Component design system using Lit and CSS tokens, ensuring uniform consumption across any framework without heavy wrappers."
+      },
+      {
+        "number": 4,
+        "category": "governance",
+        "summary": "Initial hosting and deployment (superseded by ADR 0007 for automated GitHub Actions and Vercel deployments)."
+      },
+      {
+        "number": 5,
+        "category": "designSystem",
+        "summary": "Semantic theme control in the design system via data-theme on <html>, preventing theme flash with localStorage persistence."
+      },
+      {
+        "number": 6,
+        "category": "navigation",
+        "summary": "Language switching via HTML document links: each language has its own canonical URL, with zero runtime global state owners."
+      },
+      {
+        "number": 7,
+        "category": "governance",
+        "summary": "Static hosting and deployment on Vercel via GitHub Actions with full CI gate checks prior to release."
+      },
+      {
+        "number": 8,
+        "category": "composition",
+        "summary": "Route behavior belongs to the route's owner app: no shared library injects logic into another microfrontend's route."
+      },
+      {
+        "number": 9,
+        "category": "designSystem",
+        "summary": "Isolated internal page stages in dedicated CSS, preventing global style leaks across distinct microfrontends."
+      },
+      {
+        "number": 10,
+        "category": "navigation",
+        "summary": "Content stage and entry transitions connecting the immersive home page to the themed areas."
+      },
+      {
+        "number": 11,
+        "category": "navigation",
+        "summary": "Bidirectional transitions between home and target areas with sessionStorage flags and pure CSS themed curtains."
+      },
+      {
+        "number": 12,
+        "category": "governance",
+        "summary": "Site x-ray in a versioned data file (site.json), generated from real build measurements and Lighthouse CI audits."
+      },
+      {
+        "number": 13,
+        "category": "composition",
+        "summary": "Content pages on Next.js routes as Server Components with isolated styles in public/, without inflating the route JS bundle."
+      },
+      {
+        "number": 14,
+        "category": "governance",
+        "summary": "Protected branches (development and production), two isolated environments, and automated semantic releases."
+      },
+      {
+        "number": 15,
+        "category": "composition",
+        "summary": "Language-scoped content bundles in microfrontends: each MFE compiles dedicated entry points to fetch only the active language JSON."
+      }
+    ]
+  },
+  "designSystem": {
+    "tag": "SYS-03 // DESIGN SYSTEM & TOKENS",
+    "title": "Universal Web Components & CSS Tokens",
+    "lead": "A single Lit component library serves every framework, ensuring strict visual fidelity without proprietary framework wrappers.",
+    "points": [
+      {
+        "title": "Lit & Custom Elements",
+        "text": "Native browser components encapsulated with Shadow DOM. The design system bundle is loaded only once by the shell or Next.js layout."
+      },
+      {
+        "title": "Semantic CSS Tokens",
+        "text": "Colors, typography, spacing, and border radii defined in CSS custom properties. Zero JavaScript runtime overhead for theme switching."
+      },
+      {
+        "title": "Universal Accessibility",
+        "text": "Keyboard navigation, visible focus indicators, WCAG AA contrast in both themes, and screen reader announcements built into every component."
+      }
+    ]
+  },
+  "metrics": {
+    "tag": "SYS-04 // QUALITY & REAL AUDITING",
+    "title": "Real Metrics & Performance Budgets",
+    "lead": "Measured and verified data in the CI/CD pipeline via Lighthouse CI and strict bundle budget checkers. Zero network waterfalls.",
+    "tableHeaders": {
+      "area": "Area",
+      "framework": "Technology",
+      "jsBudget": "JavaScript / Ceiling",
+      "lcp": "LCP",
+      "a11y": "Accessibility"
+    },
+    "zeroWaterfallTitle": "Zero Network Waterfalls",
+    "zeroWaterfallText": "Every route ships its content pre-bundled for the current language. Custom elements render immediately with no subsequent API roundtrips.",
+    "measuredAt": "Measurement recorded on: {date}"
+  },
+  "footer": {
+    "tag": "SYS-05 // REPOSITORY & AUDITING",
+    "title": "100% Open Source",
+    "text": "Explore the complete commit history, CI/CD workflows, E2E tests, and architecture documentation directly on GitHub.",
+    "repoButton": "View repository on GitHub",
+    "backButton": "Back to profile selection"
+  }
+}
