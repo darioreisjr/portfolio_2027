@@ -7,6 +7,7 @@ import {
   hreflangAlternates,
   languageAlternates,
   locales,
+  mfeScript,
   onMfeReady,
   pathFor,
   personaAreas,
@@ -55,6 +56,24 @@ describe('tabela de rotas', () => {
     });
     expect(findRoute('/tecnico/')).toMatchObject({ locale: 'pt-BR', entry: { area: 'tech' } });
     expect(findRoute('/nao-existe/')).toBeUndefined();
+  });
+
+  it('resolve o script do MFE injetando o idioma ativo quando parametrizado', () => {
+    const recruiter = routes.find((r) => r.area === 'recruiter');
+    expect(recruiter?.mfe).toBeDefined();
+    if (recruiter?.mfe) {
+      expect(mfeScript(recruiter.mfe, 'pt-BR')).toBe('/_mfe/vue/pt-br/mfe.js');
+      expect(mfeScript(recruiter.mfe, 'en')).toBe('/_mfe/vue/en/mfe.js');
+      expect(mfeScript(recruiter.mfe, 'es')).toBe('/_mfe/vue/es/mfe.js');
+    }
+    const tech = routes.find((r) => r.area === 'tech');
+    if (tech?.mfe) {
+      expect(mfeScript(tech.mfe, 'pt-BR')).toBe('/_mfe/angular/pt-br/main.js');
+    }
+    const client = routes.find((r) => r.area === 'client');
+    if (client?.mfe) {
+      expect(mfeScript(client.mfe, 'pt-BR')).toBe('/_mfe/react/pt-br/mfe.js');
+    }
   });
 });
 

@@ -1,4 +1,4 @@
-import type { Locale, MfeTarget } from '@portfolio/contracts';
+import { mfeScript, type Locale, type MfeTarget } from '@portfolio/contracts';
 
 type LoadModule = (script: string) => Promise<unknown>;
 
@@ -15,10 +15,11 @@ export async function mountMfe(
   basePath: string,
   load: LoadModule = importModule,
 ): Promise<void> {
+  const script = mfeScript(mfe, locale);
   try {
-    await load(mfe.script);
+    await load(script);
   } catch (error) {
-    console.error(`Falha ao carregar ${mfe.script}`, error);
+    console.error(`Falha ao carregar ${script}`, error);
     const message = document.createElement('p');
     message.setAttribute('role', 'alert');
     message.textContent = outlet.dataset.loadError ?? '';

@@ -36,8 +36,18 @@ export function scriptsIn(distDir) {
   const mfes = join(distDir, '_mfe');
   if (existsSync(mfes)) {
     for (const app of readdirSync(mfes).sort()) {
+      const appDir = join(mfes, app);
       for (const name of ['mfe.js', 'main.js']) {
-        if (existsSync(join(mfes, app, name))) entries.push(`_mfe/${app}/${name}`);
+        if (existsSync(join(appDir, name))) entries.push(`_mfe/${app}/${name}`);
+      }
+      for (const entry of readdirSync(appDir, { withFileTypes: true })) {
+        if (entry.isDirectory()) {
+          for (const name of ['mfe.js', 'main.js']) {
+            if (existsSync(join(appDir, entry.name, name))) {
+              entries.push(`_mfe/${app}/${entry.name}/${name}`);
+            }
+          }
+        }
       }
     }
   }

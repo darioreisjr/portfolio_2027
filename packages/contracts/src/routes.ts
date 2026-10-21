@@ -16,8 +16,16 @@ export type Framework = 'Next.js' | 'Vue' | 'Angular' | 'React';
 export interface MfeTarget {
   /** Custom element que o MFE registra. */
   tag: string;
-  /** Módulo ES que registra o custom element. */
+  /** Módulo ES que registra o custom element. Pode conter `[locale]`. */
   script: string;
+}
+
+/**
+ * Resolve a URL do script do MFE para um determinado idioma.
+ * Se contiver `[locale]`, substitui pelo idioma em minúsculo (ex: `pt-br`, `en`, `es`).
+ */
+export function mfeScript(mfe: MfeTarget, locale: Locale): string {
+  return mfe.script.replace('[locale]', locale.toLowerCase());
 }
 
 export interface RouteEntry {
@@ -46,7 +54,7 @@ export const routes: readonly RouteEntry[] = [
     area: 'recruiter',
     owner: 'shell',
     framework: 'Vue',
-    mfe: { tag: 'mfe-recrutador', script: '/_mfe/vue/mfe.js' },
+    mfe: { tag: 'mfe-recrutador', script: '/_mfe/vue/[locale]/mfe.js' },
     paths: {
       'pt-BR': '/recrutador/',
       en: '/en/recruiter/',
@@ -57,7 +65,7 @@ export const routes: readonly RouteEntry[] = [
     area: 'tech',
     owner: 'shell',
     framework: 'Angular',
-    mfe: { tag: 'mfe-tecnico', script: '/_mfe/angular/main.js' },
+    mfe: { tag: 'mfe-tecnico', script: '/_mfe/angular/[locale]/main.js' },
     paths: {
       'pt-BR': '/tecnico/',
       en: '/en/tech/',
@@ -68,7 +76,7 @@ export const routes: readonly RouteEntry[] = [
     area: 'client',
     owner: 'shell',
     framework: 'React',
-    mfe: { tag: 'mfe-clientes', script: '/_mfe/react/mfe.js' },
+    mfe: { tag: 'mfe-clientes', script: '/_mfe/react/[locale]/mfe.js' },
     paths: {
       'pt-BR': '/clientes/',
       en: '/en/clients/',

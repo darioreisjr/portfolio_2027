@@ -112,6 +112,8 @@ Com a página da comunidade e a explosão de aura (2026-10-10, ADR 0013): o Java
 
 Com o nome e o cargo na home e o aviso de nova aba no recrutador (2026-10-13): a home segue em 144,7 kB e um arquivo de fonte, com LCP de 2,55 a 2,58 s (teto 2,7 s) e CLS 0; a linha entrou em negrito para não baixar o peso normal. O MFE Vue vai de 50,4 para 50,7 kB e `/recrutador` de 59,5 para 59,7 kB. Detalhes em `docs/plans/issues-prioridade-baixa.md`.
 
+Com o carregamento nos microfrontends só do conteúdo do idioma da página (2026-10-21, ADR 0015, issue #32): cada microfrontend passa a compilar entradas independentes por idioma (`[locale]/mfe.js`) carregadas diretamente pelo shell de acordo com a rota ativa, eliminando os dados dos outros idiomas do bundle de execução. Medido: `mfe-vue` caiu para 45,2 kB gzip (teto 60 kB), `mfe-react` para 94,3 kB gzip (teto 105 kB) e `mfe-angular` para 63,1 kB gzip (teto 110 kB). As rotas `/recrutador`, `/clientes` e `/tecnico` medem respectivamente 54,5 kB, 103,7 kB e 72,4 kB transferidos, com folga ampla em relação aos tetos e zero waterfalls de rede.
+
 As estimativas erraram para os dois lados. O Angular sem zone.js ficou em um terço do teto. O React nasceu perto dele, e o teto subiu para 105 kB com a página do cliente. As páginas Next.js medem 144,7 kB, dos quais 7,8 kB são do design system: o Next.js sozinho já passa dos 130 kB da tabela acima, e essa parte não é cobrada por `budgets.json`, que só tem o total de 150 kB por rota (issue aberta na rodada de 2026-10-14). O MFE Vue cresce com o conteúdo dos três idiomas dentro do JavaScript; o mesmo vai acontecer com os dados reais das áreas técnica e do cliente.
 
 ## Outros recursos

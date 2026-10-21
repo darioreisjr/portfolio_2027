@@ -1,4 +1,6 @@
+import type { Site, TechContent, TechUi } from '@portfolio/content/tech';
 import { site, tech, techUi } from '@portfolio/content/tech';
+import type { Ui } from '@portfolio/content/schemas';
 import { ui } from '@portfolio/content/ui';
 import { defaultLocale, emitMfeReady, locales, type Locale } from '@portfolio/contracts';
 import {
@@ -6,10 +8,22 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
+  InjectionToken,
   input,
   ViewEncapsulation,
 } from '@angular/core';
 import { TechPageComponent } from './tech-page.component';
+
+export interface TechAreaContent {
+  locale: Locale;
+  site: Site;
+  tech: TechContent | null;
+  techUi: TechUi;
+  construction: Ui['construction'];
+}
+
+export const TECH_CONTENT = new InjectionToken<TechAreaContent>('TECH_CONTENT');
 
 @Component({
   selector: 'app-tech-area',
@@ -43,13 +57,24 @@ export class TechAreaComponent {
   readonly locale = input<string>();
   readonly basePath = input<string>();
 
-  protected readonly site = site;
+  private readonly injected = inject(TECH_CONTENT, { optional: true });
+
+  protected readonly site = this.injected?.site ?? site;
   protected readonly resolvedLocale = computed<Locale>(
-    () => locales.find((candidate) => candidate === this.locale()) ?? defaultLocale,
+    () =>
+      this.injected?.locale ??
+      locales.find((candidate) => candidate === this.locale()) ??
+      defaultLocale,
   );
-  protected readonly text = computed(() => ui[this.resolvedLocale()].construction);
-  protected readonly content = computed(() => tech?.[this.resolvedLocale()]);
-  protected readonly pageText = computed(() => techUi[this.resolvedLocale()]);
+  protected readonly text = computed(
+    () => this.injected?.construction ?? ui[this.resolvedLocale()].construction,
+  );
+  protected readonly content = computed(() =>
+    this.injected ? this.injected.tech : tech?.[this.resolvedLocale()],
+  );
+  protected readonly pageText = computed(
+    () => this.injected?.techUi ?? techUi[this.resolvedLocale()],
+  );
 
   constructor() {
     afterNextRender(() => emitMfeReady({ area: 'tech', locale: this.resolvedLocale() }));

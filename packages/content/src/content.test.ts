@@ -532,3 +532,31 @@ describe('comunidade', () => {
     expect(community?.['pt-BR'].example.channels).toBe(true);
   });
 });
+
+describe('submódulos por idioma gerados', () => {
+  it('geram dados isolados por idioma para recrutador, tech, client e ui', async () => {
+    for (const locale of locales) {
+      const rec = (await import(`../dist/data/recruiter/${locale}.js`)) as {
+        recruiter: { name: string } | null;
+        recruiterUi: { contact?: unknown };
+      };
+      expect(rec.recruiterUi).toBeDefined();
+      expect(rec.recruiterUi.contact).toBeDefined();
+
+      const u = (await import(`../dist/data/ui/${locale}.js`)) as {
+        ui: { construction: { title: string } };
+      };
+      expect(u.ui.construction.title).not.toBe('');
+
+      const t = (await import(`../dist/data/tech/${locale}.js`)) as {
+        techUi: { projects: unknown };
+      };
+      expect(t.techUi.projects).toBeDefined();
+
+      const c = (await import(`../dist/data/client/${locale}.js`)) as {
+        clientUi: { services: unknown };
+      };
+      expect(c.clientUi.services).toBeDefined();
+    }
+  });
+});
