@@ -30,6 +30,7 @@
     "@portfolio/design-system": "workspace:*",
     "@portfolio/tokens": "workspace:*",
     "jsdom": "catalog:",
+    "terser": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

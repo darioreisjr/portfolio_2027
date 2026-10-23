@@ -19,6 +19,19 @@ export default defineConfig(({ command }) => ({
     __HAS_CONTENT__: JSON.stringify(recruiter !== null),
   },
   build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        passes: 2,
+        pure_getters: true,
+      },
+      mangle: {
+        toplevel: true,
+      },
+      format: {
+        comments: false,
+      },
+    },
     lib: {
       entry: {
         'pt-br': 'src/entries/pt-br.ts',

@@ -1,24 +1,18 @@
-import { client, clientUi, type ClientContent, type ClientUi } from '@portfolio/content/client';
+import type { ClientContent, ClientUi } from '@portfolio/content/client';
 import type { Ui } from '@portfolio/content/schemas';
-import { ui } from '@portfolio/content/ui';
 import { emitMfeReady, type Locale } from '@portfolio/contracts';
 import { useEffect } from 'react';
 import { ClientPage } from './client/ClientPage.tsx';
 
-interface AppProps {
+export interface AppProps {
   locale: Locale;
-  /** Conteúdo da área; por padrão, o do pacote. `null`: a tela "em construção". */
-  content?: ClientContent | null;
-  text?: ClientUi;
-  construction?: Ui['construction'];
+  /** Conteúdo da área; `null`: a tela "em construção". */
+  content: ClientContent | null;
+  text: ClientUi;
+  construction: Ui['construction'];
 }
 
-export function App({
-  locale,
-  content = client?.[locale] ?? null,
-  text = clientUi[locale],
-  construction = ui[locale].construction,
-}: AppProps) {
+export function App({ locale, content, text, construction }: AppProps) {
   useEffect(() => emitMfeReady({ area: 'client', locale }), [locale]);
 
   if (content && text) return <ClientPage content={content} text={text} />;

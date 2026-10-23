@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports -- só neste teste: a folha, não o runtime do design system
 import areasSheet from '@portfolio/design-system/areas.css?inline';
 import { clientUi, type ClientContent } from '@portfolio/content/client';
+import { ui } from '@portfolio/content/ui';
 import { onMfeReady, type MfeReadyDetail } from '@portfolio/contracts';
 import tokensSheet from '@portfolio/tokens/tokens.css?inline';
 import { createRoot, type Root } from 'react-dom/client';
@@ -59,7 +60,14 @@ async function render(page: ClientContent | null): Promise<ShadowRoot> {
   const shadow = host.attachShadow({ mode: 'open' });
   const root = createRoot(shadow);
   roots.push(root);
-  root.render(<App locale="pt-BR" content={page} text={clientUi['pt-BR']} />);
+  root.render(
+    <App
+      locale="pt-BR"
+      content={page}
+      text={clientUi['pt-BR']}
+      construction={ui['pt-BR'].construction}
+    />,
+  );
   await expect.poll(() => shadow.querySelector('section')).not.toBeNull();
   return shadow;
 }
@@ -184,7 +192,14 @@ describe('sem conteúdo', () => {
     const shadow = host.attachShadow({ mode: 'open' });
     const root = createRoot(shadow);
     roots.push(root);
-    root.render(<App locale="pt-BR" content={null} />);
+    root.render(
+      <App
+        locale="pt-BR"
+        content={null}
+        text={clientUi['pt-BR']}
+        construction={ui['pt-BR'].construction}
+      />,
+    );
     await expect.poll(() => shadow.querySelector('[part="message"]')).not.toBeNull();
 
     expect(shadow.textContent).toContain('Fase em construção');
