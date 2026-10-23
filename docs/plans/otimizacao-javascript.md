@@ -136,19 +136,19 @@ Valores medidos atualmente por `pnpm budgets` sobre o `dist/`:
 
 Valores aferidos em 2026-10-23 após implementação completa:
 
-| Parte / Rota                | Medido Antes | Medido Depois | Teto   | Economia Real           |
-| :-------------------------- | :----------: | :-----------: | :----: | :---------------------- |
-| **`parte shell`**           |    1.4 kB    |  **1.1 kB**   | 10 kB  | **−0.3 kB (−21%)**      |
-| **`parte design-system`**   |    8.0 kB    |  **7.3 kB**   | 20 kB  | **−0.7 kB (−9%)**       |
-| **`parte mfe-vue`**         |   45.2 kB    |  **34.8 kB**  | 60 kB  | **−10.4 kB (−23%)**     |
-| **`parte mfe-react`**       |   94.3 kB    |  **76.6 kB**  | 105 kB | **−17.7 kB (−19%)**     |
-| **`parte mfe-angular`**     |   63.1 kB    |  **59.9 kB**  | 110 kB | **−3.2 kB (−5%)**       |
-| **`rota /`**                |   147.0 kB   |  **146.3 kB** | 150 kB | **−0.7 kB**             |
-| **`rota /comunidade/`**     |   147.0 kB   |  **146.3 kB** | 150 kB | **−0.7 kB**             |
-| **`rota /como-foi-feito/`** |   147.0 kB   |  **146.3 kB** | 150 kB | **−0.7 kB**             |
-| **`rota /recrutador/`**     |   54.5 kB    |  **48.8 kB**  | 90 kB  | **−5.7 kB**             |
-| **`rota /clientes/`**       |   103.7 kB   |  **84.4 kB**  | 135 kB | **−19.3 kB (−18.6%)**   |
-| **`rota /tecnico/`**        |   72.5 kB    |  **68.3 kB**  | 140 kB | **−4.2 kB**             |
+| Parte / Rota                | Medido Antes | Medido Depois |  Teto  | Economia Real         |
+| :-------------------------- | :----------: | :-----------: | :----: | :-------------------- |
+| **`parte shell`**           |    1.4 kB    |  **1.1 kB**   | 10 kB  | **−0.3 kB (−21%)**    |
+| **`parte design-system`**   |    8.0 kB    |  **7.3 kB**   | 20 kB  | **−0.7 kB (−9%)**     |
+| **`parte mfe-vue`**         |   45.2 kB    |  **34.8 kB**  | 60 kB  | **−10.4 kB (−23%)**   |
+| **`parte mfe-react`**       |   94.3 kB    |  **76.6 kB**  | 105 kB | **−17.7 kB (−19%)**   |
+| **`parte mfe-angular`**     |   63.1 kB    |  **59.9 kB**  | 110 kB | **−3.2 kB (−5%)**     |
+| **`rota /`**                |   147.0 kB   | **146.3 kB**  | 150 kB | **−0.7 kB**           |
+| **`rota /comunidade/`**     |   147.0 kB   | **146.3 kB**  | 150 kB | **−0.7 kB**           |
+| **`rota /como-foi-feito/`** |   147.0 kB   | **146.3 kB**  | 150 kB | **−0.7 kB**           |
+| **`rota /recrutador/`**     |   54.5 kB    |  **48.8 kB**  | 90 kB  | **−5.7 kB**           |
+| **`rota /clientes/`**       |   103.7 kB   |  **84.4 kB**  | 135 kB | **−19.3 kB (−18.6%)** |
+| **`rota /tecnico/`**        |   72.5 kB    |  **68.3 kB**  | 140 kB | **−4.2 kB**           |
 
 - **Testes unitários e contratos:** 100% aprovados.
 - **Testes de ponta a ponta (Playwright + axe):** 297/297 testes aprovados em 3 minutos.
