@@ -6,6 +6,19 @@ export default defineConfig({
   // Recursos estáticos compartilhados (bandeiras) vão para o dist como estão (ADR 0006).
   publicDir: 'assets',
   build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        passes: 2,
+        pure_getters: true,
+      },
+      mangle: {
+        toplevel: true,
+      },
+      format: {
+        comments: false,
+      },
+    },
     lib: {
       entry: 'src/index.ts',
       formats: ['es'],

@@ -97,6 +97,19 @@ export default defineConfig({
     },
   },
   build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        passes: 2,
+        pure_getters: true,
+      },
+      mangle: {
+        toplevel: true,
+      },
+      format: {
+        comments: false,
+      },
+    },
     lib: {
       entry: 'src/main.ts',
       formats: ['es'],
