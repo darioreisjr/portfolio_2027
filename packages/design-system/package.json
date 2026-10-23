@@ -34,6 +34,7 @@
     "@vitest/browser-playwright": "catalog:",
     "playwright": "catalog:",
     "storybook": "catalog:",
+    "terser": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
