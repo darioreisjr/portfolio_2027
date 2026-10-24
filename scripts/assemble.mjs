@@ -367,7 +367,13 @@ export function assemble(root, outDir = join(root, 'dist')) {
   writeFileSync(join(outDir, 'sitemap.xml'), buildSitemap());
   writeFileSync(join(outDir, 'robots.txt'), buildRobotsTxt());
 
-  return plan.size + 3;
+  const pkgModule = '{\n  "type": "module"\n}\n';
+  writeFileSync(join(outDir, 'package.json'), pkgModule);
+  if (existsSync(join(outDir, 'api'))) {
+    writeFileSync(join(outDir, 'api', 'package.json'), pkgModule);
+  }
+
+  return plan.size + 5;
 }
 
 if (import.meta.main) {
