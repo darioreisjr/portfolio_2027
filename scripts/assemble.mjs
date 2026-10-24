@@ -264,7 +264,7 @@ export function buildVercelConfig(routesList = routes, scriptHashes = []) {
     rewrites,
     functions: {
       'api/chat.js': {
-        maxDuration: 15,
+        maxDuration: 30,
       },
     },
     headers: [

@@ -1,4 +1,4 @@
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, ThinkingLevel } from '@google/genai';
 import profileData from '../packages/content/data/profile.json' with { type: 'json' };
 import contactsData from '../packages/content/data/contacts.json' with { type: 'json' };
 import skillsData from '../packages/content/data/skills.json' with { type: 'json' };
@@ -202,6 +202,7 @@ export async function handleChatMessage({
     ];
 
     const modelName = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+    const startTime = Date.now();
 
     const response = await ai.models.generateContent({
       model: modelName,
@@ -209,10 +210,17 @@ export async function handleChatMessage({
       config: {
         systemInstruction,
         temperature: 0.7,
+        maxOutputTokens: 1000,
+        thinkingConfig: {
+          thinkingLevel: ThinkingLevel.LOW,
+        },
       },
     });
 
     const reply = response.text?.trim();
+    console.log(
+      `[Gemini API] Resposta gerada com sucesso em ${Date.now() - startTime}ms usando ${modelName}.`,
+    );
 
     if (!reply) {
       return {
