@@ -199,4 +199,13 @@ export const component = {
   'ds-language-switcher-edge': 'var(--color-surface)',
   'ds-language-switcher-current': 'var(--color-accent)',
   'ds-language-switcher-ring-width': 'var(--border-width-control)',
+  'ds-chat-trigger-size': 'var(--size-control)',
+  'ds-chat-radius': 'var(--radius-md)',
+  'ds-chat-bg': 'var(--color-surface)',
+  'ds-chat-border': 'var(--color-border)',
+  'ds-chat-text': 'var(--color-text)',
+  'ds-chat-bubble-user-bg': 'var(--color-accent)',
+  'ds-chat-bubble-user-text': 'var(--color-on-accent)',
+  'ds-chat-bubble-assistant-bg': 'var(--color-surface-muted)',
+  'ds-chat-bubble-assistant-text': 'var(--color-text)',
 };

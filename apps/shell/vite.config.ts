@@ -53,6 +53,16 @@ function composedDev(): Plugin {
           return next();
         }
 
+        if (pathname === '/api/chat') {
+          import(join(repoRoot, 'api/chat.ts'))
+            .then(({ default: handler }) => handler(request, response))
+            .catch((err) => {
+              response.writeHead(500, { 'Content-Type': 'application/json' });
+              response.end(JSON.stringify({ error: err.message }));
+            });
+          return;
+        }
+
         const match = findRoute(pathname);
         if (match?.entry.owner === 'shell') {
           response.setHeader('Content-Type', 'text/html; charset=utf-8');

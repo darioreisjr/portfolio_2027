@@ -56,21 +56,21 @@ test('exibe os blocos de arquitetura, regras de fronteira e pipeline', async ({ 
   await expect(page.locator('.b-flow-diagram')).toContainText('pnpm assemble');
 });
 
-test('exibe todas as 15 ADRs com títulos reais e sem banner de exemplo', async ({ page }) => {
+test('exibe todas as 16 ADRs com títulos reais e sem banner de exemplo', async ({ page }) => {
   await page.goto('/como-foi-feito/');
 
   const adrs = page.locator('.b-adr-card');
-  await expect(adrs).toHaveCount(15);
+  await expect(adrs).toHaveCount(16);
 
   // Não há faixa de exemplo em nenhum lugar da página
   await expect(page.getByText('Dados de exemplo')).toHaveCount(0);
   await expect(page.getByText('Fase em construção')).toHaveCount(0);
 
-  // A ADR 15 aparece com status Aceito
-  const adr15 = adrs.filter({ hasText: 'ADR 0015' });
-  await expect(adr15).toBeVisible();
-  await expect(adr15).toContainText('Conteúdo por idioma nos microfrontends');
-  await expect(adr15.locator('.b-adr-status')).toHaveText('Aceito');
+  // A ADR 16 aparece com status Aceito
+  const adr16 = adrs.filter({ hasText: 'ADR 0016' });
+  await expect(adr16).toBeVisible();
+  await expect(adr16).toContainText('Assistente mascote com IA (Gemini API)');
+  await expect(adr16.locator('.b-adr-status')).toHaveText('Aceito');
 });
 
 test('tabela de métricas contém os dados reais do raio-x e notas 100', async ({ page }) => {

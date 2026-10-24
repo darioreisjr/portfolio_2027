@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-23",
+  "measuredAt": "2026-10-24",
   "repository": "https://github.com/darioreisjr/portfolio_2027",
   "areas": [
     {
@@ -7,11 +7,11 @@
       "framework": "Next.js",
       "owner": "web-next",
       "path": "/",
-      "maxKb": 150,
-      "jsKb": 146.3,
+      "maxKb": 160,
+      "jsKb": 151.2,
       "performance": 97,
       "accessibility": 100,
-      "lcpMs": 2616
+      "lcpMs": 2572
     },
     {
       "area": "recruiter",
@@ -19,10 +19,10 @@
       "owner": "shell",
       "path": "/recrutador/",
       "maxKb": 90,
-      "jsKb": 14,
+      "jsKb": 18.9,
       "performance": 99,
       "accessibility": 100,
-      "lcpMs": 1814
+      "lcpMs": 1812
     },
     {
       "area": "tech",
@@ -30,7 +30,7 @@
       "owner": "shell",
       "path": "/tecnico/",
       "maxKb": 140,
-      "jsKb": 68.3,
+      "jsKb": 73.2,
       "performance": 99,
       "accessibility": 100,
       "lcpMs": 1960
@@ -41,7 +41,7 @@
       "owner": "shell",
       "path": "/clientes/",
       "maxKb": 135,
-      "jsKb": 10.6,
+      "jsKb": 15.5,
       "performance": 98,
       "accessibility": 100,
       "lcpMs": 1959
@@ -51,22 +51,22 @@
       "framework": "Next.js",
       "owner": "web-next",
       "path": "/comunidade/",
-      "maxKb": 150,
-      "jsKb": 146.3,
+      "maxKb": 160,
+      "jsKb": 151.2,
       "performance": 97,
       "accessibility": 100,
-      "lcpMs": 2541
+      "lcpMs": 2539
     },
     {
       "area": "how-it-was-built",
       "framework": "Next.js",
       "owner": "web-next",
       "path": "/como-foi-feito/",
-      "maxKb": 150,
-      "jsKb": 146.3,
+      "maxKb": 160,
+      "jsKb": 151.2,
       "performance": 97,
       "accessibility": 100,
-      "lcpMs": 2547
+      "lcpMs": 2506
     }
   ],
   "parts": [
@@ -78,7 +78,7 @@
     {
       "name": "design-system",
       "maxKb": 20,
-      "jsKb": 7.3
+      "jsKb": 12.1
     },
     {
       "name": "mfe-vue",
@@ -93,12 +93,12 @@
     {
       "name": "mfe-angular",
       "maxKb": 110,
-      "jsKb": 239.7
+      "jsKb": 240
     },
     {
       "name": "web-next",
       "maxKb": 140,
-      "jsKb": 139
+      "jsKb": 139.1
     }
   ],
   "decisions": [
@@ -175,6 +175,11 @@
     {
       "number": 15,
       "title": "Conteúdo por idioma nos microfrontends",
+      "status": "aceito"
+    },
+    {
+      "number": 16,
+      "title": "Assistente mascote com IA (Gemini API) via Vercel Serverless Function",
       "status": "aceito"
     }
   ]

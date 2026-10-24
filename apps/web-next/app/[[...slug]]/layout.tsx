@@ -135,6 +135,7 @@ export default async function RootLayout({
             </nav>
           </footer>
         )}
+        <ds-chat-assistant locale={locale} />
         {/* Mesma URL que o shell usa: uma cópia do design system em cache para o site todo. */}
         <script type="module" async src="/_ds/ds.js" />
       </body>

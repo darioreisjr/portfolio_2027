@@ -15,9 +15,11 @@ Quem chega escolhe um perfil na tela inicial, como quem escolhe um personagem em
 | Técnica        | Quem quer ver código e arquitetura   | `/tecnico`        | Angular    | No ar: raio-x real do site; estudos de caso de exemplo              |
 | Cliente        | Quem quer contratar um projeto       | `/clientes`       | React      | No ar, com dados de exemplo                                         |
 | Comunidade     | Quem veio aprender e trocar ideia    | `/comunidade`     | Next.js    | No ar: projetos de código aberto reais; artigos e canais de exemplo |
-| Como foi feito | Quem quer entender o site por dentro | `/como-foi-feito` | Next.js    | No ar: arquitetura, 15 ADRs e raio-x real do repositório            |
+| Como foi feito | Quem quer entender o site por dentro | `/como-foi-feito` | Next.js    | No ar: arquitetura, 16 ADRs e raio-x real do repositório            |
 
 O site existe em português do Brasil (sem prefixo), inglês (`/en`) e espanhol (`/es`), com as rotas traduzidas: `/recrutador`, `/en/recruiter`, `/es/reclutador`.
+
+Conta também com o **Mascote Guia do Dario**, um assistente virtual conversacional com IA (Google Gemini Flash) integrado ao design system (`<ds-chat-assistant>`), posicionado no canto inferior esquerdo para responder dúvidas dos visitantes sobre a trajetória, projetos, tecnologias e contatos do autor, sem fugir do escopo e sem banco de dados.
 
 Todo bloco que ainda mostra dado fictício leva a faixa **"Dados de exemplo"**. Dado real e dado de exemplo nunca aparecem juntos no mesmo bloco.
 
@@ -41,28 +43,30 @@ São cinco aplicações que viram um único site estático:
 - **Design system próprio.** Web Components em Lit, carregados uma vez por documento, e tokens de cor, espaçamento e tipografia em propriedades CSS. Os apps não usam valor literal.
 - **Apps só conversam por contrato.** Eventos tipados e a tabela de rotas vivem em `packages/contracts`.
 
-As decisões estão registradas em 15 ADRs, em [`docs/architecture/adr/`](docs/architecture/adr/). A área técnica do site mostra essas decisões e os números medidos de cada rota, lidos do próprio repositório.
+As decisões estão registradas em 16 ADRs, em [`docs/architecture/adr/`](docs/architecture/adr/). A área técnica do site mostra essas decisões e os números medidos de cada rota, lidos do próprio repositório.
 
 ## Tecnologias
 
-| Para quê           | O quê                                                |
-| ------------------ | ---------------------------------------------------- |
-| Monorepo           | pnpm 12 e Turborepo                                  |
-| Linguagem          | TypeScript 6                                         |
-| Páginas de leitura | Next.js 16 com export estático, React 19             |
-| Microfrontends     | Vue 3.5 e React 19 (Vite) e Angular 22 (Angular CLI) |
-| Design system      | Lit 3                                                |
-| Conteúdo           | JSON validado com Zod                                |
-| Animação           | CSS e `motion` (versão mini)                         |
-| Testes             | Vitest, Playwright e axe                             |
-| Qualidade          | ESLint, Prettier, commitlint, Lighthouse CI          |
-| Publicação         | GitHub Actions e Vercel                              |
+| Para quê           | O quê                                                                 |
+| ------------------ | --------------------------------------------------------------------- |
+| Monorepo           | pnpm 12 e Turborepo                                                   |
+| Linguagem          | TypeScript 6                                                          |
+| Páginas de leitura | Next.js 16 com export estático, React 19                              |
+| Microfrontends     | Vue 3.5 e React 19 (Vite) e Angular 22 (Angular CLI)                  |
+| Design system      | Lit 3                                                                 |
+| Conteúdo           | JSON validado com Zod                                                 |
+| Assistente com IA  | Google Gemini Flash (`@google/genai`) via Vercel Serverless Functions |
+| Animação           | CSS e `motion` (versão mini)                                          |
+| Testes             | Vitest, Playwright e axe                                              |
+| Qualidade          | ESLint, Prettier, commitlint, Lighthouse CI                           |
+| Publicação         | GitHub Actions e Vercel                                               |
 
 As versões exatas ficam só no catálogo do [`pnpm-workspace.yaml`](pnpm-workspace.yaml).
 
 ## Estrutura
 
 ```
+api/              Serverless Function (/api/chat) com Gemini Flash
 apps/
   shell/          Casca em JavaScript puro: documento, cabeçalho, carga do MFE da rota
   mfe-vue/        Área do recrutador
