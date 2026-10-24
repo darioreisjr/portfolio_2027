@@ -53,7 +53,7 @@ function composedDev(): Plugin {
           return next();
         }
 
-        if (pathname === '/api/chat') {
+        if (pathname === '/api/chat' || pathname === '/api/chat/') {
           import(join(repoRoot, 'api/chat.ts'))
             .then(({ default: handler }) => handler(request, response))
             .catch((err) => {
