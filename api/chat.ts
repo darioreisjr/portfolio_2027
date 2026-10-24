@@ -201,25 +201,51 @@ export async function handleChatMessage({
       },
     ];
 
-    const modelName = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
-    const startTime = Date.now();
+    const primaryModel = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
+    const fallbackModel = 'gemini-3.8-flash';
+    const candidateModels = [primaryModel];
+    if (primaryModel !== fallbackModel) {
+      candidateModels.push(fallbackModel);
+    }
 
-    const response = await ai.models.generateContent({
-      model: modelName,
-      contents,
-      config: {
-        systemInstruction,
-        temperature: 0.7,
-        maxOutputTokens: 1000,
-        thinkingConfig: {
-          thinkingLevel: ThinkingLevel.LOW,
+    const startTime = Date.now();
+    let response;
+    let usedModel = primaryModel;
+
+    const generateWithModel = async (model: string) => {
+      return ai.models.generateContent({
+        model,
+        contents,
+        config: {
+          systemInstruction,
+          temperature: 0.7,
+          maxOutputTokens: 1000,
+          thinkingConfig: {
+            thinkingLevel: ThinkingLevel.LOW,
+          },
         },
-      },
-    });
+      });
+    };
+
+    try {
+      response = await generateWithModel(primaryModel);
+    } catch (primaryError) {
+      console.warn(
+        `[Gemini API] Falha no modelo primário (${primaryModel}):`,
+        primaryError instanceof Error ? primaryError.message : primaryError,
+      );
+      if (candidateModels.length > 1) {
+        usedModel = candidateModels[1];
+        console.log(`[Gemini API] Tentando modelo de contingência: ${usedModel}`);
+        response = await generateWithModel(usedModel);
+      } else {
+        throw primaryError;
+      }
+    }
 
     const reply = response.text?.trim();
     console.log(
-      `[Gemini API] Resposta gerada com sucesso em ${Date.now() - startTime}ms usando ${modelName}.`,
+      `[Gemini API] Resposta gerada com sucesso em ${Date.now() - startTime}ms usando ${usedModel}.`,
     );
 
     if (!reply) {
