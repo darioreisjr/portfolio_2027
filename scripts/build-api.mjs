@@ -19,7 +19,10 @@ export const buildConfig = {
   minify: false,
   sourcemap: false,
   banner: {
-    js: '// Serverless Function: /api/chat - Dario Reis Portfolio (ADR 0016)',
+    js: `// Serverless Function: /api/chat - Dario Reis Portfolio (ADR 0016)
+import { createRequire as __createRequire } from 'node:module';
+const require = __createRequire(import.meta.url);
+`,
   },
 };
 

@@ -7,7 +7,7 @@
 import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { dirname, extname, join, normalize, resolve, sep } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const distDir = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
 const port = Number(process.argv[2] ?? 4173);
@@ -72,8 +72,8 @@ createServer((request, response) => {
   if (pathname === '/api/chat') {
     const apiFile = join(distDir, 'api', 'chat.js');
     if (existsSync(apiFile)) {
-      import(`file://${apiFile}?t=${statSync(apiFile).mtimeMs}`)
-        .then(({ default: handler }) => handler(request, response))
+      import(`${pathToFileURL(apiFile).href}?t=${statSync(apiFile).mtimeMs}`)
+        .then(({ default: handler }) => Promise.resolve(handler(request, response)))
         .catch((err) => {
           response.writeHead(500, { 'Content-Type': 'application/json' });
           response.end(JSON.stringify({ error: err.message }));
