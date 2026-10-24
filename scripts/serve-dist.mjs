@@ -7,7 +7,7 @@
 import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { dirname, extname, join, normalize, resolve, sep } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const distDir = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
 const port = Number(process.argv[2] ?? 4173);
@@ -67,6 +67,21 @@ if (existsSync(vercelJsonPath)) {
 
 createServer((request, response) => {
   const { pathname } = new URL(request.url ?? '/', 'http://localhost');
+
+  // Serverless Function local para /api/chat (ADR 0016)
+  if (pathname === '/api/chat') {
+    const apiFile = join(distDir, 'api', 'chat.js');
+    if (existsSync(apiFile)) {
+      import(`${pathToFileURL(apiFile).href}?t=${statSync(apiFile).mtimeMs}`)
+        .then(({ default: handler }) => Promise.resolve(handler(request, response)))
+        .catch((err) => {
+          response.writeHead(500, { 'Content-Type': 'application/json' });
+          response.end(JSON.stringify({ error: err.message }));
+        });
+      return;
+    }
+  }
+
   const file = resolveFile(pathname);
   const target = file ?? join(distDir, '404.html');
   const type = contentTypes[extname(target)] ?? 'application/octet-stream';

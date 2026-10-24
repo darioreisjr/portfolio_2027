@@ -10,7 +10,7 @@ describe('página "como foi feito"', () => {
       if (!model) throw new Error('sem conteúdo');
       expect(model.content.repository).toBe('https://github.com/darioreisjr/portfolio_2027');
       expect(model.content.architecture.apps).toHaveLength(5);
-      expect(model.content.adrs.items).toHaveLength(15);
+      expect(model.content.adrs.items).toHaveLength(16);
       expect(model.content.metrics.areas).toHaveLength(6);
       expect(model.title).not.toBe('');
       expect(model.back).not.toBe('');
@@ -21,14 +21,14 @@ describe('página "como foi feito"', () => {
     expect(buildHowItWasBuiltPage('es')?.homeHref).toBe('/es/');
   });
 
-  it('as 15 ADRs contêm categorias válidas e status nos três idiomas', () => {
+  it('as 16 ADRs contêm categorias válidas e status nos três idiomas', () => {
     const pt = buildHowItWasBuiltPage('pt-BR');
     const en = buildHowItWasBuiltPage('en');
     const es = buildHowItWasBuiltPage('es');
 
-    expect(pt?.content.adrs.items[14]?.statusLabel).toBe('Aceito');
-    expect(en?.content.adrs.items[14]?.statusLabel).toBe('Accepted');
-    expect(es?.content.adrs.items[14]?.statusLabel).toBe('Aceptado');
+    expect(pt?.content.adrs.items[15]?.statusLabel).toBe('Aceito');
+    expect(en?.content.adrs.items[15]?.statusLabel).toBe('Accepted');
+    expect(es?.content.adrs.items[15]?.statusLabel).toBe('Aceptado');
 
     for (const item of pt?.content.adrs.items ?? []) {
       expect(item.category).toMatch(/composition|designSystem|navigation|governance/);

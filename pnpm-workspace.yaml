@@ -40,6 +40,7 @@ catalog:
   '@fontsource/m-plus-rounded-1c': 5.3.0
 
   # Build
+  esbuild: 0.28.2
   vite: 8.3.4
   '@vitejs/plugin-react': 6.1.2
   '@vitejs/plugin-vue': 6.0.10
@@ -47,6 +48,9 @@ catalog:
 
   # Conteúdo
   zod: 4.6.6
+
+  # IA e Gemini (Issue #82)
+  '@google/genai': 2.30.0
 
   # Testes
   vitest: 5.0.3
@@ -77,12 +81,14 @@ catalog:
   '@commitlint/cli': 21.2.3
   '@commitlint/config-conventional': 21.2.3
 
-# Scripts de instalação autorizados pelo autor em 2026-10-06.
+# Scripts de instalação autorizados pelo autor em 2026-10-06 e 2026-10-24 (Issue #82).
 allowBuilds:
   esbuild: true
   '@parcel/watcher': false
   lmdb: false
   msgpackr-extract: false
+  '@google/genai': false
+  protobufjs: false
 
 # O pnpm recusa versões com menos de 24 horas (1440 minutos), declarado aqui
 # para não depender do padrão da versão instalada (autor, 2026-10-15). Uma

@@ -577,9 +577,9 @@ describe('how-it-was-built (como foi feito)', () => {
   it('carrega conteúdo válido e completo nos três idiomas', () => {
     const { howItWasBuilt, howItWasBuiltUi, site } = loadContent(dataDir, { includeDrafts: false });
 
-    expect(site.decisions).toHaveLength(15);
-    const adr15 = site.decisions.find((d) => d.number === 15);
-    expect(adr15?.status).toBe('aceito');
+    expect(site.decisions).toHaveLength(16);
+    const adr16 = site.decisions.find((d) => d.number === 16);
+    expect(adr16?.status).toBe('aceito');
 
     for (const locale of locales) {
       const page = howItWasBuilt[locale];
@@ -600,7 +600,7 @@ describe('how-it-was-built (como foi feito)', () => {
       expect(page.architecture.pipelineDescription).not.toBe('');
 
       // ADRs
-      expect(page.adrs.items).toHaveLength(15);
+      expect(page.adrs.items).toHaveLength(16);
       for (const item of page.adrs.items) {
         expect(item.number).toBeGreaterThan(0);
         expect(item.title).not.toBe('');

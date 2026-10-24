@@ -27,9 +27,9 @@
     }
   },
   "routes": {
-    "/": 150,
-    "/comunidade/": 150,
-    "/como-foi-feito/": 150,
+    "/": 160,
+    "/comunidade/": 160,
+    "/como-foi-feito/": 160,
     "/recrutador/": 90,
     "/clientes/": 135,
     "/tecnico/": 140
