@@ -111,7 +111,7 @@ describe('ds-chat-assistant', () => {
     form?.dispatchEvent(new Event('submit', { cancelable: true }));
     await el.updateComplete;
 
-    expect(fetchMock).toHaveBeenCalledWith('/api/chat', expect.any(Object));
+    expect(fetchMock).toHaveBeenCalledWith('/api/chat/', expect.any(Object));
 
     // Aguarda o término da promise assíncrona
     await vi.waitFor(() => {

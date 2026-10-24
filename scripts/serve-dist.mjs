@@ -69,7 +69,7 @@ createServer((request, response) => {
   const { pathname } = new URL(request.url ?? '/', 'http://localhost');
 
   // Serverless Function local para /api/chat (ADR 0016)
-  if (pathname === '/api/chat') {
+  if (pathname === '/api/chat' || pathname === '/api/chat/') {
     const apiFile = join(distDir, 'api', 'chat.js');
     if (existsSync(apiFile)) {
       import(`${pathToFileURL(apiFile).href}?t=${statSync(apiFile).mtimeMs}`)
