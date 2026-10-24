@@ -11,16 +11,16 @@ import handler from '../api/chat.ts';
 test('buildGroundTruth extrai dados reais publicados e descarta rascunhos', () => {
   const groundTruth = buildGroundTruth();
 
-  assert.match(groundTruth, /Dario Reis/);
-  assert.match(groundTruth, /Software Engineer/);
-  assert.match(groundTruth, /dev\.darioreis@gmail\.com/);
-  assert.match(groundTruth, /React/);
-  assert.match(groundTruth, /ProBrain/);
-  assert.match(groundTruth, /Portfólio 2026/);
+  assert.ok(groundTruth.includes('Dario Reis'));
+  assert.ok(groundTruth.includes('Software Engineer'));
+  assert.ok(groundTruth.includes('dev.darioreis@gmail.com'));
+  assert.ok(groundTruth.includes('React'));
+  assert.ok(groundTruth.includes('ProBrain'));
+  assert.ok(groundTruth.includes('Portfólio 2026'));
 
   // Não deve conter exemplos de rascunho
-  assert.doesNotMatch(groundTruth, /pessoa@example\.com/);
-  assert.doesNotMatch(groundTruth, /example\.com\/github/);
+  assert.strictEqual(groundTruth.includes('pessoa@example.com'), false);
+  assert.strictEqual(groundTruth.includes('example.com/github'), false);
 });
 
 test('buildSystemPrompt gera persona do mascote e guardrails no idioma correto', () => {
