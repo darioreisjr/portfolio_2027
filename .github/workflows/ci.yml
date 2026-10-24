@@ -83,14 +83,13 @@ jobs:
         if: github.event_name == 'push'
         run: pnpm exec turbo run typecheck test build
 
-      - name: Testes dos scripts do repositório
-        run: pnpm exec node --test "scripts/*.test.mjs"
-
       # O site é verificado inteiro; o que não mudou vem do cache do Turborepo.
       - run: pnpm build
+      # Depois do build: scripts como check-budgets.test.mjs e site-xray leem
+      # packages/contracts/dist, que o passo --affected não compila em PR que não mexe no pacote.
+      - name: Testes dos scripts do repositório
+        run: pnpm exec node --test "scripts/*.test.mjs"
       # ADR 0012: ADR novo ou teto alterado sem regravar o raio-x falha aqui.
-      # Depois do build: o script lê `packages/contracts/dist`, que o passo
-      # `--affected` não compila em PR que não mexe no pacote.
       - name: Raio-x do site em dia
         run: pnpm exec node scripts/site-xray.mjs --check
       - run: pnpm assemble
