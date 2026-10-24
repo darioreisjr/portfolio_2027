@@ -18,6 +18,7 @@ import {
 import { createHash } from 'node:crypto';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { buildApiSync } from './build-api.mjs';
 import {
   canonicalUrl,
   hreflangAlternates,
@@ -52,6 +53,7 @@ export const sources = [
     only: ['ds.js', AREAS_CSS, ...FLAGS.map((flag) => `flags/${flag}.svg`)],
   },
   { from: 'packages/tokens/dist', to: '_ds', only: ['tokens.css', ...FONTS] },
+  { from: 'api/dist', to: 'api' },
 ];
 
 const REQUIRED = [
@@ -62,6 +64,7 @@ const REQUIRED = [
   '_ds/ds.js',
   '_ds/tokens.css',
   `_ds/${AREAS_CSS}`,
+  'api/chat.js',
   ...FLAGS.map((flag) => `_ds/flags/${flag}.svg`),
   ...FONTS.map((font) => `_ds/${font}`),
 ];
@@ -259,6 +262,11 @@ export function buildVercelConfig(routesList = routes, scriptHashes = []) {
     cleanUrls: true,
     trailingSlash: true,
     rewrites,
+    functions: {
+      'api/chat.js': {
+        maxDuration: 15,
+      },
+    },
     headers: [
       // Em toda resposta (issue #46 e #47): proteção contra clickjacking,
       // MIME sniffing, vazamento de referrer, APIs de sensores e execução
@@ -337,6 +345,10 @@ export function buildVercelConfig(routesList = routes, scriptHashes = []) {
 }
 
 export function assemble(root, outDir = join(root, 'dist')) {
+  if (existsSync(join(root, 'api/chat.ts'))) {
+    buildApiSync();
+  }
+
   const plan = planAssembly(root);
   const missing = REQUIRED.filter((file) => !plan.has(file));
   if (missing.length > 0) throw new Error(`Arquivos obrigatórios ausentes: ${missing.join(', ')}`);

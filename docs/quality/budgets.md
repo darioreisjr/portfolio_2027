@@ -43,7 +43,7 @@ Total por rota:
 | `/recrutador`                         | shell, design system, Vue     | 90 kB      |
 | `/clientes`                           | shell, design system, React   | 135 kB     |
 | `/tecnico`                            | shell, design system, Angular | 140 kB     |
-| `/`, `/comunidade`, `/como-foi-feito` | Next.js, design system        | 150 kB     |
+| `/`, `/comunidade`, `/como-foi-feito` | Next.js, design system        | 160 kB     |
 
 Regras:
 
@@ -51,6 +51,7 @@ Regras:
 - Dependência nova em um MFE precisa caber no teto da rota; se não couber, é carregada sob demanda ou não entra.
 - Aumentar um teto exige registrar o motivo neste arquivo.
 - **Subida do teto da parte Next.js autorizada pelo autor em 2026-10-21 (issue #31):** de 130 kB para 140 kB, para refletir o peso real medido do runtime do Next.js 16 + React 19 com as interações da home (138,9 kB medidos), mantendo o teto da rota em 150 kB.
+- **Subida do teto das rotas Next.js autorizada pelo autor em 2026-10-24 (issue #82, ADR 0016):** de 150 kB para 160 kB, para comportar o assistente mascote com IA (`<ds-chat-assistant>`) no design system (que passou de 10,5 kB para 12,1 kB gzip, ainda bem abaixo do seu teto de 20 kB).
 
 ### Linha de base medida no bootstrap (2026-10-06)
 

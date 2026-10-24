@@ -147,6 +147,7 @@ ${curtains}    <header class="shell-header">
         </details>
       </nav>
     </footer>
+    <ds-chat-assistant locale="${escapeHtml(locale)}"></ds-chat-assistant>
   </body>
 </html>
 `;
