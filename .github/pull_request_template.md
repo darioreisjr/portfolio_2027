@@ -20,6 +20,6 @@ Closes #
 - [ ] Regras de fronteira respeitadas e JavaScript dentro do teto (ver o comentário do CI).
 - [ ] Interface nova: teclado, foco visível, dois temas, três idiomas.
 - [ ] Nenhum dado inventado sobre o autor.
-- [ ] Docs e `README.md` atualizados onde o que eles dizem mudou.
+- [ ] Docs, `README.md` e "Como foi feito" atualizados onde o que eles dizem mudou.
 
 A lista completa está na skill `pr-checklist`.
