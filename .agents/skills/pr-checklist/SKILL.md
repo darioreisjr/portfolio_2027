@@ -62,6 +62,7 @@ Percorra tudo. Marque como "não se aplica" só com motivo.
 - [ ] `verify` e `origem` verdes; o comentário do CI mostra a prévia e o peso de JavaScript.
 - [ ] O tipo de cada commit está certo: ele decide a versão da próxima release (skill `commits`).
 - [ ] `README.md` revisado.
+- [ ] Página "Como foi feito" (`packages/content/data/how-it-was-built/`) revisada se houve mudança em arquitetura, ADRs, módulos ou regras de fronteira.
 
 - [ ] Conventional Commits em pt-BR: `tipo(escopo): resumo`, com o app ou pacote como escopo, sem coautor (skill `commits`).
 - [ ] A descrição diz o que mudou, por quê, como foi verificado e o que não foi verificado.

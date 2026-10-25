@@ -67,7 +67,7 @@
   },
   "adrs": {
     "tag": "SYS-02 // REGISTROS DE DECISÃO DE ARQUITETURA",
-    "title": "15 Decisões de Arquitetura (ADRs)",
+    "title": "16 Decisões de Arquitetura (ADRs)",
     "lead": "Toda escolha estrutural foi documentada e versionada em docs/architecture/adr/. Nenhuma decisão é tomada em silêncio.",
     "categories": {
       "composition": "Composição & Frameworks",
@@ -155,6 +155,11 @@
         "number": 15,
         "category": "composition",
         "summary": "Conteúdo por idioma nos microfrontends: cada MFE compila entradas separadas para baixar apenas o JSON do idioma visualizado."
+      },
+      {
+        "number": 16,
+        "category": "composition",
+        "summary": "Assistente virtual temático com Google Gemini via Serverless Function (/api/chat) e Web Component Lit no design system, mantendo CSP connect-src 'self' e zero vazamento de credenciais."
       }
     ]
   },

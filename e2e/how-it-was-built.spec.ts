@@ -19,7 +19,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Como foi feito');
     await expect(page.getByRole('heading', { level: 2 })).toHaveText([
       'Composição sem Module Federation',
-      '15 Decisões de Arquitetura (ADRs)',
+      '16 Decisões de Arquitetura (ADRs)',
       'Web Components Universais & Tokens CSS',
       'Métricas e Orçamentos Reais',
       'Código 100% Aberto',

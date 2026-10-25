@@ -67,7 +67,7 @@
   },
   "adrs": {
     "tag": "SYS-02 // ARCHITECTURE DECISION RECORDS",
-    "title": "15 Architecture Decisions (ADRs)",
+    "title": "16 Architecture Decisions (ADRs)",
     "lead": "Every architectural choice was documented and version-controlled in docs/architecture/adr/. No decision is made silently.",
     "categories": {
       "composition": "Composition & Frameworks",
@@ -155,6 +155,11 @@
         "number": 15,
         "category": "composition",
         "summary": "Language-scoped content bundles in microfrontends: each MFE compiles dedicated entry points to fetch only the active language JSON."
+      },
+      {
+        "number": 16,
+        "category": "composition",
+        "summary": "Themed mascot AI assistant powered by Google Gemini via Vercel Serverless Function (/api/chat) and Lit Web Component in the design system, enforcing connect-src 'self' CSP and zero credential exposure."
       }
     ]
   },

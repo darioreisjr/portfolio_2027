@@ -127,14 +127,38 @@ const strip = (site) => ({
 
 if (process.argv.includes('--check')) {
   const stored = JSON.parse(readFileSync(target, 'utf8'));
-  if (JSON.stringify(strip(stored)) !== JSON.stringify(structure())) {
+  const currentStructure = structure();
+  if (JSON.stringify(strip(stored)) !== JSON.stringify(currentStructure)) {
     console.error(
       'packages/content/data/site.json está diferente do repositório (áreas, tetos ou ADRs).\n' +
         'Rode: pnpm build && pnpm assemble && node scripts/site-xray.mjs',
     );
     process.exit(1);
   }
-  console.log('Raio-x do site em dia com áreas, tetos e ADRs.');
+
+  const locales = ['pt-BR', 'en', 'es'];
+  for (const loc of locales) {
+    const howPath = join(repoRoot, `packages/content/data/how-it-was-built/${loc}.json`);
+    if (existsSync(howPath)) {
+      const howData = JSON.parse(readFileSync(howPath, 'utf8'));
+      const howAdrs = howData.adrs?.adrs ?? [];
+      const howAdrNumbers = new Set(howAdrs.map((a) => a.number));
+      const missing = currentStructure.decisions.filter((d) => !howAdrNumbers.has(d.number));
+      if (
+        missing.length > 0 ||
+        !howData.adrs?.title?.includes(String(currentStructure.decisions.length))
+      ) {
+        console.error(
+          `packages/content/data/how-it-was-built/${loc}.json está defasado em relação aos ADRs do repositório.\n` +
+            `Total de ADRs no repositório: ${currentStructure.decisions.length}. Faltam: ${missing.map((m) => m.number).join(', ') || 'título desatualizado'}.\n` +
+            'Atualize o título e os resumos de ADR antes de commitar ou fazer push.',
+        );
+        process.exit(1);
+      }
+    }
+  }
+
+  console.log('Raio-x do site e página Como foi feito em dia com áreas, tetos e ADRs.');
 } else {
   if (!existsSync(distDir)) {
     console.error('dist/ não existe. Rode "pnpm build && pnpm assemble" antes.');

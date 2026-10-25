@@ -600,7 +600,15 @@ describe('how-it-was-built (como foi feito)', () => {
       expect(page.architecture.pipelineDescription).not.toBe('');
 
       // ADRs
-      expect(page.adrs.items).toHaveLength(16);
+      expect(page.adrs.items).toHaveLength(site.decisions.length);
+      expect(text.adrs.title).toContain(String(site.decisions.length));
+
+      // Garante que todo ADR registrado no repositório possui resumo e categoria no JSON de how-it-was-built
+      const textAdrNumbers = new Set(text.adrs.adrs.map((item) => item.number));
+      for (const decision of site.decisions) {
+        expect(textAdrNumbers.has(decision.number)).toBe(true);
+      }
+
       for (const item of page.adrs.items) {
         expect(item.number).toBeGreaterThan(0);
         expect(item.title).not.toBe('');
