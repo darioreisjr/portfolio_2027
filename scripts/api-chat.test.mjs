@@ -23,9 +23,9 @@ test('buildGroundTruth extrai dados reais publicados e descarta rascunhos', () =
   assert.strictEqual(groundTruth.includes('example.com/github'), false);
 });
 
-test('buildSystemPrompt gera persona do mascote e guardrails no idioma correto', () => {
+test('buildSystemPrompt gera persona da Airi e guardrails no idioma correto', () => {
   const promptPt = buildSystemPrompt('pt-BR');
-  assert.match(promptPt, /Mascote Guia do Dario/);
+  assert.match(promptPt, /Airi/);
   assert.match(promptPt, /GUARDRAILS E LIMITES ESTRITOS/);
   assert.match(promptPt, /pt-BR/);
 

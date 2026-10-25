@@ -53,9 +53,9 @@ test.describe('ds-chat-assistant (Assistente Mascote IA)', () => {
     await expect(dialog).toHaveAttribute('role', 'dialog');
     await expect(trigger).toHaveAttribute('aria-expanded', 'true');
 
-    // Confere a saudação inicial do mascote
+    // Confere a saudação inicial da Airi
     const firstBubble = assistant.locator('.message-row.model .message-bubble').first();
-    await expect(firstBubble).toContainText('Sou o mascote guia do Dario Reis');
+    await expect(firstBubble).toContainText('Sou a Airi');
 
     // Confere os chips de sugestão rápida
     const chips = assistant.locator('.suggestion-chip');

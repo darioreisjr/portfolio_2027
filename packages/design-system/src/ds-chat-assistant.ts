@@ -163,17 +163,17 @@ export function renderChatMessage(content: string): TemplateResult {
 
 const UI_TEXTS = {
   'pt-BR': {
-    triggerLabel: 'Abrir assistente virtual do Dario Reis',
+    triggerLabel: 'Abrir conversa com a Airi, assistente do Dario',
     triggerTooltip: 'Tire dúvidas comigo sobre o Dario!',
-    headerTitle: 'Guia do Dario',
-    headerBadge: 'IA Mascote',
-    closeLabel: 'Fechar conversa com o assistente',
-    inputPlaceholder: 'Pergunte sobre tecnologias, projetos ou contato...',
-    inputLabel: 'Mensagem para o assistente virtual',
+    headerTitle: 'Airi',
+    headerBadge: 'Assistente IA',
+    closeLabel: 'Fechar conversa com a Airi',
+    inputPlaceholder: 'Pergunte à Airi sobre tecnologias, projetos...',
+    inputLabel: 'Mensagem para a Airi',
     sendLabel: 'Enviar mensagem',
     loading: 'Digitando resposta...',
     initialGreeting:
-      'Olá! Sou o mascote guia do Dario Reis. Posso responder qualquer dúvida sobre as tecnologias que ele domina, seus projetos, sua experiência profissional ou como entrar em contato com ele. Como posso te ajudar?',
+      'Olá! Sou a Airi, assistente virtual e mascote oficial do Dario Reis. Posso responder qualquer dúvida sobre as tecnologias que ele domina, seus projetos, sua experiência profissional ou como entrar em contato com ele. Como posso te ajudar?',
     errorFallback:
       'Ops! Tive um probleminha para me conectar com a IA agora, mas você pode conferir todos os projetos pelo site ou falar diretamente com o Dario no WhatsApp (+55 11 96188-9886) ou LinkedIn!',
     suggestions: [
@@ -183,17 +183,17 @@ const UI_TEXTS = {
     ],
   },
   en: {
-    triggerLabel: 'Open Dario Reis virtual assistant',
+    triggerLabel: "Open chat with Airi, Dario's assistant",
     triggerTooltip: 'Ask me anything about Dario!',
-    headerTitle: "Dario's Guide",
-    headerBadge: 'AI Mascot',
-    closeLabel: 'Close assistant chat',
-    inputPlaceholder: 'Ask about skills, projects or contacts...',
-    inputLabel: 'Message for virtual assistant',
+    headerTitle: 'Airi',
+    headerBadge: 'AI Assistant',
+    closeLabel: 'Close chat with Airi',
+    inputPlaceholder: 'Ask Airi about skills, projects or contacts...',
+    inputLabel: 'Message for Airi',
     sendLabel: 'Send message',
     loading: 'Typing response...',
     initialGreeting:
-      "Hello! I am Dario Reis's mascot guide. I can answer any questions about his tech skills, projects, professional background, or how to contact him. How can I help you today?",
+      "Hello! I am Airi, Dario Reis's virtual assistant and mascot. I can answer any questions about his tech skills, projects, professional background, or how to contact him. How can I help you today?",
     errorFallback:
       'Oops! I had trouble connecting to the AI service, but you can explore all projects on the site or reach out directly to Dario via WhatsApp (+55 11 96188-9886) or LinkedIn!',
     suggestions: [
@@ -203,17 +203,17 @@ const UI_TEXTS = {
     ],
   },
   es: {
-    triggerLabel: 'Abrir asistente virtual de Dario Reis',
+    triggerLabel: 'Abrir chat con Airi, asistente de Dario',
     triggerTooltip: '¡Pregúntame cualquier cosa sobre Dario!',
-    headerTitle: 'Guía de Dario',
+    headerTitle: 'Airi',
     headerBadge: 'IA Asistente',
-    closeLabel: 'Cerrar chat del asistente',
-    inputPlaceholder: 'Pregunta sobre tecnologías, proyectos o contacto...',
-    inputLabel: 'Mensaje para el asistente virtual',
+    closeLabel: 'Cerrar chat con Airi',
+    inputPlaceholder: 'Pregunta a Airi sobre tecnologías, proyectos...',
+    inputLabel: 'Mensaje para Airi',
     sendLabel: 'Enviar mensaje',
     loading: 'Escribiendo respuesta...',
     initialGreeting:
-      '¡Hola! Soy el asistente de Dario Reis. Puedo responder tus dudas sobre las tecnologías que domina, sus proyectos, su experiencia profesional o cómo contactarlo. ¿Cómo puedo ayudarte hoy?',
+      '¡Hola! Soy Airi, la mascota y asistente virtual de Dario Reis. Puedo responder tus dudas sobre las tecnologías que domina, sus proyectos, su experiencia profesional o cómo contactarlo. ¿Cómo puedo ayudarte hoy?',
     errorFallback:
       '¡Ups! Tuve un problema para conectar con la IA, pero puedes explorar todos los proyectos en el sitio o contactar directamente a Dario por WhatsApp (+55 11 96188-9886) o LinkedIn.',
     suggestions: [
