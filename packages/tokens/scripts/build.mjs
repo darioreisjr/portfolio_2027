@@ -104,6 +104,15 @@ ds-theme-toggle:not(:defined) {
   visibility: hidden;
 }
 
+/* O balão da assistente só aparece acima de 640px: o complemento exato do
+   max-width: 640px do <ds-chat-assistant>, que o esconde. Ali a página
+   reserva também a altura dele. */
+@media (width > 640px) {
+  :root {
+    --ds-dock-reserve: var(--ds-dock-reserve-tooltip);
+  }
+}
+
 /* Grupo fixo no canto inferior direito de todo documento. Sem custom element:
    a marcação é do dono do documento e a aparência é esta (ADR 0006). */
 .ds-dock {

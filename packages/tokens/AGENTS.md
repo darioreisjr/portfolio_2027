@@ -13,6 +13,7 @@ Tokens de design em propriedades CSS customizadas, em três camadas (ADR 0003).
 - Token de componente aponta só para semânticos.
 - Componente novo do design system ganha aqui a regra `:not(:defined)` que reserva o espaço dele antes do upgrade (em `scripts/build.mjs`).
 - Elemento sem comportamento, como o grupo `ds-dock` e o seletor de idioma, tem a aparência definida aqui, em `scripts/build.mjs`, sem custom element (ADR 0006).
+- `ds-dock-reserve` é o espaço livre no fim de toda página: cobre o grupo do canto direito e a assistente `<ds-chat-assistant>` no esquerdo. Acima de 640px, onde a assistente mostra o balão, `scripts/build.mjs` troca o valor por `ds-dock-reserve-tooltip`. Mudou tamanho ou posição da assistente, ou o corte de 640px dela: ajuste as duas contas.
 - A fonte do site (M PLUS Rounded 1c, só o alfabeto latino, pesos 400 e 700) vem de `@fontsource/m-plus-rounded-1c`. O build copia os dois `.woff2` para `dist/fonts/`, publicados em `/_ds/fonts/`, e gera o `@font-face` e a face de reserva com `size-adjust`. Sem pré-carga (ver `docs/quality/budgets.md`).
 - Movimento: `motion-duration-md` (0,2 s) é o dos controles; `motion-duration-lg` (0,5 s), `motion-duration-xl` (0,7 s) e `motion-ease-in-out` são os de cena. O pulo `ds-hop`, dos controles do grupo do canto, é definido em `scripts/build.mjs` e vale em todo documento.
 - Sem dependência de framework.

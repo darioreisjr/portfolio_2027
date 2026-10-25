@@ -41,6 +41,7 @@ export const primitives = {
   'border-width-thick': '3px',
   'size-7': '1.75rem',
   'size-11': '2.75rem',
+  'size-13': '3.25rem',
   'duration-90': '90ms',
   'duration-200': '200ms',
   'duration-500': '500ms',
@@ -143,6 +144,8 @@ export const semanticStatic = {
   'border-width-marker': 'var(--border-width-thick)',
   'text-outline-width': 'var(--border-width-medium)',
   'size-control': 'var(--size-11)',
+  // Botão que flutua sobre a página, como o da assistente.
+  'size-control-floating': 'var(--size-13)',
   'size-icon': 'var(--size-7)',
   'size-indicator-sm': 'var(--space-2)',
   'size-indicator-md': 'var(--space-4)',
@@ -192,8 +195,22 @@ export const component = {
   'ds-theme-toggle-duration': 'var(--motion-duration-theme)',
   'ds-dock-offset-block': 'var(--space-block-sm)',
   'ds-dock-offset-inline': 'var(--space-inline-sm)',
-  // Espaço que a página deixa livre no fim para o grupo fixo não cobrir conteúdo.
-  'ds-dock-reserve': 'calc(var(--size-control) + var(--space-block-md))',
+  // Assistente fixa no canto inferior esquerdo (<ds-chat-assistant>).
+  'ds-chat-assistant-offset-block': 'var(--space-block-md)',
+  'ds-chat-assistant-offset-inline': 'var(--space-inline-md)',
+  'ds-chat-assistant-trigger-size': 'var(--size-control-floating)',
+  // Espaço que a página deixa livre no fim para nada fixo nos cantos cobrir
+  // conteúdo: o grupo do canto direito e o botão da assistente no esquerdo.
+  // Repete os valores de ds-chat-assistant-offset-block e -trigger-size (token
+  // de componente não aponta para outro): mudou um, mude a conta aqui.
+  'ds-dock-reserve':
+    'max(calc(var(--size-control) + var(--space-block-md)), calc(var(--space-block-md) * 2 + var(--size-control-floating)))',
+  // Acima de 640px a assistente mostra o balão de chamada sobre o botão até o
+  // primeiro clique; a reserva cresce a altura dele (scripts/build.mjs). A conta
+  // repete o vão, o padding, a linha e a borda do .tooltip-balloon; a folga do
+  // último space-block-md absorve os 4px da animação do balão.
+  'ds-dock-reserve-tooltip':
+    'calc(var(--space-block-md) * 2 + var(--size-control-floating) + var(--space-block-sm) * 3 + var(--text-size-sm) * var(--text-line-height) + var(--border-width-control) * 2)',
   'ds-language-switcher-size': 'var(--size-control)',
   'ds-language-switcher-flag-size': 'var(--size-icon)',
   'ds-language-switcher-edge': 'var(--color-surface)',
