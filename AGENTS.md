@@ -132,6 +132,7 @@ Detalhes nas skills `commits` e `deploy-vercel`.
 - Decisão de arquitetura nova: ADR escrito (skill `write-adr`).
 - Docs atualizados quando o comportamento descrito mudou.
 - `README.md` da raiz revisado antes de todo push, e atualizado se o que vai subir mudou o que ele diz (skill `commits`).
+- Página "Como foi feito" (`packages/content/data/how-it-was-built/`) revisada antes de todo push, e atualizada se o que vai subir mudou arquitetura, ADRs, módulos ou regras de fronteira (skill `commits`).
 - Commit no padrão Conventional Commits, em pt-BR e sem coautor (skill `commits`).
 
 ## Nunca
