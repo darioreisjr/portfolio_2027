@@ -5,14 +5,15 @@ Um setup de agentes que funciona igual em **Claude Code, Codex CLI, Gemini CLI e
 - **Versão:** 1.0.0 (2026-10-25)
 - **Mantido em:** `docs/ai-setup/kit/` do repositório do portfólio 2027. Esta pasta é a cópia mestra: melhorias nascem aqui e depois vão para os outros projetos.
 - **Modelos para copiar:** [`modelos/`](modelos/). Tudo marcado com `<<...>>` é lacuna para preencher.
+- **Quer só usar?** Comece pelo [COMO-USAR.md](COMO-USAR.md): onde pegar o kit, como instalar e pedidos prontos para colar no agente.
 
 ## Histórico
 
 Cada mudança no kit ganha uma linha aqui. A versão segue a ideia do SemVer: **maior** quando um projeto que já usa o kit precisa mudar arquivos à mão para atualizar, **menor** para peça nova opcional, **remendo** para correção ou texto.
 
-| Versão | Data       | O que mudou                                                                                                                                                                                                          |
-| ------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.0.0  | 2026-10-25 | Primeira versão, extraída do setup do portfólio 2027. Acrescenta Antigravity CLI, hooks de agente como fonte (`hooks.json`), extras por ferramenta (`settings.json`), hook `pre-commit` e o revisor `code-reviewer`. |
+| Versão | Data       | O que mudou                                                                                                                                                                                                                                         |
+| ------ | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.0.0  | 2026-10-25 | Primeira versão, extraída do setup do portfólio 2027. Acrescenta Antigravity CLI, hooks de agente como fonte (`hooks.json`), extras por ferramenta (`settings.json`), hook `pre-commit`, o revisor `code-reviewer` e o guia prático `COMO-USAR.md`. |
 
 ## Sumário
 

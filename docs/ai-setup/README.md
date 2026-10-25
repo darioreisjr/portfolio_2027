@@ -17,7 +17,7 @@ Depois de editar qualquer fonte: `pnpm ai:sync`. O CI roda `pnpm ai:check` e fal
 
 Por que cada coisa é assim está em `capability-matrix.md`. O que foi de fato verificado está em `validation.md`.
 
-Para levar este setup a outro projeto, use o kit portátil: [`kit/GUIA.md`](kit/GUIA.md), com os modelos em `kit/modelos/`. Ele já inclui o Antigravity CLI e hooks de agente, que este repositório ainda não usa (pendências em `docs/open-questions.md`).
+Para levar este setup a outro projeto, use o kit portátil: [`kit/COMO-USAR.md`](kit/COMO-USAR.md) para começar, [`kit/GUIA.md`](kit/GUIA.md) para os detalhes, e os modelos em `kit/modelos/`. Ele já inclui o Antigravity CLI e hooks de agente, que este repositório ainda não usa (pendências em `docs/open-questions.md`).
 
 ## Antes do primeiro uso
 
