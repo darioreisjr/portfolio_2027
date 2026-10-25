@@ -1,8 +1,164 @@
-import { LitElement, css, html } from 'lit';
+import { LitElement, css, html, type TemplateResult } from 'lit';
 
 export interface ChatMessage {
   role: 'user' | 'model';
   content: string;
+}
+
+export type InlineToken =
+  | { type: 'text'; content: string }
+  | { type: 'bold'; content: string }
+  | { type: 'italic'; content: string }
+  | { type: 'code'; content: string }
+  | { type: 'link'; label: string; url: string };
+
+export type ChatBlock =
+  { type: 'paragraph'; lines: InlineToken[][] } | { type: 'list'; items: InlineToken[][] };
+
+export function isSafeUrl(url: string): boolean {
+  try {
+    const trimmed = url.trim();
+    if (trimmed.startsWith('mailto:') || trimmed.startsWith('tel:')) {
+      return true;
+    }
+    const parsed = new URL(trimmed);
+    return ['https:', 'http:', 'mailto:', 'tel:'].includes(parsed.protocol);
+  } catch {
+    return false;
+  }
+}
+
+const INLINE_REGEX = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|`([^`]+)`|\*([^*]+)\*/g;
+
+export function parseInlineTokens(text: string): InlineToken[] {
+  const tokens: InlineToken[] = [];
+  let match: RegExpExecArray | null;
+  let lastIndex = 0;
+  INLINE_REGEX.lastIndex = 0;
+
+  while ((match = INLINE_REGEX.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      tokens.push({ type: 'text', content: text.slice(lastIndex, match.index) });
+    }
+    if (match[1] !== undefined && match[2] !== undefined) {
+      const url = match[2].trim();
+      if (isSafeUrl(url)) {
+        tokens.push({ type: 'link', label: match[1], url });
+      } else {
+        tokens.push({ type: 'text', content: match[1] });
+      }
+    } else if (match[3] !== undefined) {
+      tokens.push({ type: 'bold', content: match[3] });
+    } else if (match[4] !== undefined) {
+      tokens.push({ type: 'code', content: match[4] });
+    } else if (match[5] !== undefined) {
+      tokens.push({ type: 'italic', content: match[5] });
+    }
+    lastIndex = INLINE_REGEX.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    tokens.push({ type: 'text', content: text.slice(lastIndex) });
+  }
+
+  return tokens;
+}
+
+export function parseChatBlocks(markdown: string): ChatBlock[] {
+  // Normaliza itens emendados se a IA gerar em uma única linha (ex: "Canais: - **E-mail:** ... - **LinkedIn:** ...")
+  const normalized = markdown
+    .replace(/([^\n])\s+-\s+\*\*/g, '$1\n- **')
+    .replace(/([^\n])\s+-\s+\[/g, '$1\n- [');
+
+  const lines = normalized.split(/\r?\n/);
+  const blocks: ChatBlock[] = [];
+  let currentList: { type: 'list'; items: InlineToken[][] } | null = null;
+  let currentParagraph: string[] = [];
+
+  const flushParagraph = () => {
+    if (currentParagraph.length > 0) {
+      blocks.push({
+        type: 'paragraph',
+        lines: currentParagraph.map(parseInlineTokens),
+      });
+      currentParagraph = [];
+    }
+  };
+
+  const flushList = () => {
+    if (currentList) {
+      blocks.push(currentList);
+      currentList = null;
+    }
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) {
+      flushParagraph();
+      flushList();
+      continue;
+    }
+
+    const listMatch = line.match(/^[-*]\s+(.*)$/);
+    if (listMatch && listMatch[1] !== undefined) {
+      flushParagraph();
+      if (!currentList) {
+        currentList = { type: 'list', items: [] };
+      }
+      currentList.items.push(parseInlineTokens(listMatch[1]));
+    } else {
+      flushList();
+      currentParagraph.push(line);
+    }
+  }
+
+  flushParagraph();
+  flushList();
+
+  return blocks;
+}
+
+export function renderInlineToken(token: InlineToken): TemplateResult {
+  switch (token.type) {
+    case 'bold':
+      return html`<strong>${token.content}</strong>`;
+    case 'italic':
+      return html`<em>${token.content}</em>`;
+    case 'code':
+      return html`<code class="chat-inline-code">${token.content}</code>`;
+    case 'link':
+      return html`<a class="chat-link" href="${token.url}" target="_blank" rel="noopener noreferrer"
+        >${token.label}</a
+      >`;
+    case 'text':
+    default:
+      return html`${token.content}`;
+  }
+}
+
+export function renderChatMessage(content: string): TemplateResult {
+  const blocks = parseChatBlocks(content);
+  return html`
+    ${blocks.map((block) => {
+      if (block.type === 'list') {
+        return html`
+          <ul class="chat-list">
+            ${block.items.map(
+              (item) => html`<li class="chat-list-item">${item.map(renderInlineToken)}</li>`,
+            )}
+          </ul>
+        `;
+      }
+      return html`
+        <p class="chat-paragraph">
+          ${block.lines.map(
+            (line, idx) => html`${idx > 0 ? html`<br />` : ''}${line.map(renderInlineToken)}`,
+          )}
+        </p>
+      `;
+    })}
+  `;
 }
 
 const UI_TEXTS = {
@@ -469,6 +625,66 @@ export class DsChatAssistant extends LitElement {
       line-height: var(--text-line-height);
     }
 
+    .message-bubble p.chat-paragraph {
+      margin: 0 0 var(--space-block-xs) 0;
+      line-height: 1.5;
+    }
+
+    .message-bubble p.chat-paragraph:last-child {
+      margin-block-end: 0;
+    }
+
+    .message-bubble ul.chat-list {
+      margin: var(--space-block-xs) 0;
+      padding-inline-start: 1.25rem;
+      list-style-type: disc;
+    }
+
+    .message-bubble ul.chat-list:last-child {
+      margin-block-end: 0;
+    }
+
+    .message-bubble li.chat-list-item {
+      margin-block: 2px;
+      line-height: 1.5;
+    }
+
+    .message-bubble strong {
+      font-weight: 700;
+    }
+
+    .message-bubble .chat-link {
+      color: var(--color-accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      word-break: break-word;
+      font-weight: 500;
+      transition: opacity 0.15s ease-in-out;
+    }
+
+    .message-row.user .chat-link {
+      color: inherit;
+    }
+
+    .message-bubble .chat-link:hover {
+      opacity: 0.8;
+      text-decoration-thickness: 2px;
+    }
+
+    .message-bubble .chat-link:focus-visible {
+      outline: var(--focus-ring-width) solid var(--color-focus-ring);
+      outline-offset: 2px;
+      border-radius: var(--radius-sm);
+    }
+
+    .message-bubble .chat-inline-code {
+      background: rgba(0, 0, 0, 0.08);
+      padding: 0.1em 0.35em;
+      border-radius: var(--radius-sm);
+      font-family: monospace;
+      font-size: 0.875em;
+    }
+
     .message-row.user .message-bubble {
       background: var(--color-accent);
       color: var(--color-on-accent);
@@ -728,7 +944,7 @@ export class DsChatAssistant extends LitElement {
                     ${this.messages.map(
                       (msg) => html`
                         <div class="message-row ${msg.role}">
-                          <div class="message-bubble">${msg.content}</div>
+                          <div class="message-bubble">${renderChatMessage(msg.content)}</div>
                         </div>
                       `,
                     )}

@@ -1,7 +1,7 @@
 import '@portfolio/tokens/tokens.css';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import './index.js';
-import type { DsChatAssistant } from './ds-chat-assistant.js';
+import { isSafeUrl, parseInlineTokens, type DsChatAssistant } from './ds-chat-assistant.js';
 
 async function mount(locale: string = 'pt-BR'): Promise<DsChatAssistant> {
   const el = document.createElement('ds-chat-assistant') as DsChatAssistant;
@@ -117,7 +117,99 @@ describe('ds-chat-assistant', () => {
     await vi.waitFor(() => {
       const messages = el.shadowRoot?.querySelectorAll('.message-bubble');
       expect(messages?.length).toBe(3); // Saudação + Pergunta do usuário + Resposta da IA
-      expect(messages?.[2]?.textContent).toBe('O Dario trabalha com React, Next.js e TypeScript!');
+      expect(messages?.[2]?.textContent?.trim()).toBe(
+        'O Dario trabalha com React, Next.js e TypeScript!',
+      );
     });
+  });
+
+  it('renderiza links em markdown como links clicáveis e seguros', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        reply:
+          'Fale comigo no [LinkedIn](https://www.linkedin.com/in/darioreisjr/) ou [E-mail](mailto:dev.darioreis@gmail.com)!',
+      }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const el = await mount();
+    el.shadowRoot?.querySelector<HTMLButtonElement>('.chat-trigger')?.click();
+    await el.updateComplete;
+
+    const input = el.shadowRoot?.querySelector<HTMLInputElement>('.chat-input');
+    if (input) {
+      input.value = 'Contato?';
+      input.dispatchEvent(new Event('input'));
+    }
+    await el.updateComplete;
+
+    el.shadowRoot
+      ?.querySelector<HTMLFormElement>('.chat-form')
+      ?.dispatchEvent(new Event('submit', { cancelable: true }));
+    await el.updateComplete;
+
+    await vi.waitFor(() => {
+      const links = el.shadowRoot?.querySelectorAll('.message-row.model .chat-link');
+      expect(links?.length).toBe(2);
+      expect(links?.[0]?.getAttribute('href')).toBe('https://www.linkedin.com/in/darioreisjr/');
+      expect(links?.[0]?.getAttribute('target')).toBe('_blank');
+      expect(links?.[0]?.getAttribute('rel')).toBe('noopener noreferrer');
+      expect(links?.[0]?.textContent).toBe('LinkedIn');
+      expect(links?.[1]?.getAttribute('href')).toBe('mailto:dev.darioreis@gmail.com');
+      expect(links?.[1]?.textContent).toBe('E-mail');
+    });
+  });
+
+  it('renderiza tópicos de lista e negrito organizadamente', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        reply:
+          'Aqui estão os canais:\n- **GitHub:** [Perfil](https://github.com/darioreisjr)\n- **WhatsApp:** [Conversar](https://wa.me/5511961889886)',
+      }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const el = await mount();
+    el.shadowRoot?.querySelector<HTMLButtonElement>('.chat-trigger')?.click();
+    await el.updateComplete;
+
+    const input = el.shadowRoot?.querySelector<HTMLInputElement>('.chat-input');
+    if (input) {
+      input.value = 'Canais';
+      input.dispatchEvent(new Event('input'));
+    }
+    await el.updateComplete;
+
+    el.shadowRoot
+      ?.querySelector<HTMLFormElement>('.chat-form')
+      ?.dispatchEvent(new Event('submit', { cancelable: true }));
+    await el.updateComplete;
+
+    await vi.waitFor(() => {
+      const list = el.shadowRoot?.querySelector('.message-row.model .chat-list');
+      expect(list).not.toBeNull();
+      const items = list?.querySelectorAll('.chat-list-item');
+      expect(items?.length).toBe(2);
+      const bolds = list?.querySelectorAll('strong');
+      expect(bolds?.length).toBe(2);
+      expect(bolds?.[0]?.textContent).toBe('GitHub:');
+    });
+  });
+
+  it('descarta esquemas inseguros de URL (como javascript:)', () => {
+    expect(isSafeUrl('https://example.com')).toBe(true);
+    expect(isSafeUrl('http://example.com')).toBe(true);
+    expect(isSafeUrl('mailto:test@example.com')).toBe(true);
+    expect(isSafeUrl('tel:+5511999999999')).toBe(true);
+    expect(isSafeUrl('javascript:alert(1)')).toBe(false);
+    expect(isSafeUrl('data:text/html,bad')).toBe(false);
+
+    const tokens = parseInlineTokens('[Clique](javascript:alert(1))');
+    expect(tokens[0]?.type).toBe('text');
+    if (tokens[0]?.type === 'text') {
+      expect(tokens[0].content).toBe('Clique');
+    }
   });
 });
