@@ -212,4 +212,92 @@ describe('ds-chat-assistant', () => {
       expect(tokens[0].content).toBe('Clique');
     }
   });
+
+  it('exibe indicador "Airi está digitando..." enquanto aguarda a API', async () => {
+    let resolveResponse: (value: unknown) => void = () => {};
+    const pendingPromise = new Promise((resolve) => {
+      resolveResponse = resolve;
+    });
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockReturnValue(
+        pendingPromise.then(() => ({
+          ok: true,
+          json: async () => ({ reply: 'Resposta concluída' }),
+        })),
+      ),
+    );
+
+    const el = await mount();
+    el.shadowRoot?.querySelector<HTMLButtonElement>('.chat-trigger')?.click();
+    await el.updateComplete;
+
+    const input = el.shadowRoot?.querySelector<HTMLInputElement>('.chat-input');
+    if (input) {
+      input.value = 'Olá Airi';
+      input.dispatchEvent(new Event('input'));
+    }
+    await el.updateComplete;
+
+    el.shadowRoot
+      ?.querySelector<HTMLFormElement>('.chat-form')
+      ?.dispatchEvent(new Event('submit', { cancelable: true }));
+    await el.updateComplete;
+
+    // Enquanto a promise está pendente, deve exibir o indicador textual de digitando
+    const indicator = el.shadowRoot?.querySelector('.typing-indicator');
+    expect(indicator).not.toBeNull();
+    expect(indicator?.textContent).toContain('Airi está digitando...');
+
+    // Libera a resposta e confere conclusão
+    resolveResponse(true);
+    await vi.waitFor(() => {
+      expect(el.shadowRoot?.querySelector('.typing-indicator')).toBeNull();
+      const messages = el.shadowRoot?.querySelectorAll('.message-bubble');
+      expect(messages?.[2]?.textContent?.trim()).toBe('Resposta concluída');
+    });
+  });
+
+  it('renderiza resposta imediatamente quando prefers-reduced-motion está ativo', async () => {
+    vi.stubGlobal('matchMedia', (query: string) => ({
+      matches: query === '(prefers-reduced-motion: reduce)',
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ reply: 'Resposta imediata sem animação' }),
+      }),
+    );
+
+    const el = await mount();
+    el.shadowRoot?.querySelector<HTMLButtonElement>('.chat-trigger')?.click();
+    await el.updateComplete;
+
+    const input = el.shadowRoot?.querySelector<HTMLInputElement>('.chat-input');
+    if (input) {
+      input.value = 'Teste';
+      input.dispatchEvent(new Event('input'));
+    }
+    await el.updateComplete;
+
+    el.shadowRoot
+      ?.querySelector<HTMLFormElement>('.chat-form')
+      ?.dispatchEvent(new Event('submit', { cancelable: true }));
+    await el.updateComplete;
+
+    await vi.waitFor(() => {
+      const messages = el.shadowRoot?.querySelectorAll('.message-bubble');
+      expect(messages?.[2]?.textContent?.trim()).toBe('Resposta imediata sem animação');
+    });
+  });
 });

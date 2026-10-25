@@ -171,7 +171,7 @@ const UI_TEXTS = {
     inputPlaceholder: 'Pergunte à Airi sobre tecnologias, projetos...',
     inputLabel: 'Mensagem para a Airi',
     sendLabel: 'Enviar mensagem',
-    loading: 'Digitando resposta...',
+    loading: 'Airi está digitando...',
     initialGreeting:
       'Olá! Sou a Airi, assistente virtual e mascote oficial do Dario Reis. Posso responder qualquer dúvida sobre as tecnologias que ele domina, seus projetos, sua experiência profissional ou como entrar em contato com ele. Como posso te ajudar?',
     errorFallback:
@@ -191,7 +191,7 @@ const UI_TEXTS = {
     inputPlaceholder: 'Ask Airi about skills, projects or contacts...',
     inputLabel: 'Message for Airi',
     sendLabel: 'Send message',
-    loading: 'Typing response...',
+    loading: 'Airi is typing...',
     initialGreeting:
       "Hello! I am Airi, Dario Reis's virtual assistant and mascot. I can answer any questions about his tech skills, projects, professional background, or how to contact him. How can I help you today?",
     errorFallback:
@@ -211,7 +211,7 @@ const UI_TEXTS = {
     inputPlaceholder: 'Pregunta a Airi sobre tecnologías, proyectos...',
     inputLabel: 'Mensaje para Airi',
     sendLabel: 'Enviar mensaje',
-    loading: 'Escribiendo respuesta...',
+    loading: 'Airi está escribiendo...',
     initialGreeting:
       '¡Hola! Soy Airi, la mascota y asistente virtual de Dario Reis. Puedo responder tus dudas sobre las tecnologías que domina, sus proyectos, su experiencia profesional o cómo contactarlo. ¿Cómo puedo ayudarte hoy?',
     errorFallback:
@@ -234,6 +234,7 @@ export class DsChatAssistant extends LitElement {
     open: { type: Boolean, state: true },
     messages: { state: true },
     isLoading: { state: true },
+    isTyping: { state: true },
     showTooltip: { state: true },
     inputValue: { state: true },
   };
@@ -242,8 +243,11 @@ export class DsChatAssistant extends LitElement {
   declare open: boolean;
   declare messages: ChatMessage[];
   declare isLoading: boolean;
+  declare isTyping: boolean;
   declare showTooltip: boolean;
   declare inputValue: string;
+
+  private typewriterTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     super();
@@ -251,6 +255,7 @@ export class DsChatAssistant extends LitElement {
     this.open = false;
     this.messages = [];
     this.isLoading = false;
+    this.isTyping = false;
     this.showTooltip = true;
     this.inputValue = '';
   }
@@ -273,6 +278,14 @@ export class DsChatAssistant extends LitElement {
   override disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('keydown', this.handleKeyDown);
+    this.clearTypewriter();
+  }
+
+  private clearTypewriter() {
+    if (this.typewriterTimer) {
+      clearTimeout(this.typewriterTimer);
+      this.typewriterTimer = null;
+    }
   }
 
   private get texts() {
@@ -350,10 +363,67 @@ export class DsChatAssistant extends LitElement {
     }
   }
 
+  private async typewriterAppend(fullText: string): Promise<void> {
+    this.clearTypewriter();
+
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const messageIndex = this.messages.length;
+    this.messages = [...this.messages, { role: 'model', content: '' }];
+    this.isTyping = true;
+
+    if (prefersReducedMotion || !fullText) {
+      const updated = [...this.messages];
+      updated[messageIndex] = { role: 'model', content: fullText };
+      this.messages = updated;
+      this.isTyping = false;
+      this.saveSession();
+      this.scrollToBottom();
+      return;
+    }
+
+    const total = fullText.length;
+    const chunkSize = Math.max(2, Math.ceil(total / 45));
+    const stepDelay = 12;
+
+    return new Promise((resolve) => {
+      let currentIdx = 0;
+
+      const step = () => {
+        currentIdx = Math.min(total, currentIdx + chunkSize);
+        const chunk = fullText.slice(0, currentIdx);
+
+        const updated = [...this.messages];
+        if (updated[messageIndex]) {
+          updated[messageIndex] = { role: 'model', content: chunk };
+          this.messages = updated;
+        }
+
+        this.scrollToBottom();
+
+        if (currentIdx < total) {
+          this.typewriterTimer = setTimeout(step, stepDelay);
+        } else {
+          this.typewriterTimer = null;
+          this.isTyping = false;
+          this.saveSession();
+          this.scrollToBottom();
+          resolve();
+        }
+      };
+
+      step();
+    });
+  }
+
   private async sendMessage(text: string) {
     const trimmed = text.trim();
-    if (!trimmed || this.isLoading) return;
+    if (!trimmed || this.isLoading || this.isTyping) return;
 
+    this.clearTypewriter();
     const userMsg: ChatMessage = { role: 'user', content: trimmed };
     const nextMessages = [...this.messages, userMsg];
     this.messages = nextMessages;
@@ -377,12 +447,14 @@ export class DsChatAssistant extends LitElement {
       const data = await res.json();
       const botReply = data.reply || this.texts.errorFallback;
 
-      this.messages = [...this.messages, { role: 'model', content: botReply }];
+      this.isLoading = false;
+      await this.typewriterAppend(botReply);
     } catch {
-      this.messages = [...this.messages, { role: 'model', content: this.texts.errorFallback }];
+      this.isLoading = false;
+      await this.typewriterAppend(this.texts.errorFallback);
     } finally {
       this.isLoading = false;
-      this.saveSession();
+      this.isTyping = false;
       this.updateComplete.then(() => this.scrollToBottom());
     }
   }
@@ -733,17 +805,29 @@ export class DsChatAssistant extends LitElement {
 
     /* Indicador de carregamento */
     .typing-indicator {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 8px 12px;
+      gap: 6px;
+      padding: var(--space-block-xs) var(--space-inline-sm);
+    }
+
+    .typing-text {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      font-style: italic;
+    }
+
+    .typing-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
     }
 
     .typing-dot {
-      inline-size: 6px;
-      block-size: 6px;
+      inline-size: 5px;
+      block-size: 5px;
       border-radius: var(--radius-full);
-      background: var(--color-text-muted);
+      background: var(--color-accent);
       animation: pulse-dot 1.2s infinite ease-in-out;
     }
 
@@ -949,7 +1033,7 @@ export class DsChatAssistant extends LitElement {
                       `,
                     )}
                     ${
-                      this.messages.length === 1 && !this.isLoading
+                      this.messages.length === 1 && !this.isLoading && !this.isTyping
                         ? html`
                             <div class="suggestions-list" aria-label="Sugestões de perguntas">
                               ${t.suggestions.map(
@@ -973,11 +1057,15 @@ export class DsChatAssistant extends LitElement {
                             <div class="message-row model">
                               <div
                                 class="message-bubble typing-indicator"
+                                role="status"
                                 aria-label="${t.loading}"
                               >
-                                <span class="typing-dot"></span>
-                                <span class="typing-dot"></span>
-                                <span class="typing-dot"></span>
+                                <span class="typing-text">${t.loading}</span>
+                                <span class="typing-dots" aria-hidden="true">
+                                  <span class="typing-dot"></span>
+                                  <span class="typing-dot"></span>
+                                  <span class="typing-dot"></span>
+                                </span>
                               </div>
                             </div>
                           `
@@ -994,13 +1082,13 @@ export class DsChatAssistant extends LitElement {
                         @input="${this.handleInputChange}"
                         placeholder="${t.inputPlaceholder}"
                         aria-label="${t.inputLabel}"
-                        ?disabled="${this.isLoading}"
+                        ?disabled="${this.isLoading || this.isTyping}"
                       />
                       <button
                         class="send-btn"
                         type="submit"
                         aria-label="${t.sendLabel}"
-                        ?disabled="${this.isLoading || !this.inputValue.trim()}"
+                        ?disabled="${this.isLoading || this.isTyping || !this.inputValue.trim()}"
                       >
                         <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                           <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
