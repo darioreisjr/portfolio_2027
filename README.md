@@ -174,6 +174,8 @@ O conteúdo fica em [`packages/content/data/`](packages/content/data/), e o mode
 
 O projeto é desenvolvido por uma pessoa com ajuda de agentes de IA (Claude Code como principal; Codex e Gemini para revisão). As regras que eles seguem são as mesmas de qualquer colaborador e ficam em [`AGENTS.md`](AGENTS.md): explorar, planejar, aprovação do autor, implementar, revisar. Nenhum agente implementa sem plano aprovado, inventa conteúdo sobre o autor nem faz push sem pedido.
 
+Esse setup de agentes também existe em versão genérica, para levar a qualquer projeto: [`docs/ai-setup/kit/`](docs/ai-setup/kit/COMO-USAR.md), com guia de uso, modelos e o script que gera a configuração de Claude Code, Codex, Gemini e Antigravity a partir de uma fonte só.
+
 ## Commits
 
 [Conventional Commits](https://www.conventionalcommits.org/pt-br/) em português, com o app ou pacote como escopo: `feat(mfe-vue): período e repositórios nos projetos`. O `commitlint` recusa o que foge disso.
