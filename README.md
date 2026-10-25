@@ -19,7 +19,7 @@ Quem chega escolhe um perfil na tela inicial, como quem escolhe um personagem em
 
 O site existe em português do Brasil (sem prefixo), inglês (`/en`) e espanhol (`/es`), com as rotas traduzidas: `/recrutador`, `/en/recruiter`, `/es/reclutador`.
 
-Conta também com o **Mascote Guia do Dario**, um assistente virtual conversacional com IA (Google Gemini Flash) integrado ao design system (`<ds-chat-assistant>`), posicionado no canto inferior esquerdo para responder dúvidas dos visitantes sobre a trajetória, projetos, tecnologias e contatos do autor, sem fugir do escopo e sem banco de dados.
+Conta também com a **Airi**, mascote e assistente virtual conversacional com IA (Google Gemini Flash) integrada ao design system (`<ds-chat-assistant>`), posicionada no canto inferior esquerdo para responder dúvidas dos visitantes sobre a trajetória, projetos, tecnologias e contatos do autor, sem fugir do escopo e sem banco de dados.
 
 Todo bloco que ainda mostra dado fictício leva a faixa **"Dados de exemplo"**. Dado real e dado de exemplo nunca aparecem juntos no mesmo bloco.
 

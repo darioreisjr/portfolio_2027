@@ -41,9 +41,9 @@ describe('ds-chat-assistant', () => {
     expect(dialog).not.toBeNull();
     expect(dialog?.getAttribute('role')).toBe('dialog');
 
-    // Primeira mensagem do mascote
+    // Primeira mensagem da Airi
     const bubble = el.shadowRoot?.querySelector('.message-row.model .message-bubble');
-    expect(bubble?.textContent).toContain('Sou o mascote guia do Dario Reis');
+    expect(bubble?.textContent).toContain('Sou a Airi');
 
     // Chips de sugestão inicial
     const chips = el.shadowRoot?.querySelectorAll('.suggestion-chip');
@@ -75,16 +75,16 @@ describe('ds-chat-assistant', () => {
   it('adapta os textos para inglês quando locale é "en"', async () => {
     const el = await mount('en');
     const trigger = el.shadowRoot?.querySelector<HTMLButtonElement>('.chat-trigger');
-    expect(trigger?.getAttribute('aria-label')).toBe('Open Dario Reis virtual assistant');
+    expect(trigger?.getAttribute('aria-label')).toBe("Open chat with Airi, Dario's assistant");
 
     trigger?.click();
     await el.updateComplete;
 
     const title = el.shadowRoot?.querySelector('.header-title');
-    expect(title?.textContent).toBe("Dario's Guide");
+    expect(title?.textContent).toBe('Airi');
 
     const bubble = el.shadowRoot?.querySelector('.message-row.model .message-bubble');
-    expect(bubble?.textContent).toContain("Dario Reis's mascot guide");
+    expect(bubble?.textContent).toContain("Airi, Dario Reis's virtual assistant and mascot");
   });
 
   it('envia mensagem e exibe a resposta recebida', async () => {
