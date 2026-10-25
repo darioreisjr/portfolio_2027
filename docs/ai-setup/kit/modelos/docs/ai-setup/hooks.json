@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "bloquear-gerados": {
+      "purpose": "Recusa edição em arquivo gerado e aponta a fonte",
+      "when": "before-edit",
+      "script": "scripts/ai-hooks/guard-generated.mjs",
+      "timeoutSeconds": 15
+    },
+    "formatar-editados": {
+      "purpose": "Roda o formatador nos arquivos que o agente alterou",
+      "when": "after-edit",
+      "script": "scripts/ai-hooks/format-edited.mjs",
+      "timeoutSeconds": 60
+    }
+  }
+}

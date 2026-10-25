@@ -1,0 +1,8 @@
+{
+  "claude": {
+    "permissions": {
+      "deny": ["Read(./.env)", "Read(./.env.*)"]
+    }
+  },
+  "gemini": {}
+}
