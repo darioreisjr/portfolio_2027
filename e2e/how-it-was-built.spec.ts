@@ -99,9 +99,13 @@ test('tabela de métricas contém os dados reais do raio-x e notas 100', async (
   const repoLink = page.getByRole('link', { name: 'Ver repositório no GitHub' });
   await expect(repoLink).toHaveAttribute('href', 'https://github.com/darioreisjr/portfolio_2027');
   await expect(repoLink).toHaveAttribute('target', '_blank');
+  await expect(repoLink).toHaveClass(/b-btn-repo/);
+  await expect(repoLink).toBeVisible();
 
   const backLink = page.getByRole('link', { name: 'Voltar à escolha de perfil' });
   await expect(backLink).toHaveAttribute('href', '/');
+  await expect(backLink).toHaveClass(/b-back/);
+  await expect(backLink).toBeVisible();
 });
 
 test('os textos acompanham o idioma nos três idiomas suportados', async ({ page }) => {
