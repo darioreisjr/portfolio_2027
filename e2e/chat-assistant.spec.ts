@@ -108,3 +108,42 @@ test.describe('ds-chat-assistant (Assistente Mascote IA)', () => {
     await expectAccessible(page);
   });
 });
+
+// A assistente fica fixa no canto inferior esquerdo. No fim da página, o botão de
+// volta precisa ficar acima dela: do botão redondo no celular e, acima de 640px,
+// também do balão de chamada que aparece até o primeiro clique.
+test.describe('a assistente não cobre o botão de volta', () => {
+  const paths = ['/recrutador/', '/tecnico/', '/clientes/', '/comunidade/', '/como-foi-feito/'];
+  const screens = [
+    { name: 'celular', viewport: { width: 360, height: 740 }, balloon: false },
+    { name: 'tela média', viewport: { width: 700, height: 600 }, balloon: true },
+  ];
+
+  for (const { name, viewport, balloon } of screens) {
+    for (const path of paths) {
+      test(`${path} (${name})`, async ({ browser }) => {
+        const context = await browser.newContext({ viewport, reducedMotion: 'reduce' });
+        const page = await context.newPage();
+        await page.goto(path);
+        const back = page.getByRole('link', { name: 'Voltar à escolha de perfil' });
+        const assistant = page.locator('ds-chat-assistant');
+        const covering = balloon
+          ? assistant.locator('.tooltip-balloon')
+          : assistant.locator('.chat-trigger');
+        await expect(back).toBeVisible();
+        await expect(covering).toBeVisible();
+
+        // O conteúdo dos MFEs chega depois e alonga a página: rola de novo até o
+        // fim enquanto mede, e cobra a folga entre o botão e a assistente.
+        await expect
+          .poll(async () => {
+            await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
+            const [link, corner] = [await back.boundingBox(), await covering.boundingBox()];
+            return (corner?.y ?? 0) - ((link?.y ?? 0) + (link?.height ?? 0));
+          })
+          .toBeGreaterThanOrEqual(0);
+        await context.close();
+      });
+    }
+  }
+});
