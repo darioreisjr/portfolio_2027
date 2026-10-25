@@ -571,6 +571,11 @@
    Transição: Desdobramento de Blueprint (ADR 0011)
    --------------------------------------------------------------------------- */
 .built-arrival,
+.built-departure[hidden] {
+  display: none;
+}
+
+html[data-arrival='how-it-was-built'] .built-arrival,
 .built-departure:not([hidden]) {
   position: fixed;
   inset: 0;
@@ -580,8 +585,7 @@
   place-items: center;
 }
 
-.built-arrival::before,
-.built-departure:not([hidden])::before {
+:is(html[data-arrival='how-it-was-built'] .built-arrival, .built-departure:not([hidden]))::before {
   content: '';
   position: absolute;
   inset: 0;

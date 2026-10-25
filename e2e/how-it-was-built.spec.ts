@@ -163,6 +163,15 @@ test('com movimento reduzido não há botão de pausa e as cortinas somem', asyn
   await context.close();
 });
 
+test('ao acessar diretamente sem marca de transição a cortina de chegada fica oculta', async ({
+  page,
+}) => {
+  await page.goto('/como-foi-feito/');
+  await expect(page.locator('.built-arrival')).toBeHidden();
+  await expect(page.locator('.how-it-was-built')).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+});
+
 test.describe('no celular', () => {
   test.use({ viewport: { width: 360, height: 740 }, hasTouch: true, isMobile: true });
 
