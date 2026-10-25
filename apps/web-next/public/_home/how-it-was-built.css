@@ -528,7 +528,8 @@
   margin-block-start: var(--space-block-xs);
 }
 
-.b-btn {
+.b-btn,
+.how-it-was-built .b-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -537,34 +538,42 @@
   padding: var(--space-block-xs) var(--space-inline-md);
   font-family: var(--font-code);
   font-size: var(--text-size-sm);
+  font-weight: var(--text-weight-strong);
   letter-spacing: 0.05em;
   text-decoration: none;
-  border: 1px solid var(--b-accent);
-  background: var(--color-surface);
   cursor: pointer;
   transition:
     background var(--motion-duration-sm) ease,
-    color var(--motion-duration-sm) ease;
+    color var(--motion-duration-sm) ease,
+    border-color var(--motion-duration-sm) ease;
 }
 
-.b-btn-repo {
-  background: var(--color-text);
-  color: var(--color-surface);
-  border-color: var(--color-text);
-}
-
-.b-btn-repo:hover {
+.b-btn-repo,
+.how-it-was-built .b-btn-repo {
   background: var(--b-accent);
-  color: #ffffff;
+  color: var(--color-on-area);
+  border: 1px solid var(--b-accent);
+}
+
+.b-btn-repo:hover,
+.how-it-was-built .b-btn-repo:hover {
+  background: color-mix(in srgb, var(--b-accent) 85%, var(--color-surface));
+  color: var(--color-on-area);
   border-color: var(--b-accent);
 }
 
-.b-back {
-  color: var(--b-accent);
+.b-back,
+.how-it-was-built .b-back {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--b-accent);
 }
 
-.b-back:hover {
-  background: color-mix(in srgb, var(--b-accent) 15%, transparent);
+.b-back:hover,
+.how-it-was-built .b-back:hover {
+  background: color-mix(in srgb, var(--b-accent) 15%, var(--color-surface));
+  color: var(--color-text);
+  border-color: var(--b-accent);
 }
 
 /* ---------------------------------------------------------------------------
