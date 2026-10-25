@@ -90,6 +90,14 @@ A página "Como foi feito" (`/como-foi-feito/`) e seus dados em `packages/conten
 3. Se atualizou: confira com `pnpm test` (que roda a verificação de integridade) e inclua as alterações no commit correspondente ou em `docs: atualiza a pagina como foi feito`.
 4. No relato do push, informe que a página "Como foi feito" foi revisada e está em dia.
 
+### Revise o kit de agentes antes de todo push
+
+`docs/ai-setup/kit/` é a versão genérica do setup de agentes deste repositório, para levar a outros projetos. Antes de todo push:
+
+1. Veja se o diff (`git diff origin/development..HEAD --stat`) tocou `.agents/skills/`, `docs/ai-setup/` (fora do próprio kit), `scripts/ai-sync.mjs` ou as regras gerais do `AGENTS.md` (fluxo, "Nunca", definição de pronto).
+2. Se tocou, siga a seção "Manter o kit atualizado" do `docs/ai-setup/kit/GUIA.md`: o que serve para qualquer projeto vai para `modelos/` na forma genérica, testado numa pasta temporária, com versão nova e linha no histórico.
+3. No relato do push, diga em uma linha o que mudou no kit ou que ele já estava em dia.
+
 ### Conta do GitHub
 
 O push deste projeto é sempre feito com a conta do GitHub `darioreisjr`, dona do repositório. A máquina do autor tem mais de uma conta no `gh`. Antes de cada push:
@@ -104,7 +112,7 @@ Fluxo do ADR 0014. A `production` é o que está no ar; a `development` é onde 
 
 1. **Comece da `development` atualizada:** `git fetch origin` e `git switch -c tipo/descricao-curta origin/development`. O tipo é o do Conventional Commits: `feat/pagina-como-foi-feito`, `fix/foco-do-menu`, `docs/readme`.
 2. **Commits na branch da tarefa,** como sempre. Nunca na `development` nem na `production`. Nunca faça `git push` para essas branches diretamente, nem como teste.
-3. **Push, a pedido do autor:** depois da revisão do README, do Como foi feito e da conta do GitHub (acima), `git push -u origin <branch>` e `gh pr create --base development`. O corpo segue o modelo de `.github/pull_request_template.md`; a skill `pr-checklist` tem a lista completa.
+3. **Push, a pedido do autor:** depois da revisão do README, do Como foi feito, do kit de agentes e da conta do GitHub (acima), `git push -u origin <branch>` e `gh pr create --base development`. O corpo segue o modelo de `.github/pull_request_template.md`; a skill `pr-checklist` tem a lista completa.
 4. **Acompanhe o CI:** `gh pr checks --watch`. As checagens obrigatórias são `verify` e `origem`. O CI comenta no PR o endereço da prévia e a tabela de peso de JavaScript.
 5. **Merge, só a pedido do autor:** `gh pr merge --rebase --delete-branch`. O merge publica em `https://develop.darioreis.dev`.
 6. **Promoção para a produção, só a pedido do autor:** `gh pr create --base production --head development`, com título `chore: promove a development para a produção` e, no corpo, o que vai ao ar. Depois, `gh pr merge --merge`. Nunca `--rebase` nem `--squash` aqui: os commits precisam ser os mesmos nas duas branches.

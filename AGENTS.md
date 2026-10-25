@@ -133,6 +133,7 @@ Detalhes nas skills `commits` e `deploy-vercel`.
 - Docs atualizados quando o comportamento descrito mudou.
 - `README.md` da raiz revisado antes de todo push, e atualizado se o que vai subir mudou o que ele diz (skill `commits`).
 - Página "Como foi feito" (`packages/content/data/how-it-was-built/`) revisada antes de todo push, e atualizada se o que vai subir mudou arquitetura, ADRs, módulos ou regras de fronteira (skill `commits`).
+- Kit portátil de agentes (`docs/ai-setup/kit/`) revisado antes de todo push que mexer em skills, subagentes, MCP, `scripts/ai-sync.mjs` ou regras gerais deste arquivo, com linha nova no histórico do `GUIA.md` se mudou (skill `commits`).
 - Commit no padrão Conventional Commits, em pt-BR e sem coautor (skill `commits`).
 
 ## Nunca
@@ -155,7 +156,7 @@ Detalhes nas skills `commits` e `deploy-vercel`.
 | Subagentes | `docs/ai-setup/agents.md`        | `.claude/agents/`, `.codex/agents/`, `.gemini/agents/`     |
 | MCP        | `docs/ai-setup/mcp.json`         | `.mcp.json`, `.codex/config.toml`, `.gemini/settings.json` |
 
-Depois de editar uma fonte, rode `node scripts/ai-sync.mjs`. Detalhes de cada ferramenta em `docs/ai-setup/capability-matrix.md`.
+Depois de editar uma fonte, rode `node scripts/ai-sync.mjs`. Detalhes de cada ferramenta em `docs/ai-setup/capability-matrix.md`. A versão genérica deste setup, para levar a outros projetos, fica em `docs/ai-setup/kit/GUIA.md`.
 
 <!-- BEGIN:turborepo-agent-rules -->
 
