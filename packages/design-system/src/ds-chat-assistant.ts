@@ -480,8 +480,8 @@ export class DsChatAssistant extends LitElement {
     :host {
       display: block;
       position: fixed;
-      inset-inline-start: var(--space-inline-md);
-      inset-block-end: var(--space-block-md);
+      inset-inline-start: var(--ds-chat-assistant-offset-inline);
+      inset-block-end: var(--ds-chat-assistant-offset-block);
       z-index: 1000;
       font-family: var(--font-body);
       color: var(--color-text);
@@ -545,8 +545,8 @@ export class DsChatAssistant extends LitElement {
       display: grid;
       place-items: center;
       box-sizing: border-box;
-      inline-size: 52px;
-      block-size: 52px;
+      inline-size: var(--ds-chat-assistant-trigger-size);
+      block-size: var(--ds-chat-assistant-trigger-size);
       border-radius: var(--radius-full);
       background: var(--color-surface);
       border: var(--border-width-control) solid var(--color-border);

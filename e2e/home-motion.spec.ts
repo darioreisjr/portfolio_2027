@@ -27,6 +27,8 @@ test.describe('a tela cabe na janela, sem rolagem', () => {
     { width: 1366, height: 768 },
     { width: 1280, height: 800 },
     { width: 1280, height: 720 },
+    // Janela média e baixa: o balão da assistente aumenta a reserva do fim.
+    { width: 700, height: 640 },
     { width: 390, height: 844 },
     { width: 360, height: 740 },
   ];
