@@ -7,7 +7,9 @@ import tokensSheet from '@portfolio/tokens/tokens.css?inline';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, describe, expect, it } from 'vitest';
 import { App } from './App.tsx';
-import './main.ts';
+import { createClientArea } from './area.tsx';
+// A entrada publicada de um idioma: registra `mfe-clientes` como vai ao ar.
+import './entries/es.ts';
 
 const roots: Root[] = [];
 afterEach(() => {
@@ -16,14 +18,13 @@ afterEach(() => {
   document.head.querySelectorAll('style[data-test]').forEach((style) => style.remove());
 });
 
-function mount(locale: string): Promise<{ element: HTMLElement; ready: MfeReadyDetail }> {
+function mount(tag: string): Promise<{ element: HTMLElement; ready: MfeReadyDetail }> {
   return new Promise((resolve) => {
-    const element = document.createElement('mfe-clientes');
+    const element = document.createElement(tag);
     const cancel = onMfeReady((ready) => {
       cancel();
       resolve({ element, ready });
     });
-    element.setAttribute('locale', locale);
     document.body.append(element);
   });
 }
@@ -76,14 +77,29 @@ const texts = (scope: ParentNode, selector: string) =>
   [...scope.querySelectorAll(selector)].map((node) => node.textContent?.trim());
 
 describe('mfe-clientes', () => {
-  it('mostra a página no idioma recebido e avisa o shell', async () => {
-    const { element, ready } = await mount('es');
+  it('a entrada publicada mostra a página no idioma dela e avisa o shell', async () => {
+    const { element, ready } = await mount('mfe-clientes');
     expect(element.shadowRoot?.textContent).toContain('¿Tienes un proyecto?');
     expect(ready).toEqual({ area: 'client', locale: 'es' });
   });
 
+  it('a área renderiza os dados recebidos, sem ler atributo', async () => {
+    customElements.define(
+      'mfe-clientes-teste',
+      createClientArea({
+        locale: 'pt-BR',
+        content,
+        text: clientUi['pt-BR'],
+        construction: ui['pt-BR'].construction,
+      }),
+    );
+    const { element, ready } = await mount('mfe-clientes-teste');
+    expect(element.shadowRoot?.textContent).toContain('Serviço teste');
+    expect(ready).toEqual({ area: 'client', locale: 'pt-BR' });
+  });
+
   it('desmonta ao sair do documento', async () => {
-    const { element } = await mount('pt-BR');
+    const { element } = await mount('mfe-clientes');
     element.remove();
     await new Promise((resolve) => setTimeout(resolve));
     expect(element.shadowRoot?.textContent).toBe('');

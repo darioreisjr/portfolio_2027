@@ -1,6 +1,18 @@
-import { onMfeReady, type MfeReadyDetail } from '@portfolio/contracts';
+import { site, tech, techUi } from '@portfolio/content/tech';
+import { ui } from '@portfolio/content/ui';
+import { onMfeReady, type Locale, type MfeReadyDetail } from '@portfolio/contracts';
 import { TestBed } from '@angular/core/testing';
-import { TechAreaComponent } from './tech-area.component';
+import { TECH_CONTENT, TechAreaComponent, type TechAreaContent } from './tech-area.component';
+
+/** Os dados de um idioma, como uma entrada por idioma os entrega à área. */
+const areaFor = (locale: Locale): TechAreaContent => ({
+  locale,
+  site,
+  tech: tech?.[locale] ?? null,
+  techUi: techUi[locale],
+  construction: ui[locale].construction,
+  areas: ui[locale].areas,
+});
 
 // Os testes usam o conteúdo do pacote: os estudos de caso e as tecnologias de
 // exemplo, e o raio-x real do site. O jsdom não tem `IntersectionObserver`:
@@ -20,27 +32,25 @@ const press = (scope: ParentNode, label: string) => {
   return button;
 };
 
-async function mount(locale: string) {
+async function mount(locale: Locale, area: TechAreaContent = areaFor(locale)) {
+  TestBed.configureTestingModule({ providers: [{ provide: TECH_CONTENT, useValue: area }] });
   const fixture = TestBed.createComponent(TechAreaComponent);
-  fixture.componentRef.setInput('locale', locale);
   await fixture.whenStable();
   return { fixture, shadow: root(fixture.nativeElement as Element) };
 }
 
 describe('TechAreaComponent', () => {
-  it('mostra a página no idioma e reage à troca, sem zone.js', async () => {
-    const { fixture, shadow } = await mount('en');
+  it('mostra a página no idioma dos dados recebidos, sem zone.js', async () => {
+    const { shadow } = await mount('en');
     expect(shadow.querySelector('[part="message"]')).toBeNull();
     expect(shadow.textContent).toContain('Case studies');
-
-    fixture.componentRef.setInput('locale', 'es');
-    await fixture.whenStable();
-    expect(shadow.textContent).toContain('Casos de estudio');
   });
 
-  it('usa pt-BR quando o idioma é desconhecido', async () => {
-    const { shadow } = await mount('xx');
-    expect(shadow.textContent).toContain('Estudos de caso');
+  it('sem conteúdo, mostra a mensagem "em construção"', async () => {
+    const { shadow } = await mount('pt-BR', { ...areaFor('pt-BR'), tech: null });
+    const parts = [...shadow.querySelectorAll('[part]')].map((node) => node.getAttribute('part'));
+    expect(parts).toEqual(['message', 'title', 'text', 'bar', 'bar-fill']);
+    expect(shadow.textContent).toContain(ui['pt-BR'].construction.title);
   });
 
   it('o estilo da raiz vive no shadow root e alcança a página filha', async () => {
@@ -133,11 +143,10 @@ describe('TechAreaComponent', () => {
 describe('mfe-tecnico como custom element', () => {
   afterEach(() => document.body.replaceChildren());
 
-  it('monta pelo atributo, avisa o shell e reage à troca de atributo', async () => {
-    await import('../main');
+  it('a entrada publicada monta no idioma dela e avisa o shell', async () => {
+    await import('../entries/en');
 
     const element = document.createElement('mfe-tecnico');
-    element.setAttribute('locale', 'en');
     const ready = new Promise<MfeReadyDetail>((resolve) => {
       const cancel = onMfeReady((detail) => {
         cancel();
@@ -148,8 +157,5 @@ describe('mfe-tecnico como custom element', () => {
 
     expect(await ready).toEqual({ area: 'tech', locale: 'en' });
     expect(root(element).textContent).toContain('Case studies');
-
-    element.setAttribute('locale', 'es');
-    await vi.waitFor(() => expect(root(element).textContent).toContain('Casos de estudio'));
   });
 });

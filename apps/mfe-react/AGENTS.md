@@ -4,7 +4,7 @@ Para quem procura alguém para fazer um projeto: serviços, como funciona, proje
 
 ## Convenções
 
-- Expõe `<mfe-clientes>` por uma classe `HTMLElement` que chama `createRoot` em `connectedCallback` e `unmount` em `disconnectedCallback`. Atributos: `locale`, `base-path`.
+- Expõe `<mfe-clientes>` por `createClientArea` (`src/area.tsx`): uma classe `HTMLElement` que chama `createRoot` em `connectedCallback` e `unmount` em `disconnectedCallback`, com os dados de um idioma. Sem atributos: o idioma é fixado na entrada (`src/entries/<idioma>.ts`, ADR 0015).
 - Componentes de função e TypeScript estrito.
 - Tags do design system direto no JSX, com declaração de tipos; sem wrapper.
 - Dados de `packages/content`: `@portfolio/content/client` (`client`, o conteúdo por idioma já pronto, ou `null`; `clientUi`, os textos da área) e `ui`.
@@ -17,7 +17,7 @@ Para quem procura alguém para fazer um projeto: serviços, como funciona, proje
 - Peso: o React sozinho ocupa 77,7 kB. O teto da parte subiu para 105 kB e o da rota para 135 kB em 2026-10-10; a página mede 91,6 kB. Confira com `pnpm budgets` a cada mudança.
 - Não empacota o design system nem o Lit.
 - Raiz em shadow DOM (`attachShadow` na classe do elemento).
-- Roda sozinho com `index.html` e `dev/main.ts`, que carregam tokens e design system no lugar do shell.
+- Roda sozinho com `index.html` e `dev/main.ts`, que carregam tokens e design system no lugar do shell e a entrada de `?locale=` (padrão pt-br).
 - Teto de JavaScript: ver `docs/quality/budgets.md`.
 
 ## Comandos

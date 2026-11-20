@@ -54,7 +54,7 @@ Navegar entre os dois tipos recarrega o documento (link `<a>` comum). Navegar de
 ## Contrato de cada MFE
 
 - Expõe um custom element: `<mfe-recrutador>`, `<mfe-tecnico>`, `<mfe-clientes>`.
-- Recebe por atributo: `locale` e `base-path`.
+- Não recebe atributos. Cada idioma tem uma entrada própria (`src/entries/<idioma>.ts`, ADR 0015), que importa o submódulo de conteúdo daquele idioma e entrega os dados prontos à fábrica da área (`createRecruiterArea`, `createTechArea`, `createClientArea`). O shell escolhe o idioma pelo script que carrega.
 - Fala com o shell só por eventos tipados de `packages/contracts`.
 - Lê dados só por `packages/content`.
 - Roda sozinho em desenvolvimento, com uma página HTML mínima própria.

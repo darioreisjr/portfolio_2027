@@ -2,7 +2,8 @@ import { execSync } from 'node:child_process';
 import { copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { minify } from 'terser';
 
-execSync('ng build', { stdio: 'inherit' });
+// Só as três entradas por idioma vão para dist/browser (ADR 0015); nada de build genérico.
+rmSync('dist', { recursive: true, force: true });
 execSync('ng build -c pt-br', { stdio: 'inherit' });
 execSync('ng build -c en', { stdio: 'inherit' });
 execSync('ng build -c es', { stdio: 'inherit' });

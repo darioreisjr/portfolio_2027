@@ -4,30 +4,26 @@ import type { Locale } from '@portfolio/contracts';
 import { createRoot, type Root } from 'react-dom/client';
 import { App } from './App.tsx';
 
-export interface MfeClientesOptions {
+/** Tudo o que a área precisa, já resolvido para um idioma (ADR 0015). */
+export interface ClientArea {
   locale: Locale;
+  /** Conteúdo da área; `null`: a tela "em construção". */
   content: ClientContent | null;
   text: ClientUi;
   construction: Ui['construction'];
 }
 
-/** Cria a classe custom element vinculada aos dados de um idioma específico. */
-export function createMfeClientes(options: MfeClientesOptions): typeof HTMLElement {
+/**
+ * Cria o custom element da área de clientes com os dados de um idioma.
+ * Quem chama decide a tag e registra: as entradas por idioma, o dev e os testes.
+ */
+export function createClientArea(area: ClientArea): CustomElementConstructor {
   return class extends HTMLElement {
-    static observedAttributes = ['locale', 'base-path'];
-
     #root: Root | undefined;
 
     connectedCallback(): void {
       this.#root = createRoot(this.shadowRoot ?? this.attachShadow({ mode: 'open' }));
-      this.#root.render(
-        <App
-          locale={options.locale}
-          content={options.content}
-          text={options.text}
-          construction={options.construction}
-        />,
-      );
+      this.#root.render(<App {...area} />);
     }
 
     disconnectedCallback(): void {

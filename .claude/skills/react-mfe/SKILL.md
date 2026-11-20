@@ -9,12 +9,12 @@ Contexto: `apps/mfe-react/AGENTS.md` e `docs/architecture/adr/0002-composition.m
 
 ## Como é exposto
 
-React não tem API própria para virar custom element. Uma classe pequena faz a ponte:
+React não tem API própria para virar custom element. `createClientArea` (`src/area.tsx`) devolve uma classe pequena que faz a ponte, com os dados de um idioma:
 
 - Estende `HTMLElement` e é registrada como `<mfe-clientes>`.
 - `connectedCallback`: cria a raiz com `createRoot` e renderiza.
 - `disconnectedCallback`: chama `unmount`.
-- `attributeChangedCallback` para `locale` e `base-path`: renderiza de novo com as props novas.
+- Sem atributos: cada idioma tem uma entrada (`src/entries/<idioma>.ts`) que registra a classe com os dados daquele idioma (ADR 0015).
 
 A página de desenvolvimento isolado usa a mesma tag.
 

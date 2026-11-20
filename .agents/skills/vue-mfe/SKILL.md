@@ -10,9 +10,9 @@ Contexto: `apps/mfe-vue/AGENTS.md` e `docs/architecture/adr/0002-composition.md`
 ## Como é exposto
 
 - `defineCustomElement` registra `<mfe-recrutador>`.
-- Atributos de entrada: `locale` e `base-path`.
-- O ponto de entrada só registra o elemento. Não monta nada sozinho.
-- A página de desenvolvimento isolado importa o mesmo ponto de entrada e coloca a tag no HTML.
+- Sem atributos de entrada. Cada idioma tem uma entrada (`src/entries/<idioma>.ts`) que chama `createRecruiterArea` com os dados daquele idioma (ADR 0015).
+- A entrada só registra o elemento. Não monta nada sozinho.
+- A página de desenvolvimento isolado importa a entrada do idioma de `?locale=` e coloca a tag no HTML.
 
 ## Código
 

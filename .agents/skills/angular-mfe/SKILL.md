@@ -10,7 +10,7 @@ Contexto: `apps/mfe-angular/AGENTS.md` e `docs/architecture/adr/0002-composition
 ## Como é exposto
 
 - `createCustomElement` de `@angular/elements` gera a classe; `customElements.define` registra `<mfe-tecnico>`.
-- Atributos de entrada: `locale` e `base-path`, recebidos como inputs do componente raiz.
+- Sem atributos de entrada. Cada idioma tem uma entrada (`src/entries/<idioma>.ts`) que chama `createTechArea` com os dados daquele idioma, entregues pelo token `TECH_CONTENT` (ADR 0015). Nunca importe o módulo agregado de `@portfolio/content` num componente.
 - A doc do Angular avisa de problemas ao remover e reinserir o elemento no DOM. O shell nunca reinsere; se você precisar esconder a área, não a remova e recoloque.
 - A página de desenvolvimento isolado usa a mesma tag.
 
