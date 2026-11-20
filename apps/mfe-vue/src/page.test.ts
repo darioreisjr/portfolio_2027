@@ -1,6 +1,8 @@
-import type { RecruiterContent } from '@portfolio/content/recruiter';
-import { onMfeReady } from '@portfolio/contracts';
+import { recruiterUi, type RecruiterContent } from '@portfolio/content/recruiter';
+import { ui } from '@portfolio/content/ui';
+import { onMfeReady, type Locale } from '@portfolio/contracts';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { createRecruiterArea } from './area.ts';
 
 // Conteúdo de teste, fictício: a página só existe com conteúdo, e o do
 // repositório é rascunho (fica fora do build de produção).
@@ -65,12 +67,22 @@ const content = vi.hoisted(() => {
   return { 'pt-BR': base, en: { ...base, role: 'Test role' }, es: base };
 });
 
-vi.mock('@portfolio/content/recruiter', async (original) => ({
-  ...(await original<typeof import('@portfolio/content/recruiter')>()),
-  recruiter: content,
-}));
-
-await import('./main.ts');
+/** Uma tag por idioma, cada uma com o conteúdo de teste daquele idioma. */
+const tagFor = (locale: Locale): string => {
+  const tag = `mfe-recrutador-${locale.toLowerCase()}`;
+  if (!customElements.get(tag)) {
+    customElements.define(
+      tag,
+      createRecruiterArea({
+        locale,
+        content: content[locale],
+        text: recruiterUi[locale],
+        construction: ui[locale].construction,
+      }),
+    );
+  }
+  return tag;
+};
 
 afterEach(() => {
   document.body.replaceChildren();
@@ -83,15 +95,14 @@ afterEach(() => {
   }
 });
 
-function mount(locale = 'pt-BR'): Promise<ShadowRoot> {
+function mount(locale: Locale = 'pt-BR'): Promise<ShadowRoot> {
   return new Promise((resolve) => {
-    const element = document.createElement('mfe-recrutador');
+    const element = document.createElement(tagFor(locale));
     const cancel = onMfeReady(() => {
       cancel();
       if (!element.shadowRoot) throw new Error('sem shadow root');
       resolve(element.shadowRoot);
     });
-    element.setAttribute('locale', locale);
     document.body.append(element);
   });
 }

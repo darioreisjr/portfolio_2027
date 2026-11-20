@@ -4,7 +4,7 @@ Para quem é técnico: estudos de caso, skills com filtro, raio-x do próprio si
 
 ## Convenções
 
-- Expõe `<mfe-tecnico>` com `createCustomElement` de `@angular/elements`. Atributos: `locale`, `base-path`.
+- Expõe `<mfe-tecnico>` por `createTechArea` (`src/app/area.ts`), que cria a aplicação com o token `TECH_CONTENT` e chama `createCustomElement`. Sem atributos: o idioma é fixado na entrada (`src/entries/<idioma>.ts`, ADR 0015). `TechAreaComponent` só lê `TECH_CONTENT`; nenhum componente importa o módulo agregado de `@portfolio/content`, senão os três idiomas voltam ao bundle.
 - Componentes standalone, signals e TypeScript estrito.
 - `CUSTOM_ELEMENTS_SCHEMA` nos componentes que usam tags do design system.
 - Dados de `packages/content`: `@portfolio/content/tech` (`tech`, os estudos de caso e as tecnologias por idioma, ou `null`; `techUi`, os textos da área; `site`, o raio-x real do repositório) e `ui`.
@@ -17,7 +17,7 @@ Para quem é técnico: estudos de caso, skills com filtro, raio-x do próprio si
 - Não empacota o design system nem o Lit.
 - Sem zone.js: estado em signals. Raiz em shadow DOM (`ViewEncapsulation.ShadowDom`).
 - `outputHashing: none`: o shell carrega sempre `main.js`.
-- Roda sozinho pela configuração `solo` do `angular.json` (`dev/index.html` e `dev/main.ts`).
+- Roda sozinho pela configuração `solo` do `angular.json` (`dev/index.html` e `dev/main.ts`); `?locale=en` ou `?locale=es` escolhe a entrada (padrão pt-br). Os testes montam a área com `TECH_CONTENT` de teste ou importam a entrada publicada.
 - É o maior runtime dos três MFEs: confira o teto em `docs/quality/budgets.md` a cada dependência nova.
 
 ## Comandos

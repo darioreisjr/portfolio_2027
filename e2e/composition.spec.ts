@@ -32,7 +32,6 @@ test('/clientes/ renderiza a página do MFE React dentro do shell', async ({ pag
   await expect(page.locator('main')).toHaveAttribute('data-ready', 'client');
   await expect(page.locator('main')).toHaveAttribute('data-content', '');
   const mfe = page.locator('mfe-clientes');
-  await expect(mfe).toHaveAttribute('locale', 'pt-BR');
   await expect(mfe.getByRole('heading', { name: 'Como funciona' })).toBeAttached();
   // O estilo é do próprio MFE, com os tokens herdados do documento.
   await expect(mfe.locator('.card').first()).toHaveCSS('background-color', SURFACE_LIGHT);
@@ -48,7 +47,6 @@ test('/recrutador/ renderiza a página do MFE Vue dentro do shell', async ({ pag
   // O palco de área com conteúdo já vem marcado no HTML (ADR 0010).
   await expect(page.locator('main')).toHaveAttribute('data-content', '');
   const mfe = page.locator('mfe-recrutador');
-  await expect(mfe).toHaveAttribute('locale', 'pt-BR');
   await expect(mfe.getByRole('heading', { name: 'Experiência' })).toBeAttached();
   // O estilo é do próprio MFE, com os tokens herdados do documento.
   await expect(mfe.locator('.block').first()).toHaveCSS('background-color', SURFACE_LIGHT);
@@ -63,7 +61,6 @@ test('/tecnico/ renderiza a página do MFE Angular dentro do shell', async ({ pa
   await expect(page.locator('main')).toHaveAttribute('data-ready', 'tech');
   await expect(page.locator('main')).toHaveAttribute('data-content', '');
   const mfe = page.locator('mfe-tecnico');
-  await expect(mfe).toHaveAttribute('locale', 'pt-BR');
   await expect(mfe.getByRole('heading', { name: /Estudos de caso/ })).toBeAttached();
   // O estilo é do próprio MFE, com os tokens herdados do documento.
   await expect(mfe.locator('.panel').first()).toHaveCSS('background-color', SURFACE_LIGHT);

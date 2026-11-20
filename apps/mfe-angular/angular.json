@@ -17,7 +17,7 @@
           "builder": "@angular/build:application",
           "options": {
             "outputPath": "dist",
-            "browser": "src/main.ts",
+            "browser": "src/entries/pt-br.ts",
             "tsConfig": "tsconfig.app.json",
             "index": false,
             "outputHashing": "none",
