@@ -12,7 +12,6 @@ export async function mountMfe(
   outlet: HTMLElement,
   mfe: MfeTarget,
   locale: Locale,
-  basePath: string,
   load: LoadModule = importModule,
 ): Promise<void> {
   const script = mfeScript(mfe, locale);
@@ -27,8 +26,6 @@ export async function mountMfe(
     return;
   }
 
-  const element = document.createElement(mfe.tag);
-  element.setAttribute('locale', locale);
-  element.setAttribute('base-path', basePath);
-  outlet.replaceChildren(element);
+  // O idioma já vem no script (ADR 0015): o elemento não recebe atributos.
+  outlet.replaceChildren(document.createElement(mfe.tag));
 }

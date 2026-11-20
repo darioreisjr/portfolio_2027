@@ -53,7 +53,6 @@ for (const colorScheme of ['light', 'dark'] as const) {
       // Nas áreas do shell quem escreve a mensagem é o MFE, depois de montar.
       if (mfe) {
         await expect(stage).toHaveAttribute('data-ready', area);
-        await expect(page.locator(`.area-outlet > ${mfe}`)).toHaveAttribute('locale', 'pt-BR');
       }
       await expect(message(page)).toHaveText('Fase em construção');
       await expect(

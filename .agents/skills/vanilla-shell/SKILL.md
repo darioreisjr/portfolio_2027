@@ -21,7 +21,7 @@ O que não faz: lógica de área, leitura de conteúdo além dos textos de inter
 - Sem framework e sem biblioteca de interface: escrito em TypeScript estrito, entregue como JavaScript puro, só com APIs do navegador.
 - O manifesto `rota -> { script, tag }` é derivado da tabela de rotas de `packages/contracts`. Nenhum caminho escrito à mão.
 - Carga do MFE com `import()` do bundle em `/_mfe/<nome>/`. Só o MFE da rota atual é carregado.
-- Depois do `import()`, cria a tag com os atributos `locale` e `base-path`.
+- Depois do `import()`, cria a tag sem atributos: o idioma já veio no script escolhido por `mfeScript` (ADR 0015).
 - Ao sair da área, remove o elemento. Para voltar, cria outro; nunca reinsere o mesmo (limitação do Angular).
 - Carrega tokens e design system uma vez por documento, antes do MFE.
 - Falha de carga: mostra mensagem acessível com link para a home. Nunca deixa a tela vazia.

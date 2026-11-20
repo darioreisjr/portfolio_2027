@@ -1,5 +1,5 @@
 import type { Site, TechContent, TechUi } from '@portfolio/content/tech';
-import { ui } from '@portfolio/content/ui';
+import type { Ui } from '@portfolio/content/schemas';
 import type { AreaId, Locale } from '@portfolio/contracts';
 import {
   afterNextRender,
@@ -48,6 +48,8 @@ export class TechPageComponent {
   readonly text = input.required<TechUi>();
   readonly site = input.required<Site>();
   readonly locale = input.required<Locale>();
+  /** Nomes das áreas, no idioma da página. */
+  readonly areas = input.required<Ui['areas']>();
 
   private readonly host: HTMLElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
@@ -86,7 +88,7 @@ export class TechPageComponent {
   }
 
   protected areaName(area: string): string {
-    return ui[this.locale()].areas[area as AreaId]?.title ?? area;
+    return this.areas()[area as AreaId]?.title ?? area;
   }
 
   protected kb(value: number): string {

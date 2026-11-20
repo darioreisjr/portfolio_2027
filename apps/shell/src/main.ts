@@ -18,7 +18,7 @@ if (stage && outlet && match?.entry.mfe) {
   onMfeReady(({ area }) => {
     stage.dataset.ready = area;
   });
-  void mountMfe(outlet, match.entry.mfe, match.locale, match.entry.paths[match.locale]);
+  void mountMfe(outlet, match.entry.mfe, match.locale);
 }
 
 // Volta para a home com a cortina da área (ADR 0011). Só para um clique comum de

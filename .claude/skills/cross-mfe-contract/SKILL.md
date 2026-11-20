@@ -10,7 +10,7 @@ Apps só conversam por eventos tipados de `packages/contracts`. É a única depe
 ## Antes de criar um evento
 
 - O dado é mesmo de dois apps? Estado interno de uma área não é contrato.
-- Dá para resolver por atributo do custom element (`locale`, `base-path`)? Prefira atributo para configuração e evento para acontecimento.
+- É configuração fixa da área? Os MFEs não recebem atributos: o idioma vem da entrada que o shell carrega (ADR 0015). Configuração vai nos dados que a entrada entrega à fábrica da área; evento é para acontecimento.
 - Já existe evento que cobre o caso?
 
 ## Regras de um evento
