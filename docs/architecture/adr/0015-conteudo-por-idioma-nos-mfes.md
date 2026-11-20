@@ -67,6 +67,14 @@ Adotar a **Opção 1**: Entradas compiladas por idioma (`apps/mfe-*/dist/<locale
 - Cada MFE deve manter suas entradas por idioma sincronizadas com os idiomas suportados pelo sistema (`pt-BR`, `en`, `es`).
 - Qualquer consumo de dados de domínio nos MFEs deve importar o submódulo do idioma correspondente, nunca o módulo agregado com todos os idiomas.
 
+## Nota de 2026-11-20: fábrica por área
+
+A decisão continua valendo. Mudou a forma de cumprir o item 3 da decisão:
+
+- Cada MFE tem uma fábrica que recebe os dados já resolvidos de um idioma: `createRecruiterArea` (`apps/mfe-vue/src/area.ts`), `createTechArea` (`apps/mfe-angular/src/app/area.ts`) e `createClientArea` (`apps/mfe-react/src/area.tsx`). Cada entrada por idioma (`src/entries/<idioma>.ts`) só importa o submódulo daquele idioma e chama a fábrica. O dev isolado (`?locale=`) e os testes passam pela mesma fábrica.
+- Saíram as variantes `RecruiterArea{PtBr,En,Es}.ce.vue` e os elementos genéricos (`src/main.ts`) que liam o atributo `locale`. Os MFEs não recebem mais atributos (`locale` nem `base-path`): o idioma vem só do script que o shell carrega.
+- O Angular descumpria a regra de não importar o módulo agregado: `tech-area.component.ts` e `tech-page.component.ts` o importavam para o caminho genérico, e cada bundle levava os três idiomas. Corrigido; a parte `mfe-angular` caiu de 60,0 para 54,7 kB gzip.
+
 ## Fontes
 
 - `docs/quality/budgets.md`: orçamentos e limites de transferência por rota.
