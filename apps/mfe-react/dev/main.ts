@@ -6,12 +6,8 @@ import '@portfolio/tokens/tokens.css';
 import '@portfolio/design-system/areas.css';
 import '@portfolio/design-system';
 
-// Map, e não objeto: o valor de ?locale= nunca alcança chaves do protótipo.
-const loadPtBr = () => import('../src/entries/pt-br.ts');
-const entries = new Map<string, () => Promise<unknown>>([
-  ['pt-br', loadPtBr],
-  ['en', () => import('../src/entries/en.ts')],
-  ['es', () => import('../src/entries/es.ts')],
-]);
-const requested = new URLSearchParams(location.search).get('locale')?.toLowerCase() ?? 'pt-br';
-await (entries.get(requested) ?? loadPtBr)();
+// Comparação explícita: o valor de ?locale= nunca vira chave nem nome de função.
+const requested = new URLSearchParams(location.search).get('locale')?.toLowerCase();
+if (requested === 'en') await import('../src/entries/en.ts');
+else if (requested === 'es') await import('../src/entries/es.ts');
+else await import('../src/entries/pt-br.ts');
