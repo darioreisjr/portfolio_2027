@@ -16,3 +16,6 @@ next-env.d.ts
 .codex/
 .gemini/
 .mcp.json
+
+# Cópia fiel do upstream (alura-cursos/skills-para-ia); não reformatar
+.agents/skills/arquitetura-de-codigo/SKILL.md
