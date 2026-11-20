@@ -4,10 +4,12 @@
 // As entradas nunca importam o design system.
 import '@portfolio/design-system';
 
-const entries = {
-  'pt-br': () => import('../src/entries/pt-br'),
-  en: () => import('../src/entries/en'),
-  es: () => import('../src/entries/es'),
-};
-const requested = new URLSearchParams(location.search).get('locale')?.toLowerCase();
-await (entries[requested as keyof typeof entries] ?? entries['pt-br'])();
+// Map, e não objeto: o valor de ?locale= nunca alcança chaves do protótipo.
+const loadPtBr = () => import('../src/entries/pt-br');
+const entries = new Map<string, () => Promise<unknown>>([
+  ['pt-br', loadPtBr],
+  ['en', () => import('../src/entries/en')],
+  ['es', () => import('../src/entries/es')],
+]);
+const requested = new URLSearchParams(location.search).get('locale')?.toLowerCase() ?? 'pt-br';
+await (entries.get(requested) ?? loadPtBr)();
